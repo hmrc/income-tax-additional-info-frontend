@@ -14,17 +14,19 @@
  * limitations under the License.
  */
 
-package support.builders.models.requests
+package support.providers
 
-import models.requests.AuthorisationRequest
-import play.api.mvc.AnyContentAsEmpty
-import play.api.test.FakeRequest
-import support.builders.models.UserBuilder.aUser
+import akka.actor.ActorSystem
+import play.api.mvc.Result
+import play.api.test.DefaultAwaitTimeout
+import play.api.test.Helpers.await
 
-object AuthorisationRequestBuilder {
+import scala.concurrent.ExecutionContext.Implicits.global
 
-  val anAuthorisationRequest: AuthorisationRequest[AnyContentAsEmpty.type] = AuthorisationRequest(
-    user = aUser,
-    request = FakeRequest()
-  )
+trait ResultBodyConsumerProvider extends DefaultAwaitTimeout {
+
+  private implicit val actorSystem: ActorSystem = ActorSystem()
+
+  def consumeBody(result: Result): String =
+    await(result.body.consumeData.map(_.utf8String))
 }

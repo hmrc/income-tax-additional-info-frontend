@@ -18,19 +18,27 @@ package support.mocks
 
 import actions.ActionsProvider
 import models.requests.AuthorisationRequest
-import org.scalamock.handlers.CallHandler0
+import org.scalamock.handlers.CallHandler1
 import org.scalamock.scalatest.MockFactory
 import play.api.mvc._
-import support.builders.models.UserBuilder.aUser
+import support.builders.UserBuilder.aUser
 
 import scala.concurrent.{ExecutionContext, Future}
 
-trait MockActionsProvider extends MockFactory {
+trait MockActionsProvider extends MockFactory
+  with MockAuthorisedAction
+  with MockErrorHandler {
 
   protected val mockActionsProvider: ActionsProvider = mock[ActionsProvider]
 
-  def mockAuthorisedAction(): CallHandler0[ActionBuilder[AuthorisationRequest, AnyContent]] = {
-    val actionBuilder: ActionBuilder[AuthorisationRequest, AnyContent] = new ActionBuilder[AuthorisationRequest, AnyContent] {
+  def mockEndOfYear(taxYear: Int): CallHandler1[Int, ActionBuilder[AuthorisationRequest, AnyContent]] = {
+    (mockActionsProvider.endOfYear(_: Int))
+      .expects(taxYear)
+      .returns(value = authorisationRequestActionBuilder)
+  }
+
+  private def authorisationRequestActionBuilder: ActionBuilder[AuthorisationRequest, AnyContent] =
+    new ActionBuilder[AuthorisationRequest, AnyContent] {
       override def parser: BodyParser[AnyContent] = BodyParser("anyContent")(_ => throw new NotImplementedError)
 
       override def invokeBlock[A](request: Request[A], block: AuthorisationRequest[A] => Future[Result]): Future[Result] =
@@ -38,9 +46,4 @@ trait MockActionsProvider extends MockFactory {
 
       override protected def executionContext: ExecutionContext = ExecutionContext.Implicits.global
     }
-
-    (() => mockActionsProvider.authorisedAction())
-      .expects()
-      .returns(value = actionBuilder)
-  }
 }

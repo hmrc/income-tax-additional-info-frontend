@@ -14,20 +14,13 @@
  * limitations under the License.
  */
 
-package support.builders.models
+package models.pagerduty
 
-import models.User
-import uk.gov.hmrc.auth.core.AffinityGroup
-
-object UserBuilder {
-
-  val aUser: User = User(
-    mtditid = "1234567890",
-    arn = None,
-    nino = "AA123456A",
-    sessionId = "sessionId-eb3158c2-0aff-4ce8-8d1b-f2208ace52fe",
-    affinityGroup = AffinityGroup.Individual.toString
-  )
-
-  val anAgentUser: User = aUser.copy(arn = Some("0987654321"), affinityGroup = AffinityGroup.Agent.toString)
+object PagerDutyKeys extends Enumeration {
+  val BAD_SUCCESS_JSON_FROM_IF: PagerDutyKeys.Value = Value
+  val SERVICE_UNAVAILABLE_FROM_IF: PagerDutyKeys.Value = Value
+  val INTERNAL_SERVER_ERROR_FROM_IF: PagerDutyKeys.Value = Value
+  val UNEXPECTED_RESPONSE_FROM_IF: PagerDutyKeys.Value = Value
+  val FOURXX_RESPONSE_FROM_IF: PagerDutyKeys.Value = Value
 }
+

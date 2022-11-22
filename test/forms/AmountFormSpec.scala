@@ -32,6 +32,8 @@ class AmountFormSpec extends UnitTest {
   private val testCurrencyInvalidInt = "!"
   private val testCurrencyInvalidFormat = 12345.123
   private val testCurrencyTooBig = "100000000000.00"
+  private val testCurrencyZeroAmount = 0
+  private val testCurrencyNegativeAmount = -100
 
   "The AmountForm" should {
     "correctly validate a currency" when {
@@ -41,11 +43,25 @@ class AmountFormSpec extends UnitTest {
         val actual = theForm().bind(testInput).value
         actual shouldBe Some(expected)
       }
+
+      "zero is entered" in {
+        val testInput = Map(amount -> testCurrencyZeroAmount.toString)
+        val expected = testCurrencyZeroAmount
+        val actual = theForm().bind(testInput).value
+        actual shouldBe Some(expected)
+      }
+
+      "a negative number is entered" in {
+        val testInput = Map(amount -> testCurrencyNegativeAmount.toString)
+        val expected = testCurrencyNegativeAmount
+        val actual = theForm().bind(testInput).value
+        actual shouldBe Some(expected)
+      }
     }
 
     "correctly validate a currency with spaces" when {
       "a valid currency is entered" in {
-        val testInput = Map(amount -> testCurrencyWithSpaces.toString)
+        val testInput = Map(amount -> testCurrencyWithSpaces)
         val expected = testCurrencyValid
         val actual = theForm().bind(testInput).value
         actual shouldBe Some(expected)

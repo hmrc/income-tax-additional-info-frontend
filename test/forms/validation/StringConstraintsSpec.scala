@@ -26,8 +26,6 @@ class StringConstraintsSpec extends Constraints with AnyWordSpecLike with Matche
   private val errMsgMaxLength = "Too Long"
   private val errMsgNonEmpty = "it is empty"
   private val errMsgInvalidChar = "there are invalid chars"
-  private val errMsgNoLeadingSpace = "there are leading spaces"
-  private val errMsgInvalidInt = "contains non numerical chars"
 
   "The StringConstraints.nonEmpty method" when {
     "supplied with empty value" should {

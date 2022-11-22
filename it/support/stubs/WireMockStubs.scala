@@ -20,120 +20,115 @@ import com.github.tomakehurst.wiremock.client.MappingBuilder
 import com.github.tomakehurst.wiremock.client.WireMock._
 import com.github.tomakehurst.wiremock.http.HttpHeader
 import com.github.tomakehurst.wiremock.stubbing.StubMapping
-import play.api.libs.json.JsValue
+import models.authorisation.Enrolment.Agent
+import play.api.http.Status.{OK, UNAUTHORIZED}
+import play.api.libs.json.{JsObject, Json}
+import support.builders.UserBuilder.aUser
+import uk.gov.hmrc.auth.core.{AffinityGroup, ConfidenceLevel}
 
 trait WireMockStubs {
 
-  def stubGetWithResponseBody(url: String, status: Int, response: String, requestHeaders: Seq[HttpHeader] = Seq.empty): StubMapping = {
-    val mappingWithHeaders: MappingBuilder = requestHeaders.foldLeft(get(urlMatching(url))) { (result, nxt) =>
-      result.withHeader(nxt.key(), equalTo(nxt.firstValue()))
-    }
+  protected def stubGetWithHeadersCheck(url: String,
+                                        status: Int,
+                                        responseBody: String,
+                                        sessionHeader: (String, String) = "X-Session-ID" -> aUser.sessionId,
+                                        mtditidHeader: (String, String) = "mtditid" -> aUser.mtditid): StubMapping =
+    stubFor(get(urlMatching(url))
+      .withHeader(sessionHeader._1, equalTo(sessionHeader._2))
+      .withHeader(mtditidHeader._1, equalTo(mtditidHeader._2))
+      .willReturn(aResponse().withStatus(status).withBody(responseBody))
+    )
 
-    stubFor(mappingWithHeaders
-      .willReturn(
-        aResponse()
-          .withStatus(status)
-          .withBody(response)
-          .withHeader("Content-Type", "application/json; charset=utf-8")))
+  protected def authoriseAgentOrIndividual(isAgent: Boolean, nino: Boolean = true): StubMapping = if (isAgent) authoriseAgent() else authoriseIndividual(nino)
+
+  protected def authoriseIndividualUnauthorized(): StubMapping = {
+    stubPost(authoriseUri, UNAUTHORIZED, Json.prettyPrint(
+      successfulAuthResponse(Some(AffinityGroup.Individual), ConfidenceLevel.L200, Seq(mtditEnrolment, ninoEnrolment): _*)
+    ))
   }
 
-  def stubGetWithoutResponseBody(url: String, status: Int): StubMapping =
-    stubFor(get(urlMatching(url))
-      .willReturn(
-        aResponse()
-          .withStatus(status)))
+  protected def authoriseIndividual(withNino: Boolean = true): StubMapping = {
+    stubPost(authoriseUri, OK, Json.prettyPrint(successfulAuthResponse(Some(AffinityGroup.Individual), ConfidenceLevel.L200,
+      enrolments = Seq(mtditEnrolment) ++ (if (withNino) Seq(ninoEnrolment) else Seq.empty[JsObject]): _*)))
+  }
 
-  def stubPostWithoutResponseBody(url: String, status: Int, requestBody: String): StubMapping =
-    stubFor(post(urlEqualTo(url)).withRequestBody(equalToJson(requestBody))
-      .willReturn(
-        aResponse()
-          .withStatus(status)
-          .withHeader("Content-Type", "application/json; charset=utf-8")))
+  protected def authoriseAgent(): StubMapping = {
+    stubPost(authoriseUri, OK, Json.prettyPrint(
+      successfulAuthResponse(Some(AffinityGroup.Agent), ConfidenceLevel.L200, Seq(asAgentEnrolment, mtditEnrolment): _*)
+    ))
+  }
 
-  def stubPostWithResponseBody(url: String, status: Int, requestBody: String, response: String, requestHeaders: Seq[HttpHeader] = Seq.empty): StubMapping = {
+  protected def authoriseAgentUnauthorized(): StubMapping = {
+    stubPost(authoriseUri, UNAUTHORIZED, Json.prettyPrint(
+      successfulAuthResponse(Some(AffinityGroup.Agent), ConfidenceLevel.L200, Seq(asAgentEnrolment, mtditEnrolment): _*)
+    ))
+  }
+
+  protected def stubPost(url: String, status: Int, responseBody: String, requestHeaders: Seq[HttpHeader] = Seq.empty): StubMapping = {
     val mappingWithHeaders: MappingBuilder = requestHeaders.foldLeft(post(urlMatching(url))) { (result, nxt) =>
       result.withHeader(nxt.key(), equalTo(nxt.firstValue()))
     }
 
-    stubFor(mappingWithHeaders.withRequestBody(equalToJson(requestBody))
-      .willReturn(
-        aResponse()
-          .withStatus(status)
-          .withBody(response)
-          .withHeader("Content-Type", "application/json; charset=utf-8")))
+    stubFor(mappingWithHeaders.willReturn(aResponse().withStatus(status).withBody(responseBody)))
   }
 
-  def stubPutWithoutResponseBody(url: String, requestBody: String, status: Int, requestHeaders: Seq[HttpHeader] = Seq.empty): StubMapping = {
-    val mappingWithHeaders: MappingBuilder = requestHeaders.foldLeft(put(urlMatching(url))) { (result, nxt) =>
-      result.withHeader(nxt.key(), equalTo(nxt.firstValue()))
+  private def successfulAuthResponse(affinityGroup: Option[AffinityGroup], confidenceLevel: ConfidenceLevel, enrolments: JsObject*): JsObject = {
+    affinityGroup match {
+      case Some(group) => Json.obj(
+        "affinityGroup" -> group,
+        "allEnrolments" -> enrolments,
+        "confidenceLevel" -> confidenceLevel
+      )
+      case _ => Json.obj(
+        "allEnrolments" -> enrolments,
+        "confidenceLevel" -> confidenceLevel
+      )
     }
-
-    stubFor(mappingWithHeaders.withRequestBody(equalToJson(requestBody))
-      .willReturn(
-        aResponse()
-          .withStatus(status)
-          .withHeader("Content-Type", "application/json; charset=utf-8")))
   }
 
-  def stubPutWithResponseBody(url: String, requestBody: String, responseBody: String, status: Int, requestHeaders: Seq[HttpHeader] = Seq.empty): StubMapping = {
-    val mappingWithHeaders: MappingBuilder = requestHeaders.foldLeft(put(urlMatching(url))) { (result, nxt) =>
-      result.withHeader(nxt.key(), equalTo(nxt.firstValue()))
-    }
 
-    stubFor(mappingWithHeaders.withRequestBody(equalToJson(requestBody))
-      .willReturn(
-        aResponse()
-          .withBody(responseBody)
-          .withStatus(status)
-          .withHeader("Content-Type", "application/json; charset=utf-8")))
-  }
+  private val authoriseUri = "/auth/authorise"
 
-  def stubPatchWithoutResponseBody(url: String, status: Int): StubMapping =
-    stubFor(patch(urlEqualTo(url))
-      .willReturn(
-        aResponse()
-          .withStatus(status)
-          .withHeader("Content-Type", "application/json; charset=utf-8")))
-
-  def stubPostWithoutResponseAndRequestBody(url: String, status: Int): StubMapping =
-    stubFor(post(urlEqualTo(url))
-      .willReturn(
-        aResponse()
-          .withStatus(status)
-          .withHeader("Content-Type", "application/json; charset=utf-8")))
-
-  def verifyPostWithRequestBody(url: String, times: Int, body: JsValue): Unit =
-    verify(times, postRequestedFor(urlEqualTo(url))
-      .withRequestBody(equalToJson(body.toString(), true, true))
+  private val mtditEnrolment = Json.obj(
+    "key" -> "HMRC-MTD-IT",
+    "identifiers" -> Json.arr(
+      Json.obj(
+        "key" -> "MTDITID",
+        "value" -> "1234567890"
+      )
     )
+  )
 
-  def auditStubs(): Unit = {
-    val auditResponseCode = 204
-    stubPostWithoutResponseAndRequestBody("/write/audit", auditResponseCode)
+  private val ninoEnrolment = Json.obj(
+    "key" -> "HMRC-NI",
+    "identifiers" -> Json.arr(
+      Json.obj(
+        "key" -> "NINO",
+        "value" -> aUser.nino
+      )
+    )
+  )
+
+  private val asAgentEnrolment = Json.obj(
+    "key" -> Agent.key,
+    "identifiers" -> Json.arr(
+      Json.obj(
+        "key" -> Agent.value,
+        "value" -> "XARN1234567"
+      )
+    )
+  )
+
+  protected def createUserSessionDataStub(url: String,
+                                          status: Int,
+                                          responseBody: String,
+                                          sessionHeader: (String, String) = "X-Session-ID" -> aUser.sessionId,
+                                          mtditidHeader: (String, String) = "mtditid" -> aUser.mtditid
+                                         ): StubMapping = {
+    stubFor(post(urlMatching(url))
+      .withHeader(sessionHeader._1, equalTo(sessionHeader._2))
+      .withHeader(mtditidHeader._1, equalTo(mtditidHeader._2))
+      .willReturn(aResponse().withStatus(status).withBody(responseBody))
+    )
   }
-
-  def stubDeleteWithoutResponseBody(url: String, status: Int, requestHeaders: Seq[HttpHeader] = Seq.empty): StubMapping = {
-    val mappingWithHeaders: MappingBuilder = requestHeaders.foldLeft(delete(urlMatching(url))) { (result, nxt) =>
-      result.withHeader(nxt.key(), equalTo(nxt.firstValue()))
-    }
-
-    stubFor(mappingWithHeaders
-      .willReturn(
-        aResponse()
-          .withStatus(status)))
-  }
-
-  def stubDeleteWithResponseBody(url: String, status: Int, response: String, requestHeaders: Seq[HttpHeader] = Seq.empty): StubMapping = {
-    val mappingWithHeaders: MappingBuilder = requestHeaders.foldLeft(delete(urlMatching(url))) { (result, nxt) =>
-      result.withHeader(nxt.key(), equalTo(nxt.firstValue()))
-    }
-
-    stubFor(mappingWithHeaders
-      .willReturn(
-        aResponse()
-          .withStatus(status)
-          .withBody(response)
-      ))
-  }
-
 }

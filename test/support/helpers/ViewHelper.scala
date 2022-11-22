@@ -24,6 +24,7 @@ trait ViewHelper {
   self: AnyWordSpec with Matchers =>
 
   private val serviceName = "Update and submit an Income Tax Return"
+  private val serviceNameWelsh = "Update and submit an Income Tax Return"
   private val govUkExtension = "GOV.UK"
   private val ENGLISH = "English"
   private val WELSH = "Welsh"
@@ -40,9 +41,9 @@ trait ViewHelper {
     !document.select(selector).isEmpty
   }
 
-  def titleCheck(title: String)(implicit document: Document): Unit = {
+  def titleCheck(title: String, isWelsh: Boolean)(implicit document: Document): Unit = {
     s"has a title of $title" in {
-      document.title() shouldBe s"$title - $serviceName - $govUkExtension"
+      document.title() shouldBe s"$title - ${if (isWelsh) serviceNameWelsh else serviceName} - $govUkExtension"
     }
   }
 
@@ -54,7 +55,9 @@ trait ViewHelper {
 
   def h1Check(header: String, size: String = "l")(implicit document: Document): Unit = {
     s"have a page heading of '$header'" in {
-      document.select(s".govuk-heading-$size").text() shouldBe header
+      val headingAndCaption = document.select(s"h1.govuk-heading-$size").text()
+      val caption = document.select(s"h1 > span.govuk-caption-$size").text()
+      headingAndCaption.replace(caption, "").trim shouldBe header
     }
   }
 
@@ -82,22 +85,6 @@ trait ViewHelper {
     textOnPageCheck(item, itemSelector)
     textOnPageCheck(value, valueSelector, s"for the value of the $item field")
     linkCheck(changeHiddenText, changeSelector, href)
-  }
-
-  def changeAmountRowCheck(item: String, value: String, section: Int, row: Int, changeHiddenText: String, href: String)
-                          (implicit document: Document): Unit = {
-
-    def benefitsItemSelector(section: Int, row: Int): String = s"#main-content > div > div > dl:nth-child($section) > div:nth-child($row) > dt"
-
-    def benefitsAmountSelector(section: Int, row: Int): String =
-      s"#main-content > div > div > dl:nth-child($section) > div:nth-child($row) > dd.govuk-summary-list__value"
-
-    def benefitsChangeLinkSelector(section: Int, row: Int): String = s"#main-content > div > div > dl:nth-child($section) > div:nth-child($row) > dd > a"
-
-    textOnPageCheck(item, benefitsItemSelector(section, row))
-    textOnPageCheck(value, benefitsAmountSelector(section, row), s"for the value of the $item field")
-    linkCheck(changeHiddenText, benefitsChangeLinkSelector(section, row), href)
-
   }
 
   def formGetLinkCheck(text: String, selector: String)(implicit document: Document): Unit = {
@@ -145,6 +132,20 @@ trait ViewHelper {
         val selector = ".govuk-radios__item > input"
         document.select(selector).get(radioNumber - 1).hasAttr("checked") shouldBe checked
       }
+    }
+  }
+
+  def amountBoxLabelCheck(text: String)(implicit document: Document): Unit = {
+    s"has the text $text in the amount box label" in {
+      val selector = "#main-content > div > div > form > div > label"
+      document.select(selector).text() shouldBe text
+    }
+  }
+
+  def amountBoxHintCheck(text: String)(implicit document: Document): Unit = {
+    s"has the text $text in the amount box hint" in {
+      val selector = "#amount-hint"
+      document.select(selector).text() shouldBe text
     }
   }
 
@@ -230,6 +231,19 @@ trait ViewHelper {
     }
   }
 
+  def checkMessagesAreUnique(initial: List[(String, String)], keysToExplore: List[(String, String)], result: Set[String]): Set[String] = {
+    keysToExplore match {
+      case Nil => result
+      case head :: tail =>
+        val (currentMessageKey, currentMessage) = (head._1, head._2)
+        val duplicate = initial.collect {
+          case (messageKey, message) if currentMessageKey != messageKey && currentMessage == message => currentMessageKey
+        }.toSet
+
+        checkMessagesAreUnique(initial, tail, duplicate ++ result)
+    }
+  }
+
   def welshToggleCheck(isWelsh: Boolean)(implicit document: Document): Unit = {
     welshToggleCheck(if (isWelsh) WELSH else ENGLISH)
   }
@@ -255,7 +269,7 @@ trait ViewHelper {
       }
       s"has a link to change the language" in {
         document.select(".hmrc-language-select__list-item > a").attr("href") shouldBe
-          s"/update-and-submit-income-tax-return/construction-industry-scheme-deductions/language/${linkLanguage(otherLanguage).toLowerCase}"
+          s"/update-and-submit-income-tax-return/additional-information/language/${linkLanguage(otherLanguage).toLowerCase}"
       }
     }
   }

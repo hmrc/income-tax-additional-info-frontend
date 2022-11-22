@@ -16,6 +16,9 @@
 
 package utils
 
+import play.api.i18n.Messages
+
+import java.time.LocalDate
 import scala.util.Try
 
 object ViewUtils {
@@ -25,4 +28,9 @@ object ViewUtils {
       .map(amount => currencySymbol + f"$amount%1.2f".replace(".00", ""))
       .getOrElse(value)
       .replaceAll("\\B(?=(\\d{3})+(?!\\d))", ",")
+
+  def translatedDateFormatter(date: LocalDate)(implicit messages: Messages): String = {
+    val translatedMonth = messages("common." + date.getMonth.toString.toLowerCase)
+    date.getDayOfMonth + " " + translatedMonth + " " + date.getYear
+  }
 }

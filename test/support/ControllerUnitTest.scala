@@ -21,7 +21,7 @@ import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.mvc.MessagesControllerComponents
 import play.api.test.Helpers.stubMessagesControllerComponents
 import play.api.test.{DefaultAwaitTimeout, FutureAwaits, Injecting}
-import support.helpers.{FakeRequestHelper, TaxYearProvider}
+import support.providers.{FakeRequestProvider, TaxYearProvider}
 import support.stubs.AppConfigStub
 
 import scala.concurrent.ExecutionContext
@@ -31,7 +31,7 @@ trait ControllerUnitTest extends UnitTest
   with GuiceOneAppPerSuite
   with Injecting
   with TaxYearProvider
-  with FakeRequestHelper {
+  with FakeRequestProvider {
 
   protected implicit val mcc: MessagesControllerComponents = stubMessagesControllerComponents()
   protected implicit val appConfig: AppConfig = new AppConfigStub().config()
