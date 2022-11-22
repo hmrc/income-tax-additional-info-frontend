@@ -37,7 +37,8 @@ object MappingUtil extends Formatters {
   def currency(requiredKey: String,
                wrongFormatKey: String = "common.error.invalid_currency_format",
                maxAmountKey: String = "common.error.amountMaxLimit",
+               minAmountKey: Option[String] = None,
                args: Seq[String] = Seq.empty[String]
               ): FieldMapping[BigDecimal] =
-    of(currencyFormatter(requiredKey, wrongFormatKey, maxAmountKey, args))
+    of(currencyFormatter(requiredKey, wrongFormatKey, maxAmountKey, minAmountKey, args))
 }

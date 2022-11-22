@@ -14,10 +14,15 @@
  * limitations under the License.
  */
 
-package models.authorisation
+package support.utils
 
-sealed class EnrolmentPair(val key: String, val value: String)
+import java.time.LocalDate
 
-case object IndividualEnrolment extends EnrolmentPair(key = "HMRC-MTD-IT", value = "MTDITID")
-case object AgentEnrolment extends EnrolmentPair(key = "HMRC-AS-AGENT", value = "AgentReferenceNumber")
-case object NinoEnrolment extends EnrolmentPair(key = "HMRC-NI", value = "NINO")
+object TaxYearUtils {
+
+  private val dateNow: LocalDate = LocalDate.now()
+  private val taxYearCutoffDate: LocalDate = LocalDate.parse(s"${dateNow.getYear}-04-05")
+
+  val taxYear: Int = if (dateNow.isAfter(taxYearCutoffDate)) LocalDate.now().getYear + 1 else LocalDate.now().getYear
+  val taxYearEOY: Int = taxYear - 1
+}

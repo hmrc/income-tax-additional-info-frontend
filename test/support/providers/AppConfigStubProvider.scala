@@ -14,15 +14,12 @@
  * limitations under the License.
  */
 
-package support.helpers
+package support.providers
 
-trait TaxYearProvider {
+import config.AppConfig
+import support.stubs.AppConfigStub
 
-  protected val taxYear: Int = TaxYearUtils.taxYear
-  protected val taxYearEOY: Int = TaxYearUtils.taxYearEOY
+trait AppConfigStubProvider {
 
-  protected val taxYearEndOfYearMinusOne: Int = taxYearEOY - 1
-
-  protected val validTaxYearListSingle: Seq[Int] = Seq(taxYear)
-  protected val validTaxYearList: Seq[Int] = Seq(taxYearEndOfYearMinusOne, taxYearEOY, taxYear)
+  lazy val appConfigStub: AppConfig = new AppConfigStub().config()
 }

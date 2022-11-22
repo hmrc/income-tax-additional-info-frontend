@@ -23,6 +23,7 @@ import uk.gov.hmrc.crypto.{PlainText, SymmetricCryptoFactory}
 import java.net.URLEncoder
 
 object PlaySessionCookieBaker {
+
   private val cookieKey = "gvBoGdgzqG1AarzF1LY0zQ=="
   private val cookieSigner = new DefaultCookieSigner(SecretConfiguration(cookieKey))
 
@@ -36,7 +37,7 @@ object PlaySessionCookieBaker {
     }
 
     val encodedCookie = encode(sessionData)
-    val encrypted = SymmetricCryptoFactory.aesCrypto(cookieKey).encrypt(encodedCookie).value
+    val encrypted = SymmetricCryptoFactory.aesGcmCrypto(cookieKey).encrypt(encodedCookie).value
 
     s"""mdtp="$encrypted"; Path=/; HTTPOnly"; Path=/; HTTPOnly"""
   }

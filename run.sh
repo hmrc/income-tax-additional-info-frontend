@@ -1,3 +1,3 @@
 #!/usr/bin/env bash
 
-sbt -Dplay.http.router=testOnlyDoNotUseInAppConf.Routes run
+sbt run -Dconfig.resource=application.conf -Dapplication.router=testOnlyDoNotUseInAppConf.Routes -J-Xmx256m -J-Xms64m -Dhttp.port=10005 -Drun.mode=Dev

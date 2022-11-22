@@ -19,7 +19,7 @@ package support.stubs
 import config.AppConfig
 import org.scalamock.scalatest.MockFactory
 import play.api.mvc.RequestHeader
-import support.helpers.TaxYearUtils.taxYearEOY
+import support.utils.TaxYearUtils.taxYearEOY
 import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 
 class AppConfigStub extends MockFactory {
@@ -35,6 +35,12 @@ class AppConfigStub extends MockFactory {
     override lazy val viewAndChangeEnterUtrUrl: String = "/report-quarterly/income-and-expenses/view/agents/client-utr"
     override lazy val incomeTaxSubmissionBaseUrl: String = "/income-tax-submission-base-url"
     override lazy val signOutUrl: String = "/sign-out-url"
+
+    override lazy val additionalInformationServiceBaseUrl: String = "http://localhost:11111"
+
+    override lazy val taxYearErrorFeature: Boolean = false
+
+    override def incomeTaxSubmissionOverviewUrl(taxYear: Int): String = s"/$taxYear/income-tax-return-overview"
 
     override def contactUrl(isAgent: Boolean): String = "/contact-url"
 

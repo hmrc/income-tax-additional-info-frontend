@@ -16,13 +16,20 @@
 
 package actions
 
+import config.{AppConfig, ErrorHandler}
 import models.requests.AuthorisationRequest
 import play.api.mvc.{ActionBuilder, AnyContent}
 
 import javax.inject.{Inject, Singleton}
+import scala.concurrent.ExecutionContext
 
 @Singleton
-class ActionsProvider @Inject()(authAction: AuthorisedAction) {
-
-  def authorisedAction(): ActionBuilder[AuthorisationRequest, AnyContent] = authAction
+class ActionsProvider @Inject()(authAction: AuthorisedAction,
+                                errorHandler: ErrorHandler,
+                                appConfig: AppConfig)
+                               (implicit ec: ExecutionContext) {
+  def endOfYear(taxYear: Int): ActionBuilder[AuthorisationRequest, AnyContent] =
+    authAction
+      .andThen(TaxYearAction(taxYear, appConfig, ec))
+      .andThen(EndOfYearFilterAction(taxYear, appConfig))
 }

@@ -19,26 +19,26 @@ package models.authorisation
 import org.scalatest.matchers.should.Matchers
 import support.UnitTest
 
-class EnrolmentPairSpec extends UnitTest with Matchers {
+class EnrolmentSpec extends UnitTest with Matchers {
 
-  "IndividualEnrolment" should {
+  "Enrolment.Individual" should {
     "have correct key value pair" in {
-      IndividualEnrolment.key shouldBe "HMRC-MTD-IT"
-      IndividualEnrolment.value shouldBe "MTDITID"
+      Enrolment.Individual.key shouldBe "HMRC-MTD-IT"
+      Enrolment.Individual.value shouldBe "MTDITID"
     }
   }
 
-  "AgentEnrolment" should {
+  "Enrolment.Agent" should {
     "have correct key value pair" in {
-      AgentEnrolment.key shouldBe "HMRC-AS-AGENT"
-      AgentEnrolment.value shouldBe "AgentReferenceNumber"
+      Enrolment.Agent.key shouldBe "HMRC-AS-AGENT"
+      Enrolment.Agent.value shouldBe "AgentReferenceNumber"
     }
   }
 
-  "NinoEnrolment" should {
+  "Enrolment.Nino" should {
     "have correct key value pair" in {
-      NinoEnrolment.key shouldBe "HMRC-NI"
-      NinoEnrolment.value shouldBe "NINO"
+      Enrolment.Nino.key shouldBe "HMRC-NI"
+      Enrolment.Nino.value shouldBe "NINO"
     }
   }
 }

@@ -16,8 +16,9 @@
 
 package controllers
 
+import models.authorisation.SessionValues
 import play.api.http.Status.SEE_OTHER
-import play.api.test.Helpers.{redirectLocation, status}
+import play.api.test.Helpers.{REFERER, redirectLocation, status}
 import support.ControllerUnitTest
 
 class LanguageSwitchControllerSpec extends ControllerUnitTest {
@@ -25,11 +26,27 @@ class LanguageSwitchControllerSpec extends ControllerUnitTest {
   private val underTest = new LanguageSwitchController()
 
   ".switchToLanguage" should {
-    "return a redirect result" in {
+    "return a redirect result when taxYear provided and no referer" in {
+      val request = fakeRequest.withSession(SessionValues.TAX_YEAR -> taxYear.toString)
+      val result = underTest.switchToLanguage("en").apply(request)
+
+      status(result) shouldBe SEE_OTHER
+      redirectLocation(result) shouldBe Some(s"/income-tax-submission-base-url/$taxYear/start")
+    }
+
+    "return a redirect result when no taxYear provided and no referer" in {
       val result = underTest.switchToLanguage("en").apply(fakeRequest)
 
       status(result) shouldBe SEE_OTHER
       redirectLocation(result) shouldBe Some(s"/income-tax-submission-base-url/$taxYearEOY/start")
+    }
+
+    "return a redirect result when there is referer and taxYear" in {
+      val request = fakeRequest.withHeaders(REFERER -> "/some-referer")
+      val result = underTest.switchToLanguage("en").apply(request)
+
+      status(result) shouldBe SEE_OTHER
+      redirectLocation(result) shouldBe Some(s"/some-referer")
     }
   }
 }

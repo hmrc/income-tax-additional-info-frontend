@@ -17,9 +17,72 @@
 package support.mocks
 
 import actions.AuthorisedAction
+import models.authorisation.Enrolment.{Agent, Individual, Nino}
+import org.scalamock.handlers.CallHandler4
 import org.scalamock.scalatest.MockFactory
+import play.api.test.Helpers.stubMessagesControllerComponents
+import services.AuthorisationService
+import support.builders.UserBuilder.aUser
+import support.providers.AppConfigStubProvider
+import uk.gov.hmrc.auth.core._
+import uk.gov.hmrc.auth.core.authorise.Predicate
+import uk.gov.hmrc.auth.core.retrieve.Retrieval
+import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals
+import uk.gov.hmrc.auth.core.syntax.retrieved.authSyntaxForRetrieved
+import uk.gov.hmrc.http.HeaderCarrier
 
-trait MockAuthorisedAction extends MockFactory {
+import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.{ExecutionContext, Future}
 
-  protected val mockAuthorisedAction: AuthorisedAction = mock[AuthorisedAction]
+trait MockAuthorisedAction extends AppConfigStubProvider
+  with MockFactory {
+
+  private val mockAuthConnector = mock[AuthConnector]
+  private val mockAuthService = new AuthorisationService(mockAuthConnector)
+
+  protected val mockAuthorisedAction: AuthorisedAction = new AuthorisedAction(
+    mockAuthService,
+    appConfigStub,
+    stubMessagesControllerComponents()
+  )
+
+  protected def mockAuthAsAgent(): CallHandler4[Predicate, Retrieval[_], HeaderCarrier, ExecutionContext, Future[Any]] = {
+    val enrolments: Enrolments = Enrolments(Set(
+      Enrolment(Individual.key, Seq(EnrolmentIdentifier(Individual.value, aUser.mtditid)), "Activated"),
+      Enrolment(Agent.key, Seq(EnrolmentIdentifier(Agent.value, "0987654321")), "Activated")
+    ))
+
+    val agentRetrievals: Some[AffinityGroup] = Some(AffinityGroup.Agent)
+
+    (mockAuthConnector.authorise(_: Predicate, _: Retrieval[_])(_: HeaderCarrier, _: ExecutionContext))
+      .expects(*, Retrievals.affinityGroup, *, *)
+      .returning(Future.successful(agentRetrievals))
+
+    (mockAuthConnector.authorise(_: Predicate, _: Retrieval[_])(_: HeaderCarrier, _: ExecutionContext))
+      .expects(*, Retrievals.allEnrolments, *, *)
+      .returning(Future.successful(enrolments))
+  }
+
+  protected def mockAuthAsIndividual(nino: Option[String]): CallHandler4[Predicate, Retrieval[_], HeaderCarrier, ExecutionContext, Future[Any]] = {
+    val enrolments = Enrolments(Set(
+      Enrolment(Individual.key, Seq(EnrolmentIdentifier(Individual.value, aUser.mtditid)), "Activated"),
+      Enrolment(Agent.key, Seq(EnrolmentIdentifier(Agent.value, "0987654321")), "Activated")
+    ) ++ nino.fold(Seq.empty[Enrolment])(unwrappedNino =>
+      Seq(Enrolment(Nino.key, Seq(EnrolmentIdentifier(Nino.value, unwrappedNino)), "Activated"))
+    ))
+
+    (mockAuthConnector.authorise(_: Predicate, _: Retrieval[_])(_: HeaderCarrier, _: ExecutionContext))
+      .expects(*, Retrievals.affinityGroup, *, *)
+      .returning(Future.successful(Some(AffinityGroup.Individual)))
+
+    (mockAuthConnector.authorise(_: Predicate, _: Retrieval[_])(_: HeaderCarrier, _: ExecutionContext))
+      .expects(*, Retrievals.allEnrolments and Retrievals.confidenceLevel, *, *)
+      .returning(Future.successful(enrolments and ConfidenceLevel.L200))
+  }
+
+  protected def mockFailToAuthenticate(): CallHandler4[Predicate, Retrieval[_], HeaderCarrier, ExecutionContext, Future[Any]] = {
+    (mockAuthConnector.authorise(_: Predicate, _: Retrieval[_])(_: HeaderCarrier, _: ExecutionContext))
+      .expects(*, *, *, *)
+      .returning(Future.failed(InsufficientConfidenceLevel()))
+  }
 }

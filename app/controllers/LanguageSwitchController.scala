@@ -29,10 +29,10 @@ class LanguageSwitchController @Inject()(implicit mcc: MessagesControllerCompone
 
   def switchToLanguage(language: String): Action[AnyContent] = Action { implicit request =>
     val lang = appConfig.languageMap.getOrElse(language, Lang.defaultLang)
-
     val redirectURL = request.headers.get(REFERER)
       .flatMap(UrlUtils.asRelativeUrl)
       .getOrElse(fallbackURL)
+
     Redirect(redirectURL).withLang(Lang.apply(lang.code))
   }
 

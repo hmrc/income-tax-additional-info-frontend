@@ -26,10 +26,13 @@ import javax.inject.{Inject, Singleton}
 @Singleton
 class AppConfig @Inject()(servicesConfig: ServicesConfig) {
 
+  private lazy val additionalInformationUrlKey = "microservice.services.income-additional-information.url"
+
   private lazy val incomeTaxSubmissionFrontendUrlKey = "microservice.services.income-tax-submission-frontend.url"
   private lazy val basGatewayFrontendUrlKey = "microservice.services.bas-gateway-frontend.url"
   private lazy val feedbackFrontendUrlKey = "microservice.services.feedback-frontend.url"
   private lazy val contactFormServiceIndividualKey = "update-and-submit-income-tax-return"
+  // TODO: The key is missing in CIS and Employment. Verify if still needed.
   private lazy val contactFormServiceAgentKey = "update-and-submit-income-tax-return-agent"
   private lazy val contactFrontendUrlKey = "microservice.services.contact-frontend.url"
   private lazy val viewAndChangeUrlKey = "microservice.services.view-and-change.url"
@@ -77,6 +80,8 @@ class AppConfig @Inject()(servicesConfig: ServicesConfig) {
     val contactFormService = contactFormServiceIdentifier(isAgent)
     s"$contactFrontEndUrl/contact/beta-feedback?service=$contactFormService&backUrl=$requestUri"
   }
+
+  lazy val additionalInformationServiceBaseUrl: String = s"${servicesConfig.getString(additionalInformationUrlKey)}/income-tax-additional-information"
 
   def taxYearErrorFeature: Boolean = servicesConfig.getBoolean("taxYearErrorFeatureSwitch")
 

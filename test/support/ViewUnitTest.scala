@@ -17,16 +17,16 @@
 package support
 
 import config.AppConfig
-import models.requests.AuthorisationRequest
+import models.requests.{AuthorisationRequest}
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.i18n.{Lang, Messages, MessagesApi}
 import play.api.mvc.AnyContent
 import play.api.test.Injecting
-import support.builders.models.UserBuilder.aUser
-import support.builders.models.requests.AuthorisationRequestBuilder.anAuthorisationRequest
-import support.helpers.{FakeRequestHelper, TaxYearProvider, UserScenarios, ViewHelper}
+import support.builders.UserBuilder.anAgentUser
+import support.builders.requests.AuthorisationRequestBuilder.anAuthorisationRequest
+import support.helpers.{UserScenarios, ViewHelper}
+import support.providers.{FakeRequestProvider, TaxYearProvider}
 import support.stubs.AppConfigStub
-import uk.gov.hmrc.auth.core.AffinityGroup
 
 trait ViewUnitTest extends UnitTest
   with UserScenarios
@@ -34,16 +34,15 @@ trait ViewUnitTest extends UnitTest
   with GuiceOneAppPerSuite
   with Injecting
   with TaxYearProvider
-  with FakeRequestHelper {
+  with FakeRequestProvider {
 
-  protected implicit val mockAppConfig: AppConfig = new AppConfigStub().config()
+  protected implicit val appConfig: AppConfig = new AppConfigStub().config()
   protected implicit lazy val messagesApi: MessagesApi = inject[MessagesApi]
 
   protected lazy val defaultMessages: Messages = messagesApi.preferred(fakeRequest)
   protected lazy val welshMessages: Messages = messagesApi.preferred(Seq(Lang("cy")))
 
-  protected lazy val agentUserRequest: AuthorisationRequest[AnyContent] =
-    anAuthorisationRequest.copy[AnyContent](aUser.copy(arn = Some("arn"), affinityGroup = AffinityGroup.Agent.toString))
+  protected lazy val agentUserRequest: AuthorisationRequest[AnyContent] = anAuthorisationRequest.copy(user = anAgentUser)
 
   protected def getMessages(isWelsh: Boolean): Messages = if (isWelsh) welshMessages else defaultMessages
 

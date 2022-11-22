@@ -14,15 +14,17 @@
  * limitations under the License.
  */
 
-package support.helpers
+package support.providers
 
-import java.time.LocalDate
+import support.utils.TaxYearUtils
 
-object TaxYearUtils {
+trait TaxYearProvider {
 
-  private val dateNow: LocalDate = LocalDate.now()
-  private val taxYearCutoffDate: LocalDate = LocalDate.parse(s"${dateNow.getYear}-04-05")
+  protected val taxYear: Int = TaxYearUtils.taxYear
+  protected val taxYearEOY: Int = TaxYearUtils.taxYearEOY
 
-  val taxYear: Int = if (dateNow.isAfter(taxYearCutoffDate)) LocalDate.now().getYear + 1 else LocalDate.now().getYear
-  val taxYearEOY: Int = taxYear - 1
+  protected val taxYearEndOfYearMinusOne: Int = taxYearEOY - 1
+
+  protected val validTaxYearListSingle: Seq[Int] = Seq(taxYear)
+  protected val validTaxYearList: Seq[Int] = Seq(taxYearEndOfYearMinusOne, taxYearEOY, taxYear)
 }

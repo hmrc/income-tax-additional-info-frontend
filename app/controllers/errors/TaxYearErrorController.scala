@@ -16,7 +16,7 @@
 
 package controllers.errors
 
-import actions.ActionsProvider
+import actions.AuthorisedAction
 import config.AppConfig
 import play.api.i18n.I18nSupport
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
@@ -26,12 +26,12 @@ import views.html.templates.TaxYearErrorTemplate
 
 import javax.inject.Inject
 
-class TaxYearErrorController @Inject()(actionsProvider: ActionsProvider,
+class TaxYearErrorController @Inject()(authorisedAction: AuthorisedAction,
                                        pageView: TaxYearErrorTemplate)
                                       (implicit mcc: MessagesControllerComponents, appConfig: AppConfig)
   extends FrontendController(mcc) with I18nSupport with SessionHelper with TaxYearHelper {
 
-  def show(): Action[AnyContent] = actionsProvider.authorisedAction() { implicit request =>
+  def show(): Action[AnyContent] = authorisedAction { implicit request =>
     Ok(pageView(firstClientTaxYear, latestClientTaxYear, singleValidTaxYear))
   }
 }

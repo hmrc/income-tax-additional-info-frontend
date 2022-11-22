@@ -26,12 +26,12 @@ object YesNoForm {
   val yes = "true"
   val no = "false"
 
-  def formatter(missingInputError: String): Formatter[Boolean] = new Formatter[Boolean] {
+  def formatter(missingInputError: String, errorArgs: Seq[Any] = Seq.empty): Formatter[Boolean] = new Formatter[Boolean] {
     override def bind(key: String, data: Map[String, String]): Either[Seq[FormError], Boolean] = {
       data.get(key) match {
         case Some(`yes`) => Right(true)
         case Some(`no`) => Right(false)
-        case _ => Left(Seq(FormError(key, missingInputError)))
+        case _ => Left(Seq(FormError(key, missingInputError, errorArgs)))
       }
     }
 
@@ -39,10 +39,7 @@ object YesNoForm {
       Map(key -> value.toString)
   }
 
-  def yesNoForm(missingInputError: String): Form[Boolean] = Form(
-    single(
-      yesNo -> of(formatter(missingInputError))
-    )
+  def yesNoForm(missingInputError: String, errorArgs: Seq[Any] = Seq.empty): Form[Boolean] = Form(
+    single(yesNo -> of(formatter(missingInputError, errorArgs)))
   )
-
 }

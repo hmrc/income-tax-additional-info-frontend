@@ -23,13 +23,12 @@ import play.api.Logger
 import play.api.mvc.Results.Redirect
 import play.api.mvc._
 
-import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
 // TODO: Refactor
-class TaxYearAction @Inject()(taxYear: Int,
-                              appConfig: AppConfig,
-                              ec: ExecutionContext)
+case class TaxYearAction(taxYear: Int,
+                         appConfig: AppConfig,
+                         ec: ExecutionContext)
   extends ActionRefiner[AuthorisationRequest, AuthorisationRequest] {
 
   override protected[actions] def executionContext: ExecutionContext = ec
@@ -45,11 +44,13 @@ class TaxYearAction @Inject()(taxYear: Int,
         if (sameTaxYear) {
           Right(request)
         } else {
-          logger.info("[TaxYearAction][refine] Tax year provided is different than that in session. Redirecting to overview.")
+          val logMessage = "[TaxYearAction][refine] Tax year provided is different than that in session. Redirecting to overview."
+          logger.info(logMessage)
           Left(Redirect(appConfig.incomeTaxSubmissionOverviewUrl(taxYear)).addingToSession(TAX_YEAR -> taxYear.toString))
         }
       } else {
-        logger.info(s"[TaxYearAction][refine] Invalid tax year, redirecting to error page")
+        val logMessage = s"[TaxYearAction][refine] Invalid tax year, redirecting to error page"
+        logger.info(logMessage)
         Left(Redirect(controllers.errors.routes.TaxYearErrorController.show))
       }
     }
@@ -58,7 +59,8 @@ class TaxYearAction @Inject()(taxYear: Int,
 
     Future.successful(
       if (validTaxYears.isEmpty) {
-        logger.info(s"[TaxYearAction][refine] Valid Tax Year list not in Session, return to start page")
+        val logMessage = s"[TaxYearAction][refine] Valid Tax Year list not in Session, return to start page"
+        logger.info(logMessage)
         Left(Redirect(appConfig.incomeTaxSubmissionStartUrl(taxYear)))
       } else {
         taxYearListCheck(validTaxYears.get.split(",").toSeq.map(_.toInt))

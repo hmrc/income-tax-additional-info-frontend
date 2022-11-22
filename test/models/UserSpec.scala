@@ -17,7 +17,7 @@
 package models
 
 import support.UnitTest
-import support.builders.models.UserBuilder.aUser
+import support.builders.UserBuilder.aUser
 
 class UserSpec extends UnitTest {
 
