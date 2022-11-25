@@ -21,19 +21,26 @@
 
 @(
     form: Form[_],
+    heading: String,
     items: Seq[RadioItem] = Seq(),
-    legendHidden: Boolean = false,
     legendAsHeading: Boolean = false,
+    headingMessageArgs: Seq[String] = Seq(),
     hint: Option[Html] = None,
-    classes: Option[String] = None,
+    classes: String = "govuk-fieldset__legend--xl",
     inline: Boolean = false,
+    subheading: Option[String] = None,
+    headingClasses: String = "govuk-!-margin-bottom-2",
     name: String = "value",
-    legendHeading: Option[Html] = None
+    content: Option[Html] = None
 )(implicit messages: Messages)
 
-
 @contentHtml = {
-    @legendHeading
+    @if(subheading.isDefined) {
+        @headingHelper(messages(heading, headingMessageArgs: _*), Some(subheading.get), headingClasses)
+    } else {
+        @messages(heading, headingMessageArgs:_*)
+    }
+    @content
 }
 
 @govukRadios(Radios(
@@ -43,7 +50,7 @@
         legend = Some(Legend(
             content = HtmlContent(contentHtml),
             isPageHeading = legendAsHeading,
-            classes = if(legendAsHeading) "govuk-label--l" else if (legendHidden) "govuk-visually-hidden" else ""
+            classes = classes
         ))
     )),
     hint = hint.map(hintHtml => Hint(

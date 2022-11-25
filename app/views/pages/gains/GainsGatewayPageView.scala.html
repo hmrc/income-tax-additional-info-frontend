@@ -1,0 +1,81 @@
+@*
+ * Copyright 2022 HM Revenue & Customs
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *@
+
+@import views.html.templates.Layout
+@import views.html.templates.helpers.Heading
+@import views.html.templates.helpers.InputText
+@import views.html.templates.helpers.Button
+@import views.html.templates.helpers.ErrorSummary
+@import views.html.templates.helpers.Link
+@import views.html.templates.helpers.InputRadio
+@import views.html.templates.helpers.P
+
+@import models.requests.AuthorisationRequest
+
+@this(
+        layout: Layout,
+        inputRadio: InputRadio,
+        heading: Heading,
+        errorSummary: ErrorSummary,
+        govukWarningText : GovukWarningText,
+        formWithCsrf: FormWithCSRF,
+        inputText: InputText,
+        button: Button,
+        link: Link,
+        p:P
+)
+
+@( form: Form[Boolean],taxYear: Int)(implicit request: AuthorisationRequest[_], messages: Messages, appConfig: AppConfig)
+
+@titleForUse = @{messages(s"gains.gateway.question.title")}
+
+@headingForUse = @{titleForUse}
+
+@layout(pageTitle = titleForUse, taxYear = Some(taxYear), hasErrors = form.hasErrors, isAgent = request.user.isAgent) {
+
+    @errorSummary(form.errors)
+
+    @heading(headingForUse, Some(messages("gains.caption", (taxYear - 1).toString, taxYear.toString)), "govuk-!-margin-bottom-5")
+
+    @p(Html(messages(s"gains.gateway.question.paragraph1.${if(request.user.isAgent) "agent" else "individual"}")),
+    classes = "govuk-body govuk-p1 govuk-!-margin-bottom-5")
+
+    <ul class="govuk-body govuk-list govuk-list--bullet">
+        <li>@messages("gains.gateway.question.bullet.1")</li>
+        <li>@messages("gains.gateway.question.bullet.2")</li>
+        <li>@messages("gains.gateway.question.bullet.3")</li>
+    </ul>
+
+@p(Html(messages(s"gains.gateway.question.paragraph2.${if(request.user.isAgent) "agent" else "individual"}")),
+classes = "govuk-body govuk-p2 govuk-!-margin-bottom-5")
+
+    @formWithCsrf(action = controllers.gains.routes.GainsGatewayController.submit(taxYear)) {
+
+@inputRadio(
+form = form,
+heading = messages(s"gains.gateway.question.radio.heading.${if(request.user.isAgent) "agent" else "individual"}"),
+classes = ("govuk-fieldset__legend--m"),
+inline = true
+)
+
+        @button()
+    }
+
+}
+
+@{
+    // $COVERAGE-OFF$
+}

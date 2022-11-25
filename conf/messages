@@ -1,4 +1,5 @@
 #################       Service messages       ########################################
+
 betaBar.banner.message.1 = This is a new service – your
 betaBar.banner.message.2 = feedback
 betaBar.banner.message.3 = will help us to improve it.
@@ -55,6 +56,21 @@ gains.customer-reference.question.paragraph.agent = Your client''s insurer or IS
 gains.customer-reference.question.hint = For example, ''INPOLY123A'’.
 gains.customer-reference.question.error-message.agent = Enter your client''s customer reference
 
+gains.gateway.question.title = Gains from policies and contracts
+gains.gateway.question.radio.heading.individual = Did you make a gain on a UK policy or contract?
+gains.gateway.question.paragraph1.individual = Your insurer will have sent you a chargeable event certificate if you made a gain on a:
+gains.gateway.question.bullet.1 = life insurance policy
+gains.gateway.question.bullet.2 = life annuity
+gains.gateway.question.bullet.3 = capital redemption policy
+gains.gateway.question.paragraph2.individual = You can tell us if your life insurance company or ISA manager have cancelled your ISA or life policy later.
+gains.gateway.question.error.individual = Select Yes if you made a gain on a UK policy or contract
+
+gains.gateway.question.radio.heading.agent = Did your client make a gain on a UK policy or contract?
+gains.gateway.question.paragraph1.agent = Your client''s insurer will have sent them a chargeable event certificate if they made a gain on a:
+gains.gateway.question.paragraph2.agent = You can tell us if your client''s life insurance company or ISA manager has cancelled their ISA or life policy later.
+gains.gateway.question.error.agent = Select yes if your client made a gain on a UK policy or contract
+
+
 #################       Error messages        ########################################
 common.error.self-assessment.paragraph.1.1 = If the web address is correct or you selected a link or button, you can use
 common.error.self-assessment.paragraph.1.2 = Self Assessment: general enquiries
@@ -89,6 +105,7 @@ taxYear-error-template.paragraph.1.single = You can only enter information for a
 taxYear-error-template.paragraph.2 = Check that you’ve entered the correct web address.
 
 #################       Timeout messages        ########################################
+
 timeout.button = Sign in
 timeout.heading = For your security, we signed you out
 timeout.p1 = We did not save your answers.

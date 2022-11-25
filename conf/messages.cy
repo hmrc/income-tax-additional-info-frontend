@@ -1,4 +1,5 @@
 #################       Service messages       ########################################
+
 betaBar.banner.message.1 = This is a new service – your
 betaBar.banner.message.2 = feedback
 betaBar.banner.message.3 = will help us to improve it.
@@ -25,10 +26,10 @@ common.addedByHmrc = Added by HMRC
 common.back = Back
 common.change = Change
 common.completed = Completed
-common.continue = Continue
+common.continue = Yn eich blaen
 common.dateRange = {0} to {1}
 common.error.errorKey = Error:
-common.help.getHelpWithThisPage = Get help with this page
+common.help.getHelpWithThisPage = Help gyda’r dudalen hon
 common.inProgress = In progress
 common.no = Na
 common.notStarted = Not started
@@ -55,7 +56,23 @@ gains.customer-reference.question.paragraph.agent = Dylai yswiriwr neu reolwr IS
 gains.customer-reference.question.hint = Er enghraifft, ''INPOLY123A'’.
 gains.customer-reference.question.error-message.agent = Nodwch gyfeirnod cwsmer eich cleient
 
+
+gains.gateway.question.title = Enillion o bolisïau a chontractau
+gains.gateway.question.radio.heading.individual = A wnaethoch chi ennill ar bolisi neu gytundeb y DU?
+gains.gateway.question.paragraph1.individual = Bydd eich yswiriwr wedi anfon tystysgrif digwyddiad trethadwy, os gwnaethoch ennill ar un o’r canlynol:
+gains.gateway.question.bullet.1 = polisi yswiriant bywyd
+gains.gateway.question.bullet.2 = blwydd-dal bywyd
+gains.gateway.question.bullet.3 = polisi adbryniant cyfalaf
+gains.gateway.question.paragraph2.individual = Gallwch roi gwybod i ni os yw’ch cwmni yswiriant bywyd neu reolwr ISA wedi canslo’ch ISA neu bolisi bywyd nes ymlaen.
+gains.gateway.question.error.individual = Dewiswch ‘Iawn’ os gwnaethoch enillion ar bolisi neu gontract yn y DU
+
+gains.gateway.question.radio.heading.agent = A wnaeth eich cleient enillion ar bolisi neu gontract yn y DU?
+gains.gateway.question.paragraph1.agent = Bydd yswiriwr eich cleient wedi anfon tystysgrif digwyddiad trethadwy ato, os gwnaeth enillion ar un o’r canlynol:
+gains.gateway.question.paragraph2.agent = Gallwch roi gwybod i ni os yw cwmni yswiriant bywyd eich cleient, neu reolwr ISA eich cleient, wedi canslo ei ISA neu bolisi bywyd nes ymlaen.
+gains.gateway.question.error.agent = Dewiswch ‘Iawn’ os gwnaeth eich cleient enillion ar bolisi neu gontract yn y DU
+
 #################       Error messages        ########################################
+
 common.error.self-assessment.paragraph.1.1 = If the web address is correct or you selected a link or button, you can use
 common.error.self-assessment.paragraph.1.2 = Self Assessment: general enquiries
 common.error.self-assessment.paragraph.1.3 = to speak to someone about your income tax
@@ -89,6 +106,7 @@ taxYear-error-template.paragraph.1.single = You can only enter information for a
 taxYear-error-template.paragraph.2 = Check that you’ve entered the correct web address.
 
 #################       Timeout messages        ########################################
+
 timeout.button = Sign in
 timeout.heading = For your security, we signed you out
 timeout.p1 = We did not save your answers.
