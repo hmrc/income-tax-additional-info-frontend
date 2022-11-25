@@ -62,8 +62,8 @@ class CustomerReferencePageViewSpec extends ViewUnitTest {
   object CommonExpectedCY extends CommonExpectedResults {
     override val expectedCaption: Int => String = (taxYear: Int) => s"Enillion o bolisïau ar gyfer 6 Ebrill ${taxYear - 1} i 5 Ebrill $taxYear"
     override val expectedHint: String = "Er enghraifft, 'INPOLY123A’."
-    override val expectedButtonText: String = "Continue"
-    override val expectedHelpLinkText: String = "Get help with this page"
+    override val expectedButtonText: String = "Yn eich blaen"
+    override val expectedHelpLinkText: String = "Help gyda’r dudalen hon"
   }
 
   object ExpectedIndividualEN extends SpecificExpectedResults {
