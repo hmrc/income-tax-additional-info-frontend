@@ -40,7 +40,7 @@ class AuthorisedAction @Inject()(authService: AuthorisationService,
                                 (implicit ec: ExecutionContext)
   extends ActionBuilder[AuthorisationRequest, AnyContent] with Logging {
 
-  private val minimumConfidenceLevel: Int = ConfidenceLevel.L200.level
+  private val minimumConfidenceLevel: Int = ConfidenceLevel.L250.level
 
   override protected[actions] def executionContext: ExecutionContext = ec
 
@@ -86,7 +86,7 @@ class AuthorisedAction @Inject()(authService: AuthorisationService,
             Future.successful(Redirect(IndividualAuthErrorController.show))
         }
       case _ =>
-        val logMessage = "[AuthorisedAction][individualAuthentication] User has confidence level below 200, routing user to IV uplift."
+        val logMessage = "[AuthorisedAction][individualAuthentication] User has confidence level below 250, routing user to IV uplift."
         logger.info(logMessage)
         Future(Redirect(appConfig.incomeTaxSubmissionIvRedirect))
     }

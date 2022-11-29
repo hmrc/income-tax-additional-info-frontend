@@ -53,6 +53,6 @@ trait MockAuthorisationService extends MockAuthConnector {
     ))
 
     mockAuthorise(Retrievals.affinityGroup, Some(AffinityGroup.Individual))
-    mockAuthorise(Retrievals.allEnrolments and Retrievals.confidenceLevel, enrolments and ConfidenceLevel.L200)
+    mockAuthorise(Retrievals.allEnrolments and Retrievals.confidenceLevel, enrolments and ConfidenceLevel.L250)
   }
 }
