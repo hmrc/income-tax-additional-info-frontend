@@ -71,6 +71,16 @@ gains.gateway.question.paragraph1.agent = Bydd yswiriwr eich cleient wedi anfon 
 gains.gateway.question.paragraph2.agent = Gallwch roi gwybod i ni os yw cwmni yswiriant bywyd eich cleient, neu reolwr ISA eich cleient, wedi canslo ei ISA neu bolisi bywyd nes ymlaen.
 gains.gateway.question.error.agent = Dewiswch ‘Iawn’ os gwnaeth eich cleient enillion ar bolisi neu gontract yn y DU
 
+gains.policy-event.question.title = Digwyddiad polisi
+gains.policy-event.question.paragraph1 = Yr achosion mwyaf cyffredin o enillion yw:
+gains.policy-event.question.bullet.1 = os cafwyd arian parod neu fudd-daliadau eraill wrth ildio polisi’n llawn neu’n rhannol
+gains.policy-event.question.bullet.2 = gwnaeth polisi aeddfedu neu ddod i ben oherwydd marwolaeth y bywyd a yswiriwyd
+gains.policy-event.question.bullet.3 = gwerthwyd neu neilltuwyd polisi yn y DU, neu ran o bolisi, ar gyfer gwerth
+gains.policy-event.question.bullet.4 = roedd y polisi yn Bondiau Portffolio Personol, hyd yn oed os nad oedd yr yswiriwr wedi talu arian parod na budd-daliadau eraill yn ystod y flwyddyn
+gains.policy-event.question.label = Beth achosodd yr ennill hwn?
+gains.policy-event.question.hint = Er enghraifft, aeddfedodd polisi, ildiodd y polisi’n rhannol neu bu farw briod.
+gains.policy-event.question.error-message = Nodwch y rheswm dros yr enillion hyn. Er enghraifft, aeddfedodd polisi, ildiad rhannol o’r polisi neu farwolaeth y priod
+
 gains.status.question.radio.heading.individual = A ydych wedi gwneud ennill o’r polisi hwn o’r blaen?
 gains.status.question.radio.error.noEntry.individual = Dewiswch ‘Iawn’ os ydych wedi gwneud ennill ar y polisi hwn o’r blaen
 gains.status.question.input.year.label.individual = Sawl blwyddyn sydd wedi bod ers eich ennill diwethaf?

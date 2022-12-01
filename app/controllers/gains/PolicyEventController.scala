@@ -23,26 +23,26 @@ import play.api.data.Form
 import play.api.i18n.I18nSupport
 import play.api.mvc._
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
-import views.html.pages.gains.CustomerReferencePageView
+import views.html.pages.gains.PolicyEventPageView
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class CustomerReferenceController @Inject()(authorisedAction: AuthorisedAction,
-                                            view: CustomerReferencePageView)
-                                           (implicit appConfig: AppConfig, mcc: MessagesControllerComponents, ec: ExecutionContext)
+class PolicyEventController @Inject()(authorisedAction: AuthorisedAction,
+                                      view: PolicyEventPageView)
+                                     (implicit appConfig: AppConfig, mcc: MessagesControllerComponents, ec: ExecutionContext)
   extends FrontendController(mcc) with I18nSupport {
 
-  def customerReferenceForm(isAgent: Boolean): Form[String] = InputFieldForm.inputFieldForm(isAgent,
-    s"gains.customer-reference.question.error-message.${if (isAgent) "agent" else "individual"}")
+  def policyEventForm(isAgent: Boolean): Form[String] = InputFieldForm.inputFieldForm(isAgent,
+    s"gains.policy-event.question.error-message")
 
   def show(taxYear: Int): Action[AnyContent] = authorisedAction.async { implicit request =>
-    Future.successful(Ok(view(taxYear, customerReferenceForm(request.user.isAgent))))
+    Future.successful(Ok(view(taxYear, policyEventForm(request.user.isAgent))))
   }
 
   def submit(taxYear: Int): Action[AnyContent] = authorisedAction.async { implicit request =>
-    customerReferenceForm(request.user.isAgent).bindFromRequest().fold(
+    policyEventForm(request.user.isAgent).bindFromRequest().fold(
       formWithErrors =>
         Future.successful(BadRequest(view(taxYear, formWithErrors))),
       _ =>

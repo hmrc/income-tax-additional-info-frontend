@@ -16,7 +16,7 @@
 
 package views.pages.gains
 
-import forms.gains.CustomerReferenceForm
+import forms.gains.InputFieldForm
 import models.requests.AuthorisationRequest
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
@@ -31,10 +31,10 @@ class CustomerReferencePageViewSpec extends ViewUnitTest {
 
   object Selectors {
     val paragraph = "#main-content > div > div > p"
-    val customerReferenceNumberHint = "#customerReferenceNumber-hint"
+    val customerReferenceNumberHint = "#value-hint"
     val continueButton = "#continue"
     val getHelpLink = "#help"
-    val customerReferenceErrorHref = "#customerReferenceNumber"
+    val customerReferenceErrorHref = "#value"
   }
 
   trait SpecificExpectedResults {
@@ -111,7 +111,8 @@ class CustomerReferencePageViewSpec extends ViewUnitTest {
         implicit val userPriorDataRequest: AuthorisationRequest[AnyContent] = getAuthRequest(userScenario.isAgent)
         implicit val messages: Messages = getMessages(userScenario.isWelsh)
 
-        implicit val document: Document = Jsoup.parse(page(taxYear, CustomerReferenceForm.customerReferenceForm(userScenario.isAgent)).body)
+        implicit val document: Document = Jsoup.parse(page(taxYear, InputFieldForm.inputFieldForm(userScenario.isAgent,
+          s"gains.customer-reference.question.error-message.${if (userScenario.isAgent) "agent" else "individual"}")).body)
 
         welshToggleCheck(userScenario.isWelsh)
         titleCheck(userScenario.specificExpectedResults.get.expectedTitle, userScenario.isWelsh)
@@ -131,7 +132,8 @@ class CustomerReferencePageViewSpec extends ViewUnitTest {
         implicit val userPriorDataRequest: AuthorisationRequest[AnyContent] = getAuthRequest(userScenario.isAgent)
         implicit val messages: Messages = getMessages(userScenario.isWelsh)
 
-        implicit val document: Document = Jsoup.parse(page(taxYear, CustomerReferenceForm.customerReferenceForm(userScenario.isAgent).bind(Map(CustomerReferenceForm.CustomerReference -> ""))).body)
+        implicit val document: Document = Jsoup.parse(page(taxYear, InputFieldForm.inputFieldForm(userScenario.isAgent,
+          s"gains.customer-reference.question.error-message.${if (userScenario.isAgent) "agent" else "individual"}").bind(Map(InputFieldForm.value -> ""))).body)
 
         welshToggleCheck(userScenario.isWelsh)
         titleCheck(userScenario.specificExpectedResults.get.expectedErrorTitle, userScenario.isWelsh)
