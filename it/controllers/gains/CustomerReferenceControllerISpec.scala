@@ -16,7 +16,7 @@
 
 package controllers.gains
 
-import forms.gains.CustomerReferenceForm
+import forms.gains.InputFieldForm
 import play.api.http.HeaderNames
 import play.api.http.Status.{BAD_REQUEST, OK, SEE_OTHER}
 import play.api.libs.ws.WSResponse
@@ -43,7 +43,7 @@ class CustomerReferenceControllerISpec extends IntegrationTest {
     "redirect to income tax submission overview if successful" in {
       lazy val result: WSResponse = {
         authoriseAgentOrIndividual(isAgent = false)
-        urlPost(url(taxYear), headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)), body = Map(CustomerReferenceForm.CustomerReference -> "text"))
+        urlPost(url(taxYear), headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)), body = Map(InputFieldForm.value -> "text"))
       }
 
       result.status shouldBe SEE_OTHER

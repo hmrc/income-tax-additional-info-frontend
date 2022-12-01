@@ -18,7 +18,7 @@ package controllers.gains
 
 import actions.AuthorisedAction
 import config.AppConfig
-import forms.gains.CustomerReferenceForm
+import forms.gains.InputFieldForm
 import play.api.data.Form
 import play.api.i18n.I18nSupport
 import play.api.mvc._
@@ -34,7 +34,8 @@ class CustomerReferenceController @Inject()(authorisedAction: AuthorisedAction,
                                            (implicit appConfig: AppConfig, mcc: MessagesControllerComponents, ec: ExecutionContext)
   extends FrontendController(mcc) with I18nSupport {
 
-  def customerReferenceForm(isAgent: Boolean): Form[String] = CustomerReferenceForm.customerReferenceForm(isAgent)
+  def customerReferenceForm(isAgent: Boolean): Form[String] = InputFieldForm.inputFieldForm(isAgent,
+    s"gains.customer-reference.question.error-message.${if (isAgent) "agent" else "individual"}")
 
   def show(taxYear: Int): Action[AnyContent] = authorisedAction.async { implicit request =>
     Future.successful(Ok(view(taxYear, customerReferenceForm(request.user.isAgent))))
