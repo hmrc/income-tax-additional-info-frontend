@@ -94,6 +94,15 @@ gains.gateway.question.paragraph1.agent = Your client''s insurer will have sent 
 gains.gateway.question.paragraph2.agent = You can tell us if your client''s life insurance company or ISA manager has cancelled their ISA or life policy later.
 gains.gateway.question.error.agent = Select yes if your client made a gain on a UK policy or contract
 
+gains.policy-event.question.title = Policy event
+gains.policy-event.question.paragraph1 = The most common causes of gains are if:
+gains.policy-event.question.bullet.1 = cash or other benefits were received on a full or part surrender of a policy
+gains.policy-event.question.bullet.2 = a policy matured or ended by the death of the life insured
+gains.policy-event.question.bullet.3 = there was a sale of assignment of a UK policy, or part of a policy, for value
+gains.policy-event.question.bullet.4 = the policy was a Personal Portfolio Bond, even if the insurer had not paid cash or other benefits during the year
+gains.policy-event.question.label = What caused this gain?
+gains.policy-event.question.hint = For example, policy matured, part surrender of policy or death of spouse.
+gains.policy-event.question.error-message = Enter the reason for this gain.  For example, policy matured, part surrender of the policy or death of spouse
 
 #################       Error messages        ########################################
 common.error.self-assessment.paragraph.1.1 = If the web address is correct or you selected a link or button, you can use

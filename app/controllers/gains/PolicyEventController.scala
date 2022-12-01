@@ -18,35 +18,35 @@ package controllers.gains
 
 import actions.AuthorisedAction
 import config.AppConfig
-import forms.YesNoForm
+import forms.gains.InputFieldForm
 import play.api.data.Form
 import play.api.i18n.I18nSupport
 import play.api.mvc._
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
-import views.html.pages.gains.GainsGatewayPageView
+import views.html.pages.gains.PolicyEventPageView
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class GainsGatewayController @Inject()(authorisedAction: AuthorisedAction,
-                                       view: GainsGatewayPageView)
-                                      (implicit appConfig: AppConfig, mcc: MessagesControllerComponents, ec: ExecutionContext)
+class PolicyEventController @Inject()(authorisedAction: AuthorisedAction,
+                                      view: PolicyEventPageView)
+                                     (implicit appConfig: AppConfig, mcc: MessagesControllerComponents, ec: ExecutionContext)
   extends FrontendController(mcc) with I18nSupport {
 
-  def form(isAgent: Boolean): Form[Boolean] = YesNoForm.yesNoForm(
-    s"gains.gateway.question.error.${if (isAgent) "agent" else "individual"}")
+  def policyEventForm(isAgent: Boolean): Form[String] = InputFieldForm.inputFieldForm(isAgent,
+    s"gains.policy-event.question.error-message")
 
   def show(taxYear: Int): Action[AnyContent] = authorisedAction.async { implicit request =>
-    Future.successful(Ok(view(form(request.user.isAgent),taxYear)))
+    Future.successful(Ok(view(taxYear, policyEventForm(request.user.isAgent))))
   }
 
   def submit(taxYear: Int): Action[AnyContent] = authorisedAction.async { implicit request =>
-    form(request.user.isAgent).bindFromRequest().fold(formWithErrors =>{
-        Future.successful(BadRequest(view(formWithErrors,taxYear)))
-  }, {
-    yesNoValue =>
-        Future.successful(Ok)
-      })
+    policyEventForm(request.user.isAgent).bindFromRequest().fold(
+      formWithErrors =>
+        Future.successful(BadRequest(view(taxYear, formWithErrors))),
+      _ =>
+        Future(Redirect(appConfig.incomeTaxSubmissionOverviewUrl(taxYear)))
+    )
   }
 }
