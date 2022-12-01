@@ -22,15 +22,14 @@ import play.api.data.Form
 import play.api.data.validation.Constraint
 import play.api.data.validation.Constraints.nonEmpty
 
-object CustomerReferenceForm extends InputFilters {
+object InputFieldForm extends InputFilters {
 
-  val CustomerReference: String = "customerReferenceNumber"
+  val value: String = "value"
 
-  def notEmpty(isAgent: Boolean): Constraint[String] =
-    nonEmpty(s"gains.customer-reference.question.error-message.${if (isAgent) "agent" else "individual"}")
+  def notEmpty(isAgent: Boolean, errorMessage: String): Constraint[String] = nonEmpty(errorMessage)
 
-  def customerReferenceForm(isAgent: Boolean): Form[String] = Form(
-    CustomerReference -> trimmedText.transform[String](filter, identity).verifying(notEmpty(isAgent))
+  def inputFieldForm(isAgent: Boolean, errorMessage: String): Form[String] = Form(
+    value -> trimmedText.transform[String](filter, identity).verifying(notEmpty(isAgent, errorMessage))
   )
 
 }
