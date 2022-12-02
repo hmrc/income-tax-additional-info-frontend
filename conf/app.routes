@@ -24,10 +24,12 @@ GET        /error/not-authorised-to-use-service             controllers.errors.U
 
 GET        /error/you-need-agent-services-account           controllers.errors.YouNeedAgentServicesController.show
 
-
 ###########################     Gains pages     ####################################
 GET         /:taxYear/gains/policy-name                     controllers.gains.CustomerReferenceController.show(taxYear: Int)
 POST        /:taxYear/gains/policy-name                     controllers.gains.CustomerReferenceController.submit(taxYear: Int)
 
 GET         /:taxYear/gains/gains-gateway                   controllers.gains.GainsGatewayController.show(taxYear: Int)
 POST        /:taxYear/gains/gains-gateway                   controllers.gains.GainsGatewayController.submit(taxYear: Int)
+
+GET         /:taxYear/gains/gains-amount                    controllers.gains.GainsAmountController.show(taxYear: Int)
+POST        /:taxYear/gains/gains-amount                    controllers.gains.GainsAmountController.submit(taxYear: Int)

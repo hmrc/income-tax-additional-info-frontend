@@ -45,6 +45,24 @@ common.error.invalid_currency_format = Enter the amount in the correct format
 gains.caption = Enillion o bolisïau ar gyfer 6 Ebrill {0} i 5 Ebrill {1}
 
 #################       Gains messages       ########################################
+gains.gain-amount.question.title = Enillion ar ddigwyddiad trethadwy
+gains.gain-amount.question.paragraph.1.individual = Nodwch y swm a ddangosir ar y dystysgrif digwyddiad trethadwy a ddarperir gan eich yswiriwr.
+gains.gain-amount.question.paragraph.2.individual = Os ydych yn gydberchennog ar y polisi neu’r blwydd-dal, nodwch eich cyfran o’r elw.
+gains.gain-amount.question.paragraph.1.agent = Nodwch y swm a ddangosir ar y dystysgrif digwyddiad trethadwy a ddarperir gan yswiriwr neu reolwr ISA eich cleient.
+gains.gain-amount.question.paragraph.2.agent = Os yw’ch cleient yn berchen y polisi neu’r blwydd-dal ar y cyd, nodwch ei ran o’r enillion.
+gains.gain-amount.question.heading = Enillion ar ddigwyddiad trethadwy
+gains.gain-amount.question.label.individual = Faint o ennill gwnaethoch chi?
+gains.gain-amount.question.label.agent = Faint oedd enillion eich cleient?
+gains.gain-amount.question.hint = Er enghraifft, £193.54
+gains.gain-amount.question.error-message.individual = Nodwch eich ennill. Er enghraifft, £193.54
+gains.gain-amount.question.error-message.agent = Nodwch enillion eich cleient. Er enghraifft, £193.54
+
+gains.gain-amount.question.summary-text = Pryd i ostwng yr elw
+gains.gain-amount.question.details-text = Bydd angen i chi gyfrifo gostyngiad os yw’r canlynol yn wir:
+gains.gain-amount.question.bullet.1 = Mae’ch polisi yn gymwys ar gyfer rhyddhad cyfyngedig
+gains.gain-amount.question.bullet.2 = Roeddech yn berson nad oedd yn breswyl yn y DU tra roeddech yn berchennog llesol ar y polisi
+gains.gain-amount.question.link.text = Dysgwch ragor am ostwng enillion ar ddigwyddiad trethadwy (yn agor tab newydd)
+
 gains.customer-reference.question.title.individual = Beth yw’ch cyfeirnod cwsmer?
 gains.customer-reference.question.paragraph.individual = Dylai’ch yswiriwr neu reolwr ISA fod wedi rhoi cyfeirnod cwsmer i chi ar gyfer eich ISA neu’ch polisi bywyd a ganslwyd.
 gains.customer-reference.question.label = Cyfeirnod y cwsmer

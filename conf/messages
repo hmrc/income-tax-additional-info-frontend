@@ -45,6 +45,24 @@ common.error.invalid_currency_format = Enter the amount in the correct format
 gains.caption = Gains from policies for 6 April {0} to 5 April {1}
 
 #################       Gains messages       ########################################
+gains.gain-amount.question.title = Chargeable event gain
+gains.gain-amount.question.paragraph.1.individual = Enter the amount shown on the chargeable event certificate provided by your insurer.
+gains.gain-amount.question.paragraph.2.individual = If you are a joint owner of the policy or annuity, enter your share of the gain.
+gains.gain-amount.question.paragraph.1.agent = Enter the amount shown on the chargeable event certificate provided by your client’s insurer.
+gains.gain-amount.question.paragraph.2.agent = If your client is a joint owner of the policy or annuity, enter their share of the gain.
+gains.gain-amount.question.heading = Chargeable event gain
+gains.gain-amount.question.label.individual = How much gain did you make?
+gains.gain-amount.question.label.agent = How much gain did your client make?
+gains.gain-amount.question.hint = For example, £193.54
+gains.gain-amount.question.error-message.individual = Enter the gain you made. For example, £193.54
+gains.gain-amount.question.error-message.agent = Enter the gain your client made. For example, £193.54
+
+gains.gain-amount.question.summary-text = When to reduce the gain
+gains.gain-amount.question.details-text = You will need to calculate a reduction if:
+gains.gain-amount.question.bullet.1 = your policy qualifies for restricted relief
+gains.gain-amount.question.bullet.2 = you were a non-UK resident while you were a beneficial owner of the policy
+gains.gain-amount.question.link.text = Find out more about reducing chargeable event gains (opens in new tab)
+
 gains.customer-reference.question.title.individual = What''s your customer reference?
 gains.customer-reference.question.paragraph.individual = Your insurer or ISA manager should have given you a customer reference for your policy or contract.
 gains.customer-reference.question.label = Customer reference
