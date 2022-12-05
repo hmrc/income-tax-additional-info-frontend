@@ -50,7 +50,6 @@ gains.gain-amount.question.paragraph.1.individual = Nodwch y swm a ddangosir ar 
 gains.gain-amount.question.paragraph.2.individual = Os ydych yn gydberchennog ar y polisi neu’r blwydd-dal, nodwch eich cyfran o’r elw.
 gains.gain-amount.question.paragraph.1.agent = Nodwch y swm a ddangosir ar y dystysgrif digwyddiad trethadwy a ddarperir gan yswiriwr neu reolwr ISA eich cleient.
 gains.gain-amount.question.paragraph.2.agent = Os yw’ch cleient yn berchen y polisi neu’r blwydd-dal ar y cyd, nodwch ei ran o’r enillion.
-gains.gain-amount.question.heading = Enillion ar ddigwyddiad trethadwy
 gains.gain-amount.question.label.individual = Faint o ennill gwnaethoch chi?
 gains.gain-amount.question.label.agent = Faint oedd enillion eich cleient?
 gains.gain-amount.question.hint = Er enghraifft, £193.54

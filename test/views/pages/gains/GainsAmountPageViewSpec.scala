@@ -30,8 +30,8 @@ class GainsAmountPageViewSpec extends ViewUnitTest {
   private val page: GainsAmountPageView = inject[GainsAmountPageView]
 
   object Selectors {
-    val paragraph1 = "#main-content > div > div > p:nth-child(3)"
-    val paragraph2 = "#main-content > div > div > p:nth-child(4)"
+    val paragraph1 = "#gains-amount-paragraph-1"
+    val paragraph2 = "#gains-amount-paragraph-2"
     val gainsAmountNumberHint = "#gainAmountNumber-hint"
     val continueButton = "#continue"
     val getHelpLink = "#help"
@@ -47,7 +47,6 @@ class GainsAmountPageViewSpec extends ViewUnitTest {
 
   trait CommonExpectedResults {
     val expectedHint: String
-    val expectedHeading: String
     val expectedTitle: String
     val expectedCaption: Int => String
     val expectedButtonText: String
@@ -64,7 +63,6 @@ class GainsAmountPageViewSpec extends ViewUnitTest {
     override val expectedHint: String = "For example, £193.54"
     override val expectedButtonText: String = "Continue"
     override val expectedHelpLinkText: String = "Get help with this page"
-    override val expectedHeading: String = "Chargeable event gain"
     override val expectedTitle: String = "Chargeable event gain"
     override val expectedSummaryText: String = "When to reduce the gain"
     override val expectedDetailsText: String = "You will need to calculate a reduction if:"
@@ -78,7 +76,6 @@ class GainsAmountPageViewSpec extends ViewUnitTest {
     override val expectedHint: String = "Er enghraifft, £193.54"
     override val expectedButtonText: String = "Yn eich blaen"
     override val expectedHelpLinkText: String = "Help gyda’r dudalen hon"
-    override val expectedHeading: String = "Enillion ar ddigwyddiad trethadwy"
     override val expectedTitle: String = "Enillion ar ddigwyddiad trethadwy"
     override val expectedSummaryText: String = "Pryd i ostwng yr elw"
     override val expectedDetailsText: String = "Bydd angen i chi gyfrifo gostyngiad os yw’r canlynol yn wir:"
@@ -134,7 +131,7 @@ class GainsAmountPageViewSpec extends ViewUnitTest {
         welshToggleCheck(userScenario.isWelsh)
         titleCheck(userScenario.commonExpectedResults.expectedTitle, userScenario.isWelsh)
         captionCheck(userScenario.commonExpectedResults.expectedCaption(taxYear))
-        h1Check(userScenario.commonExpectedResults.expectedHeading)
+        h1Check(userScenario.commonExpectedResults.expectedTitle)
         textOnPageCheck(userScenario.specificExpectedResults.get.expectedParagraph1, Selectors.paragraph1)
         textOnPageCheck(userScenario.specificExpectedResults.get.expectedParagraph2, Selectors.paragraph2)
         textOnPageCheck(userScenario.commonExpectedResults.expectedHint, Selectors.gainsAmountNumberHint)
@@ -154,7 +151,7 @@ class GainsAmountPageViewSpec extends ViewUnitTest {
 
         welshToggleCheck(userScenario.isWelsh)
         captionCheck(userScenario.commonExpectedResults.expectedCaption(taxYear))
-        h1Check(userScenario.commonExpectedResults.expectedHeading)
+        h1Check(userScenario.commonExpectedResults.expectedTitle)
         textOnPageCheck(userScenario.specificExpectedResults.get.expectedParagraph1, Selectors.paragraph1)
         textOnPageCheck(userScenario.specificExpectedResults.get.expectedParagraph2, Selectors.paragraph2)
         textOnPageCheck(userScenario.commonExpectedResults.expectedHint, Selectors.gainsAmountNumberHint)

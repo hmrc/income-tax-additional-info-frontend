@@ -50,9 +50,9 @@ gains.gain-amount.question.paragraph.1.individual = Enter the amount shown on th
 gains.gain-amount.question.paragraph.2.individual = If you are a joint owner of the policy or annuity, enter your share of the gain.
 gains.gain-amount.question.paragraph.1.agent = Enter the amount shown on the chargeable event certificate provided by your client’s insurer.
 gains.gain-amount.question.paragraph.2.agent = If your client is a joint owner of the policy or annuity, enter their share of the gain.
-gains.gain-amount.question.heading = Chargeable event gain
 gains.gain-amount.question.label.individual = How much gain did you make?
 gains.gain-amount.question.label.agent = How much gain did your client make?
+#Move to common messgaes
 gains.gain-amount.question.hint = For example, £193.54
 gains.gain-amount.question.error-message.individual = Enter the gain you made. For example, £193.54
 gains.gain-amount.question.error-message.agent = Enter the gain your client made. For example, £193.54

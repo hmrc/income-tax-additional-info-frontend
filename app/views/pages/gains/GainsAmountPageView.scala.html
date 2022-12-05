@@ -44,18 +44,12 @@ link: Link
 
 @errorSummary(form.errors)
 
-@heading(headingForUse, Some(messages("gains.caption", (taxYear - 1).toString, taxYear.toString)), "govuk-!-margin-bottom-2")
+@heading(headingForUse, Some(messages("gains.caption", (taxYear - 1).toString, taxYear.toString)), "govuk-!-margin-bottom-6")
 
-<br>
-<p class="govuk-body">@messages(s"gains.gain-amount.question.paragraph.1.${if(request.user.isAgent) "agent" else "individual"}")</p>
+<p class="govuk-body" id="gains-amount-paragraph-1">@messages(s"gains.gain-amount.question.paragraph.1.${if(request.user.isAgent) "agent" else "individual"}")</p>
 
-<p class="govuk-body">@messages(s"gains.gain-amount.question.paragraph.2.${if(request.user.isAgent) "agent" else "individual"}")</p>
+<p class="govuk-body" id="gains-amount-paragraph-2">@messages(s"gains.gain-amount.question.paragraph.2.${if(request.user.isAgent) "agent" else "individual"}")</p>
 
-<label class="govuk-label govuk-label--m" for="gains-amount">
-
-    @{messages(s"gains.gain-amount.question.label.${if(request.user.isAgent) "agent" else "individual"}")}
-
-</label>
 
 @formWithCsrf(action = controllers.gains.routes.GainsAmountController.submit(taxYear)) {
 @inputText(
@@ -63,8 +57,9 @@ form = form,
 id = "gainAmountNumber",
 name = "gainAmountNumber",
 currency = true,
-label = "gains.gain-amount.question.label",
-labelHidden = true,
+label = messages(s"gains.gain-amount.question.label.${if(request.user.isAgent) "agent" else "individual"}"),
+labelClasses = Some("govuk-label--m"),
+labelHidden = false,
 classes = Some("govuk-input--width-10"),
 hint = Some(messages(s"gains.gain-amount.question.hint"))
 )
