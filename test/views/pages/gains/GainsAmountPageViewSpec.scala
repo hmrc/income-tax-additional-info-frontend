@@ -36,6 +36,12 @@ class GainsAmountPageViewSpec extends ViewUnitTest {
     val continueButton = "#continue"
     val getHelpLink = "#help"
     val gainsAmountErrorHref = "#gainAmountNumber"
+    val summaryText = "#gains-amount-summary-text"
+    val detailsText = "#gains-amount-details-text"
+    val bullet1 = "#gains-amount-bullet-1"
+    val bullet2 = "#gains-amount-bullet-2"
+    val urlLinkText = "#gains-amount-url-text"
+
   }
 
   trait SpecificExpectedResults {
@@ -59,7 +65,7 @@ class GainsAmountPageViewSpec extends ViewUnitTest {
   }
 
   object CommonExpectedEN extends CommonExpectedResults {
-    override val expectedCaption: Int => String = (taxYear: Int) => s"Gains from policies for 6 April ${taxYear - 1} to 5 April $taxYear"
+    override val expectedCaption: Int => String = (taxYear: Int) => s"Gains from life insurance policies for 6 April ${taxYear - 1} to 5 April $taxYear"
     override val expectedHint: String = "For example, £193.54"
     override val expectedButtonText: String = "Continue"
     override val expectedHelpLinkText: String = "Get help with this page"
@@ -135,6 +141,11 @@ class GainsAmountPageViewSpec extends ViewUnitTest {
         textOnPageCheck(userScenario.specificExpectedResults.get.expectedParagraph1, Selectors.paragraph1)
         textOnPageCheck(userScenario.specificExpectedResults.get.expectedParagraph2, Selectors.paragraph2)
         textOnPageCheck(userScenario.commonExpectedResults.expectedHint, Selectors.gainsAmountNumberHint)
+        textOnPageCheck(userScenario.commonExpectedResults.expectedSummaryText, Selectors.summaryText)
+        textOnPageCheck(userScenario.commonExpectedResults.expectedDetailsText, Selectors.detailsText)
+        textOnPageCheck(userScenario.commonExpectedResults.expectedBullet1, Selectors.bullet1)
+        textOnPageCheck(userScenario.commonExpectedResults.expectedBullet2, Selectors.bullet2)
+        textOnPageCheck(userScenario.commonExpectedResults.expectedURLLinkText, Selectors.urlLinkText)
         buttonCheck(userScenario.commonExpectedResults.expectedButtonText, Selectors.continueButton)
         linkCheck(userScenario.commonExpectedResults.expectedHelpLinkText, Selectors.getHelpLink, appConfig.contactUrl(userScenario.isAgent))
       }
@@ -155,9 +166,13 @@ class GainsAmountPageViewSpec extends ViewUnitTest {
         textOnPageCheck(userScenario.specificExpectedResults.get.expectedParagraph1, Selectors.paragraph1)
         textOnPageCheck(userScenario.specificExpectedResults.get.expectedParagraph2, Selectors.paragraph2)
         textOnPageCheck(userScenario.commonExpectedResults.expectedHint, Selectors.gainsAmountNumberHint)
+        textOnPageCheck(userScenario.commonExpectedResults.expectedSummaryText, Selectors.summaryText)
+        textOnPageCheck(userScenario.commonExpectedResults.expectedDetailsText, Selectors.detailsText)
+        textOnPageCheck(userScenario.commonExpectedResults.expectedBullet1, Selectors.bullet1)
+        textOnPageCheck(userScenario.commonExpectedResults.expectedBullet2, Selectors.bullet2)
+        textOnPageCheck(userScenario.commonExpectedResults.expectedURLLinkText, Selectors.urlLinkText)
         buttonCheck(userScenario.commonExpectedResults.expectedButtonText, Selectors.continueButton)
         linkCheck(userScenario.commonExpectedResults.expectedHelpLinkText, Selectors.getHelpLink, appConfig.contactUrl(userScenario.isAgent))
-
         errorSummaryCheck(userScenario.specificExpectedResults.get.expectedErrorText, Selectors.gainsAmountErrorHref)
         errorAboveElementCheck(userScenario.specificExpectedResults.get.expectedErrorText)
       }
