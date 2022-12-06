@@ -38,15 +38,15 @@ class GainsGatewayController @Inject()(authorisedAction: AuthorisedAction,
     s"gains.gateway.question.error.${if (isAgent) "agent" else "individual"}")
 
   def show(taxYear: Int): Action[AnyContent] = authorisedAction.async { implicit request =>
-    Future.successful(Ok(view(form(request.user.isAgent),taxYear)))
+    Future.successful(Ok(view(form(request.user.isAgent), taxYear)))
   }
 
   def submit(taxYear: Int): Action[AnyContent] = authorisedAction.async { implicit request =>
-    form(request.user.isAgent).bindFromRequest().fold(formWithErrors =>{
-        Future.successful(BadRequest(view(formWithErrors,taxYear)))
-  }, {
-    yesNoValue =>
+    form(request.user.isAgent).bindFromRequest().fold(formWithErrors => {
+      Future.successful(BadRequest(view(formWithErrors, taxYear)))
+    }, {
+      yesNoValue =>
         Future.successful(Ok)
-      })
+    })
   }
 }

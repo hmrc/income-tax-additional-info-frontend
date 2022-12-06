@@ -94,8 +94,8 @@ gains.status.question.input.year.label.agent = Sawl blwyddyn sydd wedi mynd heib
 gains.status.question.input.year.hint.agent = Os oedd enillion diwethaf eich cleient llai na blwyddyn yn ôl, nodwch 0.
 gains.status.question.input.year.error.noeEntry.agent = Nodwch nifer y blynyddoedd ers enillion diwethaf eich cleient. Os oedd enillion diwethaf eich cleient llai na blwyddyn yn ôl, nodwch 0
 gains.status.question.input.year.error.maxLimit.agent = Mae’n rhaid i enillion diwethaf eich cleient fod yn llai na 100 mlynedd yn ôl
-#################       Error messages        ########################################
 
+#################       Error messages        ########################################
 common.error.self-assessment.paragraph.1.1 = If the web address is correct or you selected a link or button, you can use
 common.error.self-assessment.paragraph.1.2 = Self Assessment: general enquiries
 common.error.self-assessment.paragraph.1.3 = to speak to someone about your income tax
