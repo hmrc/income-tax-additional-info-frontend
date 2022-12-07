@@ -42,7 +42,7 @@ common.error.amountMaxLimit = Enter an amount less than £100,000,000,000
 common.error.invalid_currency_format = Enter the amount in the correct format
 
 #################       Captions       ########################################
-gains.caption = Enillion o bolisïau ar gyfer 6 Ebrill {0} i 5 Ebrill {1}
+gains.caption = Enillion o bolisïau yswiriant bywyd a chontractau gyfer 6 Ebrill {0} i 5 Ebrill {1}
 
 #################       Gains messages       ########################################
 gains.gain-amount.question.title = Enillion ar ddigwyddiad trethadwy

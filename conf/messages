@@ -42,7 +42,7 @@ common.error.amountMaxLimit = Enter an amount less than £100,000,000,000
 common.error.invalid_currency_format = Enter the amount in the correct format
 
 #################       Captions       ########################################
-gains.caption = Gains from life insurance policies for 6 April {0} to 5 April {1}
+gains.caption = Gains from life insurance policies and contracts for 6 April {0} to 5 April {1}
 
 #################       Gains messages       ########################################
 gains.gain-amount.question.title = Chargeable event gain
