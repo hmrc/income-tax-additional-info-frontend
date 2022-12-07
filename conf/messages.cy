@@ -40,10 +40,10 @@ common.yes = Iawn
 
 common.error.amountMaxLimit = Enter an amount less than £100,000,000,000
 common.error.invalid_currency_format = Enter the amount in the correct format
-common.error.invalid_Year_Format = Enter the number of years in the correct format. For example, '3'
+common.error.invalid_Year_Format = Nodwch nifer y blynyddoedd yn y fformat cywir. Er enghraifft, ''3''
 
 #################       Captions       ########################################
-gains.caption = Enillion o bolisïau ar gyfer 6 Ebrill {0} i 5 Ebrill {1}
+gains.caption = Enillion o bolisïau yswiriant bywyd a chontractau ar gyfer 6 Ebrill {0} i 5 Ebrill {1}
 
 #################       Gains messages       ########################################
 gains.customer-reference.question.title.individual = Beth yw’ch cyfeirnod cwsmer?

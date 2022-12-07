@@ -34,7 +34,7 @@ class GainsStatusController @Inject()(authorisedAction: AuthorisedAction,
                                      (implicit appConfig: AppConfig, mcc: MessagesControllerComponents, ec: ExecutionContext)
   extends FrontendController(mcc) with I18nSupport {
 
-  def form(isAgent: Boolean): Form[(Boolean, Int)] = RadioButtonYearForm.radioButtonAndYearForm(
+  def form(isAgent: Boolean): Form[(Boolean, Option[Int])] = RadioButtonYearForm.radioButtonAndYearForm(
     s"gains.status.question.radio.error.noEntry.${if (isAgent) "agent" else "individual"}",
     s"gains.status.question.input.year.error.noeEntry.${if (isAgent) "agent" else "individual"}",
     s"common.error.invalid_Year_Format",
@@ -49,7 +49,7 @@ class GainsStatusController @Inject()(authorisedAction: AuthorisedAction,
     form(request.user.isAgent).bindFromRequest().fold(formWithErrors => {
       Future.successful(BadRequest(view(formWithErrors, taxYear)))
     }, {
-      yesNoValue =>
+      _ =>
         Future.successful(Ok)
     })
   }

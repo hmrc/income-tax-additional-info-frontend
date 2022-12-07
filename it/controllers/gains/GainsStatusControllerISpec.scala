@@ -16,6 +16,7 @@
 
 package controllers.gains
 
+import forms.RadioButtonYearForm.{yearInput, yesNo}
 import play.api.http.HeaderNames
 import play.api.http.Status.{BAD_REQUEST, OK}
 import play.api.libs.ws.WSResponse
@@ -28,9 +29,18 @@ class GainsStatusControllerISpec extends IntegrationTest {
   }
 
   ".show" should {
-    "render the gains status page" in {
+    "render the gains status page for individual user" in {
       lazy val result: WSResponse = {
         authoriseAgentOrIndividual(isAgent = false)
+        urlGet(url(taxYear), headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)))
+      }
+
+      result.status shouldBe OK
+    }
+
+    "render the gains status page for an agent" in {
+      lazy val result: WSResponse = {
+        authoriseAgentOrIndividual(isAgent = true)
         urlGet(url(taxYear), headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)))
       }
 
@@ -39,10 +49,46 @@ class GainsStatusControllerISpec extends IntegrationTest {
   }
 
   ".submit" should {
+    "show page with 200 status if valid" in {
+      lazy val result: WSResponse = {
+        authoriseAgentOrIndividual(isAgent = false)
+        urlPost(url(taxYear), headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)), body = Map(yesNo -> "true", yearInput -> "10"))
+      }
+
+      result.status shouldBe OK
+    }
+
     "show page with error text if form is empty" in {
       lazy val result: WSResponse = {
         authoriseAgentOrIndividual(isAgent = false)
         urlPost(url(taxYear), headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)), body = Map[String, String]())
+      }
+
+      result.status shouldBe BAD_REQUEST
+    }
+
+    "show page with error text if form has empty year" in {
+      lazy val result: WSResponse = {
+        authoriseAgentOrIndividual(isAgent = false)
+        urlPost(url(taxYear), headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)), body = Map(yesNo -> "true", yearInput -> ""))
+      }
+
+      result.status shouldBe BAD_REQUEST
+    }
+
+    "show page with error text if form has incorrect year" in {
+      lazy val result: WSResponse = {
+        authoriseAgentOrIndividual(isAgent = false)
+        urlPost(url(taxYear), headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)), body = Map(yesNo -> "true", yearInput -> "test"))
+      }
+
+      result.status shouldBe BAD_REQUEST
+    }
+
+    "show page with error text if form has exceeding max year" in {
+      lazy val result: WSResponse = {
+        authoriseAgentOrIndividual(isAgent = false)
+        urlPost(url(taxYear), headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)), body = Map(yesNo -> "true", yearInput -> "100"))
       }
 
       result.status shouldBe BAD_REQUEST
