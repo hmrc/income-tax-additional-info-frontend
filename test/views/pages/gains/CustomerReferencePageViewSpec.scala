@@ -53,7 +53,7 @@ class CustomerReferencePageViewSpec extends ViewUnitTest {
   }
 
   object CommonExpectedEN extends CommonExpectedResults {
-    override val expectedCaption: Int => String = (taxYear: Int) => s"Gains from policies for 6 April ${taxYear - 1} to 5 April $taxYear"
+    override val expectedCaption: Int => String = (taxYear: Int) => s"Gains from life insurance policies and contracts for 6 April ${taxYear - 1} to 5 April $taxYear"
     override val expectedHint: String = "For example, 'INPOLY123A’."
     override val expectedButtonText: String = "Continue"
     override val expectedHelpLinkText: String = "Get help with this page"

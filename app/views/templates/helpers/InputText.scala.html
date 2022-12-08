@@ -28,7 +28,8 @@
     classes: Option[String] = None,
     autocomplete: Option[String] = None,
     inputType: String = "text",
-    currency: Boolean = false
+    currency: Boolean = false,
+    labelClasses: Option[String] = None
 )(implicit messages: Messages)
 
 @govukInput(Input(
