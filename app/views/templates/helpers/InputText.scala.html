@@ -28,8 +28,7 @@
     classes: Option[String] = None,
     autocomplete: Option[String] = None,
     inputType: String = "text",
-    currency: Boolean = false,
-    labelClasses: Option[String] = None
+    currency: Boolean = false
 )(implicit messages: Messages)
 
 @govukInput(Input(
@@ -39,7 +38,7 @@
     label = Label(
         content = Text(messages(label)),
         isPageHeading = isPageHeading,
-        classes = if(isPageHeading) "govuk-label--xl " + labelClasses.fold("")(cls => cls) else labelClasses.fold("")(cls => cls)
+        classes = if(isPageHeading) "govuk-label--l" else if (labelHidden) "govuk-visually-hidden" else if (labelClasses.isDefined) labelClasses.get else "govuk-!-font-weight-bold"
     ),
     hint = hint.map(hintKey => Hint(
         content = HtmlContent(messages(hintKey))

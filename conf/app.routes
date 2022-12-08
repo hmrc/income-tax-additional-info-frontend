@@ -35,5 +35,8 @@ POST        /:taxYear/gains/gains-gateway                   controllers.gains.Ga
 GET         /:taxYear/gains/policy-event                    controllers.gains.PolicyEventController.show(taxYear: Int)
 POST        /:taxYear/gains/policy-event                    controllers.gains.PolicyEventController.submit(taxYear: Int)
 
+GET         /:taxYear/gains/gains-status                   controllers.gains.GainsStatusController.show(taxYear: Int)
+POST        /:taxYear/gains/gains-status                   controllers.gains.GainsStatusController.submit(taxYear: Int)
+
 GET         /:taxYear/gains/gains-amount                    controllers.gains.GainsAmountController.show(taxYear: Int)
 POST        /:taxYear/gains/gains-amount                    controllers.gains.GainsAmountController.submit(taxYear: Int)

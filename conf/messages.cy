@@ -40,9 +40,10 @@ common.yes = Iawn
 
 common.error.amountMaxLimit = Enter an amount less than £100,000,000,000
 common.error.invalid_currency_format = Enter the amount in the correct format
+common.error.invalid_Year_Format = Nodwch nifer y blynyddoedd yn y fformat cywir. Er enghraifft, ''3''
 
 #################       Captions       ########################################
-gains.caption = Enillion o bolisïau yswiriant bywyd a chontractau gyfer 6 Ebrill {0} i 5 Ebrill {1}
+gains.caption = Enillion o bolisïau yswiriant bywyd a chontractau ar gyfer 6 Ebrill {0} i 5 Ebrill {1}
 
 #################       Gains messages       ########################################
 gains.gain-amount.question.title = Enillion ar ddigwyddiad trethadwy
@@ -102,6 +103,21 @@ gains.policy-event.question.bullet.4 = roedd y polisi yn Bondiau Portffolio Pers
 gains.policy-event.question.label = Beth achosodd yr ennill hwn?
 gains.policy-event.question.hint = Er enghraifft, aeddfedodd polisi, ildiodd y polisi’n rhannol neu bu farw briod.
 gains.policy-event.question.error-message = Nodwch y rheswm dros yr enillion hyn. Er enghraifft, aeddfedodd polisi, ildiad rhannol o’r polisi neu farwolaeth y priod
+
+gains.status.question.radio.heading.individual = A ydych wedi gwneud ennill o’r polisi hwn o’r blaen?
+gains.status.question.radio.error.noEntry.individual = Dewiswch ‘Iawn’ os ydych wedi gwneud ennill ar y polisi hwn o’r blaen
+gains.status.question.input.year.label.individual = Sawl blwyddyn sydd wedi bod ers eich ennill diwethaf?
+gains.status.question.input.year.hint.individual = Os oedd eich ennill diwethaf lai na blwyddyn yn ôl, nodwch 0
+gains.status.question.input.year.error.noeEntry.individual = Nodwch nifer y blynyddoedd ers eich ennill diwethaf. Os oedd eich ennill diwethaf llai na blwyddyn yn ôl, nodwch 0
+gains.status.question.input.year.error.maxLimit.individual = Mae’n rhaid i’ch enillion diwethaf fod yn llai na 100 mlynedd yn ôl
+
+gains.status.question.radio.heading.agent = A yw’ch cleient wedi gwneud enillion ar y polisi hwn o’r blaen?
+gains.status.question.radio.error.noEntry.agent = Dewiswch ‘Iawn’ os yw’ch cleient wedi gwneud enillion ar y polisi hwn o’r blaen
+gains.status.question.input.year.label.agent = Sawl blwyddyn sydd wedi mynd heibio ers enillion diwethaf eich cleient?
+gains.status.question.input.year.hint.agent = Os oedd enillion diwethaf eich cleient llai na blwyddyn yn ôl, nodwch 0.
+gains.status.question.input.year.error.noeEntry.agent = Nodwch nifer y blynyddoedd ers enillion diwethaf eich cleient. Os oedd enillion diwethaf eich cleient llai na blwyddyn yn ôl, nodwch 0
+gains.status.question.input.year.error.maxLimit.agent = Mae’n rhaid i enillion diwethaf eich cleient fod yn llai na 100 mlynedd yn ôl
+
 #################       Error messages        ########################################
 
 common.error.self-assessment.paragraph.1.1 = If the web address is correct or you selected a link or button, you can use
