@@ -42,7 +42,7 @@ common.error.amountMaxLimit = Enter an amount less than £100,000,000,000
 common.error.invalid_currency_format = Enter the amount in the correct format
 
 #################       Captions       ########################################
-gains.caption = Gains from policies for 6 April {0} to 5 April {1}
+gains.caption = Gains from life insurance policies and contracts for 6 April {0} to 5 April {1}
 
 #################       Gains messages       ########################################
 gains.customer-reference.question.title.individual = What''s your customer reference?
@@ -79,6 +79,21 @@ gains.policy-event.question.bullet.4 = the policy was a Personal Portfolio Bond,
 gains.policy-event.question.label = What caused this gain?
 gains.policy-event.question.hint = For example, policy matured, part surrender of policy or death of spouse.
 gains.policy-event.question.error-message = Enter the reason for this gain.  For example, policy matured, part surrender of the policy or death of spouse
+
+gains.paid-tax-status.question.title.individual = Did you pay tax on your gain?
+gains.paid-tax-status.question.label.individual = How much tax did you pay?
+gains.paid-tax-status.question.hint = For example, £193.54
+gains.paid-tax-status.question.error.1.individual = Select yes if you paid tax on your gain
+gains.paid-tax-status.question.error.2.individual = Enter the amount of tax you paid. For example, £193.54
+gains.paid-tax-status.question.error.3.individual = Enter the amount of tax you paid in the correct format. For example, £193.54
+gains.paid-tax-status.question.error.4 = The amount of tax paid must be less than £100,000,000,000
+
+gains.paid-tax-status.question.title.agent = Did your client pay tax on their gain?
+gains.paid-tax-status.question.label.agent = How much tax did your client pay?
+gains.paid-tax-status.question.error.1.agent = Select yes if your client paid tax on their gain
+gains.paid-tax-status.question.error.2.agent = Enter the amount of tax your client paid. For example, £193.54
+gains.paid-tax-status.question.error.3.agent = Enter the amount of tax your client paid in the correct format. For example, £193.54
+
 
 #################       Error messages        ########################################
 common.error.self-assessment.paragraph.1.1 = If the web address is correct or you selected a link or button, you can use

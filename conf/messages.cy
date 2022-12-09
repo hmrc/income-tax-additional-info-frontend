@@ -42,7 +42,7 @@ common.error.amountMaxLimit = Enter an amount less than £100,000,000,000
 common.error.invalid_currency_format = Enter the amount in the correct format
 
 #################       Captions       ########################################
-gains.caption = Enillion o bolisïau ar gyfer 6 Ebrill {0} i 5 Ebrill {1}
+gains.caption = Enillion o bolisïau yswiriant bywyd a chontractau ar gyfer 6 Ebrill {0} i 5 Ebrill {1}
 
 #################       Gains messages       ########################################
 gains.customer-reference.question.title.individual = Beth yw’ch cyfeirnod cwsmer?
@@ -80,6 +80,21 @@ gains.policy-event.question.bullet.4 = roedd y polisi yn Bondiau Portffolio Pers
 gains.policy-event.question.label = Beth achosodd yr ennill hwn?
 gains.policy-event.question.hint = Er enghraifft, aeddfedodd polisi, ildiodd y polisi’n rhannol neu bu farw briod.
 gains.policy-event.question.error-message = Nodwch y rheswm dros yr enillion hyn. Er enghraifft, aeddfedodd polisi, ildiad rhannol o’r polisi neu farwolaeth y priod
+
+gains.paid-tax-status.question.title.individual = A wnaethoch dalu treth ar eich ennill?
+gains.paid-tax-status.question.label.individual = Faint o dreth wnaethoch ei dalu?
+gains.paid-tax-status.question.hint = Er enghraifft, £193.54
+gains.paid-tax-status.question.error.1.individual = Dewiswch ‘Iawn’ os oes gennych hawl i ryddhad am ddiffyg
+gains.paid-tax-status.question.error.2.individual = Nodwch swm y dreth a daloch. Er enghraifft, £193.54
+gains.paid-tax-status.question.error.3.individual = Nodwch swm y dreth a daloch yn y fformat cywir. Er enghraifft, £193.54
+gains.paid-tax-status.question.error.4 = Mae’n rhaid i swm y dreth a dalwyd fod yn llai na £100,000,000,000
+
+gains.paid-tax-status.question.title.agent = A wnaeth eich cleient dalu treth ar ei enillion?
+gains.paid-tax-status.question.label.agent = Faint o dreth a dalwyd gan eich cleient?
+gains.paid-tax-status.question.error.1.agent = Dewiswch ‘Iawn’ os gwnaeth eich cleient dalu treth ar ei enillion
+gains.paid-tax-status.question.error.2.agent = Nodwch enillion eich cleient. Er enghraifft, £193.54
+gains.paid-tax-status.question.error.3.agent = Nodwch swm y dreth a dalwyd gan eich cleient yn y fformat cywir. Er enghraifft, £193.54
+
 #################       Error messages        ########################################
 
 common.error.self-assessment.paragraph.1.1 = If the web address is correct or you selected a link or button, you can use
