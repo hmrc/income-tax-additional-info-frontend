@@ -35,8 +35,8 @@ object MappingUtil extends Formatters {
   }
 
   def currency(requiredKey: String,
-               wrongFormatKey: String = "common.error.invalid_currency_format",
-               maxAmountKey: String = "common.error.amountMaxLimit",
+               wrongFormatKey: String,
+               maxAmountKey: String,
                minAmountKey: Option[String] = None,
                args: Seq[String] = Seq.empty[String]
               ): FieldMapping[BigDecimal] =
@@ -47,4 +47,13 @@ object MappingUtil extends Formatters {
                  maxYearKey: String,
                  args: Seq[String] = Seq.empty[String]): FieldMapping[Option[Int]] =
     of(yearFormatter(requiredKey, wrongFormatKey, maxYearKey, args))
+
+  def optionCurrency(requiredKey: String,
+                     wrongFormatKey: String,
+                     maxAmountKey: String,
+                     minAmountKey: String,
+                     args: Seq[String] = Seq.empty[String]
+                    ): FieldMapping[Option[BigDecimal]] = {
+    of(optionCurrencyFormatter(requiredKey, wrongFormatKey, maxAmountKey, minAmountKey, args))
+}
 }
