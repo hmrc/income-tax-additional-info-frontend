@@ -66,7 +66,7 @@ class GainsGatewayPageViewSpec extends ViewUnitTest {
   }
 
   object CommonExpectedEN extends CommonExpectedResults {
-    override val expectedCaption: Int => String = (taxYear: Int) => s"Gains from policies for 6 April ${taxYear - 1} to 5 April $taxYear"
+    override val expectedCaption: Int => String = (taxYear: Int) => s"Gains from life insurance policies and contracts for 6 April ${taxYear - 1} to 5 April $taxYear"
     override val bullet1: String = "life insurance policy"
     override val bullet2: String = "life annuity"
     override val bullet3: String = "capital redemption policy"
@@ -77,7 +77,7 @@ class GainsGatewayPageViewSpec extends ViewUnitTest {
   }
 
   object CommonExpectedCY extends CommonExpectedResults {
-    override val expectedCaption: Int => String = (taxYear: Int) => s"Enillion o bolisïau ar gyfer 6 Ebrill ${taxYear - 1} i 5 Ebrill $taxYear"
+    override val expectedCaption: Int => String = (taxYear: Int) => s"Enillion o bolisïau yswiriant bywyd a chontractau ar gyfer 6 Ebrill ${taxYear - 1} i 5 Ebrill $taxYear"
     override val bullet1: String = "polisi yswiriant bywyd"
     override val bullet2: String = "blwydd-dal bywyd"
     override val bullet3: String = "polisi adbryniant cyfalaf"

@@ -61,14 +61,14 @@ class PolicyEventPageViewSpec extends ViewUnitTest {
   }
 
   object CommonExpectedEN extends CommonExpectedResults {
-    override val expectedCaption: Int => String = (taxYear: Int) => s"Gains from policies for 6 April ${taxYear - 1} to 5 April $taxYear"
+    override val expectedCaption: Int => String = (taxYear: Int) => s"Gains from life insurance policies and contracts for 6 April ${taxYear - 1} to 5 April $taxYear"
     override val expectedHint: String = "For example, policy matured, part surrender of policy or death of spouse."
     override val expectedButtonText: String = "Continue"
     override val expectedHelpLinkText: String = "Get help with this page"
   }
 
   object CommonExpectedCY extends CommonExpectedResults {
-    override val expectedCaption: Int => String = (taxYear: Int) => s"Enillion o bolisïau ar gyfer 6 Ebrill ${taxYear - 1} i 5 Ebrill $taxYear"
+    override val expectedCaption: Int => String = (taxYear: Int) => s"Enillion o bolisïau yswiriant bywyd a chontractau ar gyfer 6 Ebrill ${taxYear - 1} i 5 Ebrill $taxYear"
     override val expectedHint: String = "Er enghraifft, aeddfedodd polisi, ildiodd y polisi’n rhannol neu bu farw briod."
     override val expectedButtonText: String = "Yn eich blaen"
     override val expectedHelpLinkText: String = "Help gyda’r dudalen hon"
