@@ -27,7 +27,12 @@ object GainsAmountForm extends InputFilters {
   val GainAmount: String = "gainAmountNumber"
 
   def notEmpty(isAgent: Boolean): Constraint[String] =
-    nonEmpty(s"gains.gain-amount.question.error-message.${if (isAgent) "agent" else "individual"}")
+    nonEmpty(s"gains.gain-amount.question.no-entry-error.${if (isAgent) "agent" else "individual"}")
+
+  //need to add:
+  //no entry
+  //incorrect format error
+  //amount exceeds maximum
 
   def gainsAmountForm(isAgent: Boolean): Form[String] = Form(
     GainAmount -> trimmedText.transform[String](filter, identity).verifying(notEmpty(isAgent))

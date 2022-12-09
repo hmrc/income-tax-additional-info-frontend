@@ -41,14 +41,19 @@ class GainsAmountPageViewSpec extends ViewUnitTest {
     val bullet1 = "#gains-amount-bullet-1"
     val bullet2 = "#gains-amount-bullet-2"
     val urlLinkText = "#gains-amount-url-text"
+   // val noEntryError = ""
+   // val incorrectFormatError = ""
+    // val amountExceedsMaxError = ""
 
   }
 
   trait SpecificExpectedResults {
     val expectedParagraph1: String
     val expectedParagraph2: String
-    val expectedErrorText: String
     val expectedLabel: String
+    val expectedNoEntryError: String
+    val expectedIncorrectFormatError : String
+    val expectedAmountExceedsMaxError : String
   }
 
   trait CommonExpectedResults {
@@ -94,28 +99,36 @@ class GainsAmountPageViewSpec extends ViewUnitTest {
   object ExpectedIndividualEN extends SpecificExpectedResults {
     override val expectedParagraph1: String = "Enter the amount shown on the chargeable event certificate provided by your insurer."
     override val expectedParagraph2: String = "If you are a joint owner of the policy or annuity, enter your share of the gain."
-    override val expectedErrorText: String = "Enter the gain you made. For example, £193.54"
+    override val expectedNoEntryError: String = "Enter the gain you made. For example, £193.54"
+    override val expectedIncorrectFormatError = "Enter the gain you made in the correct format. For example, £193.54"
+    override val expectedAmountExceedsMaxError = "The amount of your gain must be less than £100,000,000,000"
     override val expectedLabel: String = "How much gain did you make?"
   }
 
   object ExpectedIndividualCY extends SpecificExpectedResults {
     override val expectedParagraph1: String = "Nodwch y swm a ddangosir ar y dystysgrif digwyddiad trethadwy a ddarperir gan eich yswiriwr."
     override val expectedParagraph2: String = "Os ydych yn gydberchennog ar y polisi neu’r blwydd-dal, nodwch eich cyfran o’r elw."
-    override val expectedErrorText: String = "Nodwch eich ennill. Er enghraifft, £193.54"
+    override val expectedNoEntryError: String = "TBD"
+    override val expectedIncorrectFormatError = "TBD"
+    override val expectedAmountExceedsMaxError = "TBD"
     override val expectedLabel: String = "Faint o ennill gwnaethoch chi?"
   }
 
   object ExpectedAgentEN extends SpecificExpectedResults {
     override val expectedParagraph1: String = "Enter the amount shown on the chargeable event certificate provided by your client’s insurer."
     override val expectedParagraph2: String = "If your client is a joint owner of the policy or annuity, enter their share of the gain."
-    override val expectedErrorText: String = "Enter the gain your client made. For example, £193.54"
+    override val expectedNoEntryError: String = "Enter the gain your client made. For example, £193.54"
+    override val expectedIncorrectFormatError = "Enter the gain your client made in the correct format. For example, £193.54"
+    override val expectedAmountExceedsMaxError = "The amount of your client's gain must be less than £100,000,000,000"
     override val expectedLabel: String = "How much gain did your client make?"
   }
 
   object ExpectedAgentCY extends SpecificExpectedResults {
     override val expectedParagraph1: String = "Nodwch y swm a ddangosir ar y dystysgrif digwyddiad trethadwy a ddarperir gan yswiriwr neu reolwr ISA eich cleient."
     override val expectedParagraph2: String = "Os yw’ch cleient yn berchen y polisi neu’r blwydd-dal ar y cyd, nodwch ei ran o’r enillion."
-    override val expectedErrorText: String = "Nodwch enillion eich cleient. Er enghraifft, £193.54"
+    override val expectedNoEntryError: String = "TBD"
+    override val expectedIncorrectFormatError = "TBD"
+    override val expectedAmountExceedsMaxError = "TBD"
     override val expectedLabel: String = "Faint oedd enillion eich cleient?"
   }
 
@@ -148,6 +161,12 @@ class GainsAmountPageViewSpec extends ViewUnitTest {
         textOnPageCheck(userScenario.commonExpectedResults.expectedURLLinkText, Selectors.urlLinkText)
         buttonCheck(userScenario.commonExpectedResults.expectedButtonText, Selectors.continueButton)
         linkCheck(userScenario.commonExpectedResults.expectedHelpLinkText, Selectors.getHelpLink, appConfig.contactUrl(userScenario.isAgent))
+        errorSummaryCheck(userScenario.specificExpectedResults.get.expectedNoEntryError, Selectors.gainsAmountErrorHref)
+        errorSummaryCheck(userScenario.specificExpectedResults.get.expectedIncorrectFormatError, Selectors.gainsAmountErrorHref)
+        errorSummaryCheck(userScenario.specificExpectedResults.get.expectedAmountExceedsMaxError, Selectors.gainsAmountErrorHref)
+        errorAboveElementCheck(userScenario.specificExpectedResults.get.expectedNoEntryError)
+        errorAboveElementCheck(userScenario.specificExpectedResults.get.expectedIncorrectFormatError)
+        errorAboveElementCheck(userScenario.specificExpectedResults.get.expectedAmountExceedsMaxError)
       }
     }
   }
@@ -173,8 +192,12 @@ class GainsAmountPageViewSpec extends ViewUnitTest {
         textOnPageCheck(userScenario.commonExpectedResults.expectedURLLinkText, Selectors.urlLinkText)
         buttonCheck(userScenario.commonExpectedResults.expectedButtonText, Selectors.continueButton)
         linkCheck(userScenario.commonExpectedResults.expectedHelpLinkText, Selectors.getHelpLink, appConfig.contactUrl(userScenario.isAgent))
-        errorSummaryCheck(userScenario.specificExpectedResults.get.expectedErrorText, Selectors.gainsAmountErrorHref)
-        errorAboveElementCheck(userScenario.specificExpectedResults.get.expectedErrorText)
+        errorSummaryCheck(userScenario.specificExpectedResults.get.expectedNoEntryError, Selectors.gainsAmountErrorHref)
+        errorSummaryCheck(userScenario.specificExpectedResults.get.expectedIncorrectFormatError, Selectors.gainsAmountErrorHref)
+        errorSummaryCheck(userScenario.specificExpectedResults.get.expectedAmountExceedsMaxError, Selectors.gainsAmountErrorHref)
+        errorAboveElementCheck(userScenario.specificExpectedResults.get.expectedNoEntryError)
+        errorAboveElementCheck(userScenario.specificExpectedResults.get.expectedIncorrectFormatError)
+        errorAboveElementCheck(userScenario.specificExpectedResults.get.expectedAmountExceedsMaxError)
       }
     }
   }

@@ -52,10 +52,16 @@ gains.gain-amount.question.paragraph.1.agent = Enter the amount shown on the cha
 gains.gain-amount.question.paragraph.2.agent = If your client is a joint owner of the policy or annuity, enter their share of the gain.
 gains.gain-amount.question.label.individual = How much gain did you make?
 gains.gain-amount.question.label.agent = How much gain did your client make?
+
+gains.gain-amount.question.no-entry-error.individual = Enter the gain you made. For example, £193.54
+gains.gain-amount.question.incorrect-format-error.individual = Enter the gain you made in the correct format. For example, £193.54
+gains.gain-amount.question.amount-exceeds-max-error.individual = The amount of your gain must be less than £100,000,000,000
+gains.gain-amount.question.no-entry-error.agent = Enter the gain your client made. For example, £193.54
+gains.gain-amount.question.incorrect-format-error.agent = Enter the gain your client made in the correct format. For example, £193.54
+gains.gain-amount.question.amount-exceeds-max-error.agent = The amount of your client's gain must be less than £100,000,000,000
+
 #Move to common messages
 gains.gain-amount.question.hint = For example, £193.54
-gains.gain-amount.question.error-message.individual = Enter the gain you made. For example, £193.54
-gains.gain-amount.question.error-message.agent = Enter the gain your client made. For example, £193.54
 
 gains.gain-amount.question.summary-text = When to reduce the gain
 gains.gain-amount.question.details-text = You will need to calculate a reduction if:
