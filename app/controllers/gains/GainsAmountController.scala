@@ -18,7 +18,7 @@ package controllers.gains
 
 import actions.AuthorisedAction
 import config.AppConfig
-import forms.gains.GainsAmountForm
+import forms.AmountForm
 import play.api.data.Form
 import play.api.i18n.I18nSupport
 import play.api.mvc._
@@ -34,14 +34,20 @@ class GainsAmountController @Inject()(authorisedAction: AuthorisedAction,
                                            (implicit appConfig: AppConfig, mcc: MessagesControllerComponents, ec: ExecutionContext)
   extends FrontendController(mcc) with I18nSupport {
 
-  def gainsAmountForm(isAgent: Boolean): Form[String] = GainsAmountForm.gainsAmountForm(isAgent)
-
+  def form(isAgent: Boolean): Form[(BigDecimal)] =
+    AmountForm.amountForm(
+      s"gains.gain-amount.question.no-entry-error.${if (isAgent) "agent" else "individual"}",
+      s"gains.gain-amount.question.incorrect-format-error.${if (isAgent) "agent" else "individual"}",
+      s"gains.gain-amount.question.amount-exceeds-max-error.${if (isAgent) "agent" else "individual"}",
+      None,
+    )
   def show(taxYear: Int): Action[AnyContent] = authorisedAction.async { implicit request =>
-    Future.successful(Ok(view(taxYear, gainsAmountForm(request.user.isAgent))))
+    Future.successful(Ok(view(taxYear, form(request.user.isAgent))))
   }
 
+
   def submit(taxYear: Int): Action[AnyContent] = authorisedAction.async { implicit request =>
-    gainsAmountForm(request.user.isAgent).bindFromRequest().fold(
+    form(request.user.isAgent).bindFromRequest().fold(
       formWithErrors =>
         Future.successful(BadRequest(view(taxYear, formWithErrors))),
       _ =>

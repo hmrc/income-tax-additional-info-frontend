@@ -34,7 +34,7 @@
         link: Link
 )
 
-@(taxYear: Int, form: Form[String])(implicit request: AuthorisationRequest[_], messages: Messages, appConfig: AppConfig)
+@(taxYear: Int, form: Form[BigDecimal])(implicit request: AuthorisationRequest[_], messages: Messages, appConfig: AppConfig)
 
 @titleForUse = @{messages(s"gains.gain-amount.question.title")}
 

@@ -16,7 +16,6 @@
 
 package controllers.gains
 
-import forms.gains.GainsAmountForm
 import play.api.http.HeaderNames
 import play.api.http.Status.{BAD_REQUEST, OK, SEE_OTHER}
 import play.api.libs.ws.WSResponse

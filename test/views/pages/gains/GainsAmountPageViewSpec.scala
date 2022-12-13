@@ -16,7 +16,6 @@
 
 package views.pages.gains
 
-import forms.gains.GainsAmountForm
 import models.requests.AuthorisationRequest
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
