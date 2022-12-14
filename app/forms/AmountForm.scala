@@ -21,8 +21,9 @@ import play.api.data.Form
 
 object AmountForm {
 
-  val amount = "gains-amount"
+  //is it amount or gains-amount, will gains-amount break anything?
 
+  val amount = "gains-amount"
 
   def amountForm(
                   emptyFieldKey: String,

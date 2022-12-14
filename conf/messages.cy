@@ -54,12 +54,12 @@ gains.gain-amount.question.label.individual = Faint o ennill gwnaethoch chi?
 gains.gain-amount.question.label.agent = Faint oedd enillion eich cleient?
 gains.gain-amount.question.hint = Er enghraifft, £193.54
 
-gains.gain-amount.question.no-entry-error.individual = TBD
-gains.gain-amount.question.incorrect-format-error.individual = TBD
-gains.gain-amount.question.amount-exceeds-max-error.individual = TBD
-gains.gain-amount.question.no-entry-error.agent = TBD
-gains.gain-amount.question.incorrect-format-error.agent = TBD
-gains.gain-amount.question.amount-exceeds-max-error.agent = TBD
+gains.gain-amount.question.no-entry-error.individual = Nodwch eich ennill. Er enghraifft, £193.54
+gains.gain-amount.question.incorrect-format-error.individual = Nodwch yr ennill a wnaethoch yn y fformat cywir. Er enghraifft, £193.54
+gains.gain-amount.question.amount-exceeds-max-error.individual = Mae’n rhaid i’r ennill fod yn llai na £100,000,000,000
+gains.gain-amount.question.no-entry-error.agent = Nodwch enillion eich cleient. Er enghraifft, £193.54
+gains.gain-amount.question.incorrect-format-error.agent = Nodwch enillion eich cleient yn y fformat cywir. Er enghraifft, £193.54
+gains.gain-amount.question.amount-exceeds-max-error.agent = Mae’n rhaid i enillion eich cleient fod yn llai na £100,000,000,000
 
 gains.gain-amount.question.summary-text = Pryd i ostwng yr elw
 gains.gain-amount.question.details-text = Bydd angen i chi gyfrifo gostyngiad os yw’r canlynol yn wir:

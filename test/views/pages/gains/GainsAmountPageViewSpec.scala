@@ -16,6 +16,7 @@
 
 package views.pages.gains
 
+import forms.AmountForm
 import models.requests.AuthorisationRequest
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
@@ -107,9 +108,9 @@ class GainsAmountPageViewSpec extends ViewUnitTest {
   object ExpectedIndividualCY extends SpecificExpectedResults {
     override val expectedParagraph1: String = "Nodwch y swm a ddangosir ar y dystysgrif digwyddiad trethadwy a ddarperir gan eich yswiriwr."
     override val expectedParagraph2: String = "Os ydych yn gydberchennog ar y polisi neu’r blwydd-dal, nodwch eich cyfran o’r elw."
-    override val expectedNoEntryError: String = "TBD"
-    override val expectedIncorrectFormatError = "TBD"
-    override val expectedAmountExceedsMaxError = "TBD"
+    override val expectedNoEntryError: String = "Nodwch eich ennill. Er enghraifft, £193.54"
+    override val expectedIncorrectFormatError = "Nodwch yr ennill a wnaethoch yn y fformat cywir. Er enghraifft, £193.54"
+    override val expectedAmountExceedsMaxError = "Mae’n rhaid i’r ennill fod yn llai na £100,000,000,000"
     override val expectedLabel: String = "Faint o ennill gwnaethoch chi?"
   }
 
@@ -125,9 +126,9 @@ class GainsAmountPageViewSpec extends ViewUnitTest {
   object ExpectedAgentCY extends SpecificExpectedResults {
     override val expectedParagraph1: String = "Nodwch y swm a ddangosir ar y dystysgrif digwyddiad trethadwy a ddarperir gan yswiriwr neu reolwr ISA eich cleient."
     override val expectedParagraph2: String = "Os yw’ch cleient yn berchen y polisi neu’r blwydd-dal ar y cyd, nodwch ei ran o’r enillion."
-    override val expectedNoEntryError: String = "TBD"
-    override val expectedIncorrectFormatError = "TBD"
-    override val expectedAmountExceedsMaxError = "TBD"
+    override val expectedNoEntryError: String = "Nodwch enillion eich cleient. Er enghraifft, £193.54"
+    override val expectedIncorrectFormatError = "Nodwch enillion eich cleient yn y fformat cywir. Er enghraifft, £193.54"
+    override val expectedAmountExceedsMaxError = "Mae’n rhaid i enillion eich cleient fod yn llai na £100,000,000,000"
     override val expectedLabel: String = "Faint oedd enillion eich cleient?"
   }
 
@@ -144,7 +145,7 @@ class GainsAmountPageViewSpec extends ViewUnitTest {
         implicit val userPriorDataRequest: AuthorisationRequest[AnyContent] = getAuthRequest(userScenario.isAgent)
         implicit val messages: Messages = getMessages(userScenario.isWelsh)
 
-        implicit val document: Document = Jsoup.parse(page(taxYear, GainsAmountForm.gainsAmountForm(userScenario.isAgent)).body)
+        implicit val document: Document = Jsoup.parse(page(taxYear, AmountForm.amountForm(userScenario.isAgent)).body)
 
         welshToggleCheck(userScenario.isWelsh)
         titleCheck(userScenario.commonExpectedResults.expectedTitle, userScenario.isWelsh)
@@ -176,7 +177,7 @@ class GainsAmountPageViewSpec extends ViewUnitTest {
         implicit val userPriorDataRequest: AuthorisationRequest[AnyContent] = getAuthRequest(userScenario.isAgent)
         implicit val messages: Messages = getMessages(userScenario.isWelsh)
 
-        implicit val document: Document = Jsoup.parse(page(taxYear, GainsAmountForm.gainsAmountForm(userScenario.isAgent).bind(Map(GainsAmountForm.GainAmount -> ""))).body)
+        implicit val document: Document = Jsoup.parse(page(taxYear, AmountForm.amountForm(userScenario.isAgent).bind(Map(AmountForm.amount -> ""))).body)
 
         welshToggleCheck(userScenario.isWelsh)
         captionCheck(userScenario.commonExpectedResults.expectedCaption(taxYear))

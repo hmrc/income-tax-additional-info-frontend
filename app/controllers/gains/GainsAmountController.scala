@@ -39,7 +39,7 @@ class GainsAmountController @Inject()(authorisedAction: AuthorisedAction,
       s"gains.gain-amount.question.no-entry-error.${if (isAgent) "agent" else "individual"}",
       s"gains.gain-amount.question.incorrect-format-error.${if (isAgent) "agent" else "individual"}",
       s"gains.gain-amount.question.amount-exceeds-max-error.${if (isAgent) "agent" else "individual"}",
-      None,
+      None
     )
   def show(taxYear: Int): Action[AnyContent] = authorisedAction.async { implicit request =>
     Future.successful(Ok(view(taxYear, form(request.user.isAgent))))
