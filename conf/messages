@@ -49,12 +49,14 @@ gains.customer-reference.question.title.individual = What''s your customer refer
 gains.customer-reference.question.paragraph.individual = Your insurer or ISA manager should have given you a customer reference for your policy or contract.
 gains.customer-reference.question.label = Customer reference
 gains.customer-reference.question.hint = For example, ''INPOLY123A''.
-gains.customer-reference.question.error-message.individual = Enter your customer reference
+gains.customer-reference.question.error-message.1.individual = Enter your customer reference
+gains.customer-reference.question.error-message.2.individual = Enter your customer reference in the correct format. For example, ''INPOLY123A''. Your customer reference must only include letters and numbers
 
 gains.customer-reference.question.title.agent = What''s your client''s customer reference?
 gains.customer-reference.question.paragraph.agent = Your client''s insurer or ISA manager should have given them a customer reference for their policy or contract.
 gains.customer-reference.question.hint = For example, ''INPOLY123A'’.
-gains.customer-reference.question.error-message.agent = Enter your client''s customer reference
+gains.customer-reference.question.error-message.1.agent = Enter your client''s customer reference
+gains.customer-reference.question.error-message.2.agent = Enter your client''s customer reference in the correct format. For example, ''INPOLY123A''. Your client''s customer reference must only include letters and numbers
 
 gains.gateway.question.title = Gains from policies and contracts
 gains.gateway.question.radio.heading.individual = Did you make a gain on a UK policy or contract?

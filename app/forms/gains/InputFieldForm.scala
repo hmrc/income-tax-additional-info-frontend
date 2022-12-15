@@ -17,19 +17,30 @@
 package forms.gains
 
 import filters.InputFilters
+import forms.validation.StringConstraints.validateAlphanumeric
 import forms.validation.mappings.MappingUtil.trimmedText
 import play.api.data.Form
 import play.api.data.validation.Constraint
-import play.api.data.validation.Constraints.nonEmpty
+import play.api.data.validation.Constraints.{nonEmpty, pattern}
 
 object InputFieldForm extends InputFilters {
 
   val value: String = "value"
 
-  def notEmpty(isAgent: Boolean, errorMessage: String): Constraint[String] = nonEmpty(errorMessage)
+  private val mixedAlphaNumericRegex = "^$|^(?=.*[0-9])(?=.*[a-zA-Z])([a-zA-Z0-9]+)$".r
 
-  def inputFieldForm(isAgent: Boolean, errorMessage: String): Form[String] = Form(
-    value -> trimmedText.transform[String](filter, identity).verifying(notEmpty(isAgent, errorMessage))
+  private def notEmpty(isAgent: Boolean, emptyFieldKey: String): Constraint[String] = nonEmpty(emptyFieldKey)
+
+  private def isMixedAlphanumeric(wrongFormatKey: String): Constraint[String] = pattern(mixedAlphaNumericRegex, value, wrongFormatKey)
+
+  def inputFieldForm(isAgent: Boolean, emptyFieldKey: String, wrongFormatKey: String): Form[String] = Form(
+    if (wrongFormatKey == "") {
+      value -> trimmedText.transform[String](filter, identity)
+        .verifying(notEmpty(isAgent, emptyFieldKey))
+    } else {
+      value -> trimmedText.transform[String](filter, identity)
+        .verifying(notEmpty(isAgent, emptyFieldKey), isMixedAlphanumeric(wrongFormatKey))
+    }
   )
 
 }
