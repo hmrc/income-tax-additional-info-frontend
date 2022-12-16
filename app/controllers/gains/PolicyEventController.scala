@@ -35,7 +35,9 @@ class PolicyEventController @Inject()(authorisedAction: AuthorisedAction,
   extends FrontendController(mcc) with I18nSupport {
 
   def policyEventForm(isAgent: Boolean): Form[String] = InputFieldForm.inputFieldForm(isAgent,
-    s"gains.policy-event.question.error-message")
+    s"gains.policy-event.question.error-message",
+  ""
+  )
 
   def show(taxYear: Int): Action[AnyContent] = authorisedAction.async { implicit request =>
     Future.successful(Ok(view(taxYear, policyEventForm(request.user.isAgent))))

@@ -20,13 +20,13 @@ import play.api.data.FormError
 import support.UnitTest
 
 class InputFieldFormSpec extends UnitTest{
-  private def theForm() = InputFieldForm.inputFieldForm(isAgent = false, "error")
+  private def theForm() = InputFieldForm.inputFieldForm(isAgent = false, "error", "wrongFormat")
 
-  private val testInputValid = "valid"
+  private val testInputValid = "valid1"
   private val testInputEmpty = ""
 
   "The InputFieldForm" should {
-    "correctly validate an alphanumeric string" when {
+    "correctly validate a mixed alphanumeric string" when {
       "a valid string is entered" in {
         val testInput = Map(InputFieldForm.value -> testInputValid)
         val expected = testInputValid

@@ -136,7 +136,7 @@ class PolicyEventPageViewSpec extends ViewUnitTest {
         implicit val messages: Messages = getMessages(userScenario.isWelsh)
 
         implicit val document: Document = Jsoup.parse(page(taxYear, InputFieldForm.inputFieldForm(userScenario.isAgent,
-          s"gains.policy-event.question.error-message")).body)
+          s"gains.policy-event.question.error-message", "")).body)
 
         welshToggleCheck(userScenario.isWelsh)
         titleCheck(userScenario.specificExpectedResults.get.expectedTitle, userScenario.isWelsh)
@@ -161,7 +161,8 @@ class PolicyEventPageViewSpec extends ViewUnitTest {
         implicit val messages: Messages = getMessages(userScenario.isWelsh)
 
         implicit val document: Document = Jsoup.parse(page(taxYear, InputFieldForm.inputFieldForm(userScenario.isAgent,
-          s"gains.policy-event.question.error-message").bind(Map(InputFieldForm.value -> ""))).body)
+          s"gains.policy-event.question.error-message",
+          "").bind(Map(InputFieldForm.value -> ""))).body)
 
         welshToggleCheck(userScenario.isWelsh)
         titleCheck(userScenario.specificExpectedResults.get.expectedErrorTitle, userScenario.isWelsh)

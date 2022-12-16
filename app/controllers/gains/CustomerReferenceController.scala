@@ -35,7 +35,9 @@ class CustomerReferenceController @Inject()(authorisedAction: AuthorisedAction,
   extends FrontendController(mcc) with I18nSupport {
 
   def customerReferenceForm(isAgent: Boolean): Form[String] = InputFieldForm.inputFieldForm(isAgent,
-    s"gains.customer-reference.question.error-message.${if (isAgent) "agent" else "individual"}")
+    s"gains.customer-reference.question.error-message.1.${if (isAgent) "agent" else "individual"}",
+    s"gains.customer-reference.question.error-message.2.${if (isAgent) "agent" else "individual"}"
+  )
 
   def show(taxYear: Int): Action[AnyContent] = authorisedAction.async { implicit request =>
     Future.successful(Ok(view(taxYear, customerReferenceForm(request.user.isAgent))))
