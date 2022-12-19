@@ -131,6 +131,17 @@ gains.gain-amount.question.label.agent = How much gain did your client make?
 gains.gain-amount.question.incorrect-format-error.agent = Enter the gain your client made in the correct format. For example, £193.54
 gains.gain-amount.question.amount-exceeds-max-error.agent = The amount of your client''s gain must be less than £100,000,000,000
 
+gains.policy-held.question.title.individual = How many years have you held this policy?
+gains.policy-held.question.paragraph.individual = If you''ve held the policy for less than a year, enter 0.
+gains.policy-held.question.error-empty.individual = Enter the number of years you have held this policy. If less than a year, enter 0
+gains.policy-held.question.error-yearsExceedsMaximum = The number of years must be less than 100
+gains.policy-held.question.error-incorrect.format.individual = Enter the number of years you have held this policy in the correct format. If less than a year, enter 0
+
+gains.policy-held.question.title.agent = How many years has your client held this policy?
+gains.policy-held.question.paragraph.agent = If your client has held the policy for less than a year, enter 0.
+gains.policy-held.question.error-empty.agent = Enter the number of years your client has held this policy. If less than a year, enter 0
+gains.policy-held.question.error-incorrect.format.agent = Enter the number of years your client has held this policy in the correct format. If less than a year, enter 0
+
 #################       Error messages        ########################################
 common.error.self-assessment.paragraph.1.1 = If the web address is correct or you selected a link or button, you can use
 common.error.self-assessment.paragraph.1.2 = Self Assessment: general enquiries
@@ -169,4 +180,3 @@ taxYear-error-template.paragraph.2 = Check that you’ve entered the correct web
 timeout.button = Sign in
 timeout.heading = For your security, we signed you out
 timeout.p1 = We did not save your answers.
-
