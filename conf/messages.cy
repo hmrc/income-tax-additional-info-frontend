@@ -41,6 +41,7 @@ common.yes = Iawn
 common.error.amountMaxLimit = Enter an amount less than £100,000,000,000
 common.error.invalid_currency_format = Enter the amount in the correct format
 common.error.invalid_Year_Format = Nodwch nifer y blynyddoedd yn y fformat cywir. Er enghraifft, ''3''
+common.monetary.input.hint = Er enghraifft, £193.54
 
 #################       Captions       ########################################
 gains.caption = Enillion o bolisïau yswiriant bywyd a chontractau ar gyfer 6 Ebrill {0} i 5 Ebrill {1}
@@ -98,7 +99,6 @@ gains.status.question.input.year.error.noeEntry.agent = Nodwch nifer y blynyddoe
 gains.status.question.input.year.error.maxLimit.agent = Mae’n rhaid i enillion diwethaf eich cleient fod yn llai na 100 mlynedd yn ôl
 gains.paid-tax-status.question.title.individual = A wnaethoch dalu treth ar eich ennill?
 gains.paid-tax-status.question.label.individual = Faint o dreth wnaethoch ei dalu?
-gains.paid-tax-status.question.hint = Er enghraifft, £193.54
 gains.paid-tax-status.question.error.1.individual = Dewiswch ‘Iawn’ os oes gennych hawl i ryddhad am ddiffyg
 gains.paid-tax-status.question.error.2.individual = Nodwch swm y dreth a daloch. Er enghraifft, £193.54
 gains.paid-tax-status.question.error.3.individual = Nodwch swm y dreth a daloch yn y fformat cywir. Er enghraifft, £193.54
@@ -107,8 +107,29 @@ gains.paid-tax-status.question.error.4 = Mae’n rhaid i swm y dreth a dalwyd fo
 gains.paid-tax-status.question.title.agent = A wnaeth eich cleient dalu treth ar ei enillion?
 gains.paid-tax-status.question.label.agent = Faint o dreth a dalwyd gan eich cleient?
 gains.paid-tax-status.question.error.1.agent = Dewiswch ‘Iawn’ os gwnaeth eich cleient dalu treth ar ei enillion
-gains.paid-tax-status.question.error.2.agent = Nodwch enillion eich cleient. Er enghraifft, £193.54
-gains.paid-tax-status.question.error.3.agent = Nodwch swm y dreth a dalwyd gan eich cleient yn y fformat cywir. Er enghraifft, £193.54
+gains.paid-tax-status.question.error.2.agent = Nodwch swm y dreth a dalodd eich cleient. Er enghraifft, £193.54
+gains.paid-tax-status.question.error.3.agent = Nodwch swm y dreth a dalodd eich cleient yn y fformat cywir. Er enghraifft, £193.54
+
+gains.gain-amount.question.title = Enillion ar ddigwyddiad trethadwy
+gains.gain-amount.question.paragraph.1.individual = Nodwch y swm a ddangosir ar y dystysgrif digwyddiad trethadwy a ddarperir gan eich yswiriwr.
+gains.gain-amount.question.paragraph.2.individual = Os ydych yn gydberchennog ar y polisi neu’r blwydd-dal, nodwch eich cyfran o’r elw.
+gains.gain-amount.question.label.individual = Faint o ennill gwnaethoch chi?
+gains.gain-amount.question.error.empty_field.individual = Nodwch eich ennill. Er enghraifft, £193.54
+gains.gain-amount.question.incorrect-format-error.individual = Nodwch yr ennill a wnaethoch yn y fformat cywir. Er enghraifft, £193.54
+gains.gain-amount.question.amount-exceeds-max-error.individual = Mae’n rhaid i’r ennill fod yn llai na £100,000,000,000
+
+gains.gain-amount.question.paragraph.1.agent = Nodwch y swm a ddangosir ar y dystysgrif digwyddiad trethadwy a ddarperir gan yswiriwr neu reolwr ISA eich cleient.
+gains.gain-amount.question.paragraph.2.agent = Os yw’ch cleient yn berchen y polisi neu’r blwydd-dal ar y cyd, nodwch ei ran o’r enillion.
+gains.gain-amount.question.label.agent = Faint oedd enillion eich cleient?
+gains.gain-amount.question.error.empty_field.agent = Nodwch enillion eich cleient. Er enghraifft, £193.54
+gains.gain-amount.question.incorrect-format-error.agent = Nodwch enillion eich cleient yn y fformat cywir. Er enghraifft, £193.54
+gains.gain-amount.question.amount-exceeds-max-error.agent = Mae’n rhaid i enillion eich cleient fod yn llai na £100,000,000,000
+
+gains.gain-amount.question.summary-text = Pryd i ostwng yr elw
+gains.gain-amount.question.details-text = Bydd angen i chi gyfrifo gostyngiad os yw’r canlynol yn wir:
+gains.gain-amount.question.bullet.1 = Mae’ch polisi yn gymwys ar gyfer rhyddhad cyfyngedig
+gains.gain-amount.question.bullet.2 = Roeddech yn berson nad oedd yn breswyl yn y DU tra roeddech yn berchennog llesol ar y polisi
+gains.gain-amount.question.link.text = Dysgwch ragor am ostwng enillion ar ddigwyddiad trethadwy (yn agor tab newydd)
 
 #################       Error messages        ########################################
 

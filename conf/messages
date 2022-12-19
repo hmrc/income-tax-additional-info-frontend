@@ -41,6 +41,7 @@ common.yes = Yes
 common.error.amountMaxLimit = Enter an amount less than £100,000,000,000
 common.error.invalid_currency_format = Enter the amount in the correct format
 common.error.invalid_Year_Format = Enter the number of years in the correct format. For example, ''3''
+common.monetary.input.hint = For example, £193.54
 
 #################       Captions       ########################################
 gains.caption = Gains from life insurance policies and contracts for 6 April {0} to 5 April {1}
@@ -98,7 +99,6 @@ gains.status.question.input.year.error.noeEntry.agent = Enter the number of year
 gains.status.question.input.year.error.maxLimit.agent = Your client''s last gain must be less than 100 years
 gains.paid-tax-status.question.title.individual = Did you pay tax on your gain?
 gains.paid-tax-status.question.label.individual = How much tax did you pay?
-gains.paid-tax-status.question.hint = For example, £193.54
 gains.paid-tax-status.question.error.1.individual = Select yes if you paid tax on your gain
 gains.paid-tax-status.question.error.2.individual = Enter the amount of tax you paid. For example, £193.54
 gains.paid-tax-status.question.error.3.individual = Enter the amount of tax you paid in the correct format. For example, £193.54
@@ -109,6 +109,27 @@ gains.paid-tax-status.question.label.agent = How much tax did your client pay?
 gains.paid-tax-status.question.error.1.agent = Select yes if your client paid tax on their gain
 gains.paid-tax-status.question.error.2.agent = Enter the amount of tax your client paid. For example, £193.54
 gains.paid-tax-status.question.error.3.agent = Enter the amount of tax your client paid in the correct format. For example, £193.54
+
+gains.gain-amount.question.title = Chargeable event gain
+gains.gain-amount.question.paragraph.1.individual = Enter the amount shown on the chargeable event certificate provided by your insurer or ISA manager.
+gains.gain-amount.question.paragraph.2.individual = If you are a joint owner of the policy or annuity, enter your share of the gain.
+gains.gain-amount.question.label.individual = How much gain did you make?
+gains.gain-amount.question.error.empty_field.individual = Enter the gain you made. For example, £193.54
+gains.gain-amount.question.incorrect-format-error.individual = Enter the gain you made in the correct format. For example, £193.54
+gains.gain-amount.question.amount-exceeds-max-error.individual = The amount of your gain must be less than £100,000,000,000
+
+gains.gain-amount.question.summary-text = When to reduce the gain
+gains.gain-amount.question.details-text = You will need to calculate a reduction if:
+gains.gain-amount.question.bullet.1 = your policy qualifies for restricted relief
+gains.gain-amount.question.bullet.2 = you were a non-UK resident while you were a beneficial owner of the policy
+gains.gain-amount.question.link.text = Find out more about reducing chargeable event gains (opens in new tab)
+
+gains.gain-amount.question.error.empty_field.agent = Enter the gain your client made. For example, £193.54
+gains.gain-amount.question.paragraph.1.agent = Enter the amount shown on the chargeable event certificate provided by your client’s insurer or ISA manager.
+gains.gain-amount.question.paragraph.2.agent = If your client is a joint owner of the policy or annuity, enter their share of the gain.
+gains.gain-amount.question.label.agent = How much gain did your client make?
+gains.gain-amount.question.incorrect-format-error.agent = Enter the gain your client made in the correct format. For example, £193.54
+gains.gain-amount.question.amount-exceeds-max-error.agent = The amount of your client''s gain must be less than £100,000,000,000
 
 #################       Error messages        ########################################
 common.error.self-assessment.paragraph.1.1 = If the web address is correct or you selected a link or button, you can use
