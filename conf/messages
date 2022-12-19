@@ -60,7 +60,7 @@ gains.customer-reference.question.hint = For example, ''INPOLY123A'’.
 gains.customer-reference.question.error-message.1.agent = Enter your client''s customer reference
 gains.customer-reference.question.error-message.2.agent = Enter your client''s customer reference in the correct format. For example, ''INPOLY123A''. Your client''s customer reference must only include letters and numbers
 
-gains.gateway.question.title = Gains from policies and contracts
+gains.gateway.question.title = Gains from life insurance policies and contracts
 gains.gateway.question.radio.heading.individual = Did you make a gain on a UK policy or contract?
 gains.gateway.question.paragraph1.individual = Your insurer will have sent you a chargeable event certificate if you made a gain on a:
 gains.gateway.question.bullet.1 = life insurance policy

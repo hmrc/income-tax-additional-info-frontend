@@ -60,7 +60,7 @@ gains.customer-reference.question.hint = Er enghraifft, ''INPOLY123A'’.
 gains.customer-reference.question.error-message.1.agent = Nodwch gyfeirnod cwsmer eich cleient
 gains.customer-reference.question.error-message.2.agent = Nodwch gyfeirnod cwsmer eich cleient yn y fformat cywir. Er enghraifft, ‘INPOLY123A’. Mae’n rhaid i’r cyfeirnod cwsmer gynnwys llythrennau a rhifau yn unig
 
-gains.gateway.question.title = Enillion o bolisïau a chontractau
+gains.gateway.question.title = Enillion o bolisïau yswiriant bywyd a chontractau
 gains.gateway.question.radio.heading.individual = A wnaethoch chi ennill ar bolisi neu gytundeb y DU?
 gains.gateway.question.paragraph1.individual = Bydd eich yswiriwr wedi anfon tystysgrif digwyddiad trethadwy, os gwnaethoch ennill ar un o’r canlynol:
 gains.gateway.question.bullet.1 = polisi yswiriant bywyd
