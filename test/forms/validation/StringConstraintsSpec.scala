@@ -74,5 +74,21 @@ class StringConstraintsSpec extends Constraints with AnyWordSpecLike with Matche
       }
     }
   }
+
+  "The StringConstraints.validateAlphanumeric method" when {
+    "supplied with a valid mixed alphanumeric string" should {
+      "return valid" in {
+        StringConstraints.validateAlphanumeric("""^$|^(?=.*[0-9])(?=.*[a-zA-Z])([a-zA-Z0-9]+)$""")(errMsgInvalidChar)("INPOLY123") shouldBe Valid
+      }
+
+
+    }
+
+    "supplied with an invalid string" should {
+      "return invalid" in {
+        StringConstraints.validateAlphanumeric("""^$|^(?=.*[0-9])(?=.*[a-zA-Z])([a-zA-Z0-9]+)$""")(errMsgInvalidChar)("ABC") shouldBe Invalid(errMsgInvalidChar)
+      }
+    }
+  }
 }
 
