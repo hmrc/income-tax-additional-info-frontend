@@ -16,19 +16,20 @@
 
 package controllers.gains
 
+import forms.AmountForm
 import play.api.http.HeaderNames
 import play.api.http.Status.{BAD_REQUEST, OK, SEE_OTHER}
 import play.api.libs.ws.WSResponse
 import support.IntegrationTest
 
-class GainsGatewayControllerISpec extends IntegrationTest {
+class GainsAmountControllerISpec extends IntegrationTest {
 
   private def url(taxYear: Int): String = {
-    s"/update-and-submit-income-tax-return/additional-information/$taxYear/gains/gains-gateway"
+    s"/update-and-submit-income-tax-return/additional-information/$taxYear/gains/gains-amount"
   }
 
   ".show" should {
-    "render the gains gateway page" in {
+    "render the gains amount page" in {
       lazy val result: WSResponse = {
         authoriseAgentOrIndividual(isAgent = false)
         urlGet(url(taxYear), headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)))
@@ -37,7 +38,7 @@ class GainsGatewayControllerISpec extends IntegrationTest {
       result.status shouldBe OK
     }
 
-    "render the gains gateway page for an agent" in {
+    "render the gains amount page for an agent" in {
       lazy val result: WSResponse = {
         authoriseAgentOrIndividual(isAgent = true)
         urlGet(url(taxYear), headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)))
@@ -48,10 +49,38 @@ class GainsGatewayControllerISpec extends IntegrationTest {
   }
 
   ".submit" should {
+    "redirect to income tax submission overview if successful" in {
+      lazy val result: WSResponse = {
+        authoriseAgentOrIndividual(isAgent = false)
+        urlPost(url(taxYear), headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)), body = Map(AmountForm.amount -> "100"))
+      }
+
+      result.status shouldBe SEE_OTHER
+      result.headers("Location").head shouldBe appConfig.incomeTaxSubmissionOverviewUrl(taxYear)
+    }
+
+    "show page with error text if form is invalid" in {
+      lazy val result: WSResponse = {
+        authoriseAgentOrIndividual(isAgent = false)
+        urlPost(url(taxYear), headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)), body = Map(AmountForm.amount -> "abc"))
+      }
+
+      result.status shouldBe BAD_REQUEST
+    }
+
     "show page with error text if form is empty" in {
       lazy val result: WSResponse = {
         authoriseAgentOrIndividual(isAgent = false)
-        urlPost(url(taxYear), headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)), body = Map[String, String]())
+        urlPost(url(taxYear), headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)), body = Map(AmountForm.amount -> ""))
+      }
+
+      result.status shouldBe BAD_REQUEST
+    }
+
+    "show page with error text if form value is too high" in {
+      lazy val result: WSResponse = {
+        authoriseAgentOrIndividual(isAgent = false)
+        urlPost(url(taxYear), headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)), body = Map(AmountForm.amount -> "10000000000000"))
       }
 
       result.status shouldBe BAD_REQUEST

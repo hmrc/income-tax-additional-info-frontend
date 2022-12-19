@@ -41,3 +41,6 @@ POST        /:taxYear/gains/gains-status                   controllers.gains.Gai
 
 GET         /:taxYear/gains/paid-tax-status                  controllers.gains.PaidTaxStatusController.show(taxYear: Int)
 POST        /:taxYear/gains/paid-tax-status                  controllers.gains.PaidTaxStatusController.submit(taxYear: Int)
+
+GET         /:taxYear/gains/gains-amount                    controllers.gains.GainsAmountController.show(taxYear: Int)
+POST        /:taxYear/gains/gains-amount                    controllers.gains.GainsAmountController.submit(taxYear: Int)
