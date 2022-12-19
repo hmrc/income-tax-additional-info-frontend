@@ -131,6 +131,18 @@ gains.gain-amount.question.bullet.1 = Mae’ch polisi yn gymwys ar gyfer rhyddha
 gains.gain-amount.question.bullet.2 = Roeddech yn berson nad oedd yn breswyl yn y DU tra roeddech yn berchennog llesol ar y polisi
 gains.gain-amount.question.link.text = Dysgwch ragor am ostwng enillion ar ddigwyddiad trethadwy (yn agor tab newydd)
 
+gains.policy-held.question.title.individual = Ers sawl blwyddyn rydych wedi dal y polisi hwn?
+gains.policy-held.question.paragraph.individual = Os ydych wedi dal y polisi ers llai na blwyddyn, nodwch 0.
+gains.customer-reference.question.label = Policy Held
+gains.policy-held.question.error-empty.individual = Nodwch nifer y blynyddoedd yr ydych wedi dal y polisi hwn. Os yw’n llai na blwyddyn, nodwch 0
+gains.policy-held.question.error-yearsExceedsMaximum = Mae’n rhaid i nifer y blynyddoedd fod yn llai na 100
+gains.policy-held.question.error-incorrect.format.individual = Nodwch nifer y blynyddoedd rydych chi wedi dal y polisi hwn yn y fformat cywir. Os yw’n llai na blwyddyn, nodwch 0
+
+gains.policy-held.question.title.agent = Ers sawl blwyddyn y mae’ch cleient wedi dal y polisi hwn?
+gains.policy-held.question.paragraph.agent = Os yw’ch cleient wedi dal y polisi am lai na blwyddyn, nodwch 0.
+gains.policy-held.question.error-empty.agent = Nodwch nifer y blynyddoedd y mae’ch cleient wedi dal y polisi hwn. Os yw’n llai na blwyddyn, nodwch 0
+gains.policy-held.question.error-incorrect.format.agent = Nodwch nifer y blynyddoedd y mae’ch cleient wedi dal y polisi hwn yn y fformat cywir. Os yw’n llai na blwyddyn, nodwch 0
+
 #################       Error messages        ########################################
 
 common.error.self-assessment.paragraph.1.1 = If the web address is correct or you selected a link or button, you can use
@@ -170,4 +182,3 @@ taxYear-error-template.paragraph.2 = Check that you’ve entered the correct web
 timeout.button = Sign in
 timeout.heading = For your security, we signed you out
 timeout.p1 = We did not save your answers.
-
