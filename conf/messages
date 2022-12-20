@@ -46,7 +46,7 @@ common.monetary.input.hint = For example, £193.54
 #################       Captions       ########################################
 gains.caption = Gains from life insurance policies and contracts for 6 April {0} to 5 April {1}
 
-#################       Gains messages       ########################################
+################# Gains from life insurance policies and contracts messages #################
 gains.customer-reference.question.title.individual = What''s your customer reference?
 gains.customer-reference.question.paragraph.individual = Your insurer or ISA manager should have given you a customer reference for your policy or contract.
 gains.customer-reference.question.label = Customer reference
@@ -60,7 +60,7 @@ gains.customer-reference.question.hint = For example, ''INPOLY123A'’.
 gains.customer-reference.question.error-message.1.agent = Enter your client''s customer reference
 gains.customer-reference.question.error-message.2.agent = Enter your client''s customer reference in the correct format. For example, ''INPOLY123A''. Your client''s customer reference must only include letters and numbers
 
-gains.gateway.question.title = Gains from policies and contracts
+gains.gateway.question.title = Gains from life insurance policies and contracts
 gains.gateway.question.radio.heading.individual = Did you make a gain on a UK policy or contract?
 gains.gateway.question.paragraph1.individual = Your insurer will have sent you a chargeable event certificate if you made a gain on a:
 gains.gateway.question.bullet.1 = life insurance policy
@@ -97,6 +97,7 @@ gains.status.question.input.year.hint.agent = If your client''s last gain was le
 gains.status.question.radio.error.noEntry.agent = Select yes if your client has made a gain from this policy before
 gains.status.question.input.year.error.noeEntry.agent = Enter the number of years since your client''s last gain. If your client''s last gain was less than a year ago, enter 0
 gains.status.question.input.year.error.maxLimit.agent = Your client''s last gain must be less than 100 years
+
 gains.paid-tax-status.question.title.individual = Did you pay tax on your gain?
 gains.paid-tax-status.question.label.individual = How much tax did you pay?
 gains.paid-tax-status.question.error.1.individual = Select yes if you paid tax on your gain
@@ -141,6 +142,29 @@ gains.policy-held.question.title.agent = How many years has your client held thi
 gains.policy-held.question.paragraph.agent = If your client has held the policy for less than a year, enter 0.
 gains.policy-held.question.error-empty.agent = Enter the number of years your client has held this policy. If less than a year, enter 0
 gains.policy-held.question.error-incorrect.format.agent = Enter the number of years your client has held this policy in the correct format. If less than a year, enter 0
+
+gains.deficiency-relief-status.question.radio.heading.individual = Are you entitled to deficiency relief?
+gains.deficiency-relief-status.question.radio.heading.agent = Is your client entitled to Deficiency Relief?
+gains.deficiency-relief-status.question.input.amount = What amount is available for relief?
+gains.deficiency-relief-status.question.heading = Deficiency Relief
+
+gains.deficiency-relief-status.question.paragraph1.individual = You may be entitled to this relief if:
+gains.deficiency-relief-status.question.bullet1.individual = your policy or annuity ended between 6 April {0} to 5 April {1}
+gains.deficiency-relief-status.question.bullet2.individual = you made gains on the policy or annuity in an earlier tax year
+gains.deficiency-relief-status.question.bullet3.individual = you pay higher rate tax
+
+gains.deficiency-relief-status.question.paragraph1.agent = Your client may be entitled to this relief if:
+gains.deficiency-relief-status.question.bullet1.agent = their policy or annuity ended between 6 April {0} to 5 April {1}
+gains.deficiency-relief-status.question.bullet2.agent = they made gains on the policy or annuity in an earlier tax year
+gains.deficiency-relief-status.question.bullet3.agent = they pay higher rate tax
+gains.deficiency-relief-status.question.paragraph2.link = Find out more about Deficiency Relief
+
+gains.deficiency-relief-status.question.radio.error.noEntry.individual = Select Yes if you are entitled to deficiency relief
+gains.deficiency-relief-status.question.radio.error.noEntry.agent = Select yes if your client is entitled to deficiency relief
+gains.deficiency-relief-status.question.input.error.noEntry = Enter the amount available for relief
+gains.deficiency-relief-status.question.input.error.incorrectFormat = Enter the amount available for relief in the correct format. For example, ''£193.54''
+gains.deficiency-relief-status.question.input.error.amountExceedsMax = The amount of Special Withholding Tax must be less than £100,000,000,000
+
 
 #################       Error messages        ########################################
 common.error.self-assessment.paragraph.1.1 = If the web address is correct or you selected a link or button, you can use
