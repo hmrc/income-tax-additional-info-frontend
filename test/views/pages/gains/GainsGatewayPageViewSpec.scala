@@ -88,40 +88,40 @@ class GainsGatewayPageViewSpec extends ViewUnitTest {
   }
 
   object ExpectedIndividualEN extends SpecificExpectedResults {
-    override val expectedTitle: String = "Gains from policies and contracts"
-    override val expectedErrorTitle: String = "Error: Gains from policies and contracts"
+    override val expectedTitle: String = "Gains from life insurance policies and contracts"
+    override val expectedErrorTitle: String = "Error: Gains from life insurance policies and contracts"
     override val expectedRadioHeading: String = "Did you make a gain on a UK policy or contract?"
-    override val expectedHeading: String = "Gains from policies and contracts"
+    override val expectedHeading: String = "Gains from life insurance policies and contracts"
     override val expectedParagraph1: String = "Your insurer will have sent you a chargeable event certificate if you made a gain on a:"
     override val expectedParagraph2: String = "You can tell us if your life insurance company or ISA manager have cancelled your ISA or life policy later."
     override val expectedErrorText: String = "Select Yes if you made a gain on a UK policy or contract"
   }
 
   object ExpectedIndividualCY extends SpecificExpectedResults {
-    override val expectedTitle: String = "Enillion o bolisïau a chontractau"
-    override val expectedErrorTitle: String = "Error: Enillion o bolisïau a chontractau"
+    override val expectedTitle: String = "Enillion o bolisïau yswiriant bywyd a chontractau"
+    override val expectedErrorTitle: String = "Error: Enillion o bolisïau yswiriant bywyd a chontractau"
     override val expectedRadioHeading: String = "A wnaethoch chi ennill ar bolisi neu gytundeb y DU?"
-    override val expectedHeading: String = "Enillion o bolisïau a chontractau"
+    override val expectedHeading: String = "Enillion o bolisïau yswiriant bywyd a chontractau"
     override val expectedParagraph1: String = "Bydd eich yswiriwr wedi anfon tystysgrif digwyddiad trethadwy, os gwnaethoch ennill ar un o’r canlynol:"
     override val expectedParagraph2: String = "Gallwch roi gwybod i ni os yw’ch cwmni yswiriant bywyd neu reolwr ISA wedi canslo’ch ISA neu bolisi bywyd nes ymlaen."
     override val expectedErrorText: String = "Dewiswch ‘Iawn’ os gwnaethoch enillion ar bolisi neu gontract yn y DU"
   }
 
   object ExpectedAgentEN extends SpecificExpectedResults {
-    override val expectedTitle: String = "Gains from policies and contracts"
-    override val expectedErrorTitle: String = "Error: Gains from policies and contracts"
+    override val expectedTitle: String = "Gains from life insurance policies and contracts"
+    override val expectedErrorTitle: String = "Error: Gains from life insurance policies and contracts"
     override val expectedRadioHeading: String = "Did your client make a gain on a UK policy or contract?"
-    override val expectedHeading: String = "Gains from policies and contracts"
+    override val expectedHeading: String = "Gains from life insurance policies and contracts"
     override val expectedParagraph1: String = "Your client's insurer will have sent them a chargeable event certificate if they made a gain on a:"
     override val expectedParagraph2: String = "You can tell us if your client's life insurance company or ISA manager has cancelled their ISA or life policy later."
     override val expectedErrorText: String = "Select yes if your client made a gain on a UK policy or contract"
   }
 
   object ExpectedAgentCY extends SpecificExpectedResults {
-    override val expectedTitle: String = "Enillion o bolisïau a chontractau"
-    override val expectedErrorTitle: String = "Error: Enillion o bolisïau a chontractau"
+    override val expectedTitle: String = "Enillion o bolisïau yswiriant bywyd a chontractau"
+    override val expectedErrorTitle: String = "Error: Enillion o bolisïau yswiriant bywyd a chontractau"
     override val expectedRadioHeading: String = "A wnaeth eich cleient enillion ar bolisi neu gontract yn y DU?"
-    override val expectedHeading: String = "Enillion o bolisïau a chontractau"
+    override val expectedHeading: String = "Enillion o bolisïau yswiriant bywyd a chontractau"
     override val expectedParagraph1: String = "Bydd yswiriwr eich cleient wedi anfon tystysgrif digwyddiad trethadwy ato, os gwnaeth enillion ar un o’r canlynol:"
     override val expectedParagraph2: String = "Gallwch roi gwybod i ni os yw cwmni yswiriant bywyd eich cleient, neu reolwr ISA eich cleient, wedi canslo ei ISA neu bolisi bywyd nes ymlaen."
     override val expectedErrorText: String = "Dewiswch ‘Iawn’ os gwnaeth eich cleient enillion ar bolisi neu gontract yn y DU"

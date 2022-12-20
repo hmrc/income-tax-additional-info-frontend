@@ -97,7 +97,7 @@ class PaidTaxStatusPageViewSpec extends ViewUnitTest {
     override val expectedErrorTitle: String = "Error: A wnaethoch dalu treth ar eich ennill?"
     override val expectedHeading: String = "A wnaethoch dalu treth ar eich ennill?"
     override val expectedLabel: String = "Faint o dreth wnaethoch ei dalu?"
-    override val expectedErrorText1: String = "Dewiswch ‘Iawn’ os oes gennych hawl i ryddhad am ddiffyg"
+    override val expectedErrorText1: String = "Dewiswch Ydw os taloch chi dreth ar eich ennill"
     override val expectedErrorText2: String = "Nodwch swm y dreth a daloch. Er enghraifft, £193.54"
     override val expectedErrorText3: String = "Nodwch swm y dreth a daloch yn y fformat cywir. Er enghraifft, £193.54"
   }
