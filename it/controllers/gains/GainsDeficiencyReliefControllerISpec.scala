@@ -16,25 +16,24 @@
 
 package controllers.gains
 
-import forms.InputFieldForm
+import forms.RadioButtonAmountForm
 import play.api.http.HeaderNames
 import play.api.http.Status.{BAD_REQUEST, OK, SEE_OTHER}
 import play.api.libs.ws.WSResponse
 import support.IntegrationTest
 
-class CustomerReferenceControllerISpec extends IntegrationTest {
+class GainsDeficiencyReliefControllerISpec extends IntegrationTest {
 
   private def url(taxYear: Int): String = {
-    s"/update-and-submit-income-tax-return/additional-information/$taxYear/gains/policy-name"
+    s"/update-and-submit-income-tax-return/additional-information/$taxYear/gains/deficiency-relief-status"
   }
 
   ".show" should {
-    "render the customer reference page" in {
+    "render the paid tax status page" in {
       lazy val result: WSResponse = {
         authoriseAgentOrIndividual(isAgent = false)
         urlGet(url(taxYear), headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)))
       }
-
       result.status shouldBe OK
     }
 
@@ -51,28 +50,25 @@ class CustomerReferenceControllerISpec extends IntegrationTest {
     "redirect to income tax submission overview if successful" in {
       lazy val result: WSResponse = {
         authoriseAgentOrIndividual(isAgent = false)
-        urlPost(url(taxYear), headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)), body = Map(InputFieldForm.value -> "mixedAlphaNumOnly1"))
+        urlPost(url(taxYear), headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)), body = Map(RadioButtonAmountForm.yesNo -> "true", RadioButtonAmountForm.amount -> "100"))
       }
 
       result.status shouldBe SEE_OTHER
       result.headers("Location").head shouldBe appConfig.incomeTaxSubmissionOverviewUrl(taxYear)
     }
 
-    "show page with error text if form is invalid" in {
+    "show page with error text if no radio is selected" in {
       lazy val result: WSResponse = {
         authoriseAgentOrIndividual(isAgent = false)
         urlPost(url(taxYear), headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)), body = Map[String, String]())
       }
-
       result.status shouldBe BAD_REQUEST
     }
 
-    "show page with error text if input is the wrong format" in {
+    "show page with error text if form is invalid" in {
       lazy val result: WSResponse = {
         authoriseAgentOrIndividual(isAgent = false)
-        urlPost(url(taxYear), headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)), body = Map[String, String](
-          "value" -> "!@£"
-        ))
+        urlPost(url(taxYear), headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)), body = Map[String, String]())
       }
 
       result.status shouldBe BAD_REQUEST

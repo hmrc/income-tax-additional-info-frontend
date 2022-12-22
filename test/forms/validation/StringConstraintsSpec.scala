@@ -74,5 +74,33 @@ class StringConstraintsSpec extends Constraints with AnyWordSpecLike with Matche
       }
     }
   }
+
+  "The StringConstraints.validateMixedAlphaNumeric method" when {
+    "supplied with a valid mixed alphanumeric string" should {
+      "return valid" in {
+        StringConstraints.validateMixedAlphaNumeric(errMsgInvalidChar)("INPOLY123") shouldBe Valid
+      }
+   }
+
+    "supplied with invalid alphanumeric string" should {
+      "return invalid" in {
+        StringConstraints.validateMixedAlphaNumeric(errMsgInvalidChar)("123") shouldBe Invalid(errMsgInvalidChar)
+      }
+    }
+  }
+
+  "The StringConstraints.validateAlphabetsWithSpace method" when {
+    "supplied with a valid alphabet string" should {
+      "return valid" in {
+        StringConstraints.validateAlphabetsWithSpace(errMsgInvalidChar)("test this input") shouldBe Valid
+      }
+    }
+
+    "supplied with invalid alphabet string" should {
+      "return invalid" in {
+        StringConstraints.validateAlphabetsWithSpace(errMsgInvalidChar)("123 test") shouldBe Invalid(errMsgInvalidChar)
+      }
+    }
+  }
 }
 

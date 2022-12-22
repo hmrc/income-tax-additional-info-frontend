@@ -18,35 +18,35 @@ package controllers.gains
 
 import actions.AuthorisedAction
 import config.AppConfig
-import forms.InputFieldForm
+import forms.AmountForm
 import play.api.data.Form
 import play.api.i18n.I18nSupport
 import play.api.mvc._
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
-import views.html.pages.gains.CustomerReferencePageView
+import views.html.pages.gains.GainsAmountPageView
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class CustomerReferenceController @Inject()(authorisedAction: AuthorisedAction,
-                                            view: CustomerReferencePageView)
-                                           (implicit appConfig: AppConfig, mcc: MessagesControllerComponents, ec: ExecutionContext)
+class GainsAmountController @Inject()(authorisedAction: AuthorisedAction,
+                                      view: GainsAmountPageView)
+                                     (implicit appConfig: AppConfig, mcc: MessagesControllerComponents, ec: ExecutionContext)
   extends FrontendController(mcc) with I18nSupport {
 
-  val inputFormat = "mixedAlphaNumeric"
-
-  def customerReferenceForm(isAgent: Boolean): Form[String] = InputFieldForm.inputFieldForm(isAgent, inputFormat,
-    s"gains.customer-reference.question.error-message.1.${if (isAgent) "agent" else "individual"}",
-    s"gains.customer-reference.question.error-message.2.${if (isAgent) "agent" else "individual"}"
-  )
-
+  def form(isAgent: Boolean): Form[(BigDecimal)] =
+    AmountForm.amountForm(
+      s"gains.gain-amount.question.error.empty_field.${if (isAgent) "agent" else "individual"}",
+      s"gains.gain-amount.question.incorrect-format-error.${if (isAgent) "agent" else "individual"}",
+      s"gains.gain-amount.question.amount-exceeds-max-error.${if (isAgent) "agent" else "individual"}"
+    )
   def show(taxYear: Int): Action[AnyContent] = authorisedAction.async { implicit request =>
-    Future.successful(Ok(view(taxYear, customerReferenceForm(request.user.isAgent))))
+    Future.successful(Ok(view(taxYear, form(request.user.isAgent))))
   }
 
+
   def submit(taxYear: Int): Action[AnyContent] = authorisedAction.async { implicit request =>
-    customerReferenceForm(request.user.isAgent).bindFromRequest().fold(
+    form(request.user.isAgent).bindFromRequest().fold(
       formWithErrors =>
         Future.successful(BadRequest(view(taxYear, formWithErrors))),
       _ =>

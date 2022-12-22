@@ -20,7 +20,6 @@
 @import views.html.templates.helpers.InputRadio
 @import views.html.templates.helpers.InputText
 @import views.html.templates.helpers.Heading
-
 @import models.requests.AuthorisationRequest
 
 @this(
@@ -33,13 +32,11 @@
     button: Button
 )
 
-@(form: Form[(Boolean, Int)], taxYear: Int)(implicit request: AuthorisationRequest[_], messages: Messages, appConfig: AppConfig)
+@(form: Form[(Boolean, Option[Int])], taxYear: Int)(implicit request: AuthorisationRequest[_], messages: Messages, appConfig: AppConfig)
 
 @titleForUse = @{messages(s"gains.status.question.radio.heading.${if(request.user.isAgent) "agent" else "individual"}")}
 
 @headingForUse = @{(titleForUse)}
-
-@hasFormErrors = @{form.hasErrors}
 
 @layout(pageTitle = titleForUse, taxYear = Some(taxYear), hasErrors = form.hasErrors, isAgent = request.user.isAgent) {
 
@@ -67,9 +64,11 @@
                             classes = Some("govuk-input--width-2"),
                             form = form
                         )
-                    )
+                    ),
+                    checked = form("value").value.contains("true")
                 ),
-                RadioItem(id = Some("value-no"), value = Some("false"),
+                RadioItem(id = Some("value-no"),
+                    value = Some("false"),
                     content = Text(messages("common.no")),
                     checked = form("value").value.contains("false")
                 )

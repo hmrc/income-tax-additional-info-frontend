@@ -97,7 +97,7 @@ class PaidTaxStatusPageViewSpec extends ViewUnitTest {
     override val expectedErrorTitle: String = "Error: A wnaethoch dalu treth ar eich ennill?"
     override val expectedHeading: String = "A wnaethoch dalu treth ar eich ennill?"
     override val expectedLabel: String = "Faint o dreth wnaethoch ei dalu?"
-    override val expectedErrorText1: String = "Dewiswch ‘Iawn’ os oes gennych hawl i ryddhad am ddiffyg"
+    override val expectedErrorText1: String = "Dewiswch Ydw os taloch chi dreth ar eich ennill"
     override val expectedErrorText2: String = "Nodwch swm y dreth a daloch. Er enghraifft, £193.54"
     override val expectedErrorText3: String = "Nodwch swm y dreth a daloch yn y fformat cywir. Er enghraifft, £193.54"
   }
@@ -118,8 +118,8 @@ class PaidTaxStatusPageViewSpec extends ViewUnitTest {
     override val expectedHeading: String = "A wnaeth eich cleient dalu treth ar ei enillion?"
     override val expectedLabel: String = "Faint o dreth a dalwyd gan eich cleient?"
     override val expectedErrorText1: String = "Dewiswch ‘Iawn’ os gwnaeth eich cleient dalu treth ar ei enillion"
-    override val expectedErrorText2: String = "Nodwch enillion eich cleient. Er enghraifft, £193.54"
-    override val expectedErrorText3: String = "Nodwch swm y dreth a dalwyd gan eich cleient yn y fformat cywir. Er enghraifft, £193.54"
+    override val expectedErrorText2: String = "Nodwch swm y dreth a dalodd eich cleient. Er enghraifft, £193.54"
+    override val expectedErrorText3: String = "Nodwch swm y dreth a dalodd eich cleient yn y fformat cywir. Er enghraifft, £193.54"
   }
 
   override protected val userScenarios: Seq[UserScenario[CommonExpectedResults, SpecificExpectedResults]] = Seq(

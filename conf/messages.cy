@@ -40,24 +40,27 @@ common.yes = Iawn
 
 common.error.amountMaxLimit = Enter an amount less than £100,000,000,000
 common.error.invalid_currency_format = Enter the amount in the correct format
-common.error.invalid_Year_Format = Enter the number of years in the correct format. For example, '3'
+common.error.invalid_Year_Format = Nodwch nifer y blynyddoedd yn y fformat cywir. Er enghraifft, ''3''
+common.monetary.input.hint = Er enghraifft, £193.54
 
 #################       Captions       ########################################
 gains.caption = Enillion o bolisïau yswiriant bywyd a chontractau ar gyfer 6 Ebrill {0} i 5 Ebrill {1}
 
-#################       Gains messages       ########################################
+################# Gains from life insurance policies and contracts messages #################
 gains.customer-reference.question.title.individual = Beth yw’ch cyfeirnod cwsmer?
 gains.customer-reference.question.paragraph.individual = Dylai’ch yswiriwr neu reolwr ISA fod wedi rhoi cyfeirnod cwsmer i chi ar gyfer eich ISA neu’ch polisi bywyd a ganslwyd.
 gains.customer-reference.question.label = Cyfeirnod y cwsmer
 gains.customer-reference.question.hint = Er enghraifft, ''INPOLY123A''.
-gains.customer-reference.question.error-message.individual = Nodwch eich cyfeirnod cwsmer
+gains.customer-reference.question.error-message.1.individual = Nodwch eich cyfeirnod cwsmer
+gains.customer-reference.question.error-message.2.individual = Nodwch eich cyfeirnod cwsmer yn y fformat cywir. Er enghraifft, ''INPOLY123A''. Mae’n rhaid i’ch cyfeirnod cwsmer gynnwys llythrennau a rhifau yn unig
 
 gains.customer-reference.question.title.agent = Beth yw cyfeirnod cwsmer eich cleient?
 gains.customer-reference.question.paragraph.agent = Dylai yswiriwr neu reolwr ISA eich cleient fod wedi rhoi cyfeirnod cwsmer iddo ar gyfer ei bolisi neu ei gontract.
 gains.customer-reference.question.hint = Er enghraifft, ''INPOLY123A'’.
-gains.customer-reference.question.error-message.agent = Nodwch gyfeirnod cwsmer eich cleient
+gains.customer-reference.question.error-message.1.agent = Nodwch gyfeirnod cwsmer eich cleient
+gains.customer-reference.question.error-message.2.agent = Nodwch gyfeirnod cwsmer eich cleient yn y fformat cywir. Er enghraifft, ‘INPOLY123A’. Mae’n rhaid i’r cyfeirnod cwsmer gynnwys llythrennau a rhifau yn unig
 
-gains.gateway.question.title = Enillion o bolisïau a chontractau
+gains.gateway.question.title = Enillion o bolisïau yswiriant bywyd a chontractau
 gains.gateway.question.radio.heading.individual = A wnaethoch chi ennill ar bolisi neu gytundeb y DU?
 gains.gateway.question.paragraph1.individual = Bydd eich yswiriwr wedi anfon tystysgrif digwyddiad trethadwy, os gwnaethoch ennill ar un o’r canlynol:
 gains.gateway.question.bullet.1 = polisi yswiriant bywyd
@@ -80,6 +83,7 @@ gains.policy-event.question.bullet.4 = roedd y polisi yn Bondiau Portffolio Pers
 gains.policy-event.question.label = Beth achosodd yr ennill hwn?
 gains.policy-event.question.hint = Er enghraifft, aeddfedodd polisi, ildiodd y polisi’n rhannol neu bu farw briod.
 gains.policy-event.question.error-message = Nodwch y rheswm dros yr enillion hyn. Er enghraifft, aeddfedodd polisi, ildiad rhannol o’r polisi neu farwolaeth y priod
+gains.policy-event.question.incorrect-format.error-message = Nodwch y rheswm dros yr ennill hwn yn y fformat cywir. Mae’n rhaid i’r rheswm dros eich ennill gynnwys y llythrennau a i z yn unig. Er enghraifft, aeddfedodd y polisi, ildiad rhannol o’r polisi neu farwolaeth y priod
 
 gains.status.question.radio.heading.individual = A ydych wedi gwneud ennill o’r polisi hwn o’r blaen?
 gains.status.question.radio.error.noEntry.individual = Dewiswch ‘Iawn’ os ydych wedi gwneud ennill ar y polisi hwn o’r blaen
@@ -94,11 +98,9 @@ gains.status.question.input.year.label.agent = Sawl blwyddyn sydd wedi mynd heib
 gains.status.question.input.year.hint.agent = Os oedd enillion diwethaf eich cleient llai na blwyddyn yn ôl, nodwch 0.
 gains.status.question.input.year.error.noeEntry.agent = Nodwch nifer y blynyddoedd ers enillion diwethaf eich cleient. Os oedd enillion diwethaf eich cleient llai na blwyddyn yn ôl, nodwch 0
 gains.status.question.input.year.error.maxLimit.agent = Mae’n rhaid i enillion diwethaf eich cleient fod yn llai na 100 mlynedd yn ôl
-
 gains.paid-tax-status.question.title.individual = A wnaethoch dalu treth ar eich ennill?
 gains.paid-tax-status.question.label.individual = Faint o dreth wnaethoch ei dalu?
-gains.paid-tax-status.question.hint = Er enghraifft, £193.54
-gains.paid-tax-status.question.error.1.individual = Dewiswch ‘Iawn’ os oes gennych hawl i ryddhad am ddiffyg
+gains.paid-tax-status.question.error.1.individual = Dewiswch Ydw os taloch chi dreth ar eich ennill
 gains.paid-tax-status.question.error.2.individual = Nodwch swm y dreth a daloch. Er enghraifft, £193.54
 gains.paid-tax-status.question.error.3.individual = Nodwch swm y dreth a daloch yn y fformat cywir. Er enghraifft, £193.54
 gains.paid-tax-status.question.error.4 = Mae’n rhaid i swm y dreth a dalwyd fod yn llai na £100,000,000,000
@@ -106,8 +108,66 @@ gains.paid-tax-status.question.error.4 = Mae’n rhaid i swm y dreth a dalwyd fo
 gains.paid-tax-status.question.title.agent = A wnaeth eich cleient dalu treth ar ei enillion?
 gains.paid-tax-status.question.label.agent = Faint o dreth a dalwyd gan eich cleient?
 gains.paid-tax-status.question.error.1.agent = Dewiswch ‘Iawn’ os gwnaeth eich cleient dalu treth ar ei enillion
-gains.paid-tax-status.question.error.2.agent = Nodwch enillion eich cleient. Er enghraifft, £193.54
-gains.paid-tax-status.question.error.3.agent = Nodwch swm y dreth a dalwyd gan eich cleient yn y fformat cywir. Er enghraifft, £193.54
+gains.paid-tax-status.question.error.2.agent = Nodwch swm y dreth a dalodd eich cleient. Er enghraifft, £193.54
+gains.paid-tax-status.question.error.3.agent = Nodwch swm y dreth a dalodd eich cleient yn y fformat cywir. Er enghraifft, £193.54
+
+gains.gain-amount.question.title = Enillion ar ddigwyddiad trethadwy
+gains.gain-amount.question.paragraph.1.individual = Nodwch y swm a ddangosir ar y dystysgrif digwyddiad trethadwy a ddarperir gan eich yswiriwr.
+gains.gain-amount.question.paragraph.2.individual = Os ydych yn gydberchennog ar y polisi neu’r blwydd-dal, nodwch eich cyfran o’r elw.
+gains.gain-amount.question.label.individual = Faint o ennill gwnaethoch chi?
+gains.gain-amount.question.error.empty_field.individual = Nodwch eich ennill. Er enghraifft, £193.54
+gains.gain-amount.question.incorrect-format-error.individual = Nodwch yr ennill a wnaethoch yn y fformat cywir. Er enghraifft, £193.54
+gains.gain-amount.question.amount-exceeds-max-error.individual = Mae’n rhaid i’r ennill fod yn llai na £100,000,000,000
+
+gains.gain-amount.question.paragraph.1.agent = Nodwch y swm a ddangosir ar y dystysgrif digwyddiad trethadwy a ddarperir gan yswiriwr neu reolwr ISA eich cleient.
+gains.gain-amount.question.paragraph.2.agent = Os yw’ch cleient yn berchen y polisi neu’r blwydd-dal ar y cyd, nodwch ei ran o’r enillion.
+gains.gain-amount.question.label.agent = Faint oedd enillion eich cleient?
+gains.gain-amount.question.error.empty_field.agent = Nodwch enillion eich cleient. Er enghraifft, £193.54
+gains.gain-amount.question.incorrect-format-error.agent = Nodwch enillion eich cleient yn y fformat cywir. Er enghraifft, £193.54
+gains.gain-amount.question.amount-exceeds-max-error.agent = Mae’n rhaid i enillion eich cleient fod yn llai na £100,000,000,000
+
+gains.gain-amount.question.summary-text = Pryd i ostwng yr elw
+gains.gain-amount.question.details-text = Bydd angen i chi gyfrifo gostyngiad os yw’r canlynol yn wir:
+gains.gain-amount.question.bullet.1 = Mae’ch polisi yn gymwys ar gyfer rhyddhad cyfyngedig
+gains.gain-amount.question.bullet.2 = Roeddech yn berson nad oedd yn breswyl yn y DU tra roeddech yn berchennog llesol ar y polisi
+gains.gain-amount.question.link.text = Dysgwch ragor am ostwng enillion ar ddigwyddiad trethadwy (yn agor tab newydd)
+
+gains.policy-held.question.title.individual = Ers sawl blwyddyn rydych wedi dal y polisi hwn?
+gains.policy-held.question.paragraph.individual = Os ydych wedi dal y polisi ers llai na blwyddyn, nodwch 0.
+gains.customer-reference.question.label = Policy Held
+gains.policy-held.question.error-empty.individual = Nodwch nifer y blynyddoedd yr ydych wedi dal y polisi hwn. Os yw’n llai na blwyddyn, nodwch 0
+gains.policy-held.question.error-yearsExceedsMaximum = Mae’n rhaid i nifer y blynyddoedd fod yn llai na 100
+gains.policy-held.question.error-incorrect.format.individual = Nodwch nifer y blynyddoedd rydych chi wedi dal y polisi hwn yn y fformat cywir. Os yw’n llai na blwyddyn, nodwch 0
+
+gains.policy-held.question.title.agent = Ers sawl blwyddyn y mae’ch cleient wedi dal y polisi hwn?
+gains.policy-held.question.paragraph.agent = Os yw’ch cleient wedi dal y polisi am lai na blwyddyn, nodwch 0.
+gains.policy-held.question.error-empty.agent = Nodwch nifer y blynyddoedd y mae’ch cleient wedi dal y polisi hwn. Os yw’n llai na blwyddyn, nodwch 0
+gains.policy-held.question.error-incorrect.format.agent = Nodwch nifer y blynyddoedd y mae’ch cleient wedi dal y polisi hwn yn y fformat cywir. Os yw’n llai na blwyddyn, nodwch 0
+
+
+gains.deficiency-relief-status.question.radio.heading.individual = A oes gennych hawl i Ryddhad am Ddiffyg?
+gains.deficiency-relief-status.question.radio.heading.agent = A oes gan eich cleient yr hawl i Ryddhad am Ddiffyg?
+gains.deficiency-relief-status.question.input.amount = Pa swm sydd gael ar gyfer rhyddhad?
+gains.deficiency-relief-status.question.heading = Rhyddhad am ddiffyg
+gains.deficiency-relief-status.question.paragraph2.link = Dysgwch ragor am Ryddhad am Ddiffyg (yn agor tab newydd)
+
+gains.deficiency-relief-status.question.paragraph1.individual = Mae’n bosibl y bydd hawl gennych i’r rhyddhad hwn:
+gains.deficiency-relief-status.question.bullet1.individual = os daeth eich polisi neu flwydd-dal i ben rhwng 6 Ebrill {0} a 5 Ebrill {1}
+gains.deficiency-relief-status.question.bullet2.individual = os gwnaethoch enillion ar y polisi neu’r blwydd-dal mewn blwyddyn dreth gynharach
+gains.deficiency-relief-status.question.bullet3.individual = os ydych yn talu treth ar y gyfradd uwch
+
+gains.deficiency-relief-status.question.paragraph1.agent = Mae’n bosibl bod gan eich cleient hawl i’r rhyddhad hwn dan yr amgylchiadau canlynol:
+gains.deficiency-relief-status.question.bullet1.agent = daeth ei bolisi neu flwydd-dal i ben rhwng 6 Ebrill {0} a 5 Ebrill {1}
+gains.deficiency-relief-status.question.bullet2.agent = gwnaeth enillion ar y polisi neu’r blwydd-dal yn ystod blwyddyn dreth gynharach
+gains.deficiency-relief-status.question.bullet3.agent = mae’n talu treth ar y gyfradd uwch
+
+gains.deficiency-relief-status.question.radio.error.noEntry.individual = Dewiswch ‘Iawn’ os oes gennych hawl i ryddhad am ddiffyg
+gains.deficiency-relief-status.question.radio.error.noEntry.agent = Dewiswch ‘Iawn’ os oes gan eich cleient yr hawl i Ryddhad am Ddiffyg
+gains.deficiency-relief-status.question.input.error.noEntry = Nodwch y swm sydd ar gael ar gyfer rhyddhad
+gains.deficiency-relief-status.question.input.error.incorrectFormat = Nodwch y swm sydd ar gael ar gyfer rhyddhad yn y fformat cywir. Er enghraifft, ‘£193.54’
+gains.deficiency-relief-status.question.input.error.amountExceedsMax = Mae’n rhaid i swm y Dreth Ataliedig Arbennig fod yn llai na £100,000,000,000
+
+
 
 #################       Error messages        ########################################
 
@@ -148,4 +208,3 @@ taxYear-error-template.paragraph.2 = Check that you’ve entered the correct web
 timeout.button = Sign in
 timeout.heading = For your security, we signed you out
 timeout.p1 = We did not save your answers.
-

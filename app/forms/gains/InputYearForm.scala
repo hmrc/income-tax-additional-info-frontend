@@ -17,19 +17,24 @@
 package forms.gains
 
 import filters.InputFilters
-import forms.validation.mappings.MappingUtil.trimmedText
+import forms.validation.mappings.MappingUtil.optionYear
 import play.api.data.Form
-import play.api.data.validation.Constraint
-import play.api.data.validation.Constraints.nonEmpty
 
-object InputFieldForm extends InputFilters {
+object InputYearForm extends InputFilters {
 
-  val value: String = "value"
+  val numberOfYears: String = "policyHeld"
 
-  def notEmpty(isAgent: Boolean, errorMessage: String): Constraint[String] = nonEmpty(errorMessage)
-
-  def inputFieldForm(isAgent: Boolean, errorMessage: String): Form[String] = Form(
-    value -> trimmedText.transform[String](filter, identity).verifying(notEmpty(isAgent, errorMessage))
+  def inputYearsForm(emptyFieldKey: String,
+                     wrongFormatKey: String,
+                     maxYearKey: String,
+                     emptyFieldArguments: Seq[String] = Seq.empty[String]
+                ): Form[Option[Int]] = Form(
+    numberOfYears -> optionYear(
+      requiredKey = emptyFieldKey,
+      wrongFormatKey = wrongFormatKey,
+      maxYearKey = maxYearKey,
+      args = emptyFieldArguments
+    )
   )
 
 }

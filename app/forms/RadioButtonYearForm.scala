@@ -16,7 +16,7 @@
 
 package forms
 
-import forms.validation.mappings.MappingUtil.year
+import forms.validation.mappings.MappingUtil.optionYear
 import play.api.data.Forms.{of, tuple}
 import play.api.data.format.Formatter
 import play.api.data.{FieldMapping, Form, FormError}
@@ -33,7 +33,7 @@ object RadioButtonYearForm {
                              wrongYearFormatError: String,
                              exceedsMaxYearError: String,
                              errorArgs: Seq[String] = Seq.empty
-                            ): Form[(Boolean, Int)] = {
+                            ): Form[(Boolean, Option[Int])] = {
     Form(
       tuple(
         yesNo -> of(formatter(missingRadioInputError, errorArgs)),
@@ -62,26 +62,26 @@ object RadioButtonYearForm {
   def yearFormatter(requiredKey: String,
                     wrongFormatKey: String,
                     maxYearKey: String,
-                    args: Seq[String] = Seq.empty[String]): Formatter[Int] = {
-    new Formatter[Int] {
+                    args: Seq[String] = Seq.empty[String]): Formatter[Option[Int]] = {
+    new Formatter[Option[Int]] {
 
-      val yearFormatted: FieldMapping[Int] = year(
+      val optionalYear: FieldMapping[Option[Int]] = optionYear(
         requiredKey = requiredKey,
         wrongFormatKey = wrongFormatKey,
         maxYearKey = maxYearKey,
         args = args)
 
-      override def bind(key: String, data: Map[String, String]): Either[Seq[FormError], Int] = {
+      override def bind(key: String, data: Map[String, String]): Either[Seq[FormError], Option[Int]] = {
         data.get(yesNo) match {
-          case Some("true") => year(requiredKey,
+          case Some("true") => optionYear(requiredKey,
             wrongFormatKey,
             maxYearKey,
             args = args).binder.bind(key, data)
-          case _ => Right(0)
+          case _ => Right(None)
         }
       }
 
-      override def unbind(key: String, value: Int): Map[String, String] = yearFormatted.binder.unbind(key, value)
+      override def unbind(key: String, value: Option[Int]): Map[String, String] = optionalYear.binder.unbind(key, value)
     }
   }
 }

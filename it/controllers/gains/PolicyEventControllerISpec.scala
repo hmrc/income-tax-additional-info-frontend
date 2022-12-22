@@ -16,7 +16,7 @@
 
 package controllers.gains
 
-import forms.gains.InputFieldForm
+import forms.InputFieldForm
 import play.api.http.HeaderNames
 import play.api.http.Status.{BAD_REQUEST, OK, SEE_OTHER}
 import play.api.libs.ws.WSResponse
@@ -50,10 +50,19 @@ class PolicyEventControllerISpec extends IntegrationTest {
       result.headers("Location").head shouldBe appConfig.incomeTaxSubmissionOverviewUrl(taxYear)
     }
 
-    "show page with error text if form is invalid" in {
+    "show page with error text if form is empty" in {
       lazy val result: WSResponse = {
         authoriseAgentOrIndividual(isAgent = false)
         urlPost(url(taxYear), headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)), body = Map[String, String]())
+      }
+
+      result.status shouldBe BAD_REQUEST
+    }
+
+    "show page with error text if form submitted with invalid alphanumeric value" in {
+      lazy val result: WSResponse = {
+        authoriseAgentOrIndividual(isAgent = false)
+        urlPost(url(taxYear), headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)), body = Map(InputFieldForm.value -> "123.test"))
       }
 
       result.status shouldBe BAD_REQUEST

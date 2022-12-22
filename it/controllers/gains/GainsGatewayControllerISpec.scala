@@ -36,6 +36,15 @@ class GainsGatewayControllerISpec extends IntegrationTest {
 
       result.status shouldBe OK
     }
+
+    "render the gains gateway page for an agent" in {
+      lazy val result: WSResponse = {
+        authoriseAgentOrIndividual(isAgent = true)
+        urlGet(url(taxYear), headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)))
+      }
+
+      result.status shouldBe OK
+    }
   }
 
   ".submit" should {

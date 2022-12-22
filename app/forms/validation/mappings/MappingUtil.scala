@@ -42,10 +42,10 @@ object MappingUtil extends Formatters {
               ): FieldMapping[BigDecimal] =
     of(currencyFormatter(requiredKey, wrongFormatKey, maxAmountKey, minAmountKey, args))
 
-  def year(requiredKey: String,
-           wrongFormatKey: String,
-           maxYearKey: String,
-           args: Seq[String] = Seq.empty[String]): FieldMapping[Int] =
+  def optionYear(requiredKey: String,
+                 wrongFormatKey: String,
+                 maxYearKey: String,
+                 args: Seq[String] = Seq.empty[String]): FieldMapping[Option[Int]] =
     of(yearFormatter(requiredKey, wrongFormatKey, maxYearKey, args))
 
   def optionCurrency(requiredKey: String,

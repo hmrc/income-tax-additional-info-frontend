@@ -66,6 +66,35 @@ trait Formatters {
       }
     }
 
+  private[mappings] def yearFormatter(requiredKey: String,
+                                      wrongFormatKey: String,
+                                      maxYearKey: String,
+                                      args: Seq[String] = Seq.empty[String]
+                                     ): Formatter[Option[Int]] =
+    new Formatter[Option[Int]] {
+      private val baseFormatter = stringFormatter(requiredKey)
+
+      override def bind(key: String, data: Map[String, String]): Either[Seq[FormError], Option[Int]] = {
+        validYear(baseFormatter
+          .bind(key, data)
+          .map(_.replaceAll("""\s""", "")), key)
+      }
+
+      override def unbind(key: String, value: Option[Int]): Map[String, String] = baseFormatter.unbind(key, value.getOrElse("").toString)
+
+      private def validYear(input: Either[Seq[FormError], String], key: String): Either[Seq[FormError], Option[Int]] = {
+
+        val validNumeric = """^[0-9]*"""
+
+        input.flatMap {
+          case s if s.isEmpty => Left(Seq(FormError(key, requiredKey, args)))
+          case s if !s.matches(validNumeric) => Left(Seq(FormError(key, wrongFormatKey, args)))
+          case s if s.toInt >= 100 => Left(Seq(FormError(key, maxYearKey, args)))
+          case s => Right(Some(s.toInt))
+        }
+      }
+    }
+
   private def checksWithMinAmount(x: BigDecimal,
                                   key: String,
                                   minAmountKey: String,
@@ -124,34 +153,5 @@ trait Formatters {
 
       override def unbind(key: String, value: Option[BigDecimal]): Map[String, String] =
         baseFormatter.unbind(key, value.getOrElse("").toString)
-    }
-
-  private[mappings] def yearFormatter(requiredKey: String,
-                                      wrongFormatKey: String,
-                                      maxYearKey: String,
-                                      args: Seq[String] = Seq.empty[String]
-                                     ): Formatter[Int] =
-    new Formatter[Int] {
-      private val baseFormatter = stringFormatter(requiredKey)
-
-      override def bind(key: String, data: Map[String, String]): Either[Seq[FormError], Int] = {
-        validYear(baseFormatter
-          .bind(key, data)
-          .map(_.replaceAll("""\s""", "")), key)
-      }
-
-      override def unbind(key: String, value: Int): Map[String, String] = baseFormatter.unbind(key, value.toString)
-
-      private def validYear(input: Either[Seq[FormError], String], key: String): Either[Seq[FormError], Int] = {
-
-        val validNumeric = """^[0-9]*"""
-
-        input.flatMap {
-          case s if s.isEmpty => Left(Seq(FormError(key, requiredKey, args)))
-          case s if !s.matches(validNumeric) => Left(Seq(FormError(key, wrongFormatKey, args)))
-          case s if s.toInt >= 100 => Left(Seq(FormError(key, maxYearKey, args)))
-          case s => Right(s.toInt)
-        }
-      }
     }
 }

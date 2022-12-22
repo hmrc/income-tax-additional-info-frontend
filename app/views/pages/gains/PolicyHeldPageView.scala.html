@@ -1,0 +1,70 @@
+@*
+ * Copyright 2022 HM Revenue & Customs
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *@
+
+@import views.html.templates.Layout
+@import views.html.templates.helpers.Heading
+@import views.html.templates.helpers.InputText
+@import views.html.templates.helpers.Button
+@import views.html.templates.helpers.ErrorSummary
+@import views.html.templates.helpers.Link
+@import models.requests.AuthorisationRequest
+
+
+@this(
+        layout: Layout,
+        heading: Heading,
+        errorSummary: ErrorSummary,
+        govukWarningText : GovukWarningText,
+        formWithCsrf: FormWithCSRF,
+        inputText: InputText,
+        button: Button,
+        link: Link
+)
+
+@(taxYear: Int, form: Form[Option[Int]])(implicit request: AuthorisationRequest[_], messages: Messages, appConfig: AppConfig)
+
+@titleForUse = @{messages(s"gains.policy-held.question.title.${if(request.user.isAgent) "agent" else "individual"}")}
+
+@headingForUse = @{titleForUse}
+
+@layout(pageTitle = titleForUse, taxYear = Some(taxYear), hasErrors = form.hasErrors, isAgent = request.user.isAgent) {
+
+    @errorSummary(form.errors)
+
+    @heading(headingForUse, Some(messages("gains.caption", (taxYear - 1).toString, taxYear.toString)), "govuk-!-margin-bottom-2")
+
+    <p class="govuk-body">@messages(s"gains.policy-held.question.paragraph.${if(request.user.isAgent) "agent" else "individual"}")</p>
+
+    @formWithCsrf(action = controllers.gains.routes.PolicyHeldController.submit(taxYear)) {
+        @inputText(
+            form = form,
+            id = "policyHeld",
+            name = "policyHeld",
+            currency = false,
+            label = "gains.policy-held.question.label",
+            labelHidden = true,
+            classes = Some("govuk-input--width-2")
+        )
+
+    @button()
+
+    }
+
+}
+
+@{
+    // $COVERAGE-OFF$
+}

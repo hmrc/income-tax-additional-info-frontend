@@ -65,7 +65,7 @@
                     name = "amount",
                     label = messages(s"gains.paid-tax-status.question.label.${if(request.user.isAgent) "agent" else "individual"}"),
                     labelClasses = Some("govuk-!-font-weight-regular"),
-                    hint = Some(messages(s"gains.paid-tax-status.question.hint")),
+                    hint = Some(messages(s"common.monetary.input.hint")),
                     currency = true,
                     form = form
                     )

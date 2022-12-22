@@ -16,7 +16,7 @@
 
 package views.pages.gains
 
-import forms.gains.InputFieldForm
+import forms.InputFieldForm
 import models.requests.AuthorisationRequest
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
@@ -28,6 +28,7 @@ import views.html.pages.gains.PolicyEventPageView
 class PolicyEventPageViewSpec extends ViewUnitTest {
 
   private val page: PolicyEventPageView = inject[PolicyEventPageView]
+  private val inputFormat = "alphabetsWithSpace"
 
   object Selectors {
     val paragraph = "#main-content > div > div > p"
@@ -51,6 +52,7 @@ class PolicyEventPageViewSpec extends ViewUnitTest {
     val expectedListItemThree: String
     val expectedListItemFour: String
     val expectedErrorText: String
+    val expectedErrorText1: String
   }
 
   trait CommonExpectedResults {
@@ -84,6 +86,7 @@ class PolicyEventPageViewSpec extends ViewUnitTest {
     override val expectedListItemThree: String = "there was a sale of assignment of a UK policy, or part of a policy, for value"
     override val expectedListItemFour: String = "the policy was a Personal Portfolio Bond, even if the insurer had not paid cash or other benefits during the year"
     override val expectedErrorText: String = "Enter the reason for this gain. For example, policy matured, part surrender of the policy or death of spouse"
+    override val expectedErrorText1: String = "Enter the reason for this gain in the correct format. The reason for your gain must only include letters a to z. For example, policy matured, part surrender of the policy or death of spouse"
   }
 
   object ExpectedIndividualCY extends SpecificExpectedResults {
@@ -96,6 +99,7 @@ class PolicyEventPageViewSpec extends ViewUnitTest {
     override val expectedListItemThree: String = "gwerthwyd neu neilltuwyd polisi yn y DU, neu ran o bolisi, ar gyfer gwerth"
     override val expectedListItemFour: String = "roedd y polisi yn Bondiau Portffolio Personol, hyd yn oed os nad oedd yr yswiriwr wedi talu arian parod na budd-daliadau eraill yn ystod y flwyddyn"
     override val expectedErrorText: String = "Nodwch y rheswm dros yr enillion hyn. Er enghraifft, aeddfedodd polisi, ildiad rhannol o’r polisi neu farwolaeth y priod"
+    override val expectedErrorText1: String = "Nodwch y rheswm dros yr ennill hwn yn y fformat cywir. Mae’n rhaid i’r rheswm dros eich ennill gynnwys y llythrennau a i z yn unig. Er enghraifft, aeddfedodd y polisi, ildiad rhannol o’r polisi neu farwolaeth y priod"
   }
 
   object ExpectedAgentEN extends SpecificExpectedResults {
@@ -108,6 +112,7 @@ class PolicyEventPageViewSpec extends ViewUnitTest {
     override val expectedListItemThree: String = "there was a sale of assignment of a UK policy, or part of a policy, for value"
     override val expectedListItemFour: String = "the policy was a Personal Portfolio Bond, even if the insurer had not paid cash or other benefits during the year"
     override val expectedErrorText: String = "Enter the reason for this gain. For example, policy matured, part surrender of the policy or death of spouse"
+    override val expectedErrorText1: String = "Enter the reason for this gain in the correct format. The reason for your gain must only include letters a to z. For example, policy matured, part surrender of the policy or death of spouse"
   }
 
   object ExpectedAgentCY extends SpecificExpectedResults {
@@ -120,6 +125,7 @@ class PolicyEventPageViewSpec extends ViewUnitTest {
     override val expectedListItemThree: String = "gwerthwyd neu neilltuwyd polisi yn y DU, neu ran o bolisi, ar gyfer gwerth"
     override val expectedListItemFour: String = "roedd y polisi yn Bondiau Portffolio Personol, hyd yn oed os nad oedd yr yswiriwr wedi talu arian parod na budd-daliadau eraill yn ystod y flwyddyn"
     override val expectedErrorText: String = "Nodwch y rheswm dros yr enillion hyn. Er enghraifft, aeddfedodd polisi, ildiad rhannol o’r polisi neu farwolaeth y priod"
+    override val expectedErrorText1: String = "Nodwch y rheswm dros yr ennill hwn yn y fformat cywir. Mae’n rhaid i’r rheswm dros eich ennill gynnwys y llythrennau a i z yn unig. Er enghraifft, aeddfedodd y polisi, ildiad rhannol o’r polisi neu farwolaeth y priod"
   }
 
   override protected val userScenarios: Seq[UserScenario[CommonExpectedResults, SpecificExpectedResults]] = Seq(
@@ -135,8 +141,8 @@ class PolicyEventPageViewSpec extends ViewUnitTest {
         implicit val userPriorDataRequest: AuthorisationRequest[AnyContent] = getAuthRequest(userScenario.isAgent)
         implicit val messages: Messages = getMessages(userScenario.isWelsh)
 
-        implicit val document: Document = Jsoup.parse(page(taxYear, InputFieldForm.inputFieldForm(userScenario.isAgent,
-          s"gains.policy-event.question.error-message")).body)
+        implicit val document: Document = Jsoup.parse(page(taxYear, InputFieldForm.inputFieldForm(userScenario.isAgent, inputFormat,
+          s"gains.policy-event.question.error-message", s"gains.policy-event.question.incorrect-format.error-message")).body)
 
         welshToggleCheck(userScenario.isWelsh)
         titleCheck(userScenario.specificExpectedResults.get.expectedTitle, userScenario.isWelsh)
@@ -156,12 +162,13 @@ class PolicyEventPageViewSpec extends ViewUnitTest {
 
   userScenarios.foreach { userScenario =>
     s"language is ${welshTest(userScenario.isWelsh)} and request is from an ${agentTest(userScenario.isAgent)}" should {
-      "render policy event page with errors if submitted form is invalid" which {
+      "render policy event page with errors if submitted form is empty" which {
         implicit val userPriorDataRequest: AuthorisationRequest[AnyContent] = getAuthRequest(userScenario.isAgent)
         implicit val messages: Messages = getMessages(userScenario.isWelsh)
 
-        implicit val document: Document = Jsoup.parse(page(taxYear, InputFieldForm.inputFieldForm(userScenario.isAgent,
-          s"gains.policy-event.question.error-message").bind(Map(InputFieldForm.value -> ""))).body)
+        implicit val document: Document = Jsoup.parse(page(taxYear, InputFieldForm.inputFieldForm(userScenario.isAgent, inputFormat,
+          s"gains.policy-event.question.error-message",
+          s"gains.policy-event.question.incorrect-format.error-message").bind(Map(InputFieldForm.value -> ""))).body)
 
         welshToggleCheck(userScenario.isWelsh)
         titleCheck(userScenario.specificExpectedResults.get.expectedErrorTitle, userScenario.isWelsh)
@@ -178,6 +185,35 @@ class PolicyEventPageViewSpec extends ViewUnitTest {
 
         errorSummaryCheck(userScenario.specificExpectedResults.get.expectedErrorText, Selectors.causedGainsErrorHref)
         errorAboveElementCheck(userScenario.specificExpectedResults.get.expectedErrorText)
+      }
+    }
+  }
+
+  userScenarios.foreach { userScenario =>
+    s"language is ${welshTest(userScenario.isWelsh)} and request is from an ${agentTest(userScenario.isAgent)}" should {
+      "render policy event page with errors if submitted form is invalid" which {
+        implicit val userPriorDataRequest: AuthorisationRequest[AnyContent] = getAuthRequest(userScenario.isAgent)
+        implicit val messages: Messages = getMessages(userScenario.isWelsh)
+
+        implicit val document: Document = Jsoup.parse(page(taxYear, InputFieldForm.inputFieldForm(userScenario.isAgent, inputFormat,
+          s"gains.policy-event.question.error-message",
+          s"gains.policy-event.question.incorrect-format.error-message").bind(Map(InputFieldForm.value -> "123.test"))).body)
+
+        welshToggleCheck(userScenario.isWelsh)
+        titleCheck(userScenario.specificExpectedResults.get.expectedErrorTitle, userScenario.isWelsh)
+        captionCheck(userScenario.commonExpectedResults.expectedCaption(taxYear))
+        h1Check(userScenario.specificExpectedResults.get.expectedHeading)
+        textOnPageCheck(userScenario.specificExpectedResults.get.expectedParagraph, Selectors.paragraph)
+        textOnPageCheck(userScenario.commonExpectedResults.expectedHint, Selectors.causedGainsHint)
+        textOnPageCheck(userScenario.specificExpectedResults.get.expectedListItemOne, Selectors.listItemOne)
+        textOnPageCheck(userScenario.specificExpectedResults.get.expectedListItemTwo, Selectors.listItemTwo)
+        textOnPageCheck(userScenario.specificExpectedResults.get.expectedListItemThree, Selectors.listItemThree)
+        textOnPageCheck(userScenario.specificExpectedResults.get.expectedListItemFour, Selectors.listItemFour)
+        buttonCheck(userScenario.commonExpectedResults.expectedButtonText, Selectors.continueButton)
+        linkCheck(userScenario.commonExpectedResults.expectedHelpLinkText, Selectors.getHelpLink, appConfig.contactUrl(userScenario.isAgent))
+
+        errorSummaryCheck(userScenario.specificExpectedResults.get.expectedErrorText1, Selectors.causedGainsErrorHref)
+        errorAboveElementCheck(userScenario.specificExpectedResults.get.expectedErrorText1)
       }
     }
   }
