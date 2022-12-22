@@ -33,10 +33,11 @@ class PolicyEventController @Inject()(authorisedAction: AuthorisedAction,
                                       view: PolicyEventPageView)
                                      (implicit appConfig: AppConfig, mcc: MessagesControllerComponents, ec: ExecutionContext)
   extends FrontendController(mcc) with I18nSupport {
+  val inputFormat = "alphabetsWithSpace"
 
-  def policyEventForm(isAgent: Boolean): Form[String] = InputFieldForm.inputFieldForm(isAgent,
+  def policyEventForm(isAgent: Boolean): Form[String] = InputFieldForm.inputFieldForm(isAgent, inputFormat,
     s"gains.policy-event.question.error-message",
-  ""
+    s"gains.policy-event.question.incorrect-format.error-message"
   )
 
   def show(taxYear: Int): Action[AnyContent] = authorisedAction.async { implicit request =>

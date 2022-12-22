@@ -20,25 +20,57 @@ import play.api.data.FormError
 import support.UnitTest
 
 class InputFieldFormSpec extends UnitTest{
-  private def theForm() = InputFieldForm.inputFieldForm(isAgent = false, "error", "wrongFormat")
+  private def theForm(inputFormat: String) = InputFieldForm.inputFieldForm(isAgent = false, inputFormat, "nothing to see here", "wrong format")
 
-  private val testInputValid = "valid1"
+  private val testInputNumber = "123"
+  private val testInputAlphabet = "test"
+  private val testInputAlphabetsWithSpace = "test this input"
+  private val testInputMixedAlphaNumeric = "INPOLY123A"
   private val testInputEmpty = ""
+  private val testInputEmptySpace = ""
 
   "The InputFieldForm" should {
     "correctly validate a mixed alphanumeric string" when {
       "a valid string is entered" in {
-        val testInput = Map(InputFieldForm.value -> testInputValid)
-        val expected = testInputValid
-        val actual = theForm().bind(testInput).value
+        val testInput = Map(InputFieldForm.value -> testInputMixedAlphaNumeric)
+        val expected = testInputMixedAlphaNumeric
+        val actual = theForm("mixedAlphaNumeric").bind(testInput).value
+        actual shouldBe Some(expected)
+      }
+
+      "a valid alphabet is entered" in {
+        val testInput = Map(InputFieldForm.value -> testInputAlphabetsWithSpace)
+        val expected = testInputAlphabetsWithSpace
+        val actual = theForm("alphabetsWithSpace").bind(testInput).value
         actual shouldBe Some(expected)
       }
 
       "an empty string is entered" in {
         val testInput = Map(InputFieldForm.value -> testInputEmpty)
-        val actual = theForm().bind(testInput)
+        val actual = theForm("alphabetsWithSpace").bind(testInput)
 
-        actual.errors should contain(FormError(InputFieldForm.value, "error"))
+        actual.errors should contain(FormError(InputFieldForm.value, "nothing to see here"))
+      }
+
+      "an empty string with is entered" in {
+        val testInput = Map(InputFieldForm.value -> testInputEmptySpace)
+        val actual = theForm("alphabetsWithSpace").bind(testInput)
+
+        actual.errors should contain(FormError(InputFieldForm.value, "nothing to see here"))
+      }
+
+      "an invalid alphabet is entered" in {
+        val testInput = Map(InputFieldForm.value -> testInputNumber)
+        val actual = theForm("alphabetsWithSpace").bind(testInput)
+
+        actual.errors should contain(FormError(InputFieldForm.value, "wrong format"))
+      }
+
+      "an invalid mixed alphanumeric is entered" in {
+        val testInput = Map(InputFieldForm.value -> testInputAlphabet)
+        val actual = theForm("mixedAlphaNumeric").bind(testInput)
+
+        actual.errors should contain(FormError(InputFieldForm.value, "wrong format"))
       }
     }
   }
