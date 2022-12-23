@@ -28,6 +28,7 @@ import views.html.pages.gains.CustomerReferencePageView
 class CustomerReferencePageViewSpec extends ViewUnitTest {
 
   private val page: CustomerReferencePageView = inject[CustomerReferencePageView]
+  private val inputFormat = "mixedAlphaNumeric"
 
   object Selectors {
     val paragraph = "#main-content > div > div > p"
@@ -116,7 +117,7 @@ class CustomerReferencePageViewSpec extends ViewUnitTest {
         implicit val userPriorDataRequest: AuthorisationRequest[AnyContent] = getAuthRequest(userScenario.isAgent)
         implicit val messages: Messages = getMessages(userScenario.isWelsh)
 
-        implicit val document: Document = Jsoup.parse(page(taxYear, InputFieldForm.inputFieldForm(userScenario.isAgent,
+        implicit val document: Document = Jsoup.parse(page(taxYear, InputFieldForm.inputFieldForm(userScenario.isAgent, inputFormat,
           s"gains.customer-reference.question.error-message.1.${if (userScenario.isAgent) "agent" else "individual"}",
           s"gains.customer-reference.question.error-message.2.${if (userScenario.isAgent) "agent" else "individual"}")).body)
 
@@ -138,7 +139,7 @@ class CustomerReferencePageViewSpec extends ViewUnitTest {
         implicit val userPriorDataRequest: AuthorisationRequest[AnyContent] = getAuthRequest(userScenario.isAgent)
         implicit val messages: Messages = getMessages(userScenario.isWelsh)
 
-        implicit val document: Document = Jsoup.parse(page(taxYear, InputFieldForm.inputFieldForm(userScenario.isAgent,
+        implicit val document: Document = Jsoup.parse(page(taxYear, InputFieldForm.inputFieldForm(userScenario.isAgent, inputFormat,
           s"gains.customer-reference.question.error-message.1.${if (userScenario.isAgent) "agent" else "individual"}",
           s"gains.customer-reference.question.error-message.2.${if (userScenario.isAgent) "agent" else "individual"}")
           .bind(Map(InputFieldForm.value -> ""))).body)
@@ -164,7 +165,7 @@ class CustomerReferencePageViewSpec extends ViewUnitTest {
         implicit val userPriorDataRequest: AuthorisationRequest[AnyContent] = getAuthRequest(userScenario.isAgent)
         implicit val messages: Messages = getMessages(userScenario.isWelsh)
 
-        implicit val document: Document = Jsoup.parse(page(taxYear, InputFieldForm.inputFieldForm(userScenario.isAgent,
+        implicit val document: Document = Jsoup.parse(page(taxYear, InputFieldForm.inputFieldForm(userScenario.isAgent, inputFormat,
           s"gains.customer-reference.question.error-message.1.${if (userScenario.isAgent) "agent" else "individual"}",
           s"gains.customer-reference.question.error-message.2.${if (userScenario.isAgent) "agent" else "individual"}")
           .bind(Map(InputFieldForm.value -> "aaa"))).body)

@@ -17,29 +17,28 @@
 package forms.gains
 
 import filters.InputFilters
-import forms.validation.StringConstraints.validateAlphanumeric
+import forms.validation.StringConstraints.{nonEmpty, validateAlphabetsWithSpace, validateMixedAlphaNumeric}
 import forms.validation.mappings.MappingUtil.trimmedText
 import play.api.data.Form
 import play.api.data.validation.Constraint
-import play.api.data.validation.Constraints.{nonEmpty, pattern}
+import forms.validation.utils.ConstraintUtil.ConstraintUtil
 
 object InputFieldForm extends InputFilters {
 
   val value: String = "value"
 
-  private val mixedAlphaNumericRegex = "^$|^(?=.*[0-9])(?=.*[a-zA-Z])([a-zA-Z0-9]+)$".r
+  def notEmpty(isAgent: Boolean, emptyFieldKey: String): Constraint[String] = nonEmpty(emptyFieldKey)
 
-  private def notEmpty(isAgent: Boolean, emptyFieldKey: String): Constraint[String] = nonEmpty(emptyFieldKey)
+  def isValidAlphabetsWithSpace(wrongFormatKey: String): Constraint[String] = validateAlphabetsWithSpace(wrongFormatKey)
 
-  private def isMixedAlphanumeric(wrongFormatKey: String): Constraint[String] = pattern(mixedAlphaNumericRegex, value, wrongFormatKey)
+  def isValidMixedAlphaNumeric(wrongFormatKey: String): Constraint[String] = validateMixedAlphaNumeric(wrongFormatKey)
 
-  def inputFieldForm(isAgent: Boolean, emptyFieldKey: String, wrongFormatKey: String): Form[String] = Form(
-    if (wrongFormatKey == "") {
-      value -> trimmedText.transform[String](filter, identity)
-        .verifying(notEmpty(isAgent, emptyFieldKey))
-    } else {
-      value -> trimmedText.transform[String](filter, identity)
-        .verifying(notEmpty(isAgent, emptyFieldKey), isMixedAlphanumeric(wrongFormatKey))
+  def inputFieldForm(isAgent: Boolean, inputFormat: String, emptyFieldKey: String, wrongFormatKey: String): Form[String] = Form(
+    inputFormat match {
+      case "alphabetsWithSpace" => value -> trimmedText.transform[String](filter, identity).verifying(
+        notEmpty(isAgent, emptyFieldKey) andThen isValidAlphabetsWithSpace(wrongFormatKey))
+      case "mixedAlphaNumeric" => value -> trimmedText.transform[String](filter, identity)
+        .verifying(notEmpty(isAgent, emptyFieldKey) andThen isValidMixedAlphaNumeric(wrongFormatKey))
     }
   )
 

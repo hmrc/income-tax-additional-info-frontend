@@ -83,6 +83,7 @@ gains.policy-event.question.bullet.4 = roedd y polisi yn Bondiau Portffolio Pers
 gains.policy-event.question.label = Beth achosodd yr ennill hwn?
 gains.policy-event.question.hint = Er enghraifft, aeddfedodd polisi, ildiodd y polisi’n rhannol neu bu farw briod.
 gains.policy-event.question.error-message = Nodwch y rheswm dros yr enillion hyn. Er enghraifft, aeddfedodd polisi, ildiad rhannol o’r polisi neu farwolaeth y priod
+gains.policy-event.question.incorrect-format.error-message = Nodwch y rheswm dros yr ennill hwn yn y fformat cywir. Mae’n rhaid i’r rheswm dros eich ennill gynnwys y llythrennau a i z yn unig. Er enghraifft, aeddfedodd y polisi, ildiad rhannol o’r polisi neu farwolaeth y priod
 
 gains.status.question.radio.heading.individual = A ydych wedi gwneud ennill o’r polisi hwn o’r blaen?
 gains.status.question.radio.error.noEntry.individual = Dewiswch ‘Iawn’ os ydych wedi gwneud ennill ar y polisi hwn o’r blaen

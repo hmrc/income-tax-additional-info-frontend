@@ -74,20 +74,32 @@ class StringConstraintsSpec extends Constraints with AnyWordSpecLike with Matche
       }
     }
   }
-  "The StringConstraints.validateAlphanumeric method" when {
+
+  "The StringConstraints.validateMixedAlphaNumeric method" when {
     "supplied with a valid mixed alphanumeric string" should {
       "return valid" in {
-        StringConstraints.validateAlphanumeric("""^$|^(?=.*[0-9])(?=.*[a-zA-Z])([a-zA-Z0-9]+)$""")(errMsgInvalidChar)("INPOLY123") shouldBe Valid
+        StringConstraints.validateMixedAlphaNumeric(errMsgInvalidChar)("INPOLY123") shouldBe Valid
       }
-
-
     }
 
-    "supplied with an invalid string" should {
+    "supplied with invalid alphanumeric string" should {
       "return invalid" in {
-        StringConstraints.validateAlphanumeric("""^$|^(?=.*[0-9])(?=.*[a-zA-Z])([a-zA-Z0-9]+)$""")(errMsgInvalidChar)("ABC") shouldBe Invalid(errMsgInvalidChar)
+        StringConstraints.validateMixedAlphaNumeric(errMsgInvalidChar)("123") shouldBe Invalid(errMsgInvalidChar)
+      }
+    }
+  }
+
+  "The StringConstraints.validateAlphabetsWithSpace method" when {
+    "supplied with a valid alphabet string" should {
+      "return valid" in {
+        StringConstraints.validateAlphabetsWithSpace(errMsgInvalidChar)("test this input") shouldBe Valid
+      }
+    }
+
+    "supplied with invalid alphabet string" should {
+      "return invalid" in {
+        StringConstraints.validateAlphabetsWithSpace(errMsgInvalidChar)("123 test") shouldBe Invalid(errMsgInvalidChar)
       }
     }
   }
 }
-
