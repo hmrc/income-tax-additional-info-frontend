@@ -97,7 +97,7 @@ class DeficiencyReliefPageViewSpec extends ViewUnitTest {
   object ExpectedIndividualEN extends SpecificExpectedResults {
     override val expectedTitle: String = "Are you entitled to deficiency relief?"
     override val expectedErrorTitle: String = "Error: Are you entitled to deficiency relief?"
-    override val expectedHeading: String = "Deficiency Relief"
+    override val expectedHeading: String = "Deficiency relief"
     override val expectedParagraph1: String = "You may be entitled to this relief if:"
     override val expectedBullet1: Int => String = (taxYear: Int) => s"your policy or annuity ended between 6 April ${taxYear - 1} to 5 April $taxYear"
     override val expectedBullet2: String = "you made gains on the policy or annuity in an earlier tax year"
@@ -121,9 +121,9 @@ class DeficiencyReliefPageViewSpec extends ViewUnitTest {
   }
 
   object ExpectedAgentEN extends SpecificExpectedResults {
-    override val expectedTitle: String = "Is your client entitled to Deficiency Relief?"
-    override val expectedErrorTitle: String = "Error: Is your client entitled to Deficiency Relief?"
-    override val expectedHeading: String = "Deficiency Relief"
+    override val expectedTitle: String = "Is your client entitled to Deficiency relief?"
+    override val expectedErrorTitle: String = "Error: Is your client entitled to Deficiency relief?"
+    override val expectedHeading: String = "Deficiency relief"
     override val expectedParagraph1: String = "Your client may be entitled to this relief if:"
     override val expectedBullet1: Int => String = (taxYear: Int) => s"their policy or annuity ended between 6 April ${taxYear - 1} to 5 April $taxYear"
     override val expectedBullet2: String = "they made gains on the policy or annuity in an earlier tax year"

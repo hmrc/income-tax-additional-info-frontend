@@ -27,6 +27,7 @@ common.back = Back
 common.change = Change
 common.completed = Completed
 common.continue = Continue
+common.saveAndContinue = Save and continue
 common.dateRange = {0} to {1}
 common.error.errorKey = Error:
 common.help.getHelpWithThisPage = Get help with this page
@@ -43,13 +44,16 @@ common.error.invalid_currency_format = Enter the amount in the correct format
 common.error.invalid_Year_Format = Enter the number of years in the correct format. For example, ''3''
 common.monetary.input.hint = For example, £193.54
 
+common.gains.deficiency-relief-status = Deficiency relief
+common.gains.policy-event = Policy event
+common.gains.customer-reference = Customer reference
+
 #################       Captions       ########################################
 gains.caption = Gains from life insurance policies and contracts for 6 April {0} to 5 April {1}
 
 ################# Gains from life insurance policies and contracts messages #################
 gains.customer-reference.question.title.individual = What''s your customer reference?
 gains.customer-reference.question.paragraph.individual = Your insurer or ISA manager should have given you a customer reference for your policy or contract.
-gains.customer-reference.question.label = Customer reference
 gains.customer-reference.question.hint = For example, ''INPOLY123A''.
 gains.customer-reference.question.error-message.1.individual = Enter your customer reference
 gains.customer-reference.question.error-message.2.individual = Enter your customer reference in the correct format. For example, ''INPOLY123A''. Your customer reference must only include letters and numbers
@@ -74,7 +78,6 @@ gains.gateway.question.paragraph1.agent = Your client''s insurer will have sent 
 gains.gateway.question.paragraph2.agent = You can tell us if your client''s life insurance company or ISA manager has cancelled their ISA or life policy later.
 gains.gateway.question.error.agent = Select yes if your client made a gain on a UK policy or contract
 
-gains.policy-event.question.title = Policy event
 gains.policy-event.question.paragraph1 = The most common causes of gains are if:
 gains.policy-event.question.bullet.1 = cash or other benefits were received on a full or part surrender of a policy
 gains.policy-event.question.bullet.2 = a policy matured or ended by the death of the life insured
@@ -144,9 +147,8 @@ gains.policy-held.question.error-empty.agent = Enter the number of years your cl
 gains.policy-held.question.error-incorrect.format.agent = Enter the number of years your client has held this policy in the correct format. If less than a year, enter 0
 
 gains.deficiency-relief-status.question.radio.heading.individual = Are you entitled to deficiency relief?
-gains.deficiency-relief-status.question.radio.heading.agent = Is your client entitled to Deficiency Relief?
+gains.deficiency-relief-status.question.radio.heading.agent = Is your client entitled to Deficiency relief?
 gains.deficiency-relief-status.question.input.amount = What amount is available for relief?
-gains.deficiency-relief-status.question.heading = Deficiency Relief
 
 gains.deficiency-relief-status.question.paragraph1.individual = You may be entitled to this relief if:
 gains.deficiency-relief-status.question.bullet1.individual = your policy or annuity ended between 6 April {0} to 5 April {1}
@@ -157,7 +159,7 @@ gains.deficiency-relief-status.question.paragraph1.agent = Your client may be en
 gains.deficiency-relief-status.question.bullet1.agent = their policy or annuity ended between 6 April {0} to 5 April {1}
 gains.deficiency-relief-status.question.bullet2.agent = they made gains on the policy or annuity in an earlier tax year
 gains.deficiency-relief-status.question.bullet3.agent = they pay higher rate tax
-gains.deficiency-relief-status.question.paragraph2.link = Find out more about Deficiency Relief
+gains.deficiency-relief-status.question.paragraph2.link = Find out more about Deficiency relief
 
 gains.deficiency-relief-status.question.radio.error.noEntry.individual = Select Yes if you are entitled to deficiency relief
 gains.deficiency-relief-status.question.radio.error.noEntry.agent = Select yes if your client is entitled to deficiency relief
@@ -165,6 +167,21 @@ gains.deficiency-relief-status.question.input.error.noEntry = Enter the amount a
 gains.deficiency-relief-status.question.input.error.incorrectFormat = Enter the amount available for relief in the correct format. For example, ''£193.54''
 gains.deficiency-relief-status.question.input.error.amountExceedsMax = The amount of Special Withholding Tax must be less than £100,000,000,000
 
+gains.policy-summary.question.title = Policy summary
+gains.policy-summary.list.previous.gain.from.policy = Previous gain from this policy
+gains.policy-summary.list.policy.held.for = Policy held for
+gains.policy-summary.list.amount.of.gain.made = Amount of gain made
+gains.policy-summary.list.tax.paid.on.gain = Tax paid on gain
+gains.policy-summary.list.amount.of.tax.paid = Amount of tax paid
+gains.policy-summary.list.amount.of.relief.available = Amount of relief available
+
+gains.policy-summary.list.hidden.text.customer.reference = Change your customer reference
+gains.policy-summary.list.hidden.text.policy.event = Change the policy event
+gains.policy-summary.list.hidden.text.previous.gain.from.policy = Change the previous gain from this policy
+gains.policy-summary.list.hidden.text.policy.held.for = Change the number of years you held this policy
+gains.policy-summary.list.hidden.text.amount.of.gain.made = Change the amount of gain made
+gains.policy-summary.list.hidden.text.amount.of.tax.paid = Change the amount of tax paid
+gains.policy-summary.list.hidden.text.deficiency.relief = Change the deficiency relief
 
 #################       Error messages        ########################################
 common.error.self-assessment.paragraph.1.1 = If the web address is correct or you selected a link or button, you can use

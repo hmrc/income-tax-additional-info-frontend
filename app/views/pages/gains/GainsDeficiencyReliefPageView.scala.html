@@ -41,7 +41,7 @@
 
 @titleForUse = @{messages(s"gains.deficiency-relief-status.question.radio.heading.${if(request.user.isAgent) "agent" else "individual"}")}
 
-@headingForUse = @{messages(s"gains.deficiency-relief-status.question.heading")}
+@headingForUse = @{messages(s"common.gains.deficiency-relief-status")}
 
 @layout(pageTitle = titleForUse, taxYear = Some(taxYear), hasErrors = form.hasErrors, isAgent = request.user.isAgent) {
 
