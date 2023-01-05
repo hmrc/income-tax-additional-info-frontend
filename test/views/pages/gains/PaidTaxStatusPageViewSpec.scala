@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -118,7 +118,7 @@ class PaidTaxStatusPageViewSpec extends ViewUnitTest {
     override val expectedHeading: String = "A wnaeth eich cleient dalu treth ar ei enillion?"
     override val expectedLabel: String = "Faint o dreth a dalwyd gan eich cleient?"
     override val expectedErrorText1: String = "Dewiswch ‘Iawn’ os gwnaeth eich cleient dalu treth ar ei enillion"
-    override val expectedErrorText2: String = "Nodwch enillion eich cleient. Er enghraifft, £193.54"
+    override val expectedErrorText2: String = "Nodwch swm y dreth a dalodd eich cleient. Er enghraifft, £193.54"
     override val expectedErrorText3: String = "Nodwch swm y dreth a dalwyd gan eich cleient yn y fformat cywir. Er enghraifft, £193.54"
   }
 

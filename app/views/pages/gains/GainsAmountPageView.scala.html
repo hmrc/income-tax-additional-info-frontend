@@ -1,5 +1,5 @@
 @*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -54,14 +54,14 @@
     @formWithCsrf(action = controllers.gains.routes.GainsAmountController.submit(taxYear)) {
         @inputText(
             form = form,
-            id = "gainAmountNumber",
-            name = "gainAmountNumber",
+            id = "gains-amount",
+            name = "gains-amount",
             currency = true,
             label = messages(s"gains.gain-amount.question.label.${if(request.user.isAgent) "agent" else "individual"}"),
             labelClasses = Some("govuk-label--m"),
             labelHidden = false,
             classes = Some("govuk-input--width-10"),
-            hint = Some(messages(s"gains.gain-amount.question.hint"))
+            hint = Some(messages(s"common.monetary.hint"))
         )
 
 

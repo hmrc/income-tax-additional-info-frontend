@@ -14,24 +14,24 @@
  * limitations under the License.
  */
 
-package controllers.errors
+package controllers.gains
 
 import actions.AuthorisedAction
 import config.AppConfig
 import play.api.i18n.I18nSupport
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
-import utils.{SessionHelper, TaxYearHelper}
-import views.html.templates.TaxYearErrorTemplate
+import views.html.pages.gains.SummaryPageView
 
 import javax.inject.Inject
+import scala.concurrent.{ExecutionContext, Future}
 
-class TaxYearErrorController @Inject()(authorisedAction: AuthorisedAction,
-                                       pageView: TaxYearErrorTemplate)
-                                      (implicit mcc: MessagesControllerComponents, appConfig: AppConfig)
-  extends FrontendController(mcc) with I18nSupport with SessionHelper with TaxYearHelper {
+class SummaryController @Inject()(authorisedAction: AuthorisedAction,
+                                  view: SummaryPageView)
+                                 (implicit appConfig: AppConfig, mcc: MessagesControllerComponents, ec: ExecutionContext)
+  extends FrontendController(mcc) with I18nSupport {
 
-  def show(): Action[AnyContent] = authorisedAction { implicit request =>
-    Ok(pageView(firstClientTaxYear, latestClientTaxYear, singleValidTaxYear))
+  def show(taxYear: Int): Action[AnyContent] = authorisedAction.async { implicit request =>
+    Future.successful(Ok(view(taxYear)))
   }
 }

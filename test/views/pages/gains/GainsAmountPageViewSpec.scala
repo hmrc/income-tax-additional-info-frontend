@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,19 +32,15 @@ class GainsAmountPageViewSpec extends ViewUnitTest {
   object Selectors {
     val paragraph1 = "#gains-amount-paragraph-1"
     val paragraph2 = "#gains-amount-paragraph-2"
-    val gainsAmountNumberHint = "#gainAmountNumber-hint"
+    val gainsAmountNumberHint = "#gains-amount-hint"
     val continueButton = "#continue"
     val getHelpLink = "#help"
-    val gainsAmountErrorHref = "#gainAmountNumber"
+    val gainsAmountErrorHref = "#gains-amount"
     val summaryText = "#gains-amount-summary-text"
     val detailsText = "#gains-amount-details-text"
     val bullet1 = "#gains-amount-bullet-1"
     val bullet2 = "#gains-amount-bullet-2"
     val urlLinkText = "#gains-amount-url-text"
-   // val noEntryError = ""
-   // val incorrectFormatError = ""
-    // val amountExceedsMaxError = ""
-
   }
 
   trait SpecificExpectedResults {
@@ -83,7 +79,7 @@ class GainsAmountPageViewSpec extends ViewUnitTest {
   }
 
   object CommonExpectedCY extends CommonExpectedResults {
-    override val expectedCaption: Int => String = (taxYear: Int) => s"Enillion o bolisïau yswiriant bywyd a chontractau gyfer 6 Ebrill ${taxYear - 1} i 5 Ebrill $taxYear"
+    override val expectedCaption: Int => String = (taxYear: Int) => s"Enillion o bolisïau yswiriant bywyd a chontractau ar gyfer 6 Ebrill ${taxYear - 1} i 5 Ebrill $taxYear"
     override val expectedHint: String = "Er enghraifft, £193.54"
     override val expectedButtonText: String = "Yn eich blaen"
     override val expectedHelpLinkText: String = "Help gyda’r dudalen hon"
@@ -141,11 +137,15 @@ class GainsAmountPageViewSpec extends ViewUnitTest {
 
   userScenarios.foreach { userScenario =>
     s"language is ${welshTest(userScenario.isWelsh)} and request is from an ${agentTest(userScenario.isAgent)}" should {
-      "render gains amount page" which {
+      "render the gains amount page" which {
         implicit val userPriorDataRequest: AuthorisationRequest[AnyContent] = getAuthRequest(userScenario.isAgent)
         implicit val messages: Messages = getMessages(userScenario.isWelsh)
 
-        implicit val document: Document = Jsoup.parse(page(taxYear, AmountForm.amountForm(userScenario.isAgent)).body)
+        implicit val document: Document = Jsoup.parse(page(taxYear, AmountForm.amountForm(
+          s"gains.gain-amount.question.no-entry-error.${if (userScenario.isAgent) "agent" else "individual"}",
+          s"gains.gain-amount.question.incorrect-format-error.${if (userScenario.isAgent) "agent" else "individual"}",
+          s"gains.gain-amount.question.amount-exceeds-max-error.${if (userScenario.isAgent) "agent" else "individual"}",
+          None)).body)
 
         welshToggleCheck(userScenario.isWelsh)
         titleCheck(userScenario.commonExpectedResults.expectedTitle, userScenario.isWelsh)
@@ -161,12 +161,6 @@ class GainsAmountPageViewSpec extends ViewUnitTest {
         textOnPageCheck(userScenario.commonExpectedResults.expectedURLLinkText, Selectors.urlLinkText)
         buttonCheck(userScenario.commonExpectedResults.expectedButtonText, Selectors.continueButton)
         linkCheck(userScenario.commonExpectedResults.expectedHelpLinkText, Selectors.getHelpLink, appConfig.contactUrl(userScenario.isAgent))
-        errorSummaryCheck(userScenario.specificExpectedResults.get.expectedNoEntryError, Selectors.gainsAmountErrorHref)
-        errorSummaryCheck(userScenario.specificExpectedResults.get.expectedIncorrectFormatError, Selectors.gainsAmountErrorHref)
-        errorSummaryCheck(userScenario.specificExpectedResults.get.expectedAmountExceedsMaxError, Selectors.gainsAmountErrorHref)
-        errorAboveElementCheck(userScenario.specificExpectedResults.get.expectedNoEntryError)
-        errorAboveElementCheck(userScenario.specificExpectedResults.get.expectedIncorrectFormatError)
-        errorAboveElementCheck(userScenario.specificExpectedResults.get.expectedAmountExceedsMaxError)
       }
     }
   }
@@ -177,7 +171,12 @@ class GainsAmountPageViewSpec extends ViewUnitTest {
         implicit val userPriorDataRequest: AuthorisationRequest[AnyContent] = getAuthRequest(userScenario.isAgent)
         implicit val messages: Messages = getMessages(userScenario.isWelsh)
 
-        implicit val document: Document = Jsoup.parse(page(taxYear, AmountForm.amountForm(userScenario.isAgent).bind(Map(AmountForm.amount -> ""))).body)
+        implicit val document: Document = Jsoup.parse(page(taxYear, AmountForm.amountForm(
+          s"gains.gain-amount.question.no-entry-error.${if (userScenario.isAgent) "agent" else "individual"}",
+          s"gains.gain-amount.question.incorrect-format-error.${if (userScenario.isAgent) "agent" else "individual"}",
+          s"gains.gain-amount.question.amount-exceeds-max-error.${if (userScenario.isAgent) "agent" else "individual"}",
+          None
+        ).bind(Map(AmountForm.amount -> ""))).body)
 
         welshToggleCheck(userScenario.isWelsh)
         captionCheck(userScenario.commonExpectedResults.expectedCaption(taxYear))
@@ -193,11 +192,7 @@ class GainsAmountPageViewSpec extends ViewUnitTest {
         buttonCheck(userScenario.commonExpectedResults.expectedButtonText, Selectors.continueButton)
         linkCheck(userScenario.commonExpectedResults.expectedHelpLinkText, Selectors.getHelpLink, appConfig.contactUrl(userScenario.isAgent))
         errorSummaryCheck(userScenario.specificExpectedResults.get.expectedNoEntryError, Selectors.gainsAmountErrorHref)
-        errorSummaryCheck(userScenario.specificExpectedResults.get.expectedIncorrectFormatError, Selectors.gainsAmountErrorHref)
-        errorSummaryCheck(userScenario.specificExpectedResults.get.expectedAmountExceedsMaxError, Selectors.gainsAmountErrorHref)
         errorAboveElementCheck(userScenario.specificExpectedResults.get.expectedNoEntryError)
-        errorAboveElementCheck(userScenario.specificExpectedResults.get.expectedIncorrectFormatError)
-        errorAboveElementCheck(userScenario.specificExpectedResults.get.expectedAmountExceedsMaxError)
       }
     }
   }

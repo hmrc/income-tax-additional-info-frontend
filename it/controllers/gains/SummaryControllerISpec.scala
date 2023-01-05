@@ -16,20 +16,19 @@
 
 package controllers.gains
 
-import forms.gains.InputFieldForm
 import play.api.http.HeaderNames
-import play.api.http.Status.{BAD_REQUEST, OK, SEE_OTHER}
+import play.api.http.Status.{BAD_REQUEST, OK}
 import play.api.libs.ws.WSResponse
 import support.IntegrationTest
 
-class PolicyEventControllerISpec extends IntegrationTest {
+class SummaryControllerISpec extends IntegrationTest {
 
   private def url(taxYear: Int): String = {
-    s"/update-and-submit-income-tax-return/additional-information/$taxYear/gains/policy-event"
+    s"/update-and-submit-income-tax-return/additional-information/$taxYear/gains/summary"
   }
 
   ".show" should {
-    "render the policy event page" in {
+    "render the summary page" in {
       lazy val result: WSResponse = {
         authoriseAgentOrIndividual(isAgent = false)
         urlGet(url(taxYear), headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)))
@@ -37,26 +36,13 @@ class PolicyEventControllerISpec extends IntegrationTest {
 
       result.status shouldBe OK
     }
-  }
-
-  ".submit" should {
-    "redirect to income tax submission overview if successful" in {
+    "render the summary page for an agent" in {
       lazy val result: WSResponse = {
         authoriseAgentOrIndividual(isAgent = false)
-        urlPost(url(taxYear), headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)), body = Map(InputFieldForm.value -> "text"))
+        urlGet(url(taxYear), headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)))
       }
 
-      result.status shouldBe SEE_OTHER
-      result.headers("Location").head shouldBe appConfig.incomeTaxSubmissionOverviewUrl(taxYear)
-    }
-
-    "show page with error text if form is invalid" in {
-      lazy val result: WSResponse = {
-        authoriseAgentOrIndividual(isAgent = false)
-        urlPost(url(taxYear), headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)), body = Map[String, String]())
-      }
-
-      result.status shouldBe BAD_REQUEST
+      result.status shouldBe OK
     }
   }
 }
