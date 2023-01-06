@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,8 +22,8 @@ import com.github.tomakehurst.wiremock.core.WireMockConfiguration.wireMockConfig
 
 trait WireMockServer {
 
-  private val wiremockPort = 11111
-  private val wiremockHost = "localhost"
+  val wiremockPort = 11111
+  val wiremockHost = "localhost"
 
   private lazy val wireMockServer = new wiremock.WireMockServer(wireMockConfig().port(wiremockPort))
 

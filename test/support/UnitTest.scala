@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,10 +16,15 @@
 
 package support
 
+import org.scalamock.scalatest.MockFactory
+import org.scalatest.BeforeAndAfterEach
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
 import play.api.test.{DefaultAwaitTimeout, FutureAwaits}
+import uk.gov.hmrc.http.HeaderCarrier
 
-trait UnitTest extends AnyWordSpec
-  with FutureAwaits with DefaultAwaitTimeout
-  with Matchers
+trait UnitTest extends AnyWordSpec with Matchers with MockFactory with BeforeAndAfterEach
+  with FutureAwaits with DefaultAwaitTimeout {
+
+  implicit val emptyHeaderCarrier: HeaderCarrier = HeaderCarrier()
+}

@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package connectors
+package connectors.httpParsers
 
 import connectors.errors.{ApiError, MultiErrorsBody, SingleErrorBody}
 import play.api.http.Status.INTERNAL_SERVER_ERROR
@@ -23,6 +23,11 @@ import uk.gov.hmrc.http.HttpResponse
 trait Parser {
 
   protected val parserName: String
+  protected val service: String
+
+  def logMessage(response: HttpResponse): Option[String] = {
+    Some(s"[$parserName][read] Received ${response.status} from $service API. Body:${response.body}")
+  }
 
   def badSuccessJsonResponse[Response]: Either[ApiError, Response] = {
     Left(ApiError(INTERNAL_SERVER_ERROR, SingleErrorBody.parsingError))
