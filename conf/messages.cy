@@ -35,7 +35,7 @@ common.inProgress = In progress
 common.no = Na
 common.notStarted = Not started
 common.opensInNewTab = (opens in new tab)
-common.return.to.overview = Return to overview
+common.return.to.overview = Yn ôl i’r trosolwg
 common.view = View
 common.yes = Iawn
 
@@ -183,6 +183,13 @@ gains.policy-summary.list.hidden.text.policy.held.for = Newid nifer y blynyddoed
 gains.policy-summary.list.hidden.text.amount.of.gain.made = Newid swm yr enillion a wnaed
 gains.policy-summary.list.hidden.text.amount.of.tax.paid = Newid swm y dreth a dalwyd
 gains.policy-summary.list.hidden.text.deficiency.relief = Newid y rhyddhad am ddiffyg
+
+gains.summary.title.individual = Eich polisïau
+gains.summary.sub-title = Polisïau wedi’u canslo
+gains.summary.key = Ennill ar bolisi neu gytundeb y DU
+gains.summary.key.cancelled = Ennill ar bolisi neu gytundeb y DU sydd wedi’i ganslo
+
+gains.summary.title.agent = Polisïau eich cleient
 
 #################       Error messages        ########################################
 common.error.self-assessment.paragraph.1.1 = If the web address is correct or you selected a link or button, you can use

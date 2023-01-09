@@ -184,6 +184,13 @@ gains.policy-summary.list.hidden.text.amount.of.gain.made = Change the amount of
 gains.policy-summary.list.hidden.text.amount.of.tax.paid = Change the amount of tax paid
 gains.policy-summary.list.hidden.text.deficiency.relief = Change the deficiency relief
 
+gains.summary.title.individual = Your policies
+gains.summary.sub-title = Cancelled policies
+gains.summary.key = Gain on a UK policy or contract
+gains.summary.key.cancelled = Gain on a cancelled UK policy or contract
+
+gains.summary.title.agent = Your client''s policies
+
 #################       Error messages        ########################################
 common.error.self-assessment.paragraph.1.1 = If the web address is correct or you selected a link or button, you can use
 common.error.self-assessment.paragraph.1.2 = Self Assessment: general enquiries
