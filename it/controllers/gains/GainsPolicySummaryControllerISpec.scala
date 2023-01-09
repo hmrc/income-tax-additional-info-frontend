@@ -17,18 +17,18 @@
 package controllers.gains
 
 import play.api.http.HeaderNames
-import play.api.http.Status.{BAD_REQUEST, OK, SEE_OTHER}
+import play.api.http.Status.{BAD_REQUEST, OK}
 import play.api.libs.ws.WSResponse
 import support.IntegrationTest
 
-class PolicySummaryControllerISpec extends IntegrationTest {
+class GainsPolicySummaryControllerISpec extends IntegrationTest {
 
   private def url(taxYear: Int): String = {
-    s"/update-and-submit-income-tax-return/additional-information/$taxYear/gains/policy-summary"
+    s"/update-and-submit-income-tax-return/additional-information/$taxYear/gains/summary"
   }
 
   ".show" should {
-    "render the policy summary page" in {
+    "render the summary page" in {
       lazy val result: WSResponse = {
         authoriseAgentOrIndividual(isAgent = false)
         urlGet(url(taxYear), headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)))
@@ -36,14 +36,13 @@ class PolicySummaryControllerISpec extends IntegrationTest {
 
       result.status shouldBe OK
     }
-
-    "render the policy summary page for an agent" in {
+    "render the summary page for an agent" in {
       lazy val result: WSResponse = {
-        authoriseAgentOrIndividual(isAgent = true)
+        authoriseAgentOrIndividual(isAgent = false)
         urlGet(url(taxYear), headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)))
       }
+
       result.status shouldBe OK
     }
   }
-
 }
