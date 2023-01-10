@@ -50,6 +50,7 @@ common.gains.deficiency-relief-status = Rhyddhad am ddiffyg
 
 #################       Captions       ########################################
 gains.caption = Enillion o bolisïau yswiriant bywyd a chontractau ar gyfer 6 Ebrill {0} i 5 Ebrill {1}
+cancelled.gains.caption = Enillion o bolisïau a ganslwyd ar gyfer 6 Ebrill {0} i 5 Ebrill {1}
 
 ################# Gains from life insurance policies and contracts messages #################
 gains.customer-reference.question.title.individual = Beth yw’ch cyfeirnod cwsmer?
@@ -77,6 +78,11 @@ gains.gateway.question.radio.heading.agent = A wnaeth eich cleient enillion ar b
 gains.gateway.question.paragraph1.agent = Bydd yswiriwr eich cleient wedi anfon tystysgrif digwyddiad trethadwy ato, os gwnaeth enillion ar un o’r canlynol:
 gains.gateway.question.paragraph2.agent = Gallwch roi gwybod i ni os yw cwmni yswiriant bywyd eich cleient, neu reolwr ISA eich cleient, wedi canslo ei ISA neu bolisi bywyd nes ymlaen.
 gains.gateway.question.error.agent = Dewiswch ‘Iawn’ os gwnaeth eich cleient enillion ar bolisi neu gontract yn y DU
+
+cancelled.gains.gateway.question.title.individual= A wnaethoch ennill o Gyfrif Cynilo Unigol (ISA) neu bolisi bywyd a ganslwyd?
+cancelled.gains.gateway.question.title.agent = A wnaeth eich cleient enillion ar Gyfrif Cynilo Unigol wedi’i ganslo neu ar yswiriant bywyd wedi’i ganslo?
+cancelled.gains.gateway.question.error.individual = Dewiswch ‘Iawn’ os gwnaethoch ennill o Gyfrif Cynilo Unigol (ISA) neu bolisi bywyd a ganslwyd
+cancelled.gains.gateway.question.error.agent = Dewiswch ‘Iawn’ os gwnaeth eich cleient enillion ar Gyfrif Cynilo Unigol wedi’i ganslo neu ar yswiriant bywyd wedi’i ganslo
 
 gains.policy-event.question.paragraph1 = Yr achosion mwyaf cyffredin o enillion yw:
 gains.policy-event.question.bullet.1 = os cafwyd arian parod neu fudd-daliadau eraill wrth ildio polisi’n llawn neu’n rhannol

@@ -50,6 +50,7 @@ common.gains.customer-reference = Customer reference
 
 #################       Captions       ########################################
 gains.caption = Gains from life insurance policies and contracts for 6 April {0} to 5 April {1}
+cancelled.gains.caption = Gains from cancelled policies for 6 April {0} to 5 April {1}
 
 ################# Gains from life insurance policies and contracts messages #################
 gains.customer-reference.question.title.individual = What''s your customer reference?
@@ -77,6 +78,13 @@ gains.gateway.question.radio.heading.agent = Did your client make a gain on a UK
 gains.gateway.question.paragraph1.agent = Your client''s insurer will have sent them a chargeable event certificate if they made a gain on a:
 gains.gateway.question.paragraph2.agent = You can tell us if your client''s life insurance company or ISA manager has cancelled their ISA or life policy later.
 gains.gateway.question.error.agent = Select yes if your client made a gain on a UK policy or contract
+
+
+cancelled.gains.gateway.question.title.individual = Did you make a gain from a cancelled Individual Savings Account or life policy?
+cancelled.gains.gateway.question.title.agent = Did your client make a gain from a cancelled Individual Savings Account or life policy?
+
+cancelled.gains.gateway.question.error.individual = Select yes if you made a gain from a cancelled Individual Savings Account or life policy
+cancelled.gains.gateway.question.error.agent = Select yes if your client made a gain from a cancelled Individual Savings Account or life policy
 
 gains.policy-event.question.paragraph1 = The most common causes of gains are if:
 gains.policy-event.question.bullet.1 = cash or other benefits were received on a full or part surrender of a policy
