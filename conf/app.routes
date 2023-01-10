@@ -32,6 +32,9 @@ POST        /:taxYear/gains/policy-name                     controllers.gains.Cu
 GET         /:taxYear/gains/gains-gateway                   controllers.gains.GainsGatewayController.show(taxYear: Int)
 POST        /:taxYear/gains/gains-gateway                   controllers.gains.GainsGatewayController.submit(taxYear: Int)
 
+GET         /:taxYear/gains/voided-isa-status               controllers.gains.CancelledGainsGatewayController.show(taxYear: Int)
+POST        /:taxYear/gains/voided-isa-status               controllers.gains.CancelledGainsGatewayController.submit(taxYear: Int)
+
 GET         /:taxYear/gains/deficiency-relief-status        controllers.gains.GainsDeficiencyReliefController.show(taxYear: Int)
 POST        /:taxYear/gains/deficiency-relief-status        controllers.gains.GainsDeficiencyReliefController.submit(taxYear: Int)
 

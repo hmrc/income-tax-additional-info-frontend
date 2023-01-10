@@ -18,39 +18,35 @@ package controllers.gains
 
 import actions.AuthorisedAction
 import config.AppConfig
-import forms.AmountForm
+import forms.YesNoForm
 import play.api.data.Form
 import play.api.i18n.I18nSupport
 import play.api.mvc._
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
-import views.html.pages.gains.GainsAmountPageView
+import views.html.pages.gains.CancelledGainsGatewayPageView
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class GainsAmountController @Inject()(authorisedAction: AuthorisedAction,
-                                      view: GainsAmountPageView)
-                                     (implicit appConfig: AppConfig, mcc: MessagesControllerComponents, ec: ExecutionContext)
+class CancelledGainsGatewayController @Inject()(authorisedAction: AuthorisedAction,
+                                       view: CancelledGainsGatewayPageView)
+                                      (implicit appConfig: AppConfig, mcc: MessagesControllerComponents, ec: ExecutionContext)
   extends FrontendController(mcc) with I18nSupport {
 
-  def form(isAgent: Boolean): Form[(BigDecimal)] =
-    AmountForm.amountForm(
-      s"gains.gain-amount.question.error.empty_field.${if (isAgent) "agent" else "individual"}",
-      s"gains.gain-amount.question.incorrect-format-error.${if (isAgent) "agent" else "individual"}",
-      s"gains.gain-amount.question.amount-exceeds-max-error.${if (isAgent) "agent" else "individual"}"
-    )
+  def form(isAgent: Boolean): Form[Boolean] = YesNoForm.yesNoForm(
+    s"cancelled.gains.gateway.question.error.${if (isAgent) "agent" else "individual"}")
+
   def show(taxYear: Int): Action[AnyContent] = authorisedAction.async { implicit request =>
-    Future.successful(Ok(view(taxYear, form(request.user.isAgent))))
+    Future.successful(Ok(view(form(request.user.isAgent),taxYear)))
   }
 
-
   def submit(taxYear: Int): Action[AnyContent] = authorisedAction.async { implicit request =>
-    form(request.user.isAgent).bindFromRequest().fold(
-      formWithErrors =>
-        Future.successful(BadRequest(view(taxYear, formWithErrors))),
-      _ =>
-        Future(Redirect(appConfig.incomeTaxSubmissionOverviewUrl(taxYear)))
-    )
+    form(request.user.isAgent).bindFromRequest().fold(formWithErrors =>{
+      Future.successful(BadRequest(view(formWithErrors,taxYear)))
+    }, {
+      yesNoValue =>
+        Future.successful(Ok)
+    })
   }
 }
