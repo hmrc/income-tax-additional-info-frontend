@@ -16,22 +16,30 @@
 
 package controllers.gains
 
-import forms.gains.InputFieldForm
 import play.api.http.HeaderNames
 import play.api.http.Status.{BAD_REQUEST, OK, SEE_OTHER}
 import play.api.libs.ws.WSResponse
 import support.IntegrationTest
 
-class PolicyEventControllerISpec extends IntegrationTest {
+class CancelledGainsGatewayControllerISpec extends IntegrationTest {
 
   private def url(taxYear: Int): String = {
-    s"/update-and-submit-income-tax-return/additional-information/$taxYear/gains/policy-event"
+    s"/update-and-submit-income-tax-return/additional-information/$taxYear/gains/voided-isa-status"
   }
 
   ".show" should {
-    "render the policy event page" in {
+    "render the cancelled gains gateway page" in {
       lazy val result: WSResponse = {
         authoriseAgentOrIndividual(isAgent = false)
+        urlGet(url(taxYear), headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)))
+      }
+
+      result.status shouldBe OK
+    }
+
+    "render the cancelled gains gateway page for an agent" in {
+      lazy val result: WSResponse = {
+        authoriseAgentOrIndividual(isAgent = true)
         urlGet(url(taxYear), headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)))
       }
 
@@ -40,29 +48,10 @@ class PolicyEventControllerISpec extends IntegrationTest {
   }
 
   ".submit" should {
-    "redirect to income tax submission overview if successful" in {
-      lazy val result: WSResponse = {
-        authoriseAgentOrIndividual(isAgent = false)
-        urlPost(url(taxYear), headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)), body = Map(InputFieldForm.value -> "text"))
-      }
-
-      result.status shouldBe SEE_OTHER
-      result.headers("Location").head shouldBe appConfig.incomeTaxSubmissionOverviewUrl(taxYear)
-    }
-
     "show page with error text if form is empty" in {
       lazy val result: WSResponse = {
         authoriseAgentOrIndividual(isAgent = false)
         urlPost(url(taxYear), headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)), body = Map[String, String]())
-      }
-
-      result.status shouldBe BAD_REQUEST
-    }
-
-    "show page with error text if form submitted with invalid alphanumeric value" in {
-      lazy val result: WSResponse = {
-        authoriseAgentOrIndividual(isAgent = false)
-        urlPost(url(taxYear), headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)), body = Map(InputFieldForm.value -> "123.test"))
       }
 
       result.status shouldBe BAD_REQUEST

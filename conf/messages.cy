@@ -79,9 +79,8 @@ gains.gateway.question.paragraph1.agent = Bydd yswiriwr eich cleient wedi anfon 
 gains.gateway.question.paragraph2.agent = Gallwch roi gwybod i ni os yw cwmni yswiriant bywyd eich cleient, neu reolwr ISA eich cleient, wedi canslo ei ISA neu bolisi bywyd nes ymlaen.
 gains.gateway.question.error.agent = Dewiswch ‘Iawn’ os gwnaeth eich cleient enillion ar bolisi neu gontract yn y DU
 
-cancelled.gains.gateway.question.radio.heading.individual = A wnaethoch ennill o Gyfrif Cynilo Unigol (ISA) neu bolisi bywyd a ganslwyd?
-cancelled.gains.gateway.question.radio.heading.agent = A wnaeth eich cleient enillion ar Gyfrif Cynilo Unigol wedi’i ganslo neu ar yswiriant bywyd wedi’i ganslo?
-cancelled.gains.gateway.question.title = Enillion o bolisïau a ganslwyd
+cancelled.gains.gateway.question.title.individual= A wnaethoch ennill o Gyfrif Cynilo Unigol (ISA) neu bolisi bywyd a ganslwyd?
+cancelled.gains.gateway.question.title.agent = A wnaeth eich cleient enillion ar Gyfrif Cynilo Unigol wedi’i ganslo neu ar yswiriant bywyd wedi’i ganslo?
 cancelled.gains.gateway.question.error.individual = Select yes if you made a gain from a cancelled Individual Savings Account or life policy
 cancelled.gains.gateway.question.error.agent = Dewiswch ‘Iawn’ os gwnaeth eich cleient enillion ar Gyfrif Cynilo Unigol wedi’i ganslo neu ar yswiriant bywyd wedi’i ganslo
 
