@@ -18,26 +18,27 @@ Run the following command to start the remaining services locally:
     sudo mongod (If not already running)
     sm --start INCOME_TAX_SUBMISSION_ALL -r
 
-This service runs on port: `localhost:9302`
+This service runs on port: `localhost:10005`
 
 ### Feature Switches
 
-| Feature | Environments Enabled In |
-| --- | --- |
-| Welsh | Local, QA, Staging |
-| NRS | Local, QA, Staging, Production |
-| Tax Year Error | Production |
-| Dividends | Local, QA, Staging, Production, ET |
-| Interest | Local, QA, Staging, Production, ET |
-| GiftAid | Local, QA, Staging, Production, ET |
-| Student loans | Local, QA, Staging, ET |
-| EmploymentsEnabled | Local, QA, Staging, Production, ET |
-| EmploymentsReleased | Local, QA, Staging, Production, ET |
-| End of year employment | Local, QA, Staging, ET |
-| CISEnabled | Local, QA, Staging |
-| CISReleased | Local, QA, Staging |
+| Feature                | Environments Enabled In            |
+|------------------------|------------------------------------|
+| Welsh                  | Local, QA, Staging                 |
+| NRS                    | Local, QA, Staging, Production     |
+| Tax Year Error         | Production                         |
+| Dividends              | Local, QA, Staging, Production, ET |
+| Interest               | Local, QA, Staging, Production, ET |
+| GiftAid                | Local, QA, Staging, Production, ET |
+| Student loans          | Local, QA, Staging, Production, ET |
+| EmploymentsEnabled     | Local, QA, Staging, Production, ET |
+| EmploymentsReleased    | Local, QA, Staging, Production, ET |
+| End of year employment | Local, QA, Staging, ET             |
+| CISEnabled             | Local, QA, Staging                 |
+| CISReleased            | Local, QA, Staging                 |
 | CrystallisationEnabled | Local, QA, Staging, Production, ET |
-| TailoringEnabled | Local |
+| TailoringEnabled       | Local                              |
+| GAINSEnabled           | Local, QA, Staging                 |
 
 ## Auth Setup - How to enter the service
 
@@ -544,6 +545,9 @@ This journey is a part of the Income-Tax-Cis-Frontend repository see its [readMe
 
 ## Pensions
 This journey is a part of the Income-Tax-Pensions-Frontend repository see its [readMe](https://github.com/hmrc/income-tax-pensions-frontend/blob/main/README.md) for more.
+
+## Gains
+These journeys are a part of the Income-Tax-Additional-info-Frontend repository see its [readMe](https://github.com/hmrc/income-tax-additional-info-frontend/blob/main/README.md) for more.
 
 ## Crystallisation
 It must be the end of the tax year for a user to submit for crystallisation.
