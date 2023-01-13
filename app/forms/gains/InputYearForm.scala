@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,20 +17,24 @@
 package forms.gains
 
 import filters.InputFilters
-import forms.validation.mappings.MappingUtil.trimmedText
+import forms.validation.mappings.MappingUtil.optionYear
 import play.api.data.Form
-import play.api.data.validation.Constraint
-import play.api.data.validation.Constraints.nonEmpty
 
-object CustomerReferenceForm extends InputFilters {
+object InputYearForm extends InputFilters {
 
-  val CustomerReference: String = "customerReferenceNumber"
+  val numberOfYears: String = "policyHeld"
 
-  def notEmpty(isAgent: Boolean): Constraint[String] =
-    nonEmpty(s"gains.customer-reference.question.error-message.${if (isAgent) "agent" else "individual"}")
-
-  def customerReferenceForm(isAgent: Boolean): Form[String] = Form(
-    CustomerReference -> trimmedText.transform[String](filter, identity).verifying(notEmpty(isAgent))
+  def inputYearsForm(emptyFieldKey: String,
+                     wrongFormatKey: String,
+                     maxYearKey: String,
+                     emptyFieldArguments: Seq[String] = Seq.empty[String]
+                ): Form[Option[Int]] = Form(
+    numberOfYears -> optionYear(
+      requiredKey = emptyFieldKey,
+      wrongFormatKey = wrongFormatKey,
+      maxYearKey = maxYearKey,
+      args = emptyFieldArguments
+    )
   )
 
 }

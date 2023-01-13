@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,8 +25,8 @@ object AmountForm {
 
   def amountForm(
                   emptyFieldKey: String,
-                  wrongFormatKey: String = "common.error.invalid_currency_format",
-                  exceedsMaxAmountKey: String = "common.error.amountMaxLimit",
+                  wrongFormatKey: String,
+                  exceedsMaxAmountKey: String,
                   underMinAmountKey: Option[String] = None,
                   emptyFieldArguments: Seq[String] = Seq.empty[String]
                 ): Form[BigDecimal] = Form(

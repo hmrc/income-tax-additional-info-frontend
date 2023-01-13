@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,14 +23,15 @@ object ConstraintUtil {
 
   def constraint[A](f: A => ValidationResult): Constraint[A] = Constraint[A](name = "")(f)
 
-//  implicit class ConstraintUtil[A](cons: Constraint[A]) {
-//
-//    def andThen(newCons: Constraint[A]): Constraint[A] =
-//      constraint((data: A) =>
-//        cons.apply(data) match {
-//          case Valid => newCons.apply(data)
-//          case r => r
-//        }
-//      )
-//  }
+  implicit class ConstraintUtil[A](cons: Constraint[A]) {
+
+    def andThen(newCons: Constraint[A]): Constraint[A] =
+      constraint((data: A) =>
+        cons.apply(data) match {
+          case Valid => newCons.apply(data)
+          case r => r
+        }
+      )
+
+  }
 }

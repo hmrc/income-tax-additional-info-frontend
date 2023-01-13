@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,11 +23,12 @@ object StringConstraints {
 
   val charRegex = """^([ A-Za-z0-9&@£$€¥#.,:;-])*$"""
   val numericalCharacters = """[0-9.]*"""
-
   val monetaryRegex = """\d+|\d*\.\d{1,2}"""
+  val alphabetsWithSpaceRegex = """^([a-zA-Z])+([a-zA-Z ])*$"""
+  val mixedAlphaNumericRegex = """^$|^(?=.*[0-9])(?=.*[a-zA-Z])([a-zA-Z0-9]+)$"""
 
-  def validateChar(charRegex:String): String => Constraint[String] = msgKey => constraint[String](
-  x => if (x.matches(charRegex)) Valid else Invalid(msgKey)
+  def validateChar(charRegex: String): String => Constraint[String] = msgKey => constraint[String](
+    x => if (x.matches(charRegex)) Valid else Invalid(msgKey)
   )
 
   val nonEmpty: String => Constraint[String] = msgKey => constraint[String](
@@ -38,4 +39,11 @@ object StringConstraints {
     x => if (x.length <= maxChars) Valid else Invalid(msgKey)
   )
 
+  def validateMixedAlphaNumeric: String => Constraint[String] = msgKey => constraint[String](
+    x => if (x.matches(mixedAlphaNumericRegex)) Valid else Invalid(msgKey)
+  )
+
+  def validateAlphabetsWithSpace: String => Constraint[String] = msgKey => constraint[String](
+    x => if (!x.matches(alphabetsWithSpaceRegex)) Invalid(msgKey) else Valid
+  )
 }

@@ -1,5 +1,5 @@
 @*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,7 +28,8 @@
     classes: Option[String] = None,
     autocomplete: Option[String] = None,
     inputType: String = "text",
-    currency: Boolean = false
+    currency: Boolean = false,
+    labelClasses: Option[String] = None
 )(implicit messages: Messages)
 
 @govukInput(Input(
@@ -38,7 +39,7 @@
     label = Label(
         content = Text(messages(label)),
         isPageHeading = isPageHeading,
-        classes = if(isPageHeading) "govuk-label--l" else if (labelHidden) "govuk-visually-hidden" else "govuk-!-font-weight-bold"
+        classes = if(isPageHeading) "govuk-label--l" else if (labelHidden) "govuk-visually-hidden" else if (labelClasses.isDefined) labelClasses.get else "govuk-!-font-weight-bold"
     ),
     hint = hint.map(hintKey => Hint(
         content = HtmlContent(messages(hintKey))

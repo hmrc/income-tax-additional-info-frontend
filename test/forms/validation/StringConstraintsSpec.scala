@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -74,5 +74,32 @@ class StringConstraintsSpec extends Constraints with AnyWordSpecLike with Matche
       }
     }
   }
-}
 
+  "The StringConstraints.validateMixedAlphaNumeric method" when {
+    "supplied with a valid mixed alphanumeric string" should {
+      "return valid" in {
+        StringConstraints.validateMixedAlphaNumeric(errMsgInvalidChar)("INPOLY123") shouldBe Valid
+      }
+    }
+
+    "supplied with invalid alphanumeric string" should {
+      "return invalid" in {
+        StringConstraints.validateMixedAlphaNumeric(errMsgInvalidChar)("123") shouldBe Invalid(errMsgInvalidChar)
+      }
+    }
+  }
+
+  "The StringConstraints.validateAlphabetsWithSpace method" when {
+    "supplied with a valid alphabet string" should {
+      "return valid" in {
+        StringConstraints.validateAlphabetsWithSpace(errMsgInvalidChar)("test this input") shouldBe Valid
+      }
+    }
+
+    "supplied with invalid alphabet string" should {
+      "return invalid" in {
+        StringConstraints.validateAlphabetsWithSpace(errMsgInvalidChar)("123 test") shouldBe Invalid(errMsgInvalidChar)
+      }
+    }
+  }
+}

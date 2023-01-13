@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -40,7 +40,7 @@ class AuthorisedAction @Inject()(authService: AuthorisationService,
                                 (implicit ec: ExecutionContext)
   extends ActionBuilder[AuthorisationRequest, AnyContent] with Logging {
 
-  private val minimumConfidenceLevel: Int = ConfidenceLevel.L200.level
+  private val minimumConfidenceLevel: Int = ConfidenceLevel.L250.level
 
   override protected[actions] def executionContext: ExecutionContext = ec
 
@@ -86,7 +86,7 @@ class AuthorisedAction @Inject()(authService: AuthorisationService,
             Future.successful(Redirect(IndividualAuthErrorController.show))
         }
       case _ =>
-        val logMessage = "[AuthorisedAction][individualAuthentication] User has confidence level below 200, routing user to IV uplift."
+        val logMessage = "[AuthorisedAction][individualAuthentication] User has confidence level below 250, routing user to IV uplift."
         logger.info(logMessage)
         Future(Redirect(appConfig.incomeTaxSubmissionIvRedirect))
     }

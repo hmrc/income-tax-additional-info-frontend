@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,7 +18,7 @@ package controllers.gains
 
 import actions.AuthorisedAction
 import config.AppConfig
-import forms.gains.CustomerReferenceForm
+import forms.gains.InputFieldForm
 import play.api.data.Form
 import play.api.i18n.I18nSupport
 import play.api.mvc._
@@ -34,7 +34,12 @@ class CustomerReferenceController @Inject()(authorisedAction: AuthorisedAction,
                                            (implicit appConfig: AppConfig, mcc: MessagesControllerComponents, ec: ExecutionContext)
   extends FrontendController(mcc) with I18nSupport {
 
-  def customerReferenceForm(isAgent: Boolean): Form[String] = CustomerReferenceForm.customerReferenceForm(isAgent)
+  val inputFormat = "mixedAlphaNumeric"
+
+  def customerReferenceForm(isAgent: Boolean): Form[String] = InputFieldForm.inputFieldForm(isAgent, inputFormat,
+    s"gains.customer-reference.question.error-message.1.${if (isAgent) "agent" else "individual"}",
+    s"gains.customer-reference.question.error-message.2.${if (isAgent) "agent" else "individual"}"
+  )
 
   def show(taxYear: Int): Action[AnyContent] = authorisedAction.async { implicit request =>
     Future.successful(Ok(view(taxYear, customerReferenceForm(request.user.isAgent))))

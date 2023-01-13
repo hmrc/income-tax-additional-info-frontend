@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,6 +17,7 @@
 package connectors
 
 import connectors.errors.{MultiErrorsBody, SingleErrorBody}
+import connectors.httpParsers.Parser
 import play.api.http.Status.INTERNAL_SERVER_ERROR
 import play.api.libs.json.{JsValue, Json}
 import support.UnitTest
@@ -26,6 +27,7 @@ class ParserSpec extends UnitTest {
 
   private val underTest = new Parser {
     override val parserName: String = "TestParser"
+    override val service: String = "service"
   }
 
   def httpResponse(json: JsValue =

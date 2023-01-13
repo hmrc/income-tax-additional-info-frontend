@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -77,7 +77,7 @@ trait MockAuthorisedAction extends AppConfigStubProvider
 
     (mockAuthConnector.authorise(_: Predicate, _: Retrieval[_])(_: HeaderCarrier, _: ExecutionContext))
       .expects(*, Retrievals.allEnrolments and Retrievals.confidenceLevel, *, *)
-      .returning(Future.successful(enrolments and ConfidenceLevel.L200))
+      .returning(Future.successful(enrolments and ConfidenceLevel.L250))
   }
 
   protected def mockFailToAuthenticate(): CallHandler4[Predicate, Retrieval[_], HeaderCarrier, ExecutionContext, Future[Any]] = {

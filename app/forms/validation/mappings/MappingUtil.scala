@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -35,10 +35,25 @@ object MappingUtil extends Formatters {
   }
 
   def currency(requiredKey: String,
-               wrongFormatKey: String = "common.error.invalid_currency_format",
-               maxAmountKey: String = "common.error.amountMaxLimit",
+               wrongFormatKey: String,
+               maxAmountKey: String,
                minAmountKey: Option[String] = None,
                args: Seq[String] = Seq.empty[String]
               ): FieldMapping[BigDecimal] =
     of(currencyFormatter(requiredKey, wrongFormatKey, maxAmountKey, minAmountKey, args))
+
+  def optionYear(requiredKey: String,
+                 wrongFormatKey: String,
+                 maxYearKey: String,
+                 args: Seq[String] = Seq.empty[String]): FieldMapping[Option[Int]] =
+    of(yearFormatter(requiredKey, wrongFormatKey, maxYearKey, args))
+
+  def optionCurrency(requiredKey: String,
+                     wrongFormatKey: String,
+                     maxAmountKey: String,
+                     minAmountKey: String,
+                     args: Seq[String] = Seq.empty[String]
+                    ): FieldMapping[Option[BigDecimal]] = {
+    of(optionCurrencyFormatter(requiredKey, wrongFormatKey, maxAmountKey, minAmountKey, args))
+}
 }
