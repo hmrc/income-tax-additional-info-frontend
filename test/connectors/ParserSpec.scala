@@ -26,6 +26,7 @@ class ParserSpec extends UnitTest {
 
   private val underTest = new Parser {
     override val parserName: String = "TestParser"
+    override val service: String = "service"
   }
 
   def httpResponse(json: JsValue =

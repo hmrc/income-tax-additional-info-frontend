@@ -14,17 +14,14 @@
  * limitations under the License.
  */
 
-package support
+package connectors
 
-import org.scalamock.scalatest.MockFactory
-import org.scalatest.BeforeAndAfterEach
-import org.scalatest.matchers.should.Matchers
-import org.scalatest.wordspec.AnyWordSpec
-import play.api.test.{DefaultAwaitTimeout, FutureAwaits}
-import uk.gov.hmrc.http.HeaderCarrier
+import uk.gov.hmrc.http.{HttpReads, HttpResponse}
 
-trait UnitTest extends AnyWordSpec with Matchers with MockFactory with BeforeAndAfterEach
-  with FutureAwaits with DefaultAwaitTimeout {
+trait RawResponseReads {
 
-  implicit val emptyHeaderCarrier: HeaderCarrier = HeaderCarrier()
+  implicit val httpReads: HttpReads[HttpResponse] = new HttpReads[HttpResponse] {
+    override def read(method: String, url: String, response: HttpResponse) = response
+  }
+
 }

@@ -26,7 +26,7 @@ import javax.inject.{Inject, Singleton}
 @Singleton
 class AppConfig @Inject()(servicesConfig: ServicesConfig) {
 
-  private lazy val additionalInformationUrlKey = "microservice.services.income-additional-information.url"
+  private lazy val additionalInformationUrlKey = "microservice.services.income-tax-additional-information.url"
 
   private lazy val incomeTaxSubmissionFrontendUrlKey = "microservice.services.income-tax-submission-frontend.url"
   private lazy val basGatewayFrontendUrlKey = "microservice.services.bas-gateway-frontend.url"
@@ -55,6 +55,7 @@ class AppConfig @Inject()(servicesConfig: ServicesConfig) {
   lazy val timeoutDialogTimeout: Int = servicesConfig.getInt("timeoutDialogTimeout")
   lazy val timeoutDialogCountdown: Int = servicesConfig.getInt("timeoutDialogCountdown")
   lazy val signInUrl: String = s"$signInBaseUrl?continue=$signInContinueUrlRedirect&origin=$signInOrigin"
+  lazy val additionalInformationServiceBaseUrl: String = s"${servicesConfig.getString(additionalInformationUrlKey)}/income-tax-additional-information"
 
   def incomeTaxSubmissionBaseUrl: String = servicesConfig.getString(incomeTaxSubmissionFrontendUrlKey) +
     servicesConfig.getString(key = "microservice.services.income-tax-submission-frontend.context")
@@ -80,8 +81,6 @@ class AppConfig @Inject()(servicesConfig: ServicesConfig) {
     val contactFormService = contactFormServiceIdentifier(isAgent)
     s"$contactFrontEndUrl/contact/beta-feedback?service=$contactFormService&backUrl=$requestUri"
   }
-
-  lazy val additionalInformationServiceBaseUrl: String = s"${servicesConfig.getString(additionalInformationUrlKey)}/income-tax-additional-information"
 
   def taxYearErrorFeature: Boolean = servicesConfig.getBoolean("taxYearErrorFeatureSwitch")
 

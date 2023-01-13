@@ -14,17 +14,17 @@
  * limitations under the License.
  */
 
-package support
+package models.gains
 
-import org.scalamock.scalatest.MockFactory
-import org.scalatest.BeforeAndAfterEach
-import org.scalatest.matchers.should.Matchers
-import org.scalatest.wordspec.AnyWordSpec
-import play.api.test.{DefaultAwaitTimeout, FutureAwaits}
-import uk.gov.hmrc.http.HeaderCarrier
+import play.api.libs.json.{Json, OFormat}
 
-trait UnitTest extends AnyWordSpec with Matchers with MockFactory with BeforeAndAfterEach
-  with FutureAwaits with DefaultAwaitTimeout {
+case class ForeignModel(
+                         customerReference: Option[String] = None,
+                         gainAmount: BigDecimal,
+                         taxPaidAmount: Option[BigDecimal] = None,
+                         yearsHeld: Option[Int] = None
+                       )
 
-  implicit val emptyHeaderCarrier: HeaderCarrier = HeaderCarrier()
+object ForeignModel {
+  implicit val formats: OFormat[ForeignModel] = Json.format[ForeignModel]
 }
