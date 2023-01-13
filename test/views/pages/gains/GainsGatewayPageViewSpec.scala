@@ -40,7 +40,7 @@ class GainsGatewayPageViewSpec extends ViewUnitTest {
     val noSelector = "#value-no"
     val continueButton = "#continue"
     val getHelpLink = "#help"
-    val emptySelectionError = "#main-content > div > div > div.govuk-error-summary > div > ul > li > a"
+    val emptySelectionError = "#main-content > div > div > div.govuk-error-summary > div > div > ul > li > a"
     val errorLink = "#value"
   }
 
