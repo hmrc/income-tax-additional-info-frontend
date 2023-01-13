@@ -45,6 +45,9 @@ trait IntegrationTest extends AnyWordSpec
   with BeforeAndAfterAll
   with TaxYearProvider {
 
+  val nino = "AA123456A"
+  val mtditid = "1234567890"
+
   protected implicit val ec: ExecutionContext = ExecutionContext.Implicits.global
   protected implicit val headerCarrier: HeaderCarrier = HeaderCarrier().withExtraHeaders(headers = "mtditid" -> aUser.mtditid)
   protected implicit val actorSystem: ActorSystem = ActorSystem()
