@@ -24,13 +24,12 @@ import play.api.http.Status.NO_CONTENT
 import uk.gov.hmrc.http.HeaderCarrier
 
 import javax.inject.Inject
-import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 
 class GainsSubmissionService @Inject()(gainsSubmissionConnector: GainsSubmissionConnector) {
 
   def submitGains(body: Option[GainsSubmissionModel], nino: String, mtditid: String, taxYear: Int)
-                 (implicit hc: HeaderCarrier): Future[GainsSubmissionResponse] = {
+                 (implicit hc: HeaderCarrier, ec: ExecutionContext): Future[GainsSubmissionResponse] = {
 
     lazy val logger: Logger = Logger(this.getClass.getName)
 

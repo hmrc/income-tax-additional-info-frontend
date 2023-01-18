@@ -14,13 +14,6 @@
  * limitations under the License.
  */
 
-package models.pagerduty
+package models.mongo
 
-object PagerDutyKeys extends Enumeration {
-  val BAD_SUCCESS_JSON_FROM_IF: PagerDutyKeys.Value = Value
-  val SERVICE_UNAVAILABLE_FROM_IF: PagerDutyKeys.Value = Value
-  val INTERNAL_SERVER_ERROR_FROM_IF: PagerDutyKeys.Value = Value
-  val UNEXPECTED_RESPONSE_FROM_IF: PagerDutyKeys.Value = Value
-  val FOURXX_RESPONSE_FROM_IF: PagerDutyKeys.Value = Value
-}
-
+case class TextAndKey(associatedText: String, aesKey: String)

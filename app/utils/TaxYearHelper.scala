@@ -31,6 +31,10 @@ trait TaxYearHelper extends SessionHelper {
 
   val taxYearEOY: Int = taxYear - 1
 
+  def convertStringTaxYear(taxYear: Int): String = {
+    s"${taxYear - 1}-${taxYear.toString takeRight 2}"
+  }
+
   def retrieveTaxYearList(implicit request: Request[_]): Seq[Int] =
     getFromSession(SessionValues.VALID_TAX_YEARS)(request).getOrElse("").split(',').toSeq.map(_.toInt)
 

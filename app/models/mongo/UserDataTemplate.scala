@@ -14,10 +14,11 @@
  * limitations under the License.
  */
 
-package models
+package models.mongo
 
-case class User(mtditid: String, arn: Option[String], nino: String, affinityGroup: String, sessionId: String) {
-
-  def isAgent: Boolean = arn.nonEmpty
-
+trait UserDataTemplate {
+  val sessionId: String
+  val mtdItId: String
+  val nino: String
+  val taxYear: Int
 }
