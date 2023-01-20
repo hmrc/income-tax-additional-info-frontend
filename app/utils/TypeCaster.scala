@@ -14,10 +14,19 @@
  * limitations under the License.
  */
 
-package models
+package utils
 
-case class User(mtditid: String, arn: Option[String], nino: String, affinityGroup: String, sessionId: String) {
+object TypeCaster {
 
-  def isAgent: Boolean = arn.nonEmpty
+  trait Converter[T] {
+    self =>
+    def convert(v: String): T
+  }
 
+  object Converter {
+    implicit val stringLoader: Converter[String] = (v: String) => v
+    implicit val intLoader: Converter[Int] = (v: String) => v.toInt
+    implicit val booleanLoader: Converter[Boolean] = (v: String) => v.toBoolean
+    implicit val bigDecimalLoader: Converter[BigDecimal] = (v: String) => BigDecimal(v)
+  }
 }
