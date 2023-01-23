@@ -25,6 +25,7 @@ common.taxMonth = 5 {0} {1}
 common.addedByHmrc = Added by HMRC
 common.back = Back
 common.change = Change
+common.remove = Remove
 common.completed = Completed
 common.continue = Continue
 common.saveAndContinue = Save and continue
@@ -190,6 +191,11 @@ gains.summary.key = Gain on a UK policy or contract
 gains.summary.key.cancelled = Gain on a cancelled UK policy or contract
 
 gains.summary.title.agent = Your client''s policies
+
+gains.policies-add.question.title = Policies
+gains.policies-add.link.text = Add another gain from a different policy
+gains.policies-add.summary.hidden.text.change = Change the policy details
+gains.policies-add.summary.hidden.text.remove = Remove the policy
 
 #################       Error messages        ########################################
 common.error.self-assessment.paragraph.1.1 = If the web address is correct or you selected a link or button, you can use
