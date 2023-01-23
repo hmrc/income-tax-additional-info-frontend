@@ -25,6 +25,7 @@ common.taxMonth = 5 {0} {1}
 common.addedByHmrc = Added by HMRC
 common.back = Back
 common.change = Newid
+common.remove = Tynnu
 common.completed = Completed
 common.continue = Yn eich blaen
 common.saveAndContinue = Cadw ac yn eich blaen
@@ -190,6 +191,11 @@ gains.summary.key = Ennill ar bolisi neu gytundeb y DU
 gains.summary.key.cancelled = Ennill ar bolisi neu gytundeb y DU sydd wedi’i ganslo
 
 gains.summary.title.agent = Polisïau eich cleient
+
+gains.policies-add.question.title = Polisïau
+gains.policies-add.link.text = Ychwanegu ennill arall o bolisi gwahanol
+gains.policies-add.summary.hidden.text.change = Newid manylion y polisi
+gains.policies-add.summary.hidden.text.remove = Tynnu’r polisi
 
 #################       Error messages        ########################################
 common.error.self-assessment.paragraph.1.1 = If the web address is correct or you selected a link or button, you can use
