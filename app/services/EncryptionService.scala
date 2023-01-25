@@ -16,18 +16,18 @@
 
 package services
 
-import config.AppConfig
 import models.gains.{EncryptedGainsCyaModel, GainsCyaModel}
 import models.mongo._
-import utils.SecureGCMCipher
+import utils.AesGcmAdCrypto
+import utils.CypherSyntax.{DecryptableOps, EncryptableOps}
 
 import javax.inject.Inject
 
-class EncryptionService @Inject()(encryptionService: SecureGCMCipher, appConfig: AppConfig) {
+class EncryptionService @Inject()(implicit val encryptionService: AesGcmAdCrypto) {
 
   // Gains
   def encryptGainsUserData(gainsUserDataModel: GainsUserDataModel): EncryptedGainsUserDataModel = {
-    implicit val textAndKey: TextAndKey = TextAndKey(gainsUserDataModel.mtdItId, appConfig.encryptionKey)
+    implicit val associatedText: String = gainsUserDataModel.mtdItId
 
     EncryptedGainsUserDataModel(
       sessionId = gainsUserDataModel.sessionId,
@@ -40,7 +40,7 @@ class EncryptionService @Inject()(encryptionService: SecureGCMCipher, appConfig:
   }
 
   def decryptGainsUserData(gainsUserDataModel: EncryptedGainsUserDataModel): GainsUserDataModel = {
-    implicit val textAndKey: TextAndKey = TextAndKey(gainsUserDataModel.mtdItId, appConfig.encryptionKey)
+    implicit val associatedText: String = gainsUserDataModel.mtdItId
 
     GainsUserDataModel(
       sessionId = gainsUserDataModel.sessionId,
@@ -53,36 +53,36 @@ class EncryptionService @Inject()(encryptionService: SecureGCMCipher, appConfig:
   }
 
   private def encryptGainsCyaModel(gains: GainsCyaModel)
-                                  (implicit textAndKey: TextAndKey): EncryptedGainsCyaModel = {
+                                  (implicit associatedText: String): EncryptedGainsCyaModel = {
     EncryptedGainsCyaModel(
-      gains.gatewayQuestion.map(x => encryptionService.encrypt[Boolean](x)),
-      gains.customerReference.map(x => encryptionService.encrypt[String](x)),
-      gains.whatCausedThisGain.map(x => encryptionService.encrypt[String](x)),
-      gains.previousGain.map(x => encryptionService.encrypt[Boolean](x)),
-      gains.yearsSinceLastGain.map(x => encryptionService.encrypt[String](x)),
-      gains.howMuchGain.map(x => encryptionService.encrypt[BigDecimal](x)),
-      gains.policyYearsHeld.map(x => encryptionService.encrypt[String](x)),
-      gains.paidTaxOnGain.map(x => encryptionService.encrypt[Boolean](x)),
-      gains.taxPaid.map(x => encryptionService.encrypt[BigDecimal](x)),
-      gains.entitledToDeficiencyRelief.map(x => encryptionService.encrypt[Boolean](x)),
-      gains.amountAvailableForRelief.map(x => encryptionService.encrypt[BigDecimal](x))
+      gains.gatewayQuestion.map(_.encrypted),
+      gains.customerReference.map(_.encrypted),
+      gains.whatCausedThisGain.map(_.encrypted),
+      gains.previousGain.map(_.encrypted),
+      gains.yearsSinceLastGain.map(_.encrypted),
+      gains.howMuchGain.map(_.encrypted),
+      gains.policyYearsHeld.map(_.encrypted),
+      gains.paidTaxOnGain.map(_.encrypted),
+      gains.taxPaid.map(_.encrypted),
+      gains.entitledToDeficiencyRelief.map(_.encrypted),
+      gains.amountAvailableForRelief.map(_.encrypted)
     )
   }
 
   private def decryptGainsCyaModel(gains: EncryptedGainsCyaModel)
-                                  (implicit textAndKey: TextAndKey): GainsCyaModel = {
+                                  (implicit associatedText: String): GainsCyaModel = {
     GainsCyaModel(
-      gains.gatewayQuestion.map(x => encryptionService.decrypt[Boolean](x.value, x.nonce)),
-      gains.customerReference.map(x => encryptionService.decrypt[String](x.value, x.nonce)),
-      gains.whatCausedThisGain.map(x => encryptionService.decrypt[String](x.value, x.nonce)),
-      gains.previousGain.map(x => encryptionService.decrypt[Boolean](x.value, x.nonce)),
-      gains.yearsSinceLastGain.map(x => encryptionService.decrypt[String](x.value, x.nonce)),
-      gains.howMuchGain.map(x => encryptionService.decrypt[BigDecimal](x.value, x.nonce)),
-      gains.policyYearsHeld.map(x => encryptionService.decrypt[String](x.value, x.nonce)),
-      gains.paidTaxOnGain.map(x => encryptionService.decrypt[Boolean](x.value, x.nonce)),
-      gains.taxPaid.map(x => encryptionService.decrypt[BigDecimal](x.value, x.nonce)),
-      gains.entitledToDeficiencyRelief.map(x => encryptionService.decrypt[Boolean](x.value, x.nonce)),
-      gains.amountAvailableForRelief.map(x => encryptionService.decrypt[BigDecimal](x.value, x.nonce))
+      gains.gatewayQuestion.map(_.decrypted[Boolean]),
+      gains.customerReference.map(_.decrypted[String]),
+      gains.whatCausedThisGain.map(_.decrypted[String]),
+      gains.previousGain.map(_.decrypted[Boolean]),
+      gains.yearsSinceLastGain.map(_.decrypted[String]),
+      gains.howMuchGain.map(_.decrypted[BigDecimal]),
+      gains.policyYearsHeld.map(_.decrypted[String]),
+      gains.paidTaxOnGain.map(_.decrypted[Boolean]),
+      gains.taxPaid.map(_.decrypted[BigDecimal]),
+      gains.entitledToDeficiencyRelief.map(_.decrypted[Boolean]),
+      gains.amountAvailableForRelief.map(_.decrypted[BigDecimal])
     )
   }
 }

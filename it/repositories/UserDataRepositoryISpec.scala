@@ -16,17 +16,15 @@
 
 package repositories
 
+import com.mongodb.client.result.InsertOneResult
 import models.User
 import models.gains.GainsCyaModel
 import models.mongo._
-import org.mongodb.scala.bson.conversions.Bson
-import org.mongodb.scala.model.Filters
 import org.mongodb.scala.result.InsertOneResult
 import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
 import play.api.mvc.AnyContent
 import play.api.test.{DefaultAwaitTimeout, FakeRequest, FutureAwaits}
 import support.IntegrationTest
-import uk.gov.hmrc.mongo.play.json.Codecs.toBson
 
 class UserDataRepositoryISpec extends IntegrationTest with FutureAwaits with DefaultAwaitTimeout {
 
@@ -116,12 +114,6 @@ class UserDataRepositoryISpec extends IntegrationTest with FutureAwaits with Def
   }
 
   "find" should {
-    def filter(sessionId: String, mtdItId: String, nino: String, taxYear: Int): Bson = Filters.and(
-      Filters.equal("sessionId", toBson(sessionId)),
-      Filters.equal("mtdItId", toBson(mtdItId)),
-      Filters.equal("nino", toBson(nino)),
-      Filters.equal("taxYear", toBson(taxYear))
-    )
 
     val testUser = User(
       mtditid, None, nino, "individual", sessionId
@@ -143,7 +135,7 @@ class UserDataRepositoryISpec extends IntegrationTest with FutureAwaits with Def
 
     "return a EncryptionDecryptionError" in {
       await(gainsInvalidRepo.find(taxYear)(testUser)) mustBe
-        Left(EncryptionDecryptionError("Key being used is not valid. It could be due to invalid encoding, wrong length or uninitialized for decrypt Invalid AES key length: 2 bytes"))
+        Left(EncryptionDecryptionError("Failed encrypting data"))
     }
 
     "return a No CYA data found" in {
@@ -162,7 +154,7 @@ class UserDataRepositoryISpec extends IntegrationTest with FutureAwaits with Def
         case e: Exception => Left(e)
       }
       result.isLeft mustBe true
-      result.left.get.getMessage must include(
+      result.left.e.swap.getOrElse(new Exception("wrong message")).getMessage must include(
         "E11000 duplicate key error collection: income-tax-additional-info-frontend.gainsUserData")
     }
   }

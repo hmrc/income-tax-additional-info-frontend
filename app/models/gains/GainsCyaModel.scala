@@ -16,8 +16,8 @@
 
 package models.gains
 
-import play.api.libs.json.{Json, OFormat}
-import utils.EncryptedValue
+import play.api.libs.json.{Format, Json, OFormat}
+import uk.gov.hmrc.crypto.EncryptedValue
 
 case class GainsCyaModel(
                           gatewayQuestion: Option[Boolean] = None,
@@ -53,5 +53,8 @@ case class EncryptedGainsCyaModel(
                                  )
 
 object EncryptedGainsCyaModel {
-  implicit val format: OFormat[EncryptedGainsCyaModel] = Json.format[EncryptedGainsCyaModel]
+
+  implicit lazy val encryptedValueOFormat: OFormat[EncryptedValue] = Json.format[EncryptedValue]
+
+  implicit val format: Format[EncryptedGainsCyaModel] = Json.format[EncryptedGainsCyaModel]
 }
