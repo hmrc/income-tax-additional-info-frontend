@@ -17,7 +17,7 @@
 package controllers.gains
 
 import play.api.http.HeaderNames
-import play.api.http.Status.{BAD_REQUEST, OK, SEE_OTHER}
+import play.api.http.Status.OK
 import play.api.libs.ws.WSResponse
 import support.IntegrationTest
 

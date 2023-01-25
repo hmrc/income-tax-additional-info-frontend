@@ -19,12 +19,12 @@ package services
 import models.mongo.{EncryptedGainsUserDataModel, GainsUserDataModel}
 import org.joda.time.{DateTime, DateTimeZone}
 import support.IntegrationTest
-import utils.SecureGCMCipher
+import utils.AesGcmAdCrypto
 
 class EncryptionServiceISpec extends IntegrationTest {
 
   val service: EncryptionService = app.injector.instanceOf[EncryptionService]
-  val encryption: SecureGCMCipher = app.injector.instanceOf[SecureGCMCipher]
+  val encryption: AesGcmAdCrypto = app.injector.instanceOf[AesGcmAdCrypto]
 
   "encryptGainsUserData" should {
 

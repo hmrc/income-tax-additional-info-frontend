@@ -47,7 +47,9 @@ case class EncryptedGainsUserDataModel(
                                  ) extends UserDataTemplate
 
 object EncryptedGainsUserDataModel {
+
   implicit val mongoJodaDateTimeFormats: Format[DateTime] = dateTimeFormat
 
-  implicit val format: OFormat[EncryptedGainsUserDataModel] = Json.format[EncryptedGainsUserDataModel]
+
+  implicit val format: Format[EncryptedGainsUserDataModel] = Json.format[EncryptedGainsUserDataModel]
 }
