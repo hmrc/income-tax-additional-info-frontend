@@ -16,7 +16,7 @@
 
 package services
 
-import models.pagerduty.PagerDutyKeys._
+import utils.PagerDutyHelper.PagerDutyKeys._
 import play.api.Logging
 import play.api.http.Status._
 import uk.gov.hmrc.http.HttpResponse

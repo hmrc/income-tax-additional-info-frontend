@@ -33,16 +33,16 @@ object GainsSubmissionHttpParser extends Parser{
     override def read(method: String, url: String, response: HttpResponse): GainsSubmissionResponse = response.status match{
       case NO_CONTENT => Right(NO_CONTENT)
       case BAD_REQUEST | FORBIDDEN | NOT_FOUND | UNPROCESSABLE_ENTITY =>
-        pagerDutyLog(FOURXX_RESPONSE_FROM_API, logMessage(response))
+        pagerDutyLog(FOURXX_RESPONSE_FROM_IF, logMessage(response).get)
         handleError(response, BAD_REQUEST)
       case INTERNAL_SERVER_ERROR =>
-        pagerDutyLog(INTERNAL_SERVER_ERROR_FROM_API, logMessage(response))
+        pagerDutyLog(INTERNAL_SERVER_ERROR_FROM_IF, logMessage(response).get)
         handleError(response, INTERNAL_SERVER_ERROR)
       case SERVICE_UNAVAILABLE =>
-        pagerDutyLog(SERVICE_UNAVAILABLE_FROM_API, logMessage(response))
+        pagerDutyLog(SERVICE_UNAVAILABLE_FROM_IF, logMessage(response).get)
         handleError(response, SERVICE_UNAVAILABLE)
       case _ =>
-        pagerDutyLog(UNEXPECTED_RESPONSE_FROM_API, logMessage(response))
+        pagerDutyLog(UNEXPECTED_RESPONSE_FROM_IF, logMessage(response).get)
         handleError(response, INTERNAL_SERVER_ERROR)
     }
   }

@@ -17,7 +17,7 @@
 package support
 
 import config.AppConfig
-import models.requests.{AuthorisationRequest}
+import models.requests.AuthorisationRequest
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.i18n.{Lang, Messages, MessagesApi}
 import play.api.mvc.AnyContent

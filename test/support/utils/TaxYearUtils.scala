@@ -25,4 +25,8 @@ object TaxYearUtils {
 
   val taxYear: Int = if (dateNow.isAfter(taxYearCutoffDate)) LocalDate.now().getYear + 1 else LocalDate.now().getYear
   val taxYearEOY: Int = taxYear - 1
+
+  def convertStringTaxYear(taxYear: Int): String = {
+    s"${taxYear - 1}-${taxYear.toString takeRight 2}"
+  }
 }

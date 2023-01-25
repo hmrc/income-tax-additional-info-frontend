@@ -40,6 +40,8 @@ class AppConfigStub extends MockFactory {
 
     override lazy val taxYearErrorFeature: Boolean = false
 
+    override lazy val useEncryption: Boolean = true
+
     override def incomeTaxSubmissionOverviewUrl(taxYear: Int): String = s"/$taxYear/income-tax-return-overview"
 
     override def contactUrl(isAgent: Boolean): String = "/contact-url"
@@ -47,5 +49,25 @@ class AppConfigStub extends MockFactory {
     override def betaFeedbackUrl(request: RequestHeader, isAgent: Boolean) = "/beta-feedback-url"
 
     override def feedbackSurveyUrl(isAgent: Boolean): String = "/feedback-survey-url"
+  }
+
+  def noEncryptionConfig(): AppConfig = new AppConfig(mock[ServicesConfig]) {
+    override lazy val timeoutDialogCountdown: Int = 120
+    override lazy val timeoutDialogTimeout: Int = 900
+    override lazy val defaultTaxYear: Int = taxYearEOY
+    override lazy val welshLanguageEnabled: Boolean = true
+
+    override lazy val signInUrl: String = "/sign-in-url"
+    override lazy val incomeTaxSubmissionIvRedirect: String = "/update-and-submit-income-tax-return/iv-uplift"
+    override lazy val viewAndChangeEnterUtrUrl: String = "/report-quarterly/income-and-expenses/view/agents/client-utr"
+    override lazy val incomeTaxSubmissionBaseUrl: String = "/income-tax-submission-base-url"
+    override lazy val signOutUrl: String = "/sign-out-url"
+
+    override lazy val additionalInformationServiceBaseUrl: String = "http://localhost:11111"
+
+    override lazy val taxYearErrorFeature: Boolean = false
+
+    override lazy val useEncryption: Boolean = false
+
   }
 }

@@ -25,7 +25,7 @@ import support.UnitTest
 import uk.gov.hmrc.auth.core.AuthConnector
 import uk.gov.hmrc.http.HeaderCarrier
 
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 
 class GainsSubmissionServiceSpec extends UnitTest {
 
@@ -53,7 +53,7 @@ class GainsSubmissionServiceSpec extends UnitTest {
       val taxYear = 2023
 
       "Given connector returns a right" in  {
-
+        implicit val executionContext: ExecutionContext = ExecutionContext.Implicits.global
         (connector.submitGains(_: GainsSubmissionModel, _: String, _: Int)(_: HeaderCarrier))
           .expects(cyaData, nino, taxYear, emptyHeaderCarrier.withExtraHeaders("mtditid"-> mtdItid)).returning(Future.successful(Right((NO_CONTENT))))
 
@@ -62,6 +62,7 @@ class GainsSubmissionServiceSpec extends UnitTest {
 
       }
       "Given connector returns a left" in {
+        implicit val executionContext: ExecutionContext = ExecutionContext.Implicits.global
 
         (connector.submitGains(_: GainsSubmissionModel, _: String, _: Int)(_: HeaderCarrier))
           .expects(cyaData, nino, taxYear, emptyHeaderCarrier.withExtraHeaders("mtditid"-> mtdItid))
@@ -74,6 +75,7 @@ class GainsSubmissionServiceSpec extends UnitTest {
 
       "Given no model is supplied" in {
 
+        implicit val executionContext: ExecutionContext = ExecutionContext.Implicits.global
         lazy val result: GainsSubmissionResponse = {
           val blankData = GainsSubmissionModel(Seq(), None, None, None, None)
 

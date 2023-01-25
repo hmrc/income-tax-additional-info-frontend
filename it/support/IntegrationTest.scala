@@ -18,7 +18,9 @@ package support
 
 import akka.actor.ActorSystem
 import config.AppConfig
+import models.User
 import models.authorisation.SessionValues
+import models.gains.GainsCyaModel
 import org.scalatest.BeforeAndAfterAll
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
@@ -47,12 +49,15 @@ trait IntegrationTest extends AnyWordSpec
 
   val nino = "AA123456A"
   val mtditid = "1234567890"
+  val sessionId = "sessionId-eb3158c2-0aff-4ce8-8d1b-f2208ace52fe"
+  val affinityGroup = "affinityGroup"
 
   protected implicit val ec: ExecutionContext = ExecutionContext.Implicits.global
   protected implicit val headerCarrier: HeaderCarrier = HeaderCarrier().withExtraHeaders(headers = "mtditid" -> aUser.mtditid)
   protected implicit val actorSystem: ActorSystem = ActorSystem()
   protected implicit lazy val wsClient: WSClient = app.injector.instanceOf[WSClient]
   protected implicit lazy val appConfig: AppConfig = app.injector.instanceOf[AppConfig]
+  implicit lazy val user: User = User(mtditid, None, nino, affinityGroup, sessionId)
 
   protected lazy val appUrl = s"http://localhost:$port/update-and-submit-income-tax-return/additional-information"
 
@@ -72,9 +77,30 @@ trait IntegrationTest extends AnyWordSpec
     "useEncryption" -> "true"
   )
 
-  override implicit lazy val app: Application = new GuiceApplicationBuilder()
+  def configWithInvalidEncryptionKey: Map[String, String] = Map(
+    "defaultTaxYear" -> taxYear.toString,
+    "auditing.enabled" -> "false",
+    "play.filters.csrf.header.bypassHeaders.Csrf-Token" -> "nocheck",
+    "microservice.services.income-tax-submission-frontend.url" -> s"http://$wiremockHost:$wiremockPort",
+    "microservice.services.auth.host" -> wiremockHost,
+    "microservice.services.auth.port" -> wiremockPort.toString,
+    "microservice.services.income-tax-employment.url" -> s"http://$wiremockHost:$wiremockPort",
+    "microservice.services.income-tax-expenses.url" -> s"http://$wiremockHost:$wiremockPort",
+    "microservice.services.income-tax-submission.url" -> s"http://$wiremockHost:$wiremockPort",
+    "microservice.services.view-and-change.url" -> s"http://$wiremockHost:$wiremockPort",
+    "microservice.services.sign-in.url" -> s"/auth-login-stub/gg-sign-in",
+    "taxYearErrorFeatureSwitch" -> "false",
+    "useEncryption" -> "true",
+    "mongodb.encryption.key" -> "key"
+  )
+
+  override implicit lazy val app: Application = GuiceApplicationBuilder()
     .in(Environment.simple(mode = Mode.Dev))
     .configure(config)
+    .build()
+
+  lazy val appWithInvalidEncryptionKey: Application = GuiceApplicationBuilder()
+    .configure(configWithInvalidEncryptionKey)
     .build()
 
   override def beforeAll(): Unit = {
@@ -120,4 +146,8 @@ trait IntegrationTest extends AnyWordSpec
     SessionValues.CLIENT_MTDITID -> aUser.mtditid,
     SessionKeys.authToken -> "mock-bearer-token"
   ) ++ extraData)
+
+  val completeGainsCyaModel: GainsCyaModel = GainsCyaModel(
+      Some(true), Some("123"), Some("cause"), Some(true), Some("2"), Some(123.11), Some("2"), Some(true), Some(123.11), Some(true), Some(123.11)
+    )
 }

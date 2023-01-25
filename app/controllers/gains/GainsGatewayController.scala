@@ -17,20 +17,25 @@
 package controllers.gains
 
 import actions.AuthorisedAction
-import config.AppConfig
+import config.{AppConfig, ErrorHandler}
 import forms.YesNoForm
+import models.User
+import models.gains.GainsCyaModel
 import play.api.data.Form
 import play.api.i18n.I18nSupport
 import play.api.mvc._
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 import views.html.pages.gains.GainsGatewayPageView
+import services.GainsSessionService
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class GainsGatewayController @Inject()(authorisedAction: AuthorisedAction,
-                                       view: GainsGatewayPageView)
+                                       view: GainsGatewayPageView,
+                                       gainsSessionService: GainsSessionService,
+                                       errorHandler: ErrorHandler)
                                       (implicit appConfig: AppConfig, mcc: MessagesControllerComponents, ec: ExecutionContext)
   extends FrontendController(mcc) with I18nSupport {
 
@@ -38,7 +43,10 @@ class GainsGatewayController @Inject()(authorisedAction: AuthorisedAction,
     s"gains.gateway.question.error.${if (isAgent) "agent" else "individual"}")
 
   def show(taxYear: Int): Action[AnyContent] = authorisedAction.async { implicit request =>
-    Future.successful(Ok(view(form(request.user.isAgent),taxYear)))
+    gainsSessionService.createSessionData(
+      GainsCyaModel(
+        customerReference = Some("123")
+      ), taxYear)(errorHandler.internalServerError())(Ok(view(form(request.user.isAgent),taxYear)))(request.user.copy(nino = "nino"), ec)
   }
 
   def submit(taxYear: Int): Action[AnyContent] = authorisedAction.async { implicit request =>
