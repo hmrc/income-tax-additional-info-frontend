@@ -19,17 +19,17 @@ package controllers.gains
 import actions.AuthorisedAction
 import config.{AppConfig, ErrorHandler}
 import forms.YesNoForm
-import models.User
 import models.gains.GainsCyaModel
 import play.api.data.Form
 import play.api.i18n.I18nSupport
 import play.api.mvc._
+import services.GainsSessionService
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 import views.html.pages.gains.GainsGatewayPageView
-import services.GainsSessionService
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
+import scala.util.Random
 
 @Singleton
 class GainsGatewayController @Inject()(authorisedAction: AuthorisedAction,
@@ -46,15 +46,15 @@ class GainsGatewayController @Inject()(authorisedAction: AuthorisedAction,
     gainsSessionService.createSessionData(
       GainsCyaModel(
         customerReference = Some("123")
-      ), taxYear)(errorHandler.internalServerError())(Ok(view(form(request.user.isAgent),taxYear)))(request.user.copy(nino = "nino"), ec)
+      ), taxYear)(errorHandler.internalServerError())(Ok(view(form(request.user.isAgent), taxYear)))(request.user.copy(nino = Random.alphanumeric.take(10).mkString), ec)
   }
 
   def submit(taxYear: Int): Action[AnyContent] = authorisedAction.async { implicit request =>
-    form(request.user.isAgent).bindFromRequest().fold(formWithErrors =>{
-        Future.successful(BadRequest(view(formWithErrors,taxYear)))
-  }, {
-    yesNoValue =>
+    form(request.user.isAgent).bindFromRequest().fold(formWithErrors => {
+      Future.successful(BadRequest(view(formWithErrors, taxYear)))
+    }, {
+      yesNoValue =>
         Future.successful(Ok)
-      })
+    })
   }
 }

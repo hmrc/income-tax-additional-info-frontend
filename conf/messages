@@ -67,16 +67,17 @@ gains.customer-reference.question.error-message.2.agent = Enter your client''s c
 
 gains.gateway.question.title = Gains from life insurance policies and contracts
 gains.gateway.question.radio.heading.individual = Did you make a gain on a UK policy or contract?
-gains.gateway.question.paragraph1.individual = Your insurer will have sent you a chargeable event certificate if you made a gain on a:
-gains.gateway.question.bullet.1 = life insurance policy
-gains.gateway.question.bullet.2 = life annuity
-gains.gateway.question.bullet.3 = capital redemption policy
-gains.gateway.question.paragraph2.individual = You can tell us if your life insurance company or ISA manager have cancelled your ISA or life policy later.
+gains.gateway.question.paragraph1.individual = We will ask about gains you have made on life insurance policies, life annuities and capital redemption policies
+gains.gateway.question.paragraph2 = You will need:
+gains.gateway.question.bullet1.individual = your policy number, given to you by your insurer or ISA manager
+gains.gateway.question.bullet2.individual = the chargeable event certificate, sent to you by your insurer
+gains.gateway.question.link = Find out more about Gains from life insurance policies and contracts (opens in new tab)
 gains.gateway.question.error.individual = Select Yes if you made a gain on a UK policy or contract
 
 gains.gateway.question.radio.heading.agent = Did your client make a gain on a UK policy or contract?
-gains.gateway.question.paragraph1.agent = Your client''s insurer will have sent them a chargeable event certificate if they made a gain on a:
-gains.gateway.question.paragraph2.agent = You can tell us if your client''s life insurance company or ISA manager has cancelled their ISA or life policy later.
+gains.gateway.question.paragraph1.agent = We will ask about gains your client has made on life insurance policies, life annuities and capital redemption policies
+gains.gateway.question.bullet1.agent = your client's policy number, given to you by their insurer or ISA manager
+gains.gateway.question.bullet2.agent = the chargeable event certificate, sent to your client by their insurer
 gains.gateway.question.error.agent = Select yes if your client made a gain on a UK policy or contract
 
 gains.policy-event.question.paragraph1 = The most common causes of gains are if:
