@@ -28,10 +28,12 @@ import views.html.pages.gains.CustomerReferencePageView
 class CustomerReferencePageViewSpec extends ViewUnitTest {
 
   private val page: CustomerReferencePageView = inject[CustomerReferencePageView]
-  private val inputFormat = "mixedAlphaNumeric"
+  private val inputFormat = "policyNumber"
 
   object Selectors {
-    val paragraph = "#main-content > div > div > p"
+    val paragraph1 = "#p1"
+    val paragraph2 = "#p2"
+    val label = "#main-content > div > div > form > div > label"
     val customerReferenceNumberHint = "#value-hint"
     val continueButton = "#continue"
     val getHelpLink = "#help"
@@ -39,10 +41,11 @@ class CustomerReferencePageViewSpec extends ViewUnitTest {
   }
 
   trait SpecificExpectedResults {
-    val expectedTitle: String
     val expectedErrorTitle: String
     val expectedHeading: String
-    val expectedParagraph: String
+    val expectedParagraph1: String
+    val expectedParagraph2: String
+    val expectedLabel: String
     val expectedErrorText: String
     val expectedErrorText1: String
   }
@@ -56,52 +59,56 @@ class CustomerReferencePageViewSpec extends ViewUnitTest {
 
   object CommonExpectedEN extends CommonExpectedResults {
     override val expectedCaption: Int => String = (taxYear: Int) => s"Gains from life insurance policies and contracts for 6 April ${taxYear - 1} to 5 April $taxYear"
-    override val expectedHint: String = "For example, 'INPOLY123A’."
+    override val expectedHint: String = "For example, 'P8879' or 'LA/2881/07'."
     override val expectedButtonText: String = "Continue"
     override val expectedHelpLinkText: String = "Get help with this page"
   }
 
   object CommonExpectedCY extends CommonExpectedResults {
     override val expectedCaption: Int => String = (taxYear: Int) => s"Enillion o bolisïau yswiriant bywyd a chontractau ar gyfer 6 Ebrill ${taxYear - 1} i 5 Ebrill $taxYear"
-    override val expectedHint: String = "Er enghraifft, 'INPOLY123A’."
+    override val expectedHint: String = "For example, 'P8879' or 'LA/2881/07'."
     override val expectedButtonText: String = "Yn eich blaen"
     override val expectedHelpLinkText: String = "Help gyda’r dudalen hon"
   }
 
   object ExpectedIndividualEN extends SpecificExpectedResults {
-    override val expectedTitle: String = "What's your customer reference?"
-    override val expectedErrorTitle: String = "Error: What's your customer reference?"
-    override val expectedHeading: String = "What's your customer reference?"
-    override val expectedParagraph: String = "Your insurer or ISA manager should have given you a customer reference for your policy or contract."
-    override val expectedErrorText: String = "Enter your customer reference"
-    override val expectedErrorText1: String = "Enter your customer reference in the correct format. For example, 'INPOLY123A'. Your customer reference must only include letters and numbers"
+    override val expectedErrorTitle: String = "Error: Policy number"
+    override val expectedHeading: String = "Policy number"
+    override val expectedParagraph1: String = "Your insurer or ISA manager should have given you a policy number, also known as a 'customer reference', for your policy or contract."
+    override val expectedParagraph2: String = "Your policy number can include numbers, letters and special characters '/' or '-'."
+    override val expectedLabel: String = "What's your policy number?"
+    override val expectedErrorText: String = "Enter your policy number"
+    override val expectedErrorText1: String = "Enter your policy number in the correct format. For example, 'P8879' or 'LA/2881/07'."
   }
 
   object ExpectedIndividualCY extends SpecificExpectedResults {
-    override val expectedTitle: String = "Beth yw’ch cyfeirnod cwsmer?"
-    override val expectedErrorTitle: String = "Error: Beth yw’ch cyfeirnod cwsmer?"
-    override val expectedHeading: String = "Beth yw’ch cyfeirnod cwsmer?"
-    override val expectedParagraph: String = "Dylai’ch yswiriwr neu reolwr ISA fod wedi rhoi cyfeirnod cwsmer i chi ar gyfer eich ISA neu’ch polisi bywyd a ganslwyd."
-    override val expectedErrorText: String = "Nodwch eich cyfeirnod cwsmer"
-    override val expectedErrorText1: String = "Nodwch eich cyfeirnod cwsmer yn y fformat cywir. Er enghraifft, 'INPOLY123A'. Mae’n rhaid i’ch cyfeirnod cwsmer gynnwys llythrennau a rhifau yn unig"
+    override val expectedErrorTitle: String = "Error: Policy number"
+    override val expectedHeading: String = "Policy number"
+    override val expectedParagraph1: String = "Your insurer or ISA manager should have given you a policy number, also known as a 'customer reference', for your policy or contract."
+    override val expectedParagraph2: String = "Your policy number can include numbers, letters and special characters '/' or '-'."
+    override val expectedLabel: String = "What's your policy number?"
+    override val expectedErrorText: String = "Enter your policy number"
+    override val expectedErrorText1: String = "Enter your policy number in the correct format. For example, 'P8879' or 'LA/2881/07'."
   }
 
   object ExpectedAgentEN extends SpecificExpectedResults {
-    override val expectedTitle: String = "What's your client's customer reference?"
-    override val expectedErrorTitle: String = "Error: What's your client's customer reference?"
-    override val expectedHeading: String = "What's your client's customer reference?"
-    override val expectedParagraph: String = "Your client's insurer or ISA manager should have given them a customer reference for their policy or contract."
-    override val expectedErrorText: String = "Enter your client's customer reference"
-    override val expectedErrorText1: String = "Enter your client's customer reference in the correct format. For example, 'INPOLY123A'. Your client's customer reference must only include letters and numbers"
+    override val expectedErrorTitle: String = "Error: Policy number"
+    override val expectedHeading: String = "Policy number"
+    override val expectedParagraph1: String = "Your client's insurer or ISA manager should have given them a policy number, also known as a 'customer reference', for their policy or contract."
+    override val expectedParagraph2: String = "Your client's policy number can include numbers, letters and special characters '/' or '-'."
+    override val expectedLabel: String = "What's your client's policy number?"
+    override val expectedErrorText: String = "Enter your client's policy number"
+    override val expectedErrorText1: String = "Enter your client's policy number in the correct format. For example, 'P8879' or 'LA/2881/07'."
   }
 
   object ExpectedAgentCY extends SpecificExpectedResults {
-    override val expectedTitle: String = "Beth yw cyfeirnod cwsmer eich cleient?"
-    override val expectedErrorTitle: String = "Error: Beth yw cyfeirnod cwsmer eich cleient?"
-    override val expectedHeading: String = "Beth yw cyfeirnod cwsmer eich cleient?"
-    override val expectedParagraph: String = "Dylai yswiriwr neu reolwr ISA eich cleient fod wedi rhoi cyfeirnod cwsmer iddo ar gyfer ei bolisi neu ei gontract."
-    override val expectedErrorText: String = "Nodwch gyfeirnod cwsmer eich cleient"
-    override val expectedErrorText1: String = "Nodwch gyfeirnod cwsmer eich cleient yn y fformat cywir. Er enghraifft, ‘INPOLY123A’. Mae’n rhaid i’r cyfeirnod cwsmer gynnwys llythrennau a rhifau yn unig"
+    override val expectedErrorTitle: String = "Error: Policy number"
+    override val expectedHeading: String = "Policy number"
+    override val expectedParagraph1: String = "Your client's insurer or ISA manager should have given them a policy number, also known as a 'customer reference', for their policy or contract."
+    override val expectedParagraph2: String = "Your client's policy number can include numbers, letters and special characters '/' or '-'."
+    override val expectedLabel: String = "What's your client's policy number?"
+    override val expectedErrorText: String = "Enter your client's policy number"
+    override val expectedErrorText1: String = "Enter your client's policy number in the correct format. For example, 'P8879' or 'LA/2881/07'."
   }
 
   override protected val userScenarios: Seq[UserScenario[CommonExpectedResults, SpecificExpectedResults]] = Seq(
@@ -122,10 +129,11 @@ class CustomerReferencePageViewSpec extends ViewUnitTest {
           s"gains.customer-reference.question.error-message.2.${if (userScenario.isAgent) "agent" else "individual"}")).body)
 
         welshToggleCheck(userScenario.isWelsh)
-        titleCheck(userScenario.specificExpectedResults.get.expectedTitle, userScenario.isWelsh)
         captionCheck(userScenario.commonExpectedResults.expectedCaption(taxYear))
         h1Check(userScenario.specificExpectedResults.get.expectedHeading)
-        textOnPageCheck(userScenario.specificExpectedResults.get.expectedParagraph, Selectors.paragraph)
+        textOnPageCheck(userScenario.specificExpectedResults.get.expectedParagraph1, Selectors.paragraph1)
+        textOnPageCheck(userScenario.specificExpectedResults.get.expectedParagraph2, Selectors.paragraph2)
+        textOnPageCheck(userScenario.specificExpectedResults.get.expectedLabel, Selectors.label)
         textOnPageCheck(userScenario.commonExpectedResults.expectedHint, Selectors.customerReferenceNumberHint)
         buttonCheck(userScenario.commonExpectedResults.expectedButtonText, Selectors.continueButton)
         linkCheck(userScenario.commonExpectedResults.expectedHelpLinkText, Selectors.getHelpLink, appConfig.contactUrl(userScenario.isAgent))
@@ -148,7 +156,9 @@ class CustomerReferencePageViewSpec extends ViewUnitTest {
         titleCheck(userScenario.specificExpectedResults.get.expectedErrorTitle, userScenario.isWelsh)
         captionCheck(userScenario.commonExpectedResults.expectedCaption(taxYear))
         h1Check(userScenario.specificExpectedResults.get.expectedHeading)
-        textOnPageCheck(userScenario.specificExpectedResults.get.expectedParagraph, Selectors.paragraph)
+        textOnPageCheck(userScenario.specificExpectedResults.get.expectedParagraph1, Selectors.paragraph1)
+        textOnPageCheck(userScenario.specificExpectedResults.get.expectedParagraph2, Selectors.paragraph2)
+        textOnPageCheck(userScenario.specificExpectedResults.get.expectedLabel, Selectors.label)
         textOnPageCheck(userScenario.commonExpectedResults.expectedHint, Selectors.customerReferenceNumberHint)
         buttonCheck(userScenario.commonExpectedResults.expectedButtonText, Selectors.continueButton)
         linkCheck(userScenario.commonExpectedResults.expectedHelpLinkText, Selectors.getHelpLink, appConfig.contactUrl(userScenario.isAgent))

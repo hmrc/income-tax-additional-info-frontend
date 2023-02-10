@@ -36,7 +36,7 @@
 
 @(taxYear: Int, form: Form[String])(implicit request: AuthorisationRequest[_], messages: Messages, appConfig: AppConfig)
 
-@titleForUse = @{messages(s"gains.customer-reference.question.title.${if(request.user.isAgent) "agent" else "individual"}")}
+@titleForUse = @{messages(s"gains.customer-reference.question.title")}
 
 @headingForUse = @{titleForUse}
 
@@ -44,9 +44,11 @@
 
     @errorSummary(form.errors)
 
-    @heading(headingForUse, Some(messages("gains.caption", (taxYear - 1).toString, taxYear.toString)), "govuk-!-margin-bottom-2")
+    @heading(headingForUse, Some(messages("gains.caption", (taxYear - 1).toString, taxYear.toString)))
 
-    <p class="govuk-body">@messages(s"gains.customer-reference.question.paragraph.${if(request.user.isAgent) "agent" else "individual"}")</p>
+    <p id="p1" class="govuk-body">@messages(s"gains.customer-reference.question.paragraph.1.${if(request.user.isAgent) "agent" else "individual"}")</p>
+
+    <p id="p2" class="govuk-body">@messages(s"gains.customer-reference.question.paragraph.2.${if(request.user.isAgent) "agent" else "individual"}")</p>
 
     @formWithCsrf(action = controllers.gains.routes.CustomerReferenceController.submit(taxYear)) {
         @inputText(
@@ -54,8 +56,8 @@
             id = "value",
             name = "value",
             currency = false,
-            label = "common.gains.customer-reference",
-            labelHidden = true,
+            label = messages(s"gains.customer-reference.label.${if(request.user.isAgent) "agent" else "individual"}"),
+            labelHidden = false,
             classes = Some("govuk-input--width-10"),
             hint = Some(messages(s"gains.customer-reference.question.hint"))
         )

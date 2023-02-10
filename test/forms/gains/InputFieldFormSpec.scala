@@ -26,15 +26,16 @@ class InputFieldFormSpec extends UnitTest{
   private val testInputAlphabet = "test"
   private val testInputAlphabetsWithSpace = "test this input"
   private val testInputMixedAlphaNumeric = "INPOLY123A"
+  private val testInputPolicyNumber = "LA/2881/07"
   private val testInputEmpty = ""
   private val testInputEmptySpace = ""
 
   "The InputFieldForm" should {
-    "correctly validate a mixed alphanumeric string" when {
+    "correctly validate a policy number string" when {
       "a valid string is entered" in {
-        val testInput = Map(InputFieldForm.value -> testInputMixedAlphaNumeric)
-        val expected = testInputMixedAlphaNumeric
-        val actual = theForm("mixedAlphaNumeric").bind(testInput).value
+        val testInput = Map(InputFieldForm.value -> testInputPolicyNumber)
+        val expected = testInputPolicyNumber
+        val actual = theForm("policyNumber").bind(testInput).value
         actual shouldBe Some(expected)
       }
 
@@ -66,9 +67,9 @@ class InputFieldFormSpec extends UnitTest{
         actual.errors should contain(FormError(InputFieldForm.value, "wrong format"))
       }
 
-      "an invalid mixed alphanumeric is entered" in {
+      "an invalid policy number is entered" in {
         val testInput = Map(InputFieldForm.value -> testInputAlphabet)
-        val actual = theForm("mixedAlphaNumeric").bind(testInput)
+        val actual = theForm("policyNumber").bind(testInput)
 
         actual.errors should contain(FormError(InputFieldForm.value, "wrong format"))
       }

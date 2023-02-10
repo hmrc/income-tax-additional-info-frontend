@@ -17,7 +17,7 @@
 package forms.gains
 
 import filters.InputFilters
-import forms.validation.StringConstraints.{nonEmpty, validateAlphabetsWithSpace, validateMixedAlphaNumeric}
+import forms.validation.StringConstraints.{nonEmpty, validateAlphabetsWithSpace, validatePolicyNumber}
 import forms.validation.mappings.MappingUtil.trimmedText
 import play.api.data.Form
 import play.api.data.validation.Constraint
@@ -31,14 +31,14 @@ object InputFieldForm extends InputFilters {
 
   def isValidAlphabetsWithSpace(wrongFormatKey: String): Constraint[String] = validateAlphabetsWithSpace(wrongFormatKey)
 
-  def isValidMixedAlphaNumeric(wrongFormatKey: String): Constraint[String] = validateMixedAlphaNumeric(wrongFormatKey)
+  def isValidPolicyNumber(wrongFormatKey: String): Constraint[String] = validatePolicyNumber(wrongFormatKey)
 
   def inputFieldForm(isAgent: Boolean, inputFormat: String, emptyFieldKey: String, wrongFormatKey: String): Form[String] = Form(
     inputFormat match {
       case "alphabetsWithSpace" => value -> trimmedText.transform[String](filter, identity).verifying(
         notEmpty(isAgent, emptyFieldKey) andThen isValidAlphabetsWithSpace(wrongFormatKey))
-      case "mixedAlphaNumeric" => value -> trimmedText.transform[String](filter, identity)
-        .verifying(notEmpty(isAgent, emptyFieldKey) andThen isValidMixedAlphaNumeric(wrongFormatKey))
+      case "policyNumber" => value -> trimmedText.transform[String](filter, identity)
+        .verifying(notEmpty(isAgent, emptyFieldKey) andThen isValidPolicyNumber(wrongFormatKey))
     }
   )
 
