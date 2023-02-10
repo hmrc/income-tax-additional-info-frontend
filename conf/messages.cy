@@ -67,16 +67,17 @@ gains.customer-reference.question.error-message.2.agent = Nodwch gyfeirnod cwsme
 
 gains.gateway.question.title = Enillion o bolisïau yswiriant bywyd a chontractau
 gains.gateway.question.radio.heading.individual = A wnaethoch chi ennill ar bolisi neu gytundeb y DU?
-gains.gateway.question.paragraph1.individual = Bydd eich yswiriwr wedi anfon tystysgrif digwyddiad trethadwy, os gwnaethoch ennill ar un o’r canlynol:
-gains.gateway.question.bullet.1 = polisi yswiriant bywyd
-gains.gateway.question.bullet.2 = blwydd-dal bywyd
-gains.gateway.question.bullet.3 = polisi adbryniant cyfalaf
-gains.gateway.question.paragraph2.individual = Gallwch roi gwybod i ni os yw’ch cwmni yswiriant bywyd neu reolwr ISA wedi canslo’ch ISA neu bolisi bywyd nes ymlaen.
+gains.gateway.question.paragraph1.individual = We will ask about gains you have made on life insurance policies, life annuities and capital redemption policies
+gains.gateway.question.paragraph2 = You will need:
+gains.gateway.question.bullet1.individual = your policy number, given to you by your insurer or ISA manager
+gains.gateway.question.bullet2.individual = the chargeable event certificate, sent to you by your insurer
+gains.gateway.question.link = Find out more about Gains from life insurance policies and contracts (opens in new tab)
 gains.gateway.question.error.individual = Dewiswch ‘Iawn’ os gwnaethoch enillion ar bolisi neu gontract yn y DU
 
 gains.gateway.question.radio.heading.agent = A wnaeth eich cleient enillion ar bolisi neu gontract yn y DU?
-gains.gateway.question.paragraph1.agent = Bydd yswiriwr eich cleient wedi anfon tystysgrif digwyddiad trethadwy ato, os gwnaeth enillion ar un o’r canlynol:
-gains.gateway.question.paragraph2.agent = Gallwch roi gwybod i ni os yw cwmni yswiriant bywyd eich cleient, neu reolwr ISA eich cleient, wedi canslo ei ISA neu bolisi bywyd nes ymlaen.
+gains.gateway.question.paragraph1.agent = We will ask about gains your client has made on life insurance policies, life annuities and capital redemption policies
+gains.gateway.question.bullet1.agent = your client's policy number, given to you by their insurer or ISA manager
+gains.gateway.question.bullet2.agent = the chargeable event certificate, sent to your client by their insurer
 gains.gateway.question.error.agent = Dewiswch ‘Iawn’ os gwnaeth eich cleient enillion ar bolisi neu gontract yn y DU
 
 gains.policy-event.question.paragraph1 = Yr achosion mwyaf cyffredin o enillion yw:

@@ -30,15 +30,15 @@ class GainsGatewayPageViewSpec extends ViewUnitTest {
   private val page: GainsGatewayPageView = inject[GainsGatewayPageView]
 
   object Selectors {
-    val paragraph1 = "#main-content > div > div > p.govuk-body.govuk-p1"
-    val paragraph2 = "#main-content > div > div > p.govuk-body.govuk-p2"
+    val paragraph1 = "#gains-gateway-paragraph-1"
+    val paragraph2 = "#gains-gateway-paragraph-2"
     val bullet1 = "#main-content > div > div > ul > li:nth-child(1)"
     val bullet2 = "#main-content > div > div > ul > li:nth-child(2)"
-    val bullet3 = "#main-content > div > div > ul > li:nth-child(3)"
     val radioHeading = "#main-content > div > div > form > div > fieldset > legend"
     val yesSelector = "#value"
     val noSelector = "#value-no"
     val continueButton = "#continue"
+    val findOutMoreLink = "#gains-gateway-link-1"
     val getHelpLink = "#help"
     val emptySelectionError = "#main-content > div > div > div.govuk-error-summary > div > div > ul > li > a"
     val errorLink = "#value"
@@ -50,39 +50,37 @@ class GainsGatewayPageViewSpec extends ViewUnitTest {
     val expectedHeading: String
     val expectedRadioHeading: String
     val expectedParagraph1: String
-    val expectedParagraph2: String
+    val expectedBullet1: String
+    val expectedBullet2: String
     val expectedErrorText: String
   }
 
   trait CommonExpectedResults {
     val expectedCaption: Int => String
-    val bullet1: String
-    val bullet2: String
-    val bullet3: String
     val yesText: String
     val noText: String
+    val expectedParagraph2: String
+    val expectedLink: String
     val expectedButtonText: String
     val expectedHelpLinkText: String
   }
 
   object CommonExpectedEN extends CommonExpectedResults {
     override val expectedCaption: Int => String = (taxYear: Int) => s"Gains from life insurance policies and contracts for 6 April ${taxYear - 1} to 5 April $taxYear"
-    override val bullet1: String = "life insurance policy"
-    override val bullet2: String = "life annuity"
-    override val bullet3: String = "capital redemption policy"
     override val yesText: String = "Yes"
     override val noText: String = "No"
+    override val expectedParagraph2: String = "You will need:"
+    override val expectedLink: String = "Find out more about Gains from life insurance policies and contracts (opens in new tab)"
     override val expectedButtonText: String = "Continue"
     override val expectedHelpLinkText: String = "Get help with this page"
   }
 
   object CommonExpectedCY extends CommonExpectedResults {
     override val expectedCaption: Int => String = (taxYear: Int) => s"Enillion o bolisïau yswiriant bywyd a chontractau ar gyfer 6 Ebrill ${taxYear - 1} i 5 Ebrill $taxYear"
-    override val bullet1: String = "polisi yswiriant bywyd"
-    override val bullet2: String = "blwydd-dal bywyd"
-    override val bullet3: String = "polisi adbryniant cyfalaf"
     override val yesText: String = "Iawn"
     override val noText: String = "Na"
+    override val expectedParagraph2: String = "You will need:"
+    override val expectedLink: String = "Find out more about Gains from life insurance policies and contracts (opens in new tab)"
     override val expectedButtonText: String = "Yn eich blaen"
     override val expectedHelpLinkText: String = "Help gyda’r dudalen hon"
   }
@@ -92,8 +90,9 @@ class GainsGatewayPageViewSpec extends ViewUnitTest {
     override val expectedErrorTitle: String = "Error: Gains from life insurance policies and contracts"
     override val expectedRadioHeading: String = "Did you make a gain on a UK policy or contract?"
     override val expectedHeading: String = "Gains from life insurance policies and contracts"
-    override val expectedParagraph1: String = "Your insurer will have sent you a chargeable event certificate if you made a gain on a:"
-    override val expectedParagraph2: String = "You can tell us if your life insurance company or ISA manager have cancelled your ISA or life policy later."
+    override val expectedParagraph1: String = "We will ask about gains you have made on life insurance policies, life annuities and capital redemption policies"
+    override val expectedBullet1: String = "your policy number, given to you by your insurer or ISA manager"
+    override val expectedBullet2: String = "the chargeable event certificate, sent to you by your insurer"
     override val expectedErrorText: String = "Select Yes if you made a gain on a UK policy or contract"
   }
 
@@ -102,8 +101,9 @@ class GainsGatewayPageViewSpec extends ViewUnitTest {
     override val expectedErrorTitle: String = "Error: Enillion o bolisïau yswiriant bywyd a chontractau"
     override val expectedRadioHeading: String = "A wnaethoch chi ennill ar bolisi neu gytundeb y DU?"
     override val expectedHeading: String = "Enillion o bolisïau yswiriant bywyd a chontractau"
-    override val expectedParagraph1: String = "Bydd eich yswiriwr wedi anfon tystysgrif digwyddiad trethadwy, os gwnaethoch ennill ar un o’r canlynol:"
-    override val expectedParagraph2: String = "Gallwch roi gwybod i ni os yw’ch cwmni yswiriant bywyd neu reolwr ISA wedi canslo’ch ISA neu bolisi bywyd nes ymlaen."
+    override val expectedParagraph1: String = "We will ask about gains you have made on life insurance policies, life annuities and capital redemption policies"
+    override val expectedBullet1: String = "your policy number, given to you by your insurer or ISA manager"
+    override val expectedBullet2: String = "the chargeable event certificate, sent to you by your insurer"
     override val expectedErrorText: String = "Dewiswch ‘Iawn’ os gwnaethoch enillion ar bolisi neu gontract yn y DU"
   }
 
@@ -112,8 +112,9 @@ class GainsGatewayPageViewSpec extends ViewUnitTest {
     override val expectedErrorTitle: String = "Error: Gains from life insurance policies and contracts"
     override val expectedRadioHeading: String = "Did your client make a gain on a UK policy or contract?"
     override val expectedHeading: String = "Gains from life insurance policies and contracts"
-    override val expectedParagraph1: String = "Your client's insurer will have sent them a chargeable event certificate if they made a gain on a:"
-    override val expectedParagraph2: String = "You can tell us if your client's life insurance company or ISA manager has cancelled their ISA or life policy later."
+    override val expectedParagraph1: String = "We will ask about gains your client has made on life insurance policies, life annuities and capital redemption policies"
+    override val expectedBullet1: String = "your clients policy number, given to you by their insurer or ISA manager"
+    override val expectedBullet2: String = "the chargeable event certificate, sent to your client by their insurer"
     override val expectedErrorText: String = "Select yes if your client made a gain on a UK policy or contract"
   }
 
@@ -122,8 +123,9 @@ class GainsGatewayPageViewSpec extends ViewUnitTest {
     override val expectedErrorTitle: String = "Error: Enillion o bolisïau yswiriant bywyd a chontractau"
     override val expectedRadioHeading: String = "A wnaeth eich cleient enillion ar bolisi neu gontract yn y DU?"
     override val expectedHeading: String = "Enillion o bolisïau yswiriant bywyd a chontractau"
-    override val expectedParagraph1: String = "Bydd yswiriwr eich cleient wedi anfon tystysgrif digwyddiad trethadwy ato, os gwnaeth enillion ar un o’r canlynol:"
-    override val expectedParagraph2: String = "Gallwch roi gwybod i ni os yw cwmni yswiriant bywyd eich cleient, neu reolwr ISA eich cleient, wedi canslo ei ISA neu bolisi bywyd nes ymlaen."
+    override val expectedParagraph1: String = "We will ask about gains your client has made on life insurance policies, life annuities and capital redemption policies"
+    override val expectedBullet1: String = "your clients policy number, given to you by their insurer or ISA manager"
+    override val expectedBullet2: String = "the chargeable event certificate, sent to your client by their insurer"
     override val expectedErrorText: String = "Dewiswch ‘Iawn’ os gwnaeth eich cleient enillion ar bolisi neu gontract yn y DU"
   }
 
@@ -143,7 +145,7 @@ class GainsGatewayPageViewSpec extends ViewUnitTest {
         implicit val userPriorDataRequest: AuthorisationRequest[AnyContent] = getAuthRequest(userScenario.isAgent)
         implicit val messages: Messages = getMessages(userScenario.isWelsh)
 
-        implicit val document: Document = Jsoup.parse(page(form,taxYear).body)
+        implicit val document: Document = Jsoup.parse(page(form, taxYear).body)
 
         welshToggleCheck(userScenario.isWelsh)
         titleCheck(userScenario.specificExpectedResults.get.expectedTitle, userScenario.isWelsh)
@@ -151,10 +153,10 @@ class GainsGatewayPageViewSpec extends ViewUnitTest {
         h1Check(userScenario.specificExpectedResults.get.expectedHeading)
         textOnPageCheck(userScenario.specificExpectedResults.get.expectedRadioHeading, Selectors.radioHeading)
         textOnPageCheck(userScenario.specificExpectedResults.get.expectedParagraph1, Selectors.paragraph1)
-        textOnPageCheck(userScenario.specificExpectedResults.get.expectedParagraph2, Selectors.paragraph2)
-        textOnPageCheck(userScenario.commonExpectedResults.bullet1, Selectors.bullet1)
-        textOnPageCheck(userScenario.commonExpectedResults.bullet2, Selectors.bullet2)
-        textOnPageCheck(userScenario.commonExpectedResults.bullet3, Selectors.bullet3)
+        textOnPageCheck(userScenario.commonExpectedResults.expectedParagraph2, Selectors.paragraph2)
+        textOnPageCheck(userScenario.specificExpectedResults.get.expectedBullet1, Selectors.bullet1)
+        textOnPageCheck(userScenario.specificExpectedResults.get.expectedBullet2, Selectors.bullet2)
+        textOnPageCheck(userScenario.commonExpectedResults.expectedLink, Selectors.findOutMoreLink)
         buttonCheck(userScenario.commonExpectedResults.expectedButtonText, Selectors.continueButton)
         linkCheck(userScenario.commonExpectedResults.expectedHelpLinkText, Selectors.getHelpLink, appConfig.contactUrl(userScenario.isAgent))
       }
@@ -177,11 +179,11 @@ class GainsGatewayPageViewSpec extends ViewUnitTest {
         captionCheck(userScenario.commonExpectedResults.expectedCaption(taxYear))
         h1Check(userScenario.specificExpectedResults.get.expectedHeading)
         textOnPageCheck(userScenario.specificExpectedResults.get.expectedRadioHeading, Selectors.radioHeading)
-        textOnPageCheck(userScenario.commonExpectedResults.bullet1, Selectors.bullet1)
-        textOnPageCheck(userScenario.commonExpectedResults.bullet2, Selectors.bullet2)
-        textOnPageCheck(userScenario.commonExpectedResults.bullet3, Selectors.bullet3)
+        textOnPageCheck(userScenario.specificExpectedResults.get.expectedBullet1, Selectors.bullet1)
+        textOnPageCheck(userScenario.specificExpectedResults.get.expectedBullet2, Selectors.bullet2)
         textOnPageCheck(userScenario.specificExpectedResults.get.expectedParagraph1, Selectors.paragraph1)
-        textOnPageCheck(userScenario.specificExpectedResults.get.expectedParagraph2, Selectors.paragraph2)
+        textOnPageCheck(userScenario.commonExpectedResults.expectedParagraph2, Selectors.paragraph2)
+        textOnPageCheck(userScenario.commonExpectedResults.expectedLink, Selectors.findOutMoreLink)
         textOnPageCheck(userScenario.specificExpectedResults.get.expectedErrorText, Selectors.emptySelectionError)
         buttonCheck(userScenario.commonExpectedResults.expectedButtonText, Selectors.continueButton)
         linkCheck(userScenario.commonExpectedResults.expectedHelpLinkText, Selectors.getHelpLink, appConfig.contactUrl(userScenario.isAgent))

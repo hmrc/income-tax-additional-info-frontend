@@ -48,28 +48,32 @@
 
     @errorSummary(form.errors)
 
-    @heading(headingForUse, Some(messages("gains.caption", (taxYear - 1).toString, taxYear.toString)), "govuk-!-margin-bottom-5")
+    @heading(headingForUse, Some(messages("gains.caption", (taxYear - 1).toString, taxYear.toString)))
 
-    @p(Html(messages(s"gains.gateway.question.paragraph1.${if(request.user.isAgent) "agent" else "individual"}")),
-    classes = "govuk-body govuk-p1 govuk-!-margin-bottom-5")
+    <p class="govuk-body" id="gains-gateway-paragraph-1">@messages(s"gains.gateway.question.paragraph1.${if(request.user.isAgent) "agent" else "individual"}")</p>
+
+    <p class="govuk-body" id="gains-gateway-paragraph-2">@messages("gains.gateway.question.paragraph2")</p>
 
     <ul class="govuk-body govuk-list govuk-list--bullet">
-        <li>@messages("gains.gateway.question.bullet.1")</li>
-        <li>@messages("gains.gateway.question.bullet.2")</li>
-        <li>@messages("gains.gateway.question.bullet.3")</li>
+        <li>@messages(s"gains.gateway.question.bullet1.${if(request.user.isAgent) "agent" else "individual"}")</li>
+        <li>@messages(s"gains.gateway.question.bullet2.${if(request.user.isAgent) "agent" else "individual"}")</li>
     </ul>
 
-@p(Html(messages(s"gains.gateway.question.paragraph2.${if(request.user.isAgent) "agent" else "individual"}")),
-classes = "govuk-body govuk-p2 govuk-!-margin-bottom-5")
+    <p class="govuk-body">
+        <a href="https://www.gov.uk/government/publications/gains-on-uk-life-insurance-policies-hs320-self-assessment-helpsheet/hs320-gains-on-uk-life-insurance-policies-2022"
+           class="govuk-link govuk-link--no-visited-state" id="gains-gateway-link-1" target="_blank">
+            @messages("gains.gateway.question.link")
+        </a>
+    </p>
 
     @formWithCsrf(action = controllers.gains.routes.GainsGatewayController.submit(taxYear)) {
 
-@inputRadio(
-form = form,
-heading = messages(s"gains.gateway.question.radio.heading.${if(request.user.isAgent) "agent" else "individual"}"),
-classes = ("govuk-fieldset__legend--m"),
-inline = true
-)
+        @inputRadio(
+            form = form,
+            heading = messages(s"gains.gateway.question.radio.heading.${if(request.user.isAgent) "agent" else "individual"}"),
+            classes = ("govuk-fieldset__legend--m"),
+            inline = true
+        )
 
         @button()
     }
