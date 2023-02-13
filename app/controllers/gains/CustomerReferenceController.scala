@@ -34,7 +34,7 @@ class CustomerReferenceController @Inject()(authorisedAction: AuthorisedAction,
                                            (implicit appConfig: AppConfig, mcc: MessagesControllerComponents, ec: ExecutionContext)
   extends FrontendController(mcc) with I18nSupport {
 
-  val inputFormat = "mixedAlphaNumeric"
+  val inputFormat = "policyNumber"
 
   def customerReferenceForm(isAgent: Boolean): Form[String] = InputFieldForm.inputFieldForm(isAgent, inputFormat,
     s"gains.customer-reference.question.error-message.1.${if (isAgent) "agent" else "individual"}",

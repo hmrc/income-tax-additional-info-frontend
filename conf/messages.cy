@@ -53,17 +53,18 @@ common.gains.deficiency-relief-status = Rhyddhad am ddiffyg
 gains.caption = Enillion o bolisïau yswiriant bywyd a chontractau ar gyfer 6 Ebrill {0} i 5 Ebrill {1}
 
 ################# Gains from life insurance policies and contracts messages #################
-gains.customer-reference.question.title.individual = Beth yw’ch cyfeirnod cwsmer?
-gains.customer-reference.question.paragraph.individual = Dylai’ch yswiriwr neu reolwr ISA fod wedi rhoi cyfeirnod cwsmer i chi ar gyfer eich ISA neu’ch polisi bywyd a ganslwyd.
-gains.customer-reference.question.hint = Er enghraifft, ''INPOLY123A''.
-gains.customer-reference.question.error-message.1.individual = Nodwch eich cyfeirnod cwsmer
-gains.customer-reference.question.error-message.2.individual = Nodwch eich cyfeirnod cwsmer yn y fformat cywir. Er enghraifft, ''INPOLY123A''. Mae’n rhaid i’ch cyfeirnod cwsmer gynnwys llythrennau a rhifau yn unig
-
-gains.customer-reference.question.title.agent = Beth yw cyfeirnod cwsmer eich cleient?
-gains.customer-reference.question.paragraph.agent = Dylai yswiriwr neu reolwr ISA eich cleient fod wedi rhoi cyfeirnod cwsmer iddo ar gyfer ei bolisi neu ei gontract.
-gains.customer-reference.question.hint = Er enghraifft, ''INPOLY123A'’.
-gains.customer-reference.question.error-message.1.agent = Nodwch gyfeirnod cwsmer eich cleient
-gains.customer-reference.question.error-message.2.agent = Nodwch gyfeirnod cwsmer eich cleient yn y fformat cywir. Er enghraifft, ‘INPOLY123A’. Mae’n rhaid i’r cyfeirnod cwsmer gynnwys llythrennau a rhifau yn unig
+gains.customer-reference.question.title = Policy number
+gains.customer-reference.question.paragraph.1.individual = Your insurer or ISA manager should have given you a policy number, also known as a ''customer reference'', for your policy or contract.
+gains.customer-reference.question.paragraph.2.individual = Your policy number can include numbers, letters and special characters ''/'' or ''-''.
+gains.customer-reference.label.individual = What''s your policy number?
+gains.customer-reference.question.hint = For example, ''P8879'' or ''LA/2881/07''.
+gains.customer-reference.question.error-message.1.individual = Enter your policy number
+gains.customer-reference.question.error-message.2.individual = Enter your policy number in the correct format. For example, ''P8879'' or ''LA/2881/07''.
+gains.customer-reference.question.paragraph.1.agent = Your client''s insurer or ISA manager should have given them a policy number, also known as a ''customer reference'', for their policy or contract.
+gains.customer-reference.question.paragraph.2.agent = Your client''s policy number can include numbers, letters and special characters ''/'' or ''-''.
+gains.customer-reference.label.agent = What''s your client''s policy number?
+gains.customer-reference.question.error-message.1.agent = Enter your client''s policy number
+gains.customer-reference.question.error-message.2.agent = Enter your client''s policy number in the correct format. For example, ''P8879'' or ''LA/2881/07''.
 
 gains.gateway.question.title = Enillion o bolisïau yswiriant bywyd a chontractau
 gains.gateway.question.radio.heading.individual = A wnaethoch chi ennill ar bolisi neu gytundeb y DU?

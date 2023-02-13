@@ -53,17 +53,18 @@ common.gains.customer-reference = Customer reference
 gains.caption = Gains from life insurance policies and contracts for 6 April {0} to 5 April {1}
 
 ################# Gains from life insurance policies and contracts messages #################
-gains.customer-reference.question.title.individual = What''s your customer reference?
-gains.customer-reference.question.paragraph.individual = Your insurer or ISA manager should have given you a customer reference for your policy or contract.
-gains.customer-reference.question.hint = For example, ''INPOLY123A''.
-gains.customer-reference.question.error-message.1.individual = Enter your customer reference
-gains.customer-reference.question.error-message.2.individual = Enter your customer reference in the correct format. For example, ''INPOLY123A''. Your customer reference must only include letters and numbers
-
-gains.customer-reference.question.title.agent = What''s your client''s customer reference?
-gains.customer-reference.question.paragraph.agent = Your client''s insurer or ISA manager should have given them a customer reference for their policy or contract.
-gains.customer-reference.question.hint = For example, ''INPOLY123A'’.
-gains.customer-reference.question.error-message.1.agent = Enter your client''s customer reference
-gains.customer-reference.question.error-message.2.agent = Enter your client''s customer reference in the correct format. For example, ''INPOLY123A''. Your client''s customer reference must only include letters and numbers
+gains.customer-reference.question.title =  Policy number
+gains.customer-reference.question.paragraph.1.individual = Your insurer or ISA manager should have given you a policy number, also known as a ''customer reference'', for your policy or contract.
+gains.customer-reference.question.paragraph.2.individual = Your policy number can include numbers, letters and special characters ''/'' or ''-''.
+gains.customer-reference.label.individual = What''s your policy number?
+gains.customer-reference.question.hint = For example, ''P8879'' or ''LA/2881/07''.
+gains.customer-reference.question.error-message.1.individual = Enter your policy number
+gains.customer-reference.question.error-message.2.individual = Enter your policy number in the correct format. For example, ''P8879'' or ''LA/2881/07''.
+gains.customer-reference.question.paragraph.1.agent = Your client''s insurer or ISA manager should have given them a policy number, also known as a ''customer reference'', for their policy or contract.
+gains.customer-reference.question.paragraph.2.agent = Your client''s policy number can include numbers, letters and special characters ''/'' or ''-''.
+gains.customer-reference.label.agent = What''s your client''s policy number?
+gains.customer-reference.question.error-message.1.agent = Enter your client''s policy number
+gains.customer-reference.question.error-message.2.agent = Enter your client''s policy number in the correct format. For example, ''P8879'' or ''LA/2881/07''.
 
 gains.gateway.question.title = Gains from life insurance policies and contracts
 gains.gateway.question.radio.heading.individual = Did you make a gain on a UK policy or contract?
