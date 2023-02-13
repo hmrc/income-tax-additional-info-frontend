@@ -26,6 +26,7 @@ common.addedByHmrc = Added by HMRC
 common.back = Back
 common.change = Newid
 common.remove = Tynnu
+common.dontRemove = Don''t remove
 common.completed = Completed
 common.continue = Yn eich blaen
 common.saveAndContinue = Cadw ac yn eich blaen
@@ -198,6 +199,11 @@ gains.policies-add.question.title = Polisïau
 gains.policies-add.link.text = Ychwanegu ennill arall o bolisi gwahanol
 gains.policies-add.summary.hidden.text.change = Newid manylion y polisi
 gains.policies-add.summary.hidden.text.remove = Tynnu’r polisi
+
+gains.policies-remove.question.title = Are you sure you want to remove this policy?
+gains.policies-remove.policy.type = Policy type
+gains.policies-remove.policy.number = Policy number
+gains.policies-remove.years.policy.held = Years policy held
 
 #################       Error messages        ########################################
 common.error.self-assessment.paragraph.1.1 = If the web address is correct or you selected a link or button, you can use
