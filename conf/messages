@@ -109,15 +109,10 @@ gains.status.question.input.year.error.maxLimit.agent = Your client''s last gain
 gains.paid-tax-status.question.title.individual = Did you pay tax on your gain?
 gains.paid-tax-status.question.label.individual = How much tax did you pay?
 gains.paid-tax-status.question.error.1.individual = Select yes if you paid tax on your gain
-gains.paid-tax-status.question.error.2.individual = Enter the amount of tax you paid. For example, £193.54
-gains.paid-tax-status.question.error.3.individual = Enter the amount of tax you paid in the correct format. For example, £193.54
-gains.paid-tax-status.question.error.4 = The amount of tax paid must be less than £100,000,000,000
 
 gains.paid-tax-status.question.title.agent = Did your client pay tax on their gain?
 gains.paid-tax-status.question.label.agent = How much tax did your client pay?
 gains.paid-tax-status.question.error.1.agent = Select yes if your client paid tax on their gain
-gains.paid-tax-status.question.error.2.agent = Enter the amount of tax your client paid. For example, £193.54
-gains.paid-tax-status.question.error.3.agent = Enter the amount of tax your client paid in the correct format. For example, £193.54
 
 gains.gain-amount.question.title = Chargeable event gain
 gains.gain-amount.question.paragraph.1.individual = Enter the amount shown on the chargeable event certificate provided by your insurer or ISA manager.
