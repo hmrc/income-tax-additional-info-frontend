@@ -37,10 +37,12 @@ class GainsAmountPageViewSpec extends ViewUnitTest {
     val getHelpLink = "#help"
     val gainsAmountErrorHref = "#amount"
     val summaryText = "#gains-amount-summary-text"
-    val detailsText = "#gains-amount-details-text"
+    val detailsText1 = "#gains-amount-details-text1"
+    val detailsText2 = "#gains-amount-details-text2"
     val bullet1 = "#gains-amount-bullet-1"
     val bullet2 = "#gains-amount-bullet-2"
-    val urlLinkText = "#gains-amount-url-text"
+    val urlLinkText1 = "#gains-amount-url-text"
+    val urlLinkText2 ="#gains-amount-url-text1"
   }
 
   trait SpecificExpectedResults {
@@ -59,10 +61,12 @@ class GainsAmountPageViewSpec extends ViewUnitTest {
     val expectedButtonText: String
     val expectedHelpLinkText: String
     val expectedSummaryText: String
-    val expectedDetailsText: String
+    val expectedDetailsText1: String
+    val expectedDetailsText2: String
     val expectedBullet1: String
     val expectedBullet2: String
-    val expectedURLLinkText: String
+    val expectedURLLinkText1: String
+    val expectedURLLinkText2: String
   }
 
   object CommonExpectedEN extends CommonExpectedResults {
@@ -71,11 +75,13 @@ class GainsAmountPageViewSpec extends ViewUnitTest {
     override val expectedButtonText: String = "Continue"
     override val expectedHelpLinkText: String = "Get help with this page"
     override val expectedTitle: String = "Chargeable event gain"
-    override val expectedSummaryText: String = "When to reduce the gain"
-    override val expectedDetailsText: String = "You will need to calculate a reduction if:"
+    override val expectedSummaryText: String = "When you need to make calculations"
+    override val expectedDetailsText1: String = "Sometimes you may need to calculate your gain or reduce it."
+    override val expectedDetailsText2: String = "You will need to calculate a reduction if:"
     override val expectedBullet1: String = "your policy qualifies for restricted relief"
     override val expectedBullet2: String = "you were a non-UK resident while you were a beneficial owner of the policy"
-    override val expectedURLLinkText: String = "Find out more about reducing chargeable event gains (opens in new tab)"
+    override val expectedURLLinkText1: String ="Find out more about reducing chargeable event gains (opens in new tab)"
+    override val expectedURLLinkText2: String = "Find out more about calculating your gain (opens in new tab)"
   }
 
   object CommonExpectedCY extends CommonExpectedResults {
@@ -84,11 +90,13 @@ class GainsAmountPageViewSpec extends ViewUnitTest {
     override val expectedButtonText: String = "Yn eich blaen"
     override val expectedHelpLinkText: String = "Help gyda’r dudalen hon"
     override val expectedTitle: String = "Enillion ar ddigwyddiad trethadwy"
-    override val expectedSummaryText: String = "Pryd i ostwng yr elw"
-    override val expectedDetailsText: String = "Bydd angen i chi gyfrifo gostyngiad os yw’r canlynol yn wir:"
+    override val expectedSummaryText: String = "When you need to make calculations"
+    override val expectedDetailsText1: String = "Sometimes you may need to calculate your gain or reduce it."
+    override val expectedDetailsText2: String = "Bydd angen i chi gyfrifo gostyngiad os yw’r canlynol yn wir:"
     override val expectedBullet1: String = "Mae’ch polisi yn gymwys ar gyfer rhyddhad cyfyngedig"
     override val expectedBullet2: String = "Roeddech yn berson nad oedd yn breswyl yn y DU tra roeddech yn berchennog llesol ar y polisi"
-    override val expectedURLLinkText: String = "Dysgwch ragor am ostwng enillion ar ddigwyddiad trethadwy (yn agor tab newydd)"
+    override val expectedURLLinkText1: String = "Dysgwch ragor am ostwng enillion ar ddigwyddiad trethadwy (yn agor tab newydd)"
+    override val expectedURLLinkText2: String = "Find out more about calculating your gain (opens in new tab)"
 
   }
 
@@ -157,10 +165,12 @@ class GainsAmountPageViewSpec extends ViewUnitTest {
         textOnPageCheck(userScenario.specificExpectedResults.get.expectedParagraph2, Selectors.paragraph2)
         textOnPageCheck(userScenario.commonExpectedResults.expectedHint, Selectors.gainsAmountNumberHint)
         textOnPageCheck(userScenario.commonExpectedResults.expectedSummaryText, Selectors.summaryText)
-        textOnPageCheck(userScenario.commonExpectedResults.expectedDetailsText, Selectors.detailsText)
+        textOnPageCheck(userScenario.commonExpectedResults.expectedDetailsText1, Selectors.detailsText1)
+        textOnPageCheck(userScenario.commonExpectedResults.expectedDetailsText2, Selectors.detailsText2)
         textOnPageCheck(userScenario.commonExpectedResults.expectedBullet1, Selectors.bullet1)
         textOnPageCheck(userScenario.commonExpectedResults.expectedBullet2, Selectors.bullet2)
-        textOnPageCheck(userScenario.commonExpectedResults.expectedURLLinkText, Selectors.urlLinkText)
+        textOnPageCheck(userScenario.commonExpectedResults.expectedURLLinkText1, Selectors.urlLinkText1)
+        textOnPageCheck(userScenario.commonExpectedResults.expectedURLLinkText2, Selectors.urlLinkText2)
         buttonCheck(userScenario.commonExpectedResults.expectedButtonText, Selectors.continueButton)
         linkCheck(userScenario.commonExpectedResults.expectedHelpLinkText, Selectors.getHelpLink, appConfig.contactUrl(userScenario.isAgent))
       }
@@ -187,10 +197,12 @@ class GainsAmountPageViewSpec extends ViewUnitTest {
         textOnPageCheck(userScenario.specificExpectedResults.get.expectedParagraph2, Selectors.paragraph2)
         textOnPageCheck(userScenario.commonExpectedResults.expectedHint, Selectors.gainsAmountNumberHint)
         textOnPageCheck(userScenario.commonExpectedResults.expectedSummaryText, Selectors.summaryText)
-        textOnPageCheck(userScenario.commonExpectedResults.expectedDetailsText, Selectors.detailsText)
+        textOnPageCheck(userScenario.commonExpectedResults.expectedDetailsText1, Selectors.detailsText1)
+        textOnPageCheck(userScenario.commonExpectedResults.expectedDetailsText2, Selectors.detailsText2)
         textOnPageCheck(userScenario.commonExpectedResults.expectedBullet1, Selectors.bullet1)
         textOnPageCheck(userScenario.commonExpectedResults.expectedBullet2, Selectors.bullet2)
-        textOnPageCheck(userScenario.commonExpectedResults.expectedURLLinkText, Selectors.urlLinkText)
+        textOnPageCheck(userScenario.commonExpectedResults.expectedURLLinkText1, Selectors.urlLinkText1)
+        textOnPageCheck(userScenario.commonExpectedResults.expectedURLLinkText2, Selectors.urlLinkText2)
         buttonCheck(userScenario.commonExpectedResults.expectedButtonText, Selectors.continueButton)
         linkCheck(userScenario.commonExpectedResults.expectedHelpLinkText, Selectors.getHelpLink, appConfig.contactUrl(userScenario.isAgent))
 

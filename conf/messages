@@ -127,11 +127,14 @@ gains.gain-amount.question.error.empty_field.individual = Enter the gain you mad
 gains.gain-amount.question.incorrect-format-error.individual = Enter the gain you made in the correct format. For example, £193.54
 gains.gain-amount.question.amount-exceeds-max-error.individual = The amount of your gain must be less than £100,000,000,000
 
-gains.gain-amount.question.summary-text = When to reduce the gain
-gains.gain-amount.question.details-text = You will need to calculate a reduction if:
+gains.gain-amount.question.summary-text = When you need to make calculations
+gains.gain-amount.question.details-text.1 = Sometimes you may need to calculate your gain or reduce it.
+gains.gain-amount.question.details-text.2 = You will need to calculate a reduction if:
 gains.gain-amount.question.bullet.1 = your policy qualifies for restricted relief
 gains.gain-amount.question.bullet.2 = you were a non-UK resident while you were a beneficial owner of the policy
-gains.gain-amount.question.link.text = Find out more about reducing chargeable event gains (opens in new tab)
+gains.gain-amount.question.link.text.1 = Find out more about calculating your gain (opens in new tab)
+gains.gain-amount.question.link.text.2 = Find out more about reducing chargeable event gains (opens in new tab)
+
 
 gains.gain-amount.question.error.empty_field.agent = Enter the gain your client made. For example, £193.54
 gains.gain-amount.question.paragraph.1.agent = Enter the amount shown on the chargeable event certificate provided by your client’s insurer or ISA manager.

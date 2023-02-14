@@ -127,11 +127,13 @@ gains.gain-amount.question.error.empty_field.individual = Nodwch eich ennill. Er
 gains.gain-amount.question.incorrect-format-error.individual = Nodwch yr ennill a wnaethoch yn y fformat cywir. Er enghraifft, £193.54
 gains.gain-amount.question.amount-exceeds-max-error.individual = Mae’n rhaid i’r ennill fod yn llai na £100,000,000,000
 
-gains.gain-amount.question.summary-text = Pryd i ostwng yr elw
-gains.gain-amount.question.details-text = Bydd angen i chi gyfrifo gostyngiad os yw’r canlynol yn wir:
+gains.gain-amount.question.summary-text = When you need to make calculations
+gains.gain-amount.question.details-text.1 = Sometimes you may need to calculate your gain or reduce it.
+gains.gain-amount.question.details-text.2 = Bydd angen i chi gyfrifo gostyngiad os yw’r canlynol yn wir:
 gains.gain-amount.question.bullet.1 = Mae’ch polisi yn gymwys ar gyfer rhyddhad cyfyngedig
 gains.gain-amount.question.bullet.2 = Roeddech yn berson nad oedd yn breswyl yn y DU tra roeddech yn berchennog llesol ar y polisi
-gains.gain-amount.question.link.text = Dysgwch ragor am ostwng enillion ar ddigwyddiad trethadwy (yn agor tab newydd)
+gains.gain-amount.question.link.text.1 = Find out more about calculating your gain (opens in new tab)
+gains.gain-amount.question.link.text.2 = Dysgwch ragor am ostwng enillion ar ddigwyddiad trethadwy (yn agor tab newydd)
 
 gains.gain-amount.question.error.empty_field.agent = Nodwch enillion eich cleient. Er enghraifft, £193.54
 gains.gain-amount.question.paragraph.1.agent = Nodwch y swm a ddangosir ar y dystysgrif digwyddiad trethadwy a ddarperir gan yswiriwr neu reolwr ISA eich cleient.
