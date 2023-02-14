@@ -202,7 +202,6 @@ gains.policies-add.summary.hidden.text.remove = Remove the policy
 
 gains.policies-remove.question.title = Are you sure you want to remove this policy?
 gains.policies-remove.policy.type = Policy type
-gains.policies-remove.policy.number = Policy number
 gains.policies-remove.years.policy.held = Years policy held
 
 #################       Error messages        ########################################
