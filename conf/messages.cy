@@ -109,15 +109,10 @@ gains.status.question.input.year.error.maxLimit.agent = Mae’n rhaid i enillion
 gains.paid-tax-status.question.title.individual = A wnaethoch dalu treth ar eich ennill?
 gains.paid-tax-status.question.label.individual = Faint o dreth wnaethoch ei dalu?
 gains.paid-tax-status.question.error.1.individual = Dewiswch Ydw os taloch chi dreth ar eich ennill
-gains.paid-tax-status.question.error.2.individual = Nodwch swm y dreth a daloch. Er enghraifft, £193.54
-gains.paid-tax-status.question.error.3.individual = Nodwch swm y dreth a daloch yn y fformat cywir. Er enghraifft, £193.54
-gains.paid-tax-status.question.error.4 = Mae’n rhaid i swm y dreth a dalwyd fod yn llai na £100,000,000,000
 
 gains.paid-tax-status.question.title.agent = A wnaeth eich cleient dalu treth ar ei enillion?
 gains.paid-tax-status.question.label.agent = Faint o dreth a dalwyd gan eich cleient?
 gains.paid-tax-status.question.error.1.agent = Dewiswch ‘Iawn’ os gwnaeth eich cleient dalu treth ar ei enillion
-gains.paid-tax-status.question.error.2.agent = Nodwch swm y dreth a dalodd eich cleient. Er enghraifft, £193.54
-gains.paid-tax-status.question.error.3.agent = Nodwch swm y dreth a dalodd eich cleient yn y fformat cywir. Er enghraifft, £193.54
 
 gains.gain-amount.question.title = Enillion ar ddigwyddiad trethadwy
 gains.gain-amount.question.paragraph.1.individual = Nodwch y swm a ddangosir ar y dystysgrif digwyddiad trethadwy a ddarperir gan eich yswiriwr.

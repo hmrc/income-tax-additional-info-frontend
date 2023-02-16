@@ -18,7 +18,7 @@ package controllers.gains
 
 import actions.AuthorisedAction
 import config.AppConfig
-import forms.RadioButtonAmountForm
+import forms.YesNoForm
 import play.api.data.Form
 import play.api.i18n.I18nSupport
 import play.api.mvc._
@@ -34,13 +34,8 @@ class PaidTaxStatusController @Inject()(authorisedAction: AuthorisedAction,
                                        (implicit appConfig: AppConfig, mcc: MessagesControllerComponents, ec: ExecutionContext)
   extends FrontendController(mcc) with I18nSupport {
 
-  def form(isAgent: Boolean): Form[(Boolean, Option[BigDecimal])] =
-    RadioButtonAmountForm.radioButtonAndAmountForm(
-      s"gains.paid-tax-status.question.error.1.${if (isAgent) "agent" else "individual"}",
-      s"gains.paid-tax-status.question.error.2.${if (isAgent) "agent" else "individual"}",
-      s"gains.paid-tax-status.question.error.3.${if (isAgent) "agent" else "individual"}",
-      s"gains.paid-tax-status.question.error.4",
-      ""
+  def form(isAgent: Boolean): Form[Boolean] = YesNoForm.yesNoForm(
+      s"gains.paid-tax-status.question.error.1.${if (isAgent) "agent" else "individual"}"
     )
 
   def show(taxYear: Int): Action[AnyContent] = authorisedAction.async { implicit request =>
