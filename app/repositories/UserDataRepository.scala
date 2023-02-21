@@ -48,16 +48,18 @@ trait UserDataRepository[C <: UserDataTemplate] {
     lazy val start = s"[$repoName][create]"
     Try {
       encryptionMethod(userData)
-    }.toEither match {
-      case Left(exception: Exception) => Future.successful(handleEncryptionDecryptionException(exception, start))
-      case Right(encryptedData) =>
+    }.toOption match {
+      case Some(exception: Exception) => Future.successful(handleEncryptionDecryptionException(exception, start))
+      case Some(encryptedData) =>
         collection.insertOne(encryptedData).toFutureOption().map {
           case Some(_) => Right(true)
+          case None => Left(DataNotUpdated)
         }.recover {
           case exception: Exception =>
             pagerDutyLog(FAILED_TO_CREATE_DATA, s"$start Failed to create user data. Exception: ${exception.getMessage}")
             Left(DataNotUpdated)
         }
+      case _ => Future(Left(DataNotUpdated))
     }
   }
 
@@ -97,20 +99,22 @@ trait UserDataRepository[C <: UserDataTemplate] {
 
     Try {
       encryptionMethod.apply(userData)
-    }.toEither match {
-      case Left(exception: Exception) => Future.successful(handleEncryptionDecryptionException(exception, start))
-      case Right(encryptedData) =>
+    }.toOption match {
+      case Some(exception: Exception) => Future.successful(handleEncryptionDecryptionException(exception, start))
+      case Some(encryptedData) =>
         collection.findOneAndReplace(
           filter = filter(encryptedData.sessionId, encryptedData.mtdItId, encryptedData.nino, encryptedData.taxYear),
           replacement = encryptedData,
           options = FindOneAndReplaceOptions().returnDocument(ReturnDocument.AFTER)
         ).toFutureOption().map {
           case Some(_) => Right(true)
+          case None => Left(DataNotUpdated)
         }.recover {
           case exception: Exception =>
             pagerDutyLog(FAILED_TO_UPDATE_DATA, s"$start Failed to update user data. Exception: ${exception.getMessage}")
             Left(DataNotUpdated)
         }
+      case _ => Future(Left(DataNotUpdated))
     }
   }
 

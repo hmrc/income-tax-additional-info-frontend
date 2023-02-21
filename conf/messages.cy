@@ -49,12 +49,14 @@ common.monetary.input.hint = Er enghraifft, £193.54
 common.gains.customer-reference = Cyfeirnod y cwsmer
 common.gains.policy-event = Digwyddiad polisi
 common.gains.deficiency-relief-status = Rhyddhad am ddiffyg
+common.gains.policy-number = Policy number
+common.gains.policy-type = Policy type
+common.gains.years-policy-held=Years policy held
 
 #################       Captions       ########################################
 gains.caption = Enillion o bolisïau yswiriant bywyd a chontractau ar gyfer 6 Ebrill {0} i 5 Ebrill {1}
 
 ################# Gains from life insurance policies and contracts messages #################
-gains.customer-reference.question.title = Policy number
 gains.customer-reference.question.paragraph.1.individual = Your insurer or ISA manager should have given you a policy number, also known as a ''customer reference'', for your policy or contract.
 gains.customer-reference.question.paragraph.2.individual = Your policy number can include numbers, letters and special characters ''/'' or ''-''.
 gains.customer-reference.label.individual = What''s your policy number?
@@ -109,10 +111,15 @@ gains.status.question.input.year.error.maxLimit.agent = Mae’n rhaid i enillion
 gains.paid-tax-status.question.title.individual = A wnaethoch dalu treth ar eich ennill?
 gains.paid-tax-status.question.label.individual = Faint o dreth wnaethoch ei dalu?
 gains.paid-tax-status.question.error.1.individual = Dewiswch Ydw os taloch chi dreth ar eich ennill
+gains.paid-tax-status.question.error.2.individual = Nodwch swm y dreth a daloch. Er enghraifft, £193.54
+gains.paid-tax-status.question.error.3.individual = Nodwch swm y dreth a daloch yn y fformat cywir. Er enghraifft, £193.54
+gains.paid-tax-status.question.error.4 = Mae’n rhaid i swm y dreth a dalwyd fod yn llai na £100,000,000,000
 
 gains.paid-tax-status.question.title.agent = A wnaeth eich cleient dalu treth ar ei enillion?
 gains.paid-tax-status.question.label.agent = Faint o dreth a dalwyd gan eich cleient?
 gains.paid-tax-status.question.error.1.agent = Dewiswch ‘Iawn’ os gwnaeth eich cleient dalu treth ar ei enillion
+gains.paid-tax-status.question.error.2.agent = Nodwch swm y dreth a dalodd eich cleient. Er enghraifft, £193.54
+gains.paid-tax-status.question.error.3.agent = Nodwch swm y dreth a dalodd eich cleient yn y fformat cywir. Er enghraifft, £193.54
 
 gains.gain-amount.question.title = Enillion ar ddigwyddiad trethadwy
 gains.gain-amount.question.paragraph.1.individual = Nodwch y swm a ddangosir ar y dystysgrif digwyddiad trethadwy a ddarperir gan eich yswiriwr.
@@ -170,20 +177,17 @@ gains.deficiency-relief-status.question.input.error.incorrectFormat = Nodwch y s
 gains.deficiency-relief-status.question.input.error.amountExceedsMax = Mae’n rhaid i swm y Dreth Ataliedig Arbennig fod yn llai na £100,000,000,000
 
 gains.policy-summary.question.title = Crynodeb o’r polisi
-gains.policy-summary.list.previous.gain.from.policy = Enillion blaenorol o’r polisi hwn
-gains.policy-summary.list.policy.held.for = Cyfnod y daliwyd y polisi
-gains.policy-summary.list.amount.of.gain.made = Swm yr enillion a wnaed
-gains.policy-summary.list.tax.paid.on.gain = Treth a dalwyd ar yr enillion
-gains.policy-summary.list.amount.of.tax.paid = Swm y dreth a dalwyd
-gains.policy-summary.list.amount.of.relief.available = Swm y rhyddhad sydd ar gael
+gains.policy-summary.list.amount-of-gain-made = Amount of gain made
+gains.policy-summary.list.tax-paid-on-gain = Tax paid on gain
+gains.policy-summary.list.amount-of-relief-available = Amount of relief available
 
-gains.policy-summary.list.hidden.text.customer.reference = Newid eich cyfeirnod cwsmer
-gains.policy-summary.list.hidden.text.policy.event = Newid y digwyddiad polisi
-gains.policy-summary.list.hidden.text.previous.gain.from.policy = Newid yr enillion blaenorol o’r polisi hwn
-gains.policy-summary.list.hidden.text.policy.held.for = Newid nifer y blynyddoedd yr ydych wedi dal y polisi hwn
-gains.policy-summary.list.hidden.text.amount.of.gain.made = Newid swm yr enillion a wnaed
-gains.policy-summary.list.hidden.text.amount.of.tax.paid = Newid swm y dreth a dalwyd
-gains.policy-summary.list.hidden.text.deficiency.relief = Newid y rhyddhad am ddiffyg
+gains.policy-summary.list.hidden.text.1= type of policy
+gains.policy-summary.list.hidden.text.2 = policy number
+gains.policy-summary.list.hidden.text.3 = amount of gain made
+gains.policy-summary.list.hidden.text.5 = number of years policy held
+gains.policy-summary.list.hidden.text.6 = tax paid status
+gains.policy-summary.list.hidden.text.7 = deficiency relief status
+gains.policy-summary.list.hidden.text.8 = amount of relief available
 
 gains.summary.title.individual = Eich polisïau
 gains.summary.sub-title = Polisïau wedi’u canslo
@@ -197,9 +201,34 @@ gains.policies-add.link.text = Ychwanegu ennill arall o bolisi gwahanol
 gains.policies-add.summary.hidden.text.change = Newid manylion y polisi
 gains.policies-add.summary.hidden.text.remove = Tynnu’r polisi
 
+gains.policy-type.title.individual = What kind of policy gave you a gain?
+gains.policy-type.legend.individual = If you had a gain from more than one policy you can add this later.
+gains.policy-type.radio1 = Life Insurance
+gains.policy-type.radio2 = Life Annuity
+gains.policy-type.radio3 = Capital Redemption
+gains.policy-type.radio4.individual = Voided ISA - a policy cancelled by your ISA manager
+gains.policy-type.radio5 = A foreign policy
+gains.policy-type.help.title1 = Help with voided ISAs and cancelled policies
+gains.policy-type.help.title2 = Help with foreign policies
+gains.policy-type.help.content1.paragraph = This can include:
+gains.policy-type.help.content1.bullet1.individual = life insurance policies cancelled by your life insurance company
+gains.policy-type.help.content1.bullet2.individual = individual Savings Accounts cancelled by your ISA manager, known as voided ISAs.
+gains.policy-type.help.content2.paragraph = A foreign policy is one:
+gains.policy-type.help.content2.bullet1.individual = started while you were a non-UK resident
+gains.policy-type.help.content2.bullet2 = where premiums were paid in another country
+gains.policy-type.help.content2.bullet3.individual = surrendered, paid-out or matured, while you were a non-UK resident or after your return to the UK
+gains.policy-type.error.missing-input.individual = Select the kind of policy that gave you a gain
+
+gains.policy-type.title.agent = What kind of policy gave your client a gain?
+gains.policy-type.legend.agent = If your client had a gain from more than one policy you can add this later.
+gains.policy-type.radio4.agent = Voided ISA - a policy cancelled by your client''s ISA manager
+gains.policy-type.help.content1.bullet1.agent = life insurance policies cancelled by your client''s life insurance company
+gains.policy-type.help.content1.bullet2.agent = individual Savings Accounts cancelled by your client''s ISA manager, known as voided ISAs.
+gains.policy-type.help.content2.bullet1.agent = started while your client was a non-UK resident
+gains.policy-type.help.content2.bullet3.agent = surrendered, paid-out or matured, while your client was a non-UK resident or after their return to the UK
+gains.policy-type.error.missing-input.agent = Select the kind of policy that gave your client a gain
+
 gains.policies-remove.question.title = Are you sure you want to remove this policy?
-gains.policies-remove.policy.type = Policy type
-gains.policies-remove.years.policy.held = Years policy held
 
 #################       Error messages        ########################################
 common.error.self-assessment.paragraph.1.1 = If the web address is correct or you selected a link or button, you can use

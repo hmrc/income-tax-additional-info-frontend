@@ -17,18 +17,18 @@
 package controllers.gains
 
 import play.api.http.HeaderNames
-import play.api.http.Status.{BAD_REQUEST, OK}
+import play.api.http.Status.{BAD_REQUEST, OK, SEE_OTHER}
 import play.api.libs.ws.WSResponse
 import support.IntegrationTest
 
-class GainsPolicySummaryControllerISpec extends IntegrationTest {
+class PolicyTypeControllerISpec extends IntegrationTest {
 
   private def url(taxYear: Int): String = {
-    s"/update-and-submit-income-tax-return/additional-information/$taxYear/gains/summary"
+    s"/update-and-submit-income-tax-return/additional-information/$taxYear/gains/policy-type"
   }
 
   ".show" should {
-    "render the summary page" in {
+    "render the policy type page" in {
       lazy val result: WSResponse = {
         authoriseAgentOrIndividual(isAgent = false)
         urlGet(url(taxYear), headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)))
@@ -36,13 +36,35 @@ class GainsPolicySummaryControllerISpec extends IntegrationTest {
 
       result.status shouldBe OK
     }
-    "render the summary page for an agent" in {
+
+    "render the policy type page for an agent" in {
       lazy val result: WSResponse = {
-        authoriseAgentOrIndividual(isAgent = false)
+        authoriseAgentOrIndividual(isAgent = true)
         urlGet(url(taxYear), headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)))
       }
 
       result.status shouldBe OK
+    }
+  }
+
+  ".submit" should {
+    "redirect to income tax submission overview if successful" in {
+      lazy val result: WSResponse = {
+        authoriseAgentOrIndividual(isAgent = false)
+        urlPost(url(taxYear), headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)), body = Map("policy-type" -> "lifeInsurance"))
+      }
+
+      result.status shouldBe SEE_OTHER
+      result.headers("Location").head shouldBe appConfig.incomeTaxSubmissionOverviewUrl(taxYear)
+    }
+
+    "show page with error text if no selection is made" in {
+      lazy val result: WSResponse = {
+        authoriseAgentOrIndividual(isAgent = false)
+        urlPost(url(taxYear), headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)), body = Map[String, String]())
+      }
+
+      result.status shouldBe BAD_REQUEST
     }
   }
 }
