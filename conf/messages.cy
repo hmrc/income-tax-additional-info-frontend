@@ -109,10 +109,15 @@ gains.status.question.input.year.error.maxLimit.agent = Mae’n rhaid i enillion
 gains.paid-tax-status.question.title.individual = A wnaethoch dalu treth ar eich ennill?
 gains.paid-tax-status.question.label.individual = Faint o dreth wnaethoch ei dalu?
 gains.paid-tax-status.question.error.1.individual = Dewiswch Ydw os taloch chi dreth ar eich ennill
+gains.paid-tax-status.question.error.2.individual = Nodwch swm y dreth a daloch. Er enghraifft, £193.54
+gains.paid-tax-status.question.error.3.individual = Nodwch swm y dreth a daloch yn y fformat cywir. Er enghraifft, £193.54
+gains.paid-tax-status.question.error.4 = Mae’n rhaid i swm y dreth a dalwyd fod yn llai na £100,000,000,000
 
 gains.paid-tax-status.question.title.agent = A wnaeth eich cleient dalu treth ar ei enillion?
 gains.paid-tax-status.question.label.agent = Faint o dreth a dalwyd gan eich cleient?
 gains.paid-tax-status.question.error.1.agent = Dewiswch ‘Iawn’ os gwnaeth eich cleient dalu treth ar ei enillion
+gains.paid-tax-status.question.error.2.agent = Nodwch swm y dreth a dalodd eich cleient. Er enghraifft, £193.54
+gains.paid-tax-status.question.error.3.agent = Nodwch swm y dreth a dalodd eich cleient yn y fformat cywir. Er enghraifft, £193.54
 
 gains.gain-amount.question.title = Enillion ar ddigwyddiad trethadwy
 gains.gain-amount.question.paragraph.1.individual = Nodwch y swm a ddangosir ar y dystysgrif digwyddiad trethadwy a ddarperir gan eich yswiriwr.
@@ -196,6 +201,33 @@ gains.policies-add.question.title = Polisïau
 gains.policies-add.link.text = Ychwanegu ennill arall o bolisi gwahanol
 gains.policies-add.summary.hidden.text.change = Newid manylion y polisi
 gains.policies-add.summary.hidden.text.remove = Tynnu’r polisi
+
+gains.policy-type.title.individual = What kind of policy gave you a gain?
+gains.policy-type.legend.individual = If you had a gain from more than one policy you can add this later.
+gains.policy-type.radio1 = Life Insurance
+gains.policy-type.radio2 = Life Annuity
+gains.policy-type.radio3 = Capital Redemption
+gains.policy-type.radio4.individual = Voided ISA - a policy cancelled by your ISA manager
+gains.policy-type.radio5 = A foreign policy
+gains.policy-type.help.title1 = Help with voided ISAs and cancelled policies
+gains.policy-type.help.title2 = Help with foreign policies
+gains.policy-type.help.content1.paragraph = This can include:
+gains.policy-type.help.content1.bullet1.individual = life insurance policies cancelled by your life insurance company
+gains.policy-type.help.content1.bullet2.individual = individual Savings Accounts cancelled by your ISA manager, known as voided ISAs.
+gains.policy-type.help.content2.paragraph = A foreign policy is one:
+gains.policy-type.help.content2.bullet1.individual = started while you were a non-UK resident
+gains.policy-type.help.content2.bullet2 = where premiums were paid in another country
+gains.policy-type.help.content2.bullet3.individual = surrendered, paid-out or matured, while you were a non-UK resident or after your return to the UK
+gains.policy-type.error.missing-input.individual = Select the kind of policy that gave you a gain
+
+gains.policy-type.title.agent = What kind of policy gave your client a gain?
+gains.policy-type.legend.agent = If your client had a gain from more than one policy you can add this later.
+gains.policy-type.radio4.agent = Voided ISA - a policy cancelled by your client''s ISA manager
+gains.policy-type.help.content1.bullet1.agent = life insurance policies cancelled by your client''s life insurance company
+gains.policy-type.help.content1.bullet2.agent = individual Savings Accounts cancelled by your client''s ISA manager, known as voided ISAs.
+gains.policy-type.help.content2.bullet1.agent = started while your client was a non-UK resident
+gains.policy-type.help.content2.bullet3.agent = surrendered, paid-out or matured, while your client was a non-UK resident or after their return to the UK
+gains.policy-type.error.missing-input.agent = Select the kind of policy that gave your client a gain
 
 gains.policies-remove.question.title = Are you sure you want to remove this policy?
 gains.policies-remove.policy.type = Policy type
