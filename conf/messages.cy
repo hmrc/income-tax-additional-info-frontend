@@ -92,19 +92,11 @@ gains.policy-event.question.hint = Er enghraifft, aeddfedodd polisi, ildiodd y p
 gains.policy-event.question.error-message = Nodwch y rheswm dros yr enillion hyn. Er enghraifft, aeddfedodd polisi, ildiad rhannol o’r polisi neu farwolaeth y priod
 gains.policy-event.question.incorrect-format.error-message = Nodwch y rheswm dros yr ennill hwn yn y fformat cywir. Mae’n rhaid i’r rheswm dros eich ennill gynnwys y llythrennau a i z yn unig. Er enghraifft, aeddfedodd y polisi, ildiad rhannol o’r polisi neu farwolaeth y priod
 
-gains.status.question.radio.heading.individual = A ydych wedi gwneud ennill o’r polisi hwn o’r blaen?
-gains.status.question.radio.error.noEntry.individual = Dewiswch ‘Iawn’ os ydych wedi gwneud ennill ar y polisi hwn o’r blaen
-gains.status.question.input.year.label.individual = Sawl blwyddyn sydd wedi bod ers eich ennill diwethaf?
-gains.status.question.input.year.hint.individual = Os oedd eich ennill diwethaf lai na blwyddyn yn ôl, nodwch 0
-gains.status.question.input.year.error.noeEntry.individual = Nodwch nifer y blynyddoedd ers eich ennill diwethaf. Os oedd eich ennill diwethaf llai na blwyddyn yn ôl, nodwch 0
-gains.status.question.input.year.error.maxLimit.individual = Mae’n rhaid i’ch enillion diwethaf fod yn llai na 100 mlynedd yn ôl
+gains.status.question.radio.heading.individual = Has your policy paid you a gain in an earlier tax year?
+gains.status.question.radio.error.noEntry.individual = Select Yes if your policy paid you a gain in an earlier tax year
 
-gains.status.question.radio.heading.agent = A yw’ch cleient wedi gwneud enillion ar y polisi hwn o’r blaen?
-gains.status.question.radio.error.noEntry.agent = Dewiswch ‘Iawn’ os yw’ch cleient wedi gwneud enillion ar y polisi hwn o’r blaen
-gains.status.question.input.year.label.agent = Sawl blwyddyn sydd wedi mynd heibio ers enillion diwethaf eich cleient?
-gains.status.question.input.year.hint.agent = Os oedd enillion diwethaf eich cleient llai na blwyddyn yn ôl, nodwch 0.
-gains.status.question.input.year.error.noeEntry.agent = Nodwch nifer y blynyddoedd ers enillion diwethaf eich cleient. Os oedd enillion diwethaf eich cleient llai na blwyddyn yn ôl, nodwch 0
-gains.status.question.input.year.error.maxLimit.agent = Mae’n rhaid i enillion diwethaf eich cleient fod yn llai na 100 mlynedd yn ôl
+gains.status.question.radio.heading.agent = Has your client''s policy paid them a gain in an earlier tax year?
+gains.status.question.radio.error.noEntry.agent = Select Yes if your client''s policy paid them a gain in an earlier tax year
 
 gains.paid-tax-status.question.title.individual = A wnaethoch dalu treth ar eich ennill?
 gains.paid-tax-status.question.label.individual = Faint o dreth wnaethoch ei dalu?
