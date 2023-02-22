@@ -26,12 +26,12 @@ import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 import views.html.pages.gains.GainsStatusPageView
 
 import javax.inject.{Inject, Singleton}
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.Future
 
 @Singleton
 class GainsStatusController @Inject()(authorisedAction: AuthorisedAction,
                                       view: GainsStatusPageView)
-                                     (implicit appConfig: AppConfig, mcc: MessagesControllerComponents, ec: ExecutionContext)
+                                     (implicit appConfig: AppConfig, mcc: MessagesControllerComponents)
   extends FrontendController(mcc) with I18nSupport {
 
   def form(isAgent: Boolean): Form[(Boolean, Option[Int])] = RadioButtonYearForm.radioButtonAndYearForm(

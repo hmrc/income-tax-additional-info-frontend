@@ -38,8 +38,8 @@ POST        /:taxYear/gains/deficiency-relief-status        controllers.gains.Ga
 GET         /:taxYear/gains/policy-event                    controllers.gains.PolicyEventController.show(taxYear: Int)
 POST        /:taxYear/gains/policy-event                    controllers.gains.PolicyEventController.submit(taxYear: Int)
 
-GET         /:taxYear/gains/gains-status                    controllers.gains.GainsStatusController.show(taxYear: Int)
-POST        /:taxYear/gains/gains-status                    controllers.gains.GainsStatusController.submit(taxYear: Int)
+GET         /:taxYear/gains/gains-status                   controllers.gains.GainsStatusController.show(taxYear: Int)
+POST        /:taxYear/gains/gains-status                   controllers.gains.GainsStatusController.submit(taxYear: Int)
 
 GET         /:taxYear/gains/paid-tax-status                 controllers.gains.PaidTaxStatusController.show(taxYear: Int)
 POST        /:taxYear/gains/paid-tax-status                 controllers.gains.PaidTaxStatusController.submit(taxYear: Int)
@@ -60,3 +60,7 @@ GET         /:taxYear/gains/summary                         controllers.gains.Ga
 GET         /:taxYear/gains/policies-add                    controllers.gains.PoliciesAddController.show(taxYear: Int)
 
 GET         /:taxYear/gains/policies-remove-confirmation    controllers.gains.PoliciesRemoveController.show(taxYear: Int)
+GET         /:taxYear/gains/policies-remove-confirmation    controllers.gains.PoliciesRemoveController.show(taxYear: Int)
+
+GET         /:taxYear/gains/policies-empty                  controllers.gains.PoliciesEmptyController.show(taxYear: Int)
+POST        /:taxYear/gains/policies-empty                  controllers.gains.PoliciesEmptyController.submit(taxYear: Int)

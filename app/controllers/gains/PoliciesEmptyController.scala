@@ -19,22 +19,24 @@ package controllers.gains
 import actions.AuthorisedAction
 import config.AppConfig
 import play.api.i18n.I18nSupport
-import play.api.mvc._
+import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
-import views.html.pages.gains.PolicySummaryPageView
+import views.html.pages.gains.PoliciesEmptyPageView
+import controllers.gains.routes.PolicyTypeController
 
-import javax.inject.{Inject, Singleton}
+import javax.inject.Inject
 import scala.concurrent.Future
 
-@Singleton
-class PolicySummaryController @Inject()(authorisedAction: AuthorisedAction,
-                                        view: PolicySummaryPageView)
+class PoliciesEmptyController @Inject()(authorisedAction: AuthorisedAction,
+                                        view: PoliciesEmptyPageView)
                                        (implicit appConfig: AppConfig, mcc: MessagesControllerComponents)
   extends FrontendController(mcc) with I18nSupport {
-
 
   def show(taxYear: Int): Action[AnyContent] = authorisedAction.async { implicit request =>
     Future.successful(Ok(view(taxYear)))
   }
 
+  def submit(taxYear: Int): Action[AnyContent] = authorisedAction.async { implicit request =>
+    Future.successful(Redirect(PolicyTypeController.show(taxYear)));
+  }
 }

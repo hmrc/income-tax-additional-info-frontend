@@ -24,12 +24,12 @@ import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 import views.html.pages.gains.PoliciesRemovePageView
 
 import javax.inject.{Inject, Singleton}
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.Future
 
 @Singleton
 class PoliciesRemoveController @Inject()(authorisedAction: AuthorisedAction,
                                          view: PoliciesRemovePageView)
-                                        (implicit appConfig: AppConfig, mcc: MessagesControllerComponents, ec: ExecutionContext)
+                                        (implicit appConfig: AppConfig, mcc: MessagesControllerComponents)
   extends FrontendController(mcc) with I18nSupport {
 
 
