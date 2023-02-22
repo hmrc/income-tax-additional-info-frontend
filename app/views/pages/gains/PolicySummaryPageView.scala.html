@@ -16,19 +16,15 @@
 
 @import views.html.templates.Layout
 @import views.html.templates.helpers.Heading
-@import views.html.templates.helpers.InputText
 @import views.html.templates.helpers.Button
-@import views.html.templates.helpers.Link
+@import utils.ViewUtils.summaryListRow
 
 @import models.requests.AuthorisationRequest
 
 @this(
         layout: Layout,
         heading: Heading,
-        govukWarningText : GovukWarningText,
-        inputText: InputText,
         button: Button,
-        link: Link,
         govukSummaryList: GovukSummaryList
 )
 
@@ -37,132 +33,57 @@
 @titleForUse = @{messages(s"gains.policy-summary.question.title")}
 
 @headingForUse = @{titleForUse}
-@contentHtml = {
-    <dl class="govuk-summary-list">
-        <div class="govuk-summary-list__row">
-            <dt class="govuk-summary-list__key govuk-!-width-one-half">
-            @messages("common.gains.customer-reference")
-            </dt>
-            <dd class="govuk-summary-list__value">
-
-            </dd>
-            <dd class="govuk-summary-list__actions">
-                <a class="govuk-link" id="customer-reference" href="@controllers.gains.routes.CustomerReferenceController.show(taxYear).url">
-                    <span aria-hidden ="true" > @messages("common.change") </span>
-                    <span class="govuk-visually-hidden">@messages("gains.policy-summary.list.hidden.text.customer.reference")</span>
-                </a>
-            </dd>
-        </div>
-        <div class="govuk-summary-list__row">
-            <dt class="govuk-summary-list__key">
-            @messages("common.gains.policy-event")
-            </dt>
-            <dd class="govuk-summary-list__value">
-
-            </dd>
-            <dd class="govuk-summary-list__actions">
-             <a class="govuk-link" id="policy-event" href="@controllers.gains.routes.PolicyEventController.show(taxYear).url">
-                 <span aria-hidden ="true" > @messages("common.change") </span>
-                 <span class="govuk-visually-hidden">@messages("gains.policy-summary.list.hidden.text.policy.event")</span>
-                </a>
-            </dd>
-        </div>
-        <div class="govuk-summary-list__row">
-         <dt class="govuk-summary-list__key">
-            @messages("gains.policy-summary.list.previous.gain.from.policy")
-         </dt>
-        <dd class="govuk-summary-list__value">
-
-        </dd>
-            <dd class="govuk-summary-list__actions">
-                <a class="govuk-link" id="gain-status" href="@controllers.gains.routes.GainsStatusController.show(taxYear).url">
-                    <span aria-hidden ="true" > @messages("common.change") </span>
-                    <span class="govuk-visually-hidden">@messages("gains.policy-summary.list.hidden.text.previous.gain.from.policy")</span>
-                </a>
-            </dd>
-    </div>
-        <div class="govuk-summary-list__row">
-            <dt class="govuk-summary-list__key">
-            @messages("gains.policy-summary.list.policy.held.for")
-            </dt>
-            <dd class="govuk-summary-list__value">
-                <p class="govuk-body"></p>
-            </dd>
-            <dd class="govuk-summary-list__actions">
-                <a class="govuk-link" id="policy-held" href="@controllers.gains.routes.PolicyHeldController.show(taxYear).url">
-                    <span aria-hidden ="true" > @messages("common.change") </span>
-                    <span class="govuk-visually-hidden">@messages("gains.policy-summary.list.hidden.text.policy.held.for")</span>
-                </a>
-            </dd>
-        </div>
-    <div class="govuk-summary-list__row">
-        <dt class="govuk-summary-list__key">
-            @messages("gains.policy-summary.list.amount.of.gain.made")
-        </dt>
-        <dd class="govuk-summary-list__value">
-
-        </dd>
-        <dd class="govuk-summary-list__actions">
-            <a class="govuk-link" id="gains-amount" href="@controllers.gains.routes.GainsAmountController.show(taxYear).url">
-                <span aria-hidden ="true" > @messages("common.change") </span>
-                <span class="govuk-visually-hidden">@messages("gains.policy-summary.list.hidden.text.amount.of.gain.made")</span>
-            </a>
-        </dd>
-    </div>
-    <div class="govuk-summary-list__row">
-        <dt class="govuk-summary-list__key">
-            @messages("gains.policy-summary.list.tax.paid.on.gain")
-        </dt>
-        <dd class="govuk-summary-list__value">
-
-        </dd>
-        <dd class="govuk-summary-list__actions">
-            <a class="govuk-link" id="paid-tax-status" href="@controllers.gains.routes.PaidTaxStatusController.show(taxYear).url">
-                <span aria-hidden ="true" > @messages("common.change") </span>
-                <span class="govuk-visually-hidden">@messages("gains.policy-summary.list.hidden.text.amount.of.tax.paid")</span>
-            </a>
-        </dd>
-    </div>
-    <div class="govuk-summary-list__row">
-        <dt class="govuk-summary-list__key">
-            @messages("gains.policy-summary.list.amount.of.tax.paid")
-        </dt>
-        <dd class="govuk-summary-list__value">
-
-        </dd>
-    </div>
-    <div class="govuk-summary-list__row">
-        <dt class="govuk-summary-list__key">
-            @messages("common.gains.deficiency-relief-status")
-        </dt>
-        <dd class="govuk-summary-list__value">
-            <p class="govuk-body"></p>
-        </dd>
-        <dd class="govuk-summary-list__actions">
-            <a class="govuk-link" id="deficiency-relief" href="@controllers.gains.routes.GainsDeficiencyReliefController.show(taxYear).url">
-                <span aria-hidden ="true" > @messages("common.change") </span>
-                <span class="govuk-visually-hidden">@messages("gains.policy-summary.list.hidden.text.deficiency.relief")</span>
-            </a>
-        </dd>
-    </div>
-    <div class="govuk-summary-list__row">
-        <dt class="govuk-summary-list__key">
-            @messages("gains.policy-summary.list.amount.of.relief.available")
-        </dt>
-        <dd class="govuk-summary-list__value">
-            <p class="govuk-body"></p>
-        </dd>
-    </div>
-</dl>
-}
 
 @layout(pageTitle = titleForUse, taxYear = Some(taxYear), isAgent = request.user.isAgent) {
 
-    @heading(headingForUse, Some(messages("gains.caption", (taxYear - 1).toString, taxYear.toString)), "govuk-!-margin-bottom-6")
+    @heading(headingForUse, Some(messages("gains.caption", (taxYear - 1).toString, taxYear.toString)))
 
-    @contentHtml
+    @{
+        govukSummaryList(SummaryList(Seq(
+            Some(summaryListRow(
+                HtmlContent(messages("common.gains.policy-type")),
+                HtmlContent(messages("Life Insurance")),
+                actions = Seq((controllers.gains.routes.GainsGatewayController.show(taxYear), messages("common.change"), Some(messages("gains.policy-summary.list.hidden.text.1"))))
+            )),
+            Some(summaryListRow(
+                HtmlContent(messages("common.gains.policy-number")),
+                HtmlContent(messages("LIFE1234")),
+                actions = Seq((controllers.gains.routes.GainsGatewayController.show(taxYear), messages("common.change"), Some(messages("gains.policy-summary.list.hidden.text.2"))))
+            )),
+            Some(summaryListRow(
+                HtmlContent(messages("gains.policy-summary.list.amount-of-gain-made")),
+                HtmlContent(messages("£1234")),
+                actions = Seq((controllers.gains.routes.GainsAmountController.show(taxYear), messages("common.change"), Some(messages("gains.policy-summary.list.hidden.text.3"))))
+            )),
+            Some(summaryListRow(
+                HtmlContent(messages("common.gains.policy-event")),
+                HtmlContent(messages("Full or part surrender")),
+                actions = Seq((controllers.gains.routes.PolicyEventController.show(taxYear), messages("common.change"), Some(messages("common.gains.policy-event"))))
+            )),
+            Some(summaryListRow(
+                HtmlContent(messages("common.gains.years-policy-held")),
+                HtmlContent(messages("1")),
+                actions = Seq((controllers.gains.routes.PolicyHeldController.show(taxYear), messages("common.change"), Some(messages("gains.policy-summary.list.hidden.text.5"))))
+            )),
+            Some(summaryListRow(
+                HtmlContent(messages("gains.policy-summary.list.tax-paid-on-gain")),
+                HtmlContent(messages("No")),
+                actions = Seq((controllers.gains.routes.PaidTaxStatusController.show(taxYear), messages("common.change"), Some(messages("gains.policy-summary.list.hidden.text.6"))))
+            )),
+                Some(summaryListRow(
+                HtmlContent(messages("common.gains.deficiency-relief-status")),
+                HtmlContent(messages("No")),
+                actions = Seq((controllers.gains.routes.GainsDeficiencyReliefController.show(taxYear), messages("common.change"), Some(messages("gains.policy-summary.list.hidden.text.7"))))
+            )),
+            Some(summaryListRow(
+                HtmlContent(messages("gains.policy-summary.list.amount-of-relief-available")),
+                HtmlContent(messages("£267")),
+                actions = Seq((controllers.gains.routes.GainsGatewayController.show(taxYear), messages("common.change"), Some(messages("gains.policy-summary.list.hidden.text.8"))))
+            ))
+        ).flatten))
+    }
 
-@button("common.saveAndContinue", classes = Some("govuk-!-margin-top-6"))
+    @button("common.saveAndContinue", classes = Some("govuk-!-margin-top-6"))
 
 }
 

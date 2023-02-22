@@ -49,12 +49,14 @@ common.monetary.input.hint = For example, £193.54
 common.gains.deficiency-relief-status = Deficiency relief
 common.gains.policy-event = Policy event
 common.gains.customer-reference = Customer reference
+common.gains.policy-number = Policy number
+common.gains.policy-type = Policy type
+common.gains.years-policy-held = Years policy held
 
 #################       Captions       ########################################
 gains.caption = Gains from life insurance policies and contracts for 6 April {0} to 5 April {1}
 
 ################# Gains from life insurance policies and contracts messages #################
-gains.customer-reference.question.title =  Policy number
 gains.customer-reference.question.paragraph.1.individual = Your insurer or ISA manager should have given you a policy number, also known as a ''customer reference'', for your policy or contract.
 gains.customer-reference.question.paragraph.2.individual = Your policy number can include numbers, letters and special characters ''/'' or ''-''.
 gains.customer-reference.label.individual = What''s your policy number?
@@ -171,20 +173,17 @@ gains.deficiency-relief-status.question.input.error.incorrectFormat = Enter the 
 gains.deficiency-relief-status.question.input.error.amountExceedsMax = The amount of Special Withholding Tax must be less than £100,000,000,000
 
 gains.policy-summary.question.title = Policy summary
-gains.policy-summary.list.previous.gain.from.policy = Previous gain from this policy
-gains.policy-summary.list.policy.held.for = Policy held for
-gains.policy-summary.list.amount.of.gain.made = Amount of gain made
-gains.policy-summary.list.tax.paid.on.gain = Tax paid on gain
-gains.policy-summary.list.amount.of.tax.paid = Amount of tax paid
-gains.policy-summary.list.amount.of.relief.available = Amount of relief available
+gains.policy-summary.list.amount-of-gain-made = Amount of gain made
+gains.policy-summary.list.tax-paid-on-gain = Tax paid on gain
+gains.policy-summary.list.amount-of-relief-available = Amount of relief available
 
-gains.policy-summary.list.hidden.text.customer.reference = Change your customer reference
-gains.policy-summary.list.hidden.text.policy.event = Change the policy event
-gains.policy-summary.list.hidden.text.previous.gain.from.policy = Change the previous gain from this policy
-gains.policy-summary.list.hidden.text.policy.held.for = Change the number of years you held this policy
-gains.policy-summary.list.hidden.text.amount.of.gain.made = Change the amount of gain made
-gains.policy-summary.list.hidden.text.amount.of.tax.paid = Change the amount of tax paid
-gains.policy-summary.list.hidden.text.deficiency.relief = Change the deficiency relief
+gains.policy-summary.list.hidden.text.1 = type of policy
+gains.policy-summary.list.hidden.text.2 = policy number
+gains.policy-summary.list.hidden.text.3 = amount of gain made
+gains.policy-summary.list.hidden.text.5 = number of years policy held
+gains.policy-summary.list.hidden.text.6 = tax paid status
+gains.policy-summary.list.hidden.text.7 = deficiency relief status
+gains.policy-summary.list.hidden.text.8 = amount of relief available
 
 gains.summary.title.individual = Your policies
 gains.summary.sub-title = Cancelled policies
@@ -226,8 +225,6 @@ gains.policy-type.help.content2.bullet3.agent = surrendered, paid-out or matured
 gains.policy-type.error.missing-input.agent = Select the kind of policy that gave your client a gain
 
 gains.policies-remove.question.title = Are you sure you want to remove this policy?
-gains.policies-remove.policy.type = Policy type
-gains.policies-remove.years.policy.held = Years policy held
 
 #################       Error messages        ########################################
 common.error.self-assessment.paragraph.1.1 = If the web address is correct or you selected a link or button, you can use
