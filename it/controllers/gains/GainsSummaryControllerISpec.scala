@@ -21,7 +21,7 @@ import play.api.http.Status.OK
 import play.api.libs.ws.WSResponse
 import support.IntegrationTest
 
-class GainsPolicySummaryControllerISpec extends IntegrationTest {
+class GainsSummaryControllerISpec extends IntegrationTest {
 
   private def url(taxYear: Int): String = {
     s"/update-and-submit-income-tax-return/additional-information/$taxYear/gains/summary"

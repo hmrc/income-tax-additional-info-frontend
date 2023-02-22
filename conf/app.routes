@@ -1,16 +1,16 @@
 #################       Service pages       ########################################
 
-->    /hmrc-frontend                                        hmrcfrontend.Routes
+->    /hmrc-frontend                    hmrcfrontend.Routes
 
-GET   /assets/*file                                         controllers.Assets.versioned(path = "/public", file: Asset)
+GET   /assets/*file                     controllers.Assets.versioned(path = "/public", file: Asset)
 
-GET   /language/:lang                                       controllers.LanguageSwitchController.switchToLanguage(lang: String)
+GET   /language/:lang                   controllers.LanguageSwitchController.switchToLanguage(lang: String)
 
-GET   /sign-out                                             controllers.SignOutController.signOut(isAgent: Boolean)
+GET   /sign-out                         controllers.SignOutController.signOut(isAgent: Boolean)
 
-GET   /keep-alive                                           controllers.SessionExpiredController.keepAlive
+GET   /keep-alive                       controllers.SessionExpiredController.keepAlive
 
-GET   /timeout                                              controllers.SessionExpiredController.timeout
+GET   /timeout                          controllers.SessionExpiredController.timeout
 
 
 ###########################     Error pages     ####################################
@@ -41,8 +41,8 @@ POST        /:taxYear/gains/gains-amount                    controllers.gains.Ga
 GET         /:taxYear/gains/policy-event                    controllers.gains.PolicyEventController.show(taxYear: Int)
 POST        /:taxYear/gains/policy-event                    controllers.gains.PolicyEventController.submit(taxYear: Int)
 
-GET         /:taxYear/gains/gains-status                    controllers.gains.GainsStatusController.show(taxYear: Int)
-POST        /:taxYear/gains/gains-status                    controllers.gains.GainsStatusController.submit(taxYear: Int)
+GET         /:taxYear/gains/gains-status                   controllers.gains.GainsStatusController.show(taxYear: Int)
+POST        /:taxYear/gains/gains-status                   controllers.gains.GainsStatusController.submit(taxYear: Int)
 
 GET         /:taxYear/gains/policy-held                     controllers.gains.PolicyHeldController.show(taxYear: Int)
 POST        /:taxYear/gains/policy-held                     controllers.gains.PolicyHeldController.submit(taxYear: Int)
@@ -56,7 +56,7 @@ POST        /:taxYear/gains/deficiency-relief-status        controllers.gains.Ga
 GET         /:taxYear/gains/paid-tax-amount                 controllers.gains.PaidTaxAmountController.show(taxYear: Int)
 POST        /:taxYear/gains/paid-tax-amount                 controllers.gains.PaidTaxAmountController.submit(taxYear: Int)
 
-GET         /:taxYear/gains/policy-summary                  controllers.gains.PolicySummaryController.show(taxYear: Int)
+GET         /:taxYear/gains/policy-summary                   controllers.gains.PolicySummaryController.show(taxYear: Int)
 
 GET         /:taxYear/gains/policies-add                    controllers.gains.PoliciesAddController.show(taxYear: Int)
 

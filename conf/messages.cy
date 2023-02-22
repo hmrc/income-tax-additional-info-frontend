@@ -49,12 +49,14 @@ common.monetary.input.hint = Er enghraifft, £193.54
 common.gains.customer-reference = Cyfeirnod y cwsmer
 common.gains.policy-event = Digwyddiad polisi
 common.gains.deficiency-relief-status = Rhyddhad am ddiffyg
+common.gains.policy-number = Policy number
+common.gains.policy-type = Policy type
+common.gains.years-policy-held=Years policy held
 
 #################       Captions       ########################################
 gains.caption = Enillion o bolisïau yswiriant bywyd a chontractau ar gyfer 6 Ebrill {0} i 5 Ebrill {1}
 
 ################# Gains from life insurance policies and contracts messages #################
-gains.customer-reference.question.title = Policy number
 gains.customer-reference.question.paragraph.1.individual = Your insurer or ISA manager should have given you a policy number, also known as a ''customer reference'', for your policy or contract.
 gains.customer-reference.question.paragraph.2.individual = Your policy number can include numbers, letters and special characters ''/'' or ''-''.
 gains.customer-reference.label.individual = What''s your policy number?
@@ -183,20 +185,17 @@ gains.deficiency-relief-status.question.input.error.incorrectFormat = Nodwch y s
 gains.deficiency-relief-status.question.input.error.amountExceedsMax = Mae’n rhaid i swm y Dreth Ataliedig Arbennig fod yn llai na £100,000,000,000
 
 gains.policy-summary.question.title = Crynodeb o’r polisi
-gains.policy-summary.list.previous.gain.from.policy = Enillion blaenorol o’r polisi hwn
-gains.policy-summary.list.policy.held.for = Cyfnod y daliwyd y polisi
-gains.policy-summary.list.amount.of.gain.made = Swm yr enillion a wnaed
-gains.policy-summary.list.tax.paid.on.gain = Treth a dalwyd ar yr enillion
-gains.policy-summary.list.amount.of.tax.paid = Swm y dreth a dalwyd
-gains.policy-summary.list.amount.of.relief.available = Swm y rhyddhad sydd ar gael
+gains.policy-summary.list.amount-of-gain-made = Amount of gain made
+gains.policy-summary.list.tax-paid-on-gain = Tax paid on gain
+gains.policy-summary.list.amount-of-relief-available = Amount of relief available
 
-gains.policy-summary.list.hidden.text.customer.reference = Newid eich cyfeirnod cwsmer
-gains.policy-summary.list.hidden.text.policy.event = Newid y digwyddiad polisi
-gains.policy-summary.list.hidden.text.previous.gain.from.policy = Newid yr enillion blaenorol o’r polisi hwn
-gains.policy-summary.list.hidden.text.policy.held.for = Newid nifer y blynyddoedd yr ydych wedi dal y polisi hwn
-gains.policy-summary.list.hidden.text.amount.of.gain.made = Newid swm yr enillion a wnaed
-gains.policy-summary.list.hidden.text.amount.of.tax.paid = Newid swm y dreth a dalwyd
-gains.policy-summary.list.hidden.text.deficiency.relief = Newid y rhyddhad am ddiffyg
+gains.policy-summary.list.hidden.text.1= type of policy
+gains.policy-summary.list.hidden.text.2 = policy number
+gains.policy-summary.list.hidden.text.3 = amount of gain made
+gains.policy-summary.list.hidden.text.5 = number of years policy held
+gains.policy-summary.list.hidden.text.6 = tax paid status
+gains.policy-summary.list.hidden.text.7 = deficiency relief status
+gains.policy-summary.list.hidden.text.8 = amount of relief available
 
 gains.summary.title.individual = Eich polisïau
 gains.summary.sub-title = Polisïau wedi’u canslo
@@ -238,8 +237,6 @@ gains.policy-type.help.content2.bullet3.agent = surrendered, paid-out or matured
 gains.policy-type.error.missing-input.agent = Select the kind of policy that gave your client a gain
 
 gains.policies-remove.question.title = Are you sure you want to remove this policy?
-gains.policies-remove.policy.type = Policy type
-gains.policies-remove.years.policy.held = Years policy held
 
 #################       Error messages        ########################################
 common.error.self-assessment.paragraph.1.1 = If the web address is correct or you selected a link or button, you can use
