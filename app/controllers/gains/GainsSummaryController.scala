@@ -21,14 +21,14 @@ import config.AppConfig
 import play.api.i18n.I18nSupport
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
-import views.html.pages.gains.GainsPolicySummaryPageView
+import views.html.pages.gains.GainsSummaryPageView
 
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
-class GainsPolicySummaryController @Inject()(authorisedAction: AuthorisedAction,
-                                             view: GainsPolicySummaryPageView)
-                                            (implicit appConfig: AppConfig, mcc: MessagesControllerComponents, ec: ExecutionContext)
+class GainsSummaryController @Inject()(authorisedAction: AuthorisedAction,
+                                       view: GainsSummaryPageView)
+                                      (implicit appConfig: AppConfig, mcc: MessagesControllerComponents, ec: ExecutionContext)
   extends FrontendController(mcc) with I18nSupport {
 
   def show(taxYear: Int): Action[AnyContent] = authorisedAction.async { implicit request =>

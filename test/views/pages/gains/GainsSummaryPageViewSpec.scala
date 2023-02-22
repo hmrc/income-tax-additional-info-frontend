@@ -22,11 +22,11 @@ import org.jsoup.nodes.Document
 import play.api.i18n.Messages
 import play.api.mvc.AnyContent
 import support.ViewUnitTest
-import views.html.pages.gains.GainsPolicySummaryPageView
+import views.html.pages.gains.GainsSummaryPageView
 
-class GainsPolicySummaryPageViewSpec extends ViewUnitTest {
+class GainsSummaryPageViewSpec extends ViewUnitTest {
 
-  private val page: GainsPolicySummaryPageView = inject[GainsPolicySummaryPageView]
+  private val page: GainsSummaryPageView = inject[GainsSummaryPageView]
 
   object Selectors {
     val title = "#main-content > div > div > h1"

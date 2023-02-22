@@ -28,31 +28,19 @@ class PolicySummaryPageViewSpec extends ViewUnitTest {
 
   private val page: PolicySummaryPageView = inject[PolicySummaryPageView]
 
-  private val customerReferencePageUrl: String = s"/update-and-submit-income-tax-return/additional-information/$taxYear/gains/policy-name"
-  private val policyEventPageUrl: String = s"/update-and-submit-income-tax-return/additional-information/$taxYear/gains/policy-event"
-  private val gainsStatusPageUrl: String = s"/update-and-submit-income-tax-return/additional-information/$taxYear/gains/gains-status"
-  private val policyHeldPageUrl: String = s"/update-and-submit-income-tax-return/additional-information/$taxYear/gains/policy-held"
+  private val policyTypePageUrl: String = s"/update-and-submit-income-tax-return/additional-information/$taxYear/gains/gains-gateway"
+  private val policyNamePageUrl: String = s"/update-and-submit-income-tax-return/additional-information/$taxYear/gains/gains-gateway"
   private val gainsAmountPageUrl: String = s"/update-and-submit-income-tax-return/additional-information/$taxYear/gains/gains-amount"
-  private val taxPaidOnGainPageUrl: String = s"/update-and-submit-income-tax-return/additional-information/$taxYear/gains/paid-tax-status"
-  private val deficiencyUrl: String = s"/update-and-submit-income-tax-return/additional-information/$taxYear/gains/deficiency-relief-status"
+  private val policyEventPageUrl: String = s"/update-and-submit-income-tax-return/additional-information/$taxYear/gains/policy-event"
+  private val policyHeldPageUrl: String = s"/update-and-submit-income-tax-return/additional-information/$taxYear/gains/policy-held"
+  private val paidTaxStatusPageUrl: String = s"/update-and-submit-income-tax-return/additional-information/$taxYear/gains/paid-tax-status"
+  private val deficiencyReliefStatusUrl: String = s"/update-and-submit-income-tax-return/additional-information/$taxYear/gains/deficiency-relief-status"
+  private val amountReliefAvailableUrl: String = s"/update-and-submit-income-tax-return/additional-information/$taxYear/gains/gains-gateway"
 
   object Selectors {
-    val summaryListItem1 = "#main-content > div > div > dl > div:nth-child(1) > dt"
-    val summaryListItem2 = "#main-content > div > div > dl > div:nth-child(2) > dt"
-    val summaryListItem3 = "#main-content > div > div > dl > div:nth-child(3) > dt"
-    val summaryListItem4 = "#main-content > div > div > dl > div:nth-child(4) > dt"
-    val summaryListItem5 = "#main-content > div > div > dl > div:nth-child(5) > dt"
-    val summaryListItem6 = "#main-content > div > div > dl > div:nth-child(6) > dt"
-    val summaryListItem7 = "#main-content > div > div > dl > div:nth-child(7) > dt"
-    val summaryListItem8 = "#main-content > div > div > dl > div:nth-child(8) > dt"
-    val summaryListItem9 = "#main-content > div > div > dl > div:nth-child(9) > dt"
-    val summaryListChangeLink1 = "#customer-reference"
-    val summaryListChangeLink2 = "#policy-event"
-    val summaryListChangeLink3 = "#gain-status"
-    val summaryListChangeLink4 = "#policy-held"
-    val summaryListChangeLink5 = "#gains-amount"
-    val summaryListChangeLink6 = "#paid-tax-status"
-    val summaryListChangeLink8 = "#deficiency-relief"
+    def summaryListItem(i: Int): String = s"#main-content > div > div > dl > div:nth-child($i) > dt"
+    def summaryListChangeLink(i: Int): String = s"#main-content > div > div > dl > div:nth-child($i) > dd.govuk-summary-list__actions > a"
+
     val continueButton = "#continue"
     val getHelpLink = "#help"
   }
@@ -69,13 +57,13 @@ class PolicySummaryPageViewSpec extends ViewUnitTest {
     val expectedSummaryListItem6: String
     val expectedSummaryListItem7: String
     val expectedSummaryListItem8: String
-    val expectedSummaryListItem9: String
     val expectedSummaryListChangeLink1: String
     val expectedSummaryListChangeLink2: String
     val expectedSummaryListChangeLink3: String
     val expectedSummaryListChangeLink4: String
     val expectedSummaryListChangeLink5: String
     val expectedSummaryListChangeLink6: String
+    val expectedSummaryListChangeLink7: String
     val expectedSummaryListChangeLink8: String
     val expectedButtonText: String
     val expectedHelpLinkText: String
@@ -87,22 +75,22 @@ class PolicySummaryPageViewSpec extends ViewUnitTest {
     override val expectedTitle: String = "Policy summary"
     override val expectedHeading: String = "Policy summary"
     override val expectedCaption: Int => String = (taxYear: Int) => s"Gains from life insurance policies and contracts for 6 April ${taxYear - 1} to 5 April $taxYear"
-    override val expectedSummaryListItem1: String = "Customer reference"
-    override val expectedSummaryListItem2: String = "Policy event"
-    override val expectedSummaryListItem3: String = "Previous gain from this policy"
-    override val expectedSummaryListItem4: String = "Policy held for"
-    override val expectedSummaryListItem5: String = "Amount of gain made"
+    override val expectedSummaryListItem1: String = "Policy type"
+    override val expectedSummaryListItem2: String = "Policy number"
+    override val expectedSummaryListItem3: String = "Amount of gain made"
+    override val expectedSummaryListItem4: String = "Policy event"
+    override val expectedSummaryListItem5: String = "Years policy held"
     override val expectedSummaryListItem6: String = "Tax paid on gain"
-    override val expectedSummaryListItem7: String = "Amount of tax paid"
-    override val expectedSummaryListItem8: String = "Deficiency relief"
-    override val expectedSummaryListItem9: String = "Amount of relief available"
-    override val expectedSummaryListChangeLink1: String = "Change Change your customer reference"
-    override val expectedSummaryListChangeLink2: String = "Change Change the policy event"
-    override val expectedSummaryListChangeLink3: String = "Change Change the previous gain from this policy"
-    override val expectedSummaryListChangeLink4: String = "Change Change the number of years you held this policy"
-    override val expectedSummaryListChangeLink5: String = "Change Change the amount of gain made"
-    override val expectedSummaryListChangeLink6: String = "Change Change the amount of tax paid"
-    override val expectedSummaryListChangeLink8: String = "Change Change the deficiency relief"
+    override val expectedSummaryListItem7: String = "Deficiency relief"
+    override val expectedSummaryListItem8: String = "Amount of relief available"
+    override val expectedSummaryListChangeLink1: String = "Change type of policy"
+    override val expectedSummaryListChangeLink2: String = "Change policy number"
+    override val expectedSummaryListChangeLink3: String = "Change amount of gain made"
+    override val expectedSummaryListChangeLink4: String = "Change Policy event"
+    override val expectedSummaryListChangeLink5: String = "Change number of years policy held"
+    override val expectedSummaryListChangeLink6: String = "Change tax paid status"
+    override val expectedSummaryListChangeLink7: String = "Change deficiency relief status"
+    override val expectedSummaryListChangeLink8: String = "Change amount of relief available"
     override val expectedButtonText: String = "Save and continue"
     override val expectedHelpLinkText: String = "Get help with this page"
   }
@@ -111,22 +99,22 @@ class PolicySummaryPageViewSpec extends ViewUnitTest {
     override val expectedTitle: String = "Crynodeb o’r polisi"
     override val expectedHeading: String = "Crynodeb o’r polisi"
     override val expectedCaption: Int => String = (taxYear: Int) => s"Enillion o bolisïau yswiriant bywyd a chontractau ar gyfer 6 Ebrill ${taxYear - 1} i 5 Ebrill $taxYear"
-    override val expectedSummaryListItem1: String = "Cyfeirnod y cwsmer"
-    override val expectedSummaryListItem2: String = "Digwyddiad polisi"
-    override val expectedSummaryListItem3: String = "Enillion blaenorol o’r polisi hwn"
-    override val expectedSummaryListItem4: String = "Cyfnod y daliwyd y polisi"
-    override val expectedSummaryListItem5: String = "Swm yr enillion a wnaed"
-    override val expectedSummaryListItem6: String = "Treth a dalwyd ar yr enillion"
-    override val expectedSummaryListItem7: String = "Swm y dreth a dalwyd"
-    override val expectedSummaryListItem8: String = "Rhyddhad am ddiffyg"
-    override val expectedSummaryListItem9: String = "Swm y rhyddhad sydd ar gael"
-    override val expectedSummaryListChangeLink1: String = "Newid Newid eich cyfeirnod cwsmer"
-    override val expectedSummaryListChangeLink2: String = "Newid Newid y digwyddiad polisi"
-    override val expectedSummaryListChangeLink3: String = "Newid Newid yr enillion blaenorol o’r polisi hwn"
-    override val expectedSummaryListChangeLink4: String = "Newid Newid nifer y blynyddoedd yr ydych wedi dal y polisi hwn"
-    override val expectedSummaryListChangeLink5: String = "Newid Newid swm yr enillion a wnaed"
-    override val expectedSummaryListChangeLink6: String = "Newid Newid swm y dreth a dalwyd"
-    override val expectedSummaryListChangeLink8: String = "Newid Newid y rhyddhad am ddiffyg"
+    override val expectedSummaryListItem1: String = "Policy type"
+    override val expectedSummaryListItem2: String = "Policy number"
+    override val expectedSummaryListItem3: String = "Amount of gain made"
+    override val expectedSummaryListItem4: String = "Digwyddiad polisi"
+    override val expectedSummaryListItem5: String = "Years policy held"
+    override val expectedSummaryListItem6: String = "Tax paid on gain"
+    override val expectedSummaryListItem7: String = "Rhyddhad am ddiffyg"
+    override val expectedSummaryListItem8: String = "Amount of relief available"
+    override val expectedSummaryListChangeLink1: String = "Newid type of policy"
+    override val expectedSummaryListChangeLink2: String = "Newid policy number"
+    override val expectedSummaryListChangeLink3: String = "Newid amount of gain made"
+    override val expectedSummaryListChangeLink4: String = "Newid Digwyddiad polisi"
+    override val expectedSummaryListChangeLink5: String = "Newid number of years policy held"
+    override val expectedSummaryListChangeLink6: String = "Newid tax paid status"
+    override val expectedSummaryListChangeLink7: String = "Newid deficiency relief status"
+    override val expectedSummaryListChangeLink8: String = "Newid amount of relief available"
     override val expectedButtonText: String = "Cadw ac yn eich blaen"
     override val expectedHelpLinkText: String = "Help gyda’r dudalen hon"
   }
@@ -153,32 +141,27 @@ class PolicySummaryPageViewSpec extends ViewUnitTest {
         captionCheck(userScenario.commonExpectedResults.expectedCaption(taxYear))
         h1Check(userScenario.commonExpectedResults.expectedHeading)
 
-        textOnPageCheck(userScenario.commonExpectedResults.expectedSummaryListItem1, Selectors.summaryListItem1)
-        textOnPageCheck(userScenario.commonExpectedResults.expectedSummaryListItem2, Selectors.summaryListItem2)
-        textOnPageCheck(userScenario.commonExpectedResults.expectedSummaryListItem3, Selectors.summaryListItem3)
-        textOnPageCheck(userScenario.commonExpectedResults.expectedSummaryListItem4, Selectors.summaryListItem4)
-        textOnPageCheck(userScenario.commonExpectedResults.expectedSummaryListItem5, Selectors.summaryListItem5)
-        textOnPageCheck(userScenario.commonExpectedResults.expectedSummaryListItem6, Selectors.summaryListItem6)
-        textOnPageCheck(userScenario.commonExpectedResults.expectedSummaryListItem7, Selectors.summaryListItem7)
-        textOnPageCheck(userScenario.commonExpectedResults.expectedSummaryListItem8, Selectors.summaryListItem8)
-        textOnPageCheck(userScenario.commonExpectedResults.expectedSummaryListItem9, Selectors.summaryListItem9)
+        textOnPageCheck(userScenario.commonExpectedResults.expectedSummaryListItem1, Selectors.summaryListItem(1))
+        textOnPageCheck(userScenario.commonExpectedResults.expectedSummaryListItem2, Selectors.summaryListItem(2))
+        textOnPageCheck(userScenario.commonExpectedResults.expectedSummaryListItem3, Selectors.summaryListItem(3))
+        textOnPageCheck(userScenario.commonExpectedResults.expectedSummaryListItem4, Selectors.summaryListItem(4))
+        textOnPageCheck(userScenario.commonExpectedResults.expectedSummaryListItem5, Selectors.summaryListItem(5))
+        textOnPageCheck(userScenario.commonExpectedResults.expectedSummaryListItem6, Selectors.summaryListItem(6))
+        textOnPageCheck(userScenario.commonExpectedResults.expectedSummaryListItem7, Selectors.summaryListItem(7))
+        textOnPageCheck(userScenario.commonExpectedResults.expectedSummaryListItem8, Selectors.summaryListItem(8))
 
-        linkCheck(userScenario.commonExpectedResults.expectedSummaryListChangeLink1, Selectors.summaryListChangeLink1, customerReferencePageUrl)
-        linkCheck(userScenario.commonExpectedResults.expectedSummaryListChangeLink2, Selectors.summaryListChangeLink2, policyEventPageUrl)
-        linkCheck(userScenario.commonExpectedResults.expectedSummaryListChangeLink3, Selectors.summaryListChangeLink3, gainsStatusPageUrl)
-        linkCheck(userScenario.commonExpectedResults.expectedSummaryListChangeLink4, Selectors.summaryListChangeLink4, policyHeldPageUrl)
-        linkCheck(userScenario.commonExpectedResults.expectedSummaryListChangeLink5, Selectors.summaryListChangeLink5, gainsAmountPageUrl)
-        linkCheck(userScenario.commonExpectedResults.expectedSummaryListChangeLink6, Selectors.summaryListChangeLink6, taxPaidOnGainPageUrl)
-        linkCheck(userScenario.commonExpectedResults.expectedSummaryListChangeLink8, Selectors.summaryListChangeLink8, deficiencyUrl)
+        linkCheck(userScenario.commonExpectedResults.expectedSummaryListChangeLink1, Selectors.summaryListChangeLink(1), policyTypePageUrl)
+        linkCheck(userScenario.commonExpectedResults.expectedSummaryListChangeLink2, Selectors.summaryListChangeLink(2), policyNamePageUrl)
+        linkCheck(userScenario.commonExpectedResults.expectedSummaryListChangeLink3, Selectors.summaryListChangeLink(3), gainsAmountPageUrl)
+        linkCheck(userScenario.commonExpectedResults.expectedSummaryListChangeLink4, Selectors.summaryListChangeLink(4), policyEventPageUrl)
+        linkCheck(userScenario.commonExpectedResults.expectedSummaryListChangeLink5, Selectors.summaryListChangeLink(5), policyHeldPageUrl)
+        linkCheck(userScenario.commonExpectedResults.expectedSummaryListChangeLink6, Selectors.summaryListChangeLink(6), paidTaxStatusPageUrl)
+        linkCheck(userScenario.commonExpectedResults.expectedSummaryListChangeLink7, Selectors.summaryListChangeLink(7), deficiencyReliefStatusUrl)
+        linkCheck(userScenario.commonExpectedResults.expectedSummaryListChangeLink8, Selectors.summaryListChangeLink(8), amountReliefAvailableUrl)
 
         buttonCheck(userScenario.commonExpectedResults.expectedButtonText, Selectors.continueButton)
         linkCheck(userScenario.commonExpectedResults.expectedHelpLinkText, Selectors.getHelpLink, appConfig.contactUrl(userScenario.isAgent))
       }
     }
   }
-
-
-
-
-
 }
