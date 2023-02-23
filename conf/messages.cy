@@ -142,6 +142,14 @@ gains.gain-amount.question.label.agent = Faint oedd enillion eich cleient?
 gains.gain-amount.question.incorrect-format-error.agent = Nodwch enillion eich cleient yn y fformat cywir. Er enghraifft, £193.54
 gains.gain-amount.question.amount-exceeds-max-error.agent = Mae’n rhaid i enillion eich cleient fod yn llai na £100,000,000,000
 
+gains.paid-tax-amount.question.title.individual = How much tax did you pay on your gain?
+gains.paid-tax-amount.question.title.agent = How much tax did your client pay on their gain?
+gains.paid-tax-amount.question.error.empty_field.individual = Enter the amount of tax you paid
+gains.paid-tax-amount.question.error.empty_field.agent = Enter the amount of tax your client paid
+gains.paid-tax-amount.question.incorrect-format-error.individual = Enter the amount of tax you paid in the correct format. For example, £193.54
+gains.paid-tax-amount.question.incorrect-format-error.agent = Enter the amount of tax your client paid in the correct format. For example, £193.54
+gains.paid-tax-amount.question.amount-exceeds-max-error = The amount of tax paid must be less than £100,000,000,000
+
 gains.policy-held.question.title.individual = Ers sawl blwyddyn rydych wedi dal y polisi hwn?
 gains.policy-held.question.paragraph.individual = Os ydych wedi dal y polisi ers llai na blwyddyn, nodwch 0.
 gains.policy-held.question.error-empty.individual = Nodwch nifer y blynyddoedd yr ydych wedi dal y polisi hwn. Os yw’n llai na blwyddyn, nodwch 0

@@ -138,6 +138,14 @@ gains.gain-amount.question.label.agent = How much gain did your client make?
 gains.gain-amount.question.incorrect-format-error.agent = Enter the gain your client made in the correct format. For example, £193.54
 gains.gain-amount.question.amount-exceeds-max-error.agent = The amount of your client''s gain must be less than £100,000,000,000
 
+gains.paid-tax-amount.question.title.individual = How much tax did you pay on your gain?
+gains.paid-tax-amount.question.title.agent = How much tax did your client pay on their gain?
+gains.paid-tax-amount.question.error.empty_field.individual = Enter the amount of tax you paid
+gains.paid-tax-amount.question.error.empty_field.agent = Enter the amount of tax your client paid
+gains.paid-tax-amount.question.incorrect-format-error.individual = Enter the amount of tax you paid in the correct format. For example, £193.54
+gains.paid-tax-amount.question.incorrect-format-error.agent = Enter the amount of tax your client paid in the correct format. For example, £193.54
+gains.paid-tax-amount.question.amount-exceeds-max-error = The amount of tax paid must be less than £100,000,000,000
+
 gains.policy-held.question.title.individual = How many years have you held this policy?
 gains.policy-held.question.paragraph.individual = If you''ve held the policy for less than a year, enter 0.
 gains.policy-held.question.error-empty.individual = Enter the number of years you have held this policy. If less than a year, enter 0
