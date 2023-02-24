@@ -53,6 +53,9 @@ POST        /:taxYear/gains/policy-held                     controllers.gains.Po
 GET         /:taxYear/gains/policy-type                     controllers.gains.PolicyTypeController.show(taxYear: Int)
 POST        /:taxYear/gains/policy-type                     controllers.gains.PolicyTypeController.submit(taxYear: Int)
 
+GET         /:taxYear/gains/paid-tax-amount                 controllers.gains.PaidTaxAmountController.show(taxYear: Int)
+POST        /:taxYear/gains/paid-tax-amount                 controllers.gains.PaidTaxAmountController.submit(taxYear: Int)
+
 GET         /:taxYear/gains/policy-summary                  controllers.gains.PolicySummaryController.show(taxYear: Int)
 
 GET         /:taxYear/gains/summary                         controllers.gains.GainsSummaryController.show(taxYear: Int)
