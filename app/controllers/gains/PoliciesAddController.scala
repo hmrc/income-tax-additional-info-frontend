@@ -24,12 +24,12 @@ import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 import views.html.pages.gains.PoliciesAddPageView
 
 import javax.inject.{Inject, Singleton}
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.Future
 
 @Singleton
 class PoliciesAddController @Inject()(authorisedAction: AuthorisedAction,
                                       view: PoliciesAddPageView)
-                                     (implicit appConfig: AppConfig, mcc: MessagesControllerComponents, ec: ExecutionContext)
+                                     (implicit appConfig: AppConfig, mcc: MessagesControllerComponents)
   extends FrontendController(mcc) with I18nSupport {
 
   def show(taxYear: Int): Action[AnyContent] = authorisedAction.async { implicit request =>

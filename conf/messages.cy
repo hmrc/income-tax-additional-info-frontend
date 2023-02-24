@@ -49,6 +49,7 @@ common.monetary.input.hint = Er enghraifft, £193.54
 common.gains.customer-reference = Cyfeirnod y cwsmer
 common.gains.policy-event = Digwyddiad polisi
 common.gains.deficiency-relief-status = Rhyddhad am ddiffyg
+common.gains.policies = Polisïau
 common.gains.policy-number = Policy number
 common.gains.policy-type = Policy type
 common.gains.years-policy-held=Years policy held
@@ -196,7 +197,6 @@ gains.summary.key.cancelled = Ennill ar bolisi neu gytundeb y DU sydd wedi’i g
 
 gains.summary.title.agent = Polisïau eich cleient
 
-gains.policies-add.question.title = Polisïau
 gains.policies-add.link.text = Ychwanegu ennill arall o bolisi gwahanol
 gains.policies-add.summary.hidden.text.change = Newid manylion y polisi
 gains.policies-add.summary.hidden.text.remove = Tynnu’r polisi
@@ -229,6 +229,10 @@ gains.policy-type.help.content2.bullet3.agent = surrendered, paid-out or matured
 gains.policy-type.error.missing-input.agent = Select the kind of policy that gave your client a gain
 
 gains.policies-remove.question.title = Are you sure you want to remove this policy?
+
+gains.policies-empty.question.paragraph1 = You need to add one or more life insurance policy or contract.
+gains.policies-empty.question.button = Add a policy
+gains.policies-empty.question.paragraph2 = If you don''t have a policy to add you can return to the overview page and come back later.
 
 #################       Error messages        ########################################
 common.error.self-assessment.paragraph.1.1 = If the web address is correct or you selected a link or button, you can use
