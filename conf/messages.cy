@@ -176,6 +176,14 @@ gains.deficiency-relief-status.question.input.error.noEntry = Nodwch y swm sydd 
 gains.deficiency-relief-status.question.input.error.incorrectFormat = Nodwch y swm sydd ar gael ar gyfer rhyddhad yn y fformat cywir. Er enghraifft, ‘£193.54’
 gains.deficiency-relief-status.question.input.error.amountExceedsMax = Mae’n rhaid i swm y Dreth Ataliedig Arbennig fod yn llai na £100,000,000,000
 
+gains.paid-tax-amount.question.title.individual = How much tax did you pay on your gain?
+gains.paid-tax-amount.question.title.agent = How much tax did your client pay on their gain?
+gains.paid-tax-amount.question.error.empty_field.individual = Enter the amount of tax you paid
+gains.paid-tax-amount.question.error.empty_field.agent = Enter the amount of tax your client paid
+gains.paid-tax-amount.question.incorrect-format-error.individual = Enter the amount of tax you paid in the correct format. For example, £193.54
+gains.paid-tax-amount.question.incorrect-format-error.agent = Enter the amount of tax your client paid in the correct format. For example, £193.54
+gains.paid-tax-amount.question.amount-exceeds-max-error = The amount of tax paid must be less than £100,000,000,000
+
 gains.policy-summary.question.title = Crynodeb o’r polisi
 gains.policy-summary.list.amount-of-gain-made = Amount of gain made
 gains.policy-summary.list.tax-paid-on-gain = Tax paid on gain
