@@ -46,6 +46,9 @@ object RadioButtonYearForm {
     )
   }
 
+  def form(isAgent: Boolean): Form[Boolean] = YesNoForm.yesNoForm(
+    s"gains.paid-tax-status.question.error.1.${if (isAgent) "agent" else "individual"}"
+  )
   def formatter(missingRadioInputError: String, errorArgs: Seq[Any] = Seq.empty): Formatter[Boolean] = new Formatter[Boolean] {
     override def bind(key: String, data: Map[String, String]): Either[Seq[FormError], Boolean] = {
       data.get(key) match {

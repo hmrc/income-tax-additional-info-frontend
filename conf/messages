@@ -95,19 +95,11 @@ gains.policy-event.question.hint = For example, policy matured, part surrender o
 gains.policy-event.question.error-message = Enter the reason for this gain.  For example, policy matured, part surrender of the policy or death of spouse
 gains.policy-event.question.incorrect-format.error-message = Enter the reason for this gain in the correct format. The reason for your gain must only include letters a to z. For example, policy matured, part surrender of the policy or death of spouse
 
-gains.status.question.radio.heading.individual = Have you made a gain from this policy before?
-gains.status.question.input.year.label.individual = How many years since your last gain?
-gains.status.question.input.year.hint.individual = If your last gain was less than a year ago, enter 0.
-gains.status.question.radio.error.noEntry.individual = Select Yes if you have made a gain from this policy before
-gains.status.question.input.year.error.noeEntry.individual = Enter the number of years since your last gain. If your last gain was less than a year ago, enter 0
-gains.status.question.input.year.error.maxLimit.individual = Your last gain must be less than 100 years
+gains.status.question.radio.heading.individual = Has your policy paid you a gain in an earlier tax year?
+gains.status.question.radio.error.noEntry.individual = Select Yes if your policy paid you a gain in an earlier tax year
 
-gains.status.question.radio.heading.agent = Has your client made a gain from this policy before?
-gains.status.question.input.year.label.agent = How many years since your client''s last gain?
-gains.status.question.input.year.hint.agent = If your client''s last gain was less than a year ago, enter 0.
-gains.status.question.radio.error.noEntry.agent = Select yes if your client has made a gain from this policy before
-gains.status.question.input.year.error.noeEntry.agent = Enter the number of years since your client''s last gain. If your client''s last gain was less than a year ago, enter 0
-gains.status.question.input.year.error.maxLimit.agent = Your client''s last gain must be less than 100 years
+gains.status.question.radio.heading.agent = Has your client''s policy paid them a gain in an earlier tax year?
+gains.status.question.radio.error.noEntry.agent = Select Yes if your client''s policy paid them a gain in an earlier tax year
 
 gains.paid-tax-status.question.title.individual = Did you pay tax on your gain?
 gains.paid-tax-status.question.label.individual = How much tax did you pay?

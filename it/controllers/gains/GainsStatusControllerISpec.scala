@@ -66,32 +66,5 @@ class GainsStatusControllerISpec extends IntegrationTest {
 
       result.status shouldBe BAD_REQUEST
     }
-
-    "show page with error text if form has empty year" in {
-      lazy val result: WSResponse = {
-        authoriseAgentOrIndividual(isAgent = false)
-        urlPost(url(taxYear), headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)), body = Map(yesNo -> "true", yearInput -> ""))
-      }
-
-      result.status shouldBe BAD_REQUEST
-    }
-
-    "show page with error text if form has incorrect year" in {
-      lazy val result: WSResponse = {
-        authoriseAgentOrIndividual(isAgent = false)
-        urlPost(url(taxYear), headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)), body = Map(yesNo -> "true", yearInput -> "test"))
-      }
-
-      result.status shouldBe BAD_REQUEST
-    }
-
-    "show page with error text if form has exceeding max year" in {
-      lazy val result: WSResponse = {
-        authoriseAgentOrIndividual(isAgent = false)
-        urlPost(url(taxYear), headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)), body = Map(yesNo -> "true", yearInput -> "100"))
-      }
-
-      result.status shouldBe BAD_REQUEST
-    }
   }
 }
