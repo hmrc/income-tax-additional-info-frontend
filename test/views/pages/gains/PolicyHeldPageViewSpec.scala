@@ -33,7 +33,7 @@ class PolicyHeldPageViewSpec extends ViewUnitTest {
     val paragraph = "#main-content > div > div > p"
     val continueButton = "#continue"
     val getHelpLink = "#help"
-    val policyHeldErrorHref = "#policyHeld"
+    val yearErrorHref = "#year"
   }
 
   trait SpecificExpectedResults {
@@ -121,7 +121,7 @@ class PolicyHeldPageViewSpec extends ViewUnitTest {
         implicit val document: Document = Jsoup.parse(page(taxYear, InputYearForm.inputYearsForm(
           s"gains.policy-held.question.error-empty.${if (userScenario.isAgent) "agent" else "individual"}",
           s"gains.policy-held.question.error-incorrect.format.${if (userScenario.isAgent) "agent" else "individual"}",
-          "gains.policy-held.question.error-yearsExceedsMaximum")).body)
+          "common.gains.policy.question.error-yearsExceedsMaximum")).body)
 
         welshToggleCheck(userScenario.isWelsh)
         titleCheck(userScenario.specificExpectedResults.get.expectedTitle, userScenario.isWelsh)
@@ -143,7 +143,7 @@ class PolicyHeldPageViewSpec extends ViewUnitTest {
         implicit val document: Document = Jsoup.parse(page(taxYear, InputYearForm.inputYearsForm(
           s"gains.policy-held.question.error-empty.${if (userScenario.isAgent) "agent" else "individual"}",
           s"gains.policy-held.question.error-incorrect.format.${if (userScenario.isAgent) "agent" else "individual"}",
-          "gains.policy-held.question.error-yearsExceedsMaximum"
+          "common.gains.policy.question.error-yearsExceedsMaximum"
         ).bind(Map(InputYearForm.numberOfYears -> ""))).body)
 
         welshToggleCheck(userScenario.isWelsh)
@@ -154,7 +154,7 @@ class PolicyHeldPageViewSpec extends ViewUnitTest {
         buttonCheck(userScenario.commonExpectedResults.expectedButtonText, Selectors.continueButton)
         linkCheck(userScenario.commonExpectedResults.expectedHelpLinkText, Selectors.getHelpLink, appConfig.contactUrl(userScenario.isAgent))
 
-        errorSummaryCheck(userScenario.specificExpectedResults.get.expectedEmptyErrorText, Selectors.policyHeldErrorHref)
+        errorSummaryCheck(userScenario.specificExpectedResults.get.expectedEmptyErrorText, Selectors.yearErrorHref)
         errorAboveElementCheck(userScenario.specificExpectedResults.get.expectedEmptyErrorText)
       }
 
@@ -165,7 +165,7 @@ class PolicyHeldPageViewSpec extends ViewUnitTest {
         implicit val document: Document = Jsoup.parse(page(taxYear, InputYearForm.inputYearsForm(
           s"gains.policy-held.question.error-empty.${if (userScenario.isAgent) "agent" else "individual"}",
           s"gains.policy-held.question.error-incorrect.format.${if (userScenario.isAgent) "agent" else "individual"}",
-          "gains.policy-held.question.error-yearsExceedsMaximum"
+          "common.gains.policy.question.error-yearsExceedsMaximum"
         ).bind(Map(InputYearForm.numberOfYears -> "100"))).body)
 
         welshToggleCheck(userScenario.isWelsh)
@@ -176,7 +176,7 @@ class PolicyHeldPageViewSpec extends ViewUnitTest {
         buttonCheck(userScenario.commonExpectedResults.expectedButtonText, Selectors.continueButton)
         linkCheck(userScenario.commonExpectedResults.expectedHelpLinkText, Selectors.getHelpLink, appConfig.contactUrl(userScenario.isAgent))
 
-        errorSummaryCheck(userScenario.specificExpectedResults.get.expectedYearsExceedErrorText, Selectors.policyHeldErrorHref)
+        errorSummaryCheck(userScenario.specificExpectedResults.get.expectedYearsExceedErrorText, Selectors.yearErrorHref)
         errorAboveElementCheck(userScenario.specificExpectedResults.get.expectedYearsExceedErrorText)
       }
 
@@ -187,7 +187,7 @@ class PolicyHeldPageViewSpec extends ViewUnitTest {
         implicit val document: Document = Jsoup.parse(page(taxYear, InputYearForm.inputYearsForm(
           s"gains.policy-held.question.error-empty.${if (userScenario.isAgent) "agent" else "individual"}",
           s"gains.policy-held.question.error-incorrect.format.${if (userScenario.isAgent) "agent" else "individual"}",
-          "gains.policy-held.question.error-yearsExceedsMaximum"
+          "common.gains.policy.question.error-yearsExceedsMaximum"
         ).bind(Map(InputYearForm.numberOfYears -> "100.100.100"))).body)
 
         welshToggleCheck(userScenario.isWelsh)
@@ -198,7 +198,7 @@ class PolicyHeldPageViewSpec extends ViewUnitTest {
         buttonCheck(userScenario.commonExpectedResults.expectedButtonText, Selectors.continueButton)
         linkCheck(userScenario.commonExpectedResults.expectedHelpLinkText, Selectors.getHelpLink, appConfig.contactUrl(userScenario.isAgent))
 
-        errorSummaryCheck(userScenario.specificExpectedResults.get.expectedIncorrectFormatErrorText, Selectors.policyHeldErrorHref)
+        errorSummaryCheck(userScenario.specificExpectedResults.get.expectedIncorrectFormatErrorText, Selectors.yearErrorHref)
         errorAboveElementCheck(userScenario.specificExpectedResults.get.expectedIncorrectFormatErrorText)
       }
     }

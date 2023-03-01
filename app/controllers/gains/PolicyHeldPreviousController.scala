@@ -23,29 +23,29 @@ import play.api.data.Form
 import play.api.i18n.I18nSupport
 import play.api.mvc._
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
-import views.html.pages.gains.PolicyHeldPageView
+import views.html.pages.gains.PolicyHeldPreviousPageView
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class PolicyHeldController @Inject()(authorisedAction: AuthorisedAction,
-                                     view: PolicyHeldPageView)
+class PolicyHeldPreviousController @Inject()(authorisedAction: AuthorisedAction,
+                                     view: PolicyHeldPreviousPageView)
                                     (implicit appConfig: AppConfig, mcc: MessagesControllerComponents, ec: ExecutionContext)
   extends FrontendController(mcc) with I18nSupport {
 
-  def policyHeldForm(isAgent: Boolean): Form[Option[Int]] = InputYearForm.inputYearsForm(
-     s"gains.policy-held.question.error-empty.${if (isAgent) "agent" else "individual"}",
-     s"gains.policy-held.question.error-incorrect.format.${if (isAgent) "agent" else "individual"}",
-     s"common.gains.policy.question.error-yearsExceedsMaximum"
+  def policyHeldPreviousForm(isAgent: Boolean): Form[Option[Int]] = InputYearForm.inputYearsForm(
+    s"gains.policy-held-previous.question.error-empty.${if (isAgent) "agent" else "individual"}",
+    s"gains.policy-held-previous.question.error-incorrect.format",
+    s"common.gains.policy.question.error-yearsExceedsMaximum"
   )
 
   def show(taxYear: Int): Action[AnyContent] = authorisedAction.async { implicit request =>
-    Future.successful(Ok(view(taxYear, policyHeldForm(request.user.isAgent))))
+    Future.successful(Ok(view(taxYear, policyHeldPreviousForm(request.user.isAgent))))
   }
 
   def submit(taxYear: Int): Action[AnyContent] = authorisedAction.async { implicit request =>
-    policyHeldForm(request.user.isAgent).bindFromRequest().fold(
+    policyHeldPreviousForm(request.user.isAgent).bindFromRequest().fold(
       formWithErrors =>
         Future.successful(BadRequest(view(taxYear, formWithErrors))),
       _ =>
