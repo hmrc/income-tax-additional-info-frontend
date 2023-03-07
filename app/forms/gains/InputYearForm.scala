@@ -22,7 +22,7 @@ import play.api.data.Form
 
 object InputYearForm extends InputFilters {
 
-  val numberOfYears: String = "policyHeld"
+  val numberOfYears: String = "year"
 
   def inputYearsForm(emptyFieldKey: String,
                      wrongFormatKey: String,

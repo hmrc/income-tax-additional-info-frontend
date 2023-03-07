@@ -45,6 +45,7 @@ common.error.amountMaxLimit = Enter an amount less than £100,000,000,000
 common.error.invalid_currency_format = Enter the amount in the correct format
 common.error.invalid_Year_Format = Enter the number of years in the correct format. For example, ''3''
 common.monetary.input.hint = For example, £193.54
+common.gains.policy.question.error-yearsExceedsMaximum = The number of years must be less than 100
 
 common.gains.deficiency-relief-status = Deficiency relief
 common.gains.policy-event = Policy event
@@ -136,13 +137,29 @@ gains.gain-amount.question.amount-exceeds-max-error.agent = The amount of your c
 gains.policy-held.question.title.individual = How many years have you held this policy?
 gains.policy-held.question.paragraph.individual = If you''ve held the policy for less than a year, enter 0.
 gains.policy-held.question.error-empty.individual = Enter the number of years you have held this policy. If less than a year, enter 0
-gains.policy-held.question.error-yearsExceedsMaximum = The number of years must be less than 100
 gains.policy-held.question.error-incorrect.format.individual = Enter the number of years you have held this policy in the correct format. If less than a year, enter 0
 
 gains.policy-held.question.title.agent = How many years has your client held this policy?
 gains.policy-held.question.paragraph.agent = If your client has held the policy for less than a year, enter 0.
 gains.policy-held.question.error-empty.agent = Enter the number of years your client has held this policy. If less than a year, enter 0
 gains.policy-held.question.error-incorrect.format.agent = Enter the number of years your client has held this policy in the correct format. If less than a year, enter 0
+
+gains.policy-held-previous.question.title.individual = Years since your last gain
+gains.policy-held-previous.question.paragraph.1.individual = If you were a UK resident while you were the beneficial owner of the policy, enter the ''number of years'' from the chargeable event certificate you received from your insurer.
+gains.policy-held-previous.question.paragraph.2.individual = If you lived outside the UK while you were the beneficial owner of the policy, refer to
+gains.policy-held-previous.question.paragraph.2.link-text.individual = how to reduce your tax amount (opens in new tab)
+gains.policy-held-previous.heading.individual = How many years since your last gain?
+gains.policy-held-previous.question.paragraph.3.individual = If your last gain was less than a year ago, enter 0.
+gains.policy-held-previous.question.error-empty.individual = Enter the number of years since your last gain. If less than a year ago enter 0
+gains.policy-held-previous.question.error-incorrect.format = Enter the number of years in the correct format, for example 12
+
+gains.policy-held-previous.question.title.agent = Years since your client''s last gain
+gains.policy-held-previous.question.paragraph.1.agent = If your client was a UK resident while they were the beneficial owner of the policy, enter the ''number of years'' from the chargeable event certificate they received from their insurer.
+gains.policy-held-previous.question.paragraph.2.agent = If your client lived outside the UK while they were the beneficial owner of the policy, refer to
+gains.policy-held-previous.question.paragraph.2.link-text.agent  = how to reduce their tax amount (opens in new tab)
+gains.policy-held-previous.heading.agent = How many years since their last gain?
+gains.policy-held-previous.question.paragraph.3.agent = If their last gain was less than a year ago, enter 0.
+gains.policy-held-previous.question.error-empty.agent = Enter the number of years since your client''s last gain. If less than a year ago enter 0
 
 gains.deficiency-relief-status.question.radio.heading.individual = Are you entitled to deficiency relief?
 gains.deficiency-relief-status.question.radio.heading.agent = Is your client entitled to Deficiency relief?

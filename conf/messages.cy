@@ -45,6 +45,7 @@ common.error.amountMaxLimit = Enter an amount less than £100,000,000,000
 common.error.invalid_currency_format = Enter the amount in the correct format
 common.error.invalid_Year_Format = Nodwch nifer y blynyddoedd yn y fformat cywir. Er enghraifft, ''3''
 common.monetary.input.hint = Er enghraifft, £193.54
+common.gains.policy.question.error-yearsExceedsMaximum = Mae’n rhaid i nifer y blynyddoedd fod yn llai na 100
 
 common.gains.customer-reference = Cyfeirnod y cwsmer
 common.gains.policy-event = Digwyddiad polisi
@@ -140,13 +141,29 @@ gains.gain-amount.question.amount-exceeds-max-error.agent = Mae’n rhaid i enil
 gains.policy-held.question.title.individual = Ers sawl blwyddyn rydych wedi dal y polisi hwn?
 gains.policy-held.question.paragraph.individual = Os ydych wedi dal y polisi ers llai na blwyddyn, nodwch 0.
 gains.policy-held.question.error-empty.individual = Nodwch nifer y blynyddoedd yr ydych wedi dal y polisi hwn. Os yw’n llai na blwyddyn, nodwch 0
-gains.policy-held.question.error-yearsExceedsMaximum = Mae’n rhaid i nifer y blynyddoedd fod yn llai na 100
 gains.policy-held.question.error-incorrect.format.individual = Nodwch nifer y blynyddoedd rydych chi wedi dal y polisi hwn yn y fformat cywir. Os yw’n llai na blwyddyn, nodwch 0
 
 gains.policy-held.question.title.agent = Ers sawl blwyddyn y mae’ch cleient wedi dal y polisi hwn?
 gains.policy-held.question.paragraph.agent = Os yw’ch cleient wedi dal y polisi am lai na blwyddyn, nodwch 0.
 gains.policy-held.question.error-empty.agent = Nodwch nifer y blynyddoedd y mae’ch cleient wedi dal y polisi hwn. Os yw’n llai na blwyddyn, nodwch 0
 gains.policy-held.question.error-incorrect.format.agent = Nodwch nifer y blynyddoedd y mae’ch cleient wedi dal y polisi hwn yn y fformat cywir. Os yw’n llai na blwyddyn, nodwch 0
+
+gains.policy-held-previous.question.title.individual = Years since your last gain
+gains.policy-held-previous.question.paragraph.1.individual = If you were a UK resident while you were the beneficial owner of the policy, enter the ''number of years'' from the chargeable event certificate you received from your insurer.
+gains.policy-held-previous.question.paragraph.2.individual = If you lived outside the UK while you were the beneficial owner of the policy, refer to
+gains.policy-held-previous.question.paragraph.2.link-text.individual = how to reduce your tax amount (opens in new tab)
+gains.policy-held-previous.heading.individual = How many years since your last gain?
+gains.policy-held-previous.question.paragraph.3.individual = If your last gain was less than a year ago, enter 0.
+gains.policy-held-previous.question.error-empty.individual = Enter the number of years since your last gain. If less than a year ago enter 0
+gains.policy-held-previous.question.error-incorrect.format = Enter the number of years in the correct format, for example 12
+
+gains.policy-held-previous.question.title.agent = Years since your client''s last gain
+gains.policy-held-previous.question.paragraph.1.agent = If your client was a UK resident while they were the beneficial owner of the policy, enter the ''number of years'' from the chargeable event certificate they received from their insurer.
+gains.policy-held-previous.question.paragraph.2.agent = If your client lived outside the UK while they were the beneficial owner of the policy, refer to
+gains.policy-held-previous.question.paragraph.2.link-text.agent  = how to reduce their tax amount (opens in new tab)
+gains.policy-held-previous.heading.agent = How many years since their last gain?
+gains.policy-held-previous.question.paragraph.3.agent = If their last gain was less than a year ago, enter 0.
+gains.policy-held-previous.question.error-empty.agent = Enter the number of years since your client''s last gain. If less than a year ago enter 0
 
 gains.deficiency-relief-status.question.radio.heading.individual = A oes gennych hawl i Ryddhad am Ddiffyg?
 gains.deficiency-relief-status.question.radio.heading.agent = A oes gan eich cleient yr hawl i Ryddhad am Ddiffyg?
