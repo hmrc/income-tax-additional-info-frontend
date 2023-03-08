@@ -18,7 +18,7 @@ package controllers.gains
 
 import actions.AuthorisedAction
 import config.AppConfig
-import forms.gains.InputFieldForm
+import forms.gains.{RadioButtonPolicyEventForm}
 import play.api.data.Form
 import play.api.i18n.I18nSupport
 import play.api.mvc._
@@ -33,12 +33,11 @@ class PolicyEventController @Inject()(authorisedAction: AuthorisedAction,
                                       view: PolicyEventPageView)
                                      (implicit appConfig: AppConfig, mcc: MessagesControllerComponents, ec: ExecutionContext)
   extends FrontendController(mcc) with I18nSupport {
-  val inputFormat = "alphabetsWithSpace"
-
-  def policyEventForm(isAgent: Boolean): Form[String] = InputFieldForm.inputFieldForm(isAgent, inputFormat,
-    s"gains.policy-event.question.error-message",
-    s"gains.policy-event.question.incorrect-format.error-message"
-  )
+  private def policyEventForm(isAgent: Boolean): Form[(String,String)] =
+    RadioButtonPolicyEventForm.radioButtonCustomOptionForm(
+      s"gains.policy-event.question.error-message",
+      s"gains.policy-event.question.error-message",
+      s"gains.policy-event.question.incorrect-format.error-message")
 
   def show(taxYear: Int): Action[AnyContent] = authorisedAction.async { implicit request =>
     Future.successful(Ok(view(taxYear, policyEventForm(request.user.isAgent))))

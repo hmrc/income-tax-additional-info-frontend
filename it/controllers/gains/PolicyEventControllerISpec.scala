@@ -16,7 +16,6 @@
 
 package controllers.gains
 
-import forms.gains.InputFieldForm
 import play.api.http.HeaderNames
 import play.api.http.Status.{BAD_REQUEST, OK, SEE_OTHER}
 import play.api.libs.ws.WSResponse
@@ -37,20 +36,29 @@ class PolicyEventControllerISpec extends IntegrationTest {
 
       result.status shouldBe OK
     }
+
+    "render the policy event page for an agent" in {
+      lazy val result: WSResponse = {
+        authoriseAgentOrIndividual(isAgent = true)
+        urlGet(url(taxYear), headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)))
+      }
+
+      result.status shouldBe OK
+    }
   }
 
   ".submit" should {
     "redirect to income tax submission overview if successful" in {
       lazy val result: WSResponse = {
         authoriseAgentOrIndividual(isAgent = false)
-        urlPost(url(taxYear), headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)), body = Map(InputFieldForm.value -> "text"))
+        urlPost(url(taxYear), headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)), body = Map("policy-event" -> "Full or part surrender"))
       }
 
       result.status shouldBe SEE_OTHER
       result.headers("Location").head shouldBe appConfig.incomeTaxSubmissionOverviewUrl(taxYear)
     }
 
-    "show page with error text if form is empty" in {
+    "show page with error text if no selection is made" in {
       lazy val result: WSResponse = {
         authoriseAgentOrIndividual(isAgent = false)
         urlPost(url(taxYear), headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)), body = Map[String, String]())
@@ -59,10 +67,10 @@ class PolicyEventControllerISpec extends IntegrationTest {
       result.status shouldBe BAD_REQUEST
     }
 
-    "show page with error text if form submitted with invalid alphanumeric value" in {
+    "show page with error text if the wrong format is entered" in {
       lazy val result: WSResponse = {
         authoriseAgentOrIndividual(isAgent = false)
-        urlPost(url(taxYear), headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)), body = Map(InputFieldForm.value -> "123.test"))
+        urlPost(url(taxYear), headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)), body = Map("policy-event" -> "123 456"))
       }
 
       result.status shouldBe BAD_REQUEST

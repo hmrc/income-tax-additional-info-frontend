@@ -20,7 +20,6 @@ import com.mongodb.client.result.InsertOneResult
 import models.User
 import models.gains.GainsCyaModel
 import models.mongo._
-import org.mongodb.scala.result.InsertOneResult
 import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
 import play.api.mvc.AnyContent
 import play.api.test.{DefaultAwaitTimeout, FakeRequest, FutureAwaits}
