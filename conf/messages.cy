@@ -85,15 +85,23 @@ gains.gateway.question.bullet1.agent = your client's policy number, given to you
 gains.gateway.question.bullet2.agent = the chargeable event certificate, sent to your client by their insurer
 gains.gateway.question.error.agent = Dewiswch ‘Iawn’ os gwnaeth eich cleient enillion ar bolisi neu gontract yn y DU
 
-gains.policy-event.question.paragraph1 = Yr achosion mwyaf cyffredin o enillion yw:
+gains.policy-event.question.title = What event caused this gain?
+gains.policy-event.question.paragraph1 = Select one option.
 gains.policy-event.question.bullet.1 = os cafwyd arian parod neu fudd-daliadau eraill wrth ildio polisi’n llawn neu’n rhannol
 gains.policy-event.question.bullet.2 = gwnaeth polisi aeddfedu neu ddod i ben oherwydd marwolaeth y bywyd a yswiriwyd
 gains.policy-event.question.bullet.3 = gwerthwyd neu neilltuwyd polisi yn y DU, neu ran o bolisi, ar gyfer gwerth
 gains.policy-event.question.bullet.4 = roedd y polisi yn Bondiau Portffolio Personol, hyd yn oed os nad oedd yr yswiriwr wedi talu arian parod na budd-daliadau eraill yn ystod y flwyddyn
 gains.policy-event.question.label = Beth achosodd yr ennill hwn?
 gains.policy-event.question.hint = Er enghraifft, aeddfedodd polisi, ildiodd y polisi’n rhannol neu bu farw briod.
-gains.policy-event.question.error-message = Nodwch y rheswm dros yr enillion hyn. Er enghraifft, aeddfedodd polisi, ildiad rhannol o’r polisi neu farwolaeth y priod
-gains.policy-event.question.incorrect-format.error-message = Nodwch y rheswm dros yr ennill hwn yn y fformat cywir. Mae’n rhaid i’r rheswm dros eich ennill gynnwys y llythrennau a i z yn unig. Er enghraifft, aeddfedodd y polisi, ildiad rhannol o’r polisi neu farwolaeth y priod
+gains.policy-event.question.error-message = Enter the cause of the gain.
+gains.policy-event.question.incorrect-format.error-message = Enter the cause of the gain in the correct format. For example: Sale of policy
+gains.policy-event.radio1 = Full or part surrender
+gains.policy-event.radio2 = Policy matured or a death
+gains.policy-event.radio3 = Sale or assignment of a policy
+gains.policy-event.radio4 = Personal Portfolio Bond
+gains.policy-event.radio5 = Other
+gains.policy-event.help.title = More about gains events
+gains.policy-event.help.content.paragraph = The most common causes of gains are if:
 
 gains.status.question.radio.heading.individual = Has your policy paid you a gain in an earlier tax year?
 gains.status.question.radio.error.noEntry.individual = Select Yes if your policy paid you a gain in an earlier tax year

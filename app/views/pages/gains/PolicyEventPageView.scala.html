@@ -16,29 +16,45 @@
 
 @import views.html.templates.Layout
 @import views.html.templates.helpers.Heading
-@import views.html.templates.helpers.InputText
+@import views.html.templates.helpers.Details
 @import views.html.templates.helpers.Button
 @import views.html.templates.helpers.ErrorSummary
 @import views.html.templates.helpers.Link
+@import uk.gov.hmrc.govukfrontend.views.html.components._
+@import views.html.templates.helpers.InputText
+@import forms.gains.RadioButtonPolicyEventForm
 
+
+@import forms.gains.RadioButtonPolicyEventForm._
 @import models.requests.AuthorisationRequest
 
 @this(
         layout: Layout,
         heading: Heading,
         errorSummary: ErrorSummary,
+        govukRadios: GovukRadios,
+        inputText: InputText,
         govukWarningText : GovukWarningText,
         formWithCsrf: FormWithCSRF,
-        inputText: InputText,
+        details: Details,
         button: Button,
         link: Link
 )
 
-@(taxYear: Int, form: Form[String])(implicit request: AuthorisationRequest[_], messages: Messages, appConfig: AppConfig)
+@(taxYear: Int, form: Form[(String, String)])(implicit request: AuthorisationRequest[_], messages: Messages, appConfig: AppConfig)
 
-@titleForUse = @{messages(s"common.gains.policy-event")}
+@titleForUse = @{messages(s"gains.policy-event.question.title")}
 
 @headingForUse = @{titleForUse}
+
+@helpContent(paragraphKey: String, bulletKeys: Seq[String]) = {
+    <p>@{messages(paragraphKey)}</p>
+    <ul>
+        @{bulletKeys.map(key =>
+            Html("<li>" + messages(s"$key") + "</li>")
+        )}
+    </ul>
+}
 
 @layout(pageTitle = titleForUse, taxYear = Some(taxYear), hasErrors = form.hasErrors, isAgent = request.user.isAgent) {
 
@@ -46,25 +62,67 @@
 
     @heading(headingForUse, Some(messages("gains.caption", (taxYear - 1).toString, taxYear.toString)), "govuk-!-margin-bottom-6")
 
-    <p class="govuk-body">@{messages(s"gains.policy-event.question.paragraph1")}</p>
-
-    <ul class="govuk-list govuk-list--bullet">
-        <li>@{messages(s"gains.policy-event.question.bullet.1")}</li>
-        <li>@{messages(s"gains.policy-event.question.bullet.2")}</li>
-        <li>@{messages(s"gains.policy-event.question.bullet.3")}</li>
-        <li>@{messages(s"gains.policy-event.question.bullet.4")}</li>
-    </ul>
-
     @formWithCsrf(action = controllers.gains.routes.PolicyEventController.submit(taxYear)) {
-        @inputText(
-            form = form,
-            id = "value",
-            name = "value",
-            currency = false,
-            label = "gains.policy-event.question.label",
-            labelHidden = false,
-            classes = Some("govuk-input--width-10"),
-            hint = Some(messages(s"gains.policy-event.question.hint"))
+        @govukRadios(Radios(
+            fieldset = Some(Fieldset(
+                legend = Some(Legend(
+                content = Text({messages(s"gains.policy-event.question.paragraph1")}),
+                classes = "govuk-hint",
+                isPageHeading = false
+            ))
+        )),
+        errorMessage = if (form.errors.nonEmpty) Some(ErrorMessage(content = Text(messages(form.errors.map(_.message).head)))) else None,
+        name = "policy-event",
+        items = Seq(
+            RadioItem(
+                content = Text(messages("gains.policy-event.radio1")),
+                value = Some("Full or part surrender")
+            ),
+            RadioItem(
+                content = Text(messages("gains.policy-event.radio2")),
+                value = Some("Policy matured or a death")
+            ),
+            RadioItem(
+                content = Text(messages("gains.policy-event.radio3")),
+                value = Some("Sale or assignment of a policy")
+            ),
+            RadioItem(
+                content = Text({messages(s"gains.policy-event.radio4")}),
+                value = Some("Personal Portfolio Bond")
+            ),
+            RadioItem(
+                content = Text(messages("gains.policy-event.radio5")),
+                id = Some("other-text"),
+                value = Some("Other"),
+                checked = if (form("other-text").hasErrors) true else false,
+                conditionalHtml =
+                    Some(
+                        inputText(
+                            id = "other-text-input",
+                            name = "other-text",
+                            label = messages(s"gains.policy-event.question.label"),
+                            classes = Some("govuk-input govuk-!-width-one-half"),
+                            labelClasses = Some("govuk-!-font-weight-regular"),
+                            form = form
+                    )
+                )
+            )
+        )
+        ))
+
+        @details(
+            messages("gains.policy-event.help.title"),
+            Html(
+                helpContent(
+                    "gains.policy-event.help.content.paragraph",
+                    Seq[String](
+                        s"gains.policy-event.question.bullet.1",
+                        s"gains.policy-event.question.bullet.2",
+                        s"gains.policy-event.question.bullet.3",
+                        s"gains.policy-event.question.bullet.4"
+                    )
+                ).body
+            )
         )
 
         @button()

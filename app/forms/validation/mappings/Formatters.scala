@@ -16,8 +16,10 @@
 
 package forms.validation.mappings
 
+import forms.validation.StringConstraints.alphabetsWithSpaceRegex
 import play.api.data.FormError
 import play.api.data.format.Formatter
+
 import scala.util.control.Exception.nonFatalCatch
 
 trait Formatters {
@@ -154,4 +156,19 @@ trait Formatters {
       override def unbind(key: String, value: Option[BigDecimal]): Map[String, String] =
         baseFormatter.unbind(key, value.getOrElse("").toString)
     }
+
+  private[mappings] def stringFormatterWrongFormat(errorKey: String,wrongFormatKey: String, optional: Boolean = false): Formatter[String] = new Formatter[String] {
+
+    override def bind(key: String, data: Map[String, String]): Either[Seq[FormError], String] =
+      data.get(key) match {
+        case None => Left(Seq(FormError(key, errorKey)))
+        case Some(x) if x.trim.isEmpty && optional => Left(Seq(FormError(key, errorKey)))
+        case Some(x) if (!x.matches(alphabetsWithSpaceRegex)) => Left(Seq(FormError(key,wrongFormatKey)))
+        case Some(x) if x.trim.isEmpty && optional => Right(x.trim)
+        case Some(s) => Right(s.trim)
+      }
+
+    override def unbind(key: String, value: String): Map[String, String] =
+      Map(key -> value.trim)
+  }
 }

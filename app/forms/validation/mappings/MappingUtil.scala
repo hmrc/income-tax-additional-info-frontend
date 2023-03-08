@@ -56,4 +56,8 @@ object MappingUtil extends Formatters {
                     ): FieldMapping[Option[BigDecimal]] = {
     of(optionCurrencyFormatter(requiredKey, wrongFormatKey, maxAmountKey, minAmountKey, args))
 }
+
+  def optionString(missingInputError: String,wrongFormatKey: String): FieldMapping[String] = {
+    of(stringFormatterWrongFormat(missingInputError,wrongFormatKey, optional = true))
+  }
 }
