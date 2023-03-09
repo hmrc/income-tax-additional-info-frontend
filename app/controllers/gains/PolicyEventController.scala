@@ -36,7 +36,7 @@ class PolicyEventController @Inject()(authorisedAction: AuthorisedAction,
   private def policyEventForm(isAgent: Boolean): Form[(String,String)] =
     RadioButtonPolicyEventForm.radioButtonCustomOptionForm(
       s"gains.policy-event.question.error-message",
-      s"gains.policy-event.question.error-message",
+      s"gains.policy-event.selection.error-message",
       s"gains.policy-event.question.incorrect-format.error-message")
 
   def show(taxYear: Int): Action[AnyContent] = authorisedAction.async { implicit request =>

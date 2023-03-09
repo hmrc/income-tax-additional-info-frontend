@@ -95,6 +95,7 @@ gains.policy-event.question.bullet.4 = roedd y polisi yn Bondiau Portffolio Pers
 gains.policy-event.question.label = Beth achosodd yr ennill hwn?
 gains.policy-event.question.hint = Er enghraifft, aeddfedodd polisi, ildiodd y polisi’n rhannol neu bu farw briod.
 gains.policy-event.question.error-message = Enter the cause of the gain.
+gains.policy-event.selection.error-message = Select the cause of the gain.
 gains.policy-event.question.incorrect-format.error-message = Enter the cause of the gain in the correct format. For example: Sale of policy
 gains.policy-event.radio1 = Full or part surrender
 gains.policy-event.radio2 = Policy matured or a death
