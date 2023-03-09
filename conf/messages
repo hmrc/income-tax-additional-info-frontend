@@ -95,6 +95,7 @@ gains.policy-event.question.bullet.4 = the policy was a Personal Portfolio Bond,
 gains.policy-event.question.label = What caused this gain?
 gains.policy-event.question.hint = For example, policy matured, part surrender of policy or death of spouse.
 gains.policy-event.question.error-message = Enter the cause of the gain.
+gains.policy-event.selection.error-message = Select the cause of the gain.
 gains.policy-event.question.incorrect-format.error-message = Enter the cause of the gain in the correct format. For example: Sale of policy
 gains.policy-event.radio1 = Full or part surrender
 gains.policy-event.radio2 = Policy matured or a death

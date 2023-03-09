@@ -58,9 +58,9 @@ object RadioButtonPolicyEventForm {
                                  ): Form[(String,String)] = {
     Form(
       tuple(
-        selectedOption -> of(formatter(missingInputError)),
+        selectedOption -> of(formatter(emptyFieldKey)),
         input -> of(stringFormatter(
-          requiredKey = emptyFieldKey,
+          requiredKey = missingInputError,
           wrongFormatKey= wrongFormatKey,
           missingInputError = missingInputError,
           args = emptyFieldArguments)

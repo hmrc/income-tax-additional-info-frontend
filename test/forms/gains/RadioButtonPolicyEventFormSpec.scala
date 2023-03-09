@@ -73,7 +73,7 @@ class RadioButtonPolicyEventFormSpec extends UnitTest {
 
     "return an error" when {
       "no option is returned" in {
-        val expectedResult = Seq(FormError("policy-event", Seq("someError")))
+        val expectedResult = Seq(FormError("policy-event", Seq("error")))
         val result = customOptionForm.bind(Map[String, String]()).errors
 
         result shouldBe expectedResult
@@ -90,8 +90,8 @@ class RadioButtonPolicyEventFormSpec extends UnitTest {
       }
 
       "return an error with arguments" in {
-        val yesNoForm: Form[(String, String)] = radioButtonCustomOptionForm("someError", "error", "error")
-        val expectedResult = Seq(FormError("policy-event", Seq("someError")))
+        val yesNoForm: Form[(String, String)] = radioButtonCustomOptionForm("error", "error", "error")
+        val expectedResult = Seq(FormError("policy-event", Seq("error")))
         val result = yesNoForm.bind(Map[String, String]("" -> "invalid")).errors
 
         result shouldBe expectedResult
