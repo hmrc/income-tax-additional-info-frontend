@@ -30,7 +30,10 @@ class PolicyHeldPageViewSpec extends ViewUnitTest {
   private val page: PolicyHeldPageView = inject[PolicyHeldPageView]
 
   object Selectors {
-    val paragraph = "#main-content > div > div > p"
+    val paragraph = "#para1"
+    val paragraph2 = "#para2"
+    val paragraph3 = "#para3"
+    val subTitle = "#main-content > div > div > form > p"
     val continueButton = "#continue"
     val getHelpLink = "#help"
     val yearErrorHref = "#year"
@@ -41,6 +44,9 @@ class PolicyHeldPageViewSpec extends ViewUnitTest {
     val expectedErrorTitle: String
     val expectedHeading: String
     val expectedParagraph: String
+    val expectedParagraph2: String
+    val expectedParagraph3: String
+    val expectedSubTitle: String
     val expectedEmptyErrorText: String
     val expectedIncorrectFormatErrorText: String
     val expectedYearsExceedErrorText: String
@@ -66,43 +72,62 @@ class PolicyHeldPageViewSpec extends ViewUnitTest {
   }
 
   object ExpectedIndividualEN extends SpecificExpectedResults {
-    override val expectedTitle: String = "How many years have you held this policy?"
-    override val expectedErrorTitle: String = "Error: How many years have you held this policy?"
-    override val expectedHeading: String = "How many years have you held this policy?"
-    override val expectedParagraph: String = "If you've held the policy for less than a year, enter 0."
+    override val expectedTitle: String = "Policy held"
+    override val expectedErrorTitle: String = "Error: Policy held"
+    override val expectedHeading: String = "Policy held"
+    override val expectedParagraph: String =
+      "If you were a UK resident while you were the beneficial owner of the policy, enter the 'number of years' from the chargeable event certificate you received from your insurer."
+    override val expectedParagraph2: String = "If you lived outside the UK while you were the beneficial owner of the policy, refer to how to reduce your tax amount (opens in new tab)"
+    override val expectedParagraph3: String = "If you've held the policy for less than a year, enter 0."
+    override val expectedSubTitle: String = "How many years have you held this policy?"
     override val expectedEmptyErrorText: String = "Enter the number of years you have held this policy. If less than a year, enter 0"
     override val expectedIncorrectFormatErrorText: String = "Enter the number of years you have held this policy in the correct format. If less than a year, enter 0"
     override val expectedYearsExceedErrorText: String = "The number of years must be less than 100"
+
   }
 
   object ExpectedIndividualCY extends SpecificExpectedResults {
-    override val expectedTitle: String = "Ers sawl blwyddyn rydych wedi dal y polisi hwn?"
-    override val expectedErrorTitle: String = "Error: Ers sawl blwyddyn rydych wedi dal y polisi hwn?"
-    override val expectedHeading: String = "Ers sawl blwyddyn rydych wedi dal y polisi hwn?"
-    override val expectedParagraph: String = "Os ydych wedi dal y polisi ers llai na blwyddyn, nodwch 0."
+    override val expectedTitle: String = "Policy held"
+    override val expectedErrorTitle: String = "Error: Policy held"
+    override val expectedHeading: String = "Policy held"
+    override val expectedParagraph: String =
+      "If you were a UK resident while you were the beneficial owner of the policy, enter the 'number of years' from the chargeable event certificate you received from your insurer."
+    override val expectedParagraph2: String = "If you lived outside the UK while you were the beneficial owner of the policy, refer to how to reduce your tax amount (opens in new tab)"
+    override val expectedParagraph3: String = "Os ydych wedi dal y polisi ers llai na blwyddyn, nodwch 0."
+    override val expectedSubTitle: String = "Ers sawl blwyddyn rydych wedi dal y polisi hwn?"
     override val expectedEmptyErrorText: String = "Nodwch nifer y blynyddoedd yr ydych wedi dal y polisi hwn. Os yw’n llai na blwyddyn, nodwch 0"
     override val expectedIncorrectFormatErrorText: String = "Nodwch nifer y blynyddoedd rydych chi wedi dal y polisi hwn yn y fformat cywir. Os yw’n llai na blwyddyn, nodwch 0"
     override val expectedYearsExceedErrorText: String = "Mae’n rhaid i nifer y blynyddoedd fod yn llai na 100"
+
   }
 
   object ExpectedAgentEN extends SpecificExpectedResults {
-    override val expectedTitle: String = "How many years has your client held this policy?"
-    override val expectedErrorTitle: String = "Error: How many years has your client held this policy?"
-    override val expectedHeading: String = "How many years has your client held this policy?"
-    override val expectedParagraph: String = "If your client has held the policy for less than a year, enter 0."
+    override val expectedTitle: String = "Policy held"
+    override val expectedErrorTitle: String = "Error: Policy held"
+    override val expectedHeading: String = "Policy held"
+    override val expectedParagraph: String =
+      "If your client was a UK resident while they were the beneficial owner of the policy, enter the 'number of years' from the chargeable event certificate they received from their insurer."
+    override val expectedParagraph2: String = "If your client lived outside the UK while they were the beneficial owner of the policy, refer to how to reduce their tax amount (opens in new tab)"
+    override val expectedParagraph3: String = "If your client has held the policy for less than a year, enter 0."
+    override val expectedSubTitle: String = "How many years has your client held this policy?"
     override val expectedEmptyErrorText: String = "Enter the number of years your client has held this policy. If less than a year, enter 0"
     override val expectedIncorrectFormatErrorText: String = "Enter the number of years your client has held this policy in the correct format. If less than a year, enter 0"
     override val expectedYearsExceedErrorText: String = "The number of years must be less than 100"
   }
 
   object ExpectedAgentCY extends SpecificExpectedResults {
-    override val expectedTitle: String = "Ers sawl blwyddyn y mae’ch cleient wedi dal y polisi hwn?"
-    override val expectedErrorTitle: String = "Error: Ers sawl blwyddyn y mae’ch cleient wedi dal y polisi hwn?"
-    override val expectedHeading: String = "Ers sawl blwyddyn y mae’ch cleient wedi dal y polisi hwn?"
-    override val expectedParagraph: String = "Os yw’ch cleient wedi dal y polisi am lai na blwyddyn, nodwch 0."
+    override val expectedTitle: String = "Policy held"
+    override val expectedErrorTitle: String = "Error: Policy held"
+    override val expectedHeading: String = "Policy held"
+    override val expectedParagraph: String =
+      "If your client was a UK resident while they were the beneficial owner of the policy, enter the 'number of years' from the chargeable event certificate they received from their insurer."
+    override val expectedParagraph2: String = "If your client lived outside the UK while they were the beneficial owner of the policy, refer to how to reduce their tax amount (opens in new tab)"
+    override val expectedParagraph3: String = "Os yw’ch cleient wedi dal y polisi am lai na blwyddyn, nodwch 0."
+    override val expectedSubTitle: String = "Ers sawl blwyddyn y mae’ch cleient wedi dal y polisi hwn?"
     override val expectedEmptyErrorText: String = "Nodwch nifer y blynyddoedd y mae’ch cleient wedi dal y polisi hwn. Os yw’n llai na blwyddyn, nodwch 0"
     override val expectedIncorrectFormatErrorText: String = "Nodwch nifer y blynyddoedd y mae’ch cleient wedi dal y polisi hwn yn y fformat cywir. Os yw’n llai na blwyddyn, nodwch 0"
     override val expectedYearsExceedErrorText: String = "Mae’n rhaid i nifer y blynyddoedd fod yn llai na 100"
+
   }
 
   override protected val userScenarios: Seq[UserScenario[CommonExpectedResults, SpecificExpectedResults]] = Seq(
@@ -128,6 +153,9 @@ class PolicyHeldPageViewSpec extends ViewUnitTest {
         captionCheck(userScenario.commonExpectedResults.expectedCaption(taxYear))
         h1Check(userScenario.specificExpectedResults.get.expectedHeading)
         textOnPageCheck(userScenario.specificExpectedResults.get.expectedParagraph, Selectors.paragraph)
+        textOnPageCheck(userScenario.specificExpectedResults.get.expectedParagraph2, Selectors.paragraph2)
+        textOnPageCheck(userScenario.specificExpectedResults.get.expectedParagraph3, Selectors.paragraph3)
+        textOnPageCheck(userScenario.specificExpectedResults.get.expectedSubTitle, Selectors.subTitle)
         buttonCheck(userScenario.commonExpectedResults.expectedButtonText, Selectors.continueButton)
         linkCheck(userScenario.commonExpectedResults.expectedHelpLinkText, Selectors.getHelpLink, appConfig.contactUrl(userScenario.isAgent))
       }
@@ -151,6 +179,9 @@ class PolicyHeldPageViewSpec extends ViewUnitTest {
         captionCheck(userScenario.commonExpectedResults.expectedCaption(taxYear))
         h1Check(userScenario.specificExpectedResults.get.expectedHeading)
         textOnPageCheck(userScenario.specificExpectedResults.get.expectedParagraph, Selectors.paragraph)
+        textOnPageCheck(userScenario.specificExpectedResults.get.expectedParagraph2, Selectors.paragraph2)
+        textOnPageCheck(userScenario.specificExpectedResults.get.expectedParagraph3, Selectors.paragraph3)
+        textOnPageCheck(userScenario.specificExpectedResults.get.expectedSubTitle, Selectors.subTitle)
         buttonCheck(userScenario.commonExpectedResults.expectedButtonText, Selectors.continueButton)
         linkCheck(userScenario.commonExpectedResults.expectedHelpLinkText, Selectors.getHelpLink, appConfig.contactUrl(userScenario.isAgent))
 
@@ -173,6 +204,9 @@ class PolicyHeldPageViewSpec extends ViewUnitTest {
         captionCheck(userScenario.commonExpectedResults.expectedCaption(taxYear))
         h1Check(userScenario.specificExpectedResults.get.expectedHeading)
         textOnPageCheck(userScenario.specificExpectedResults.get.expectedParagraph, Selectors.paragraph)
+        textOnPageCheck(userScenario.specificExpectedResults.get.expectedParagraph2, Selectors.paragraph2)
+        textOnPageCheck(userScenario.specificExpectedResults.get.expectedParagraph3, Selectors.paragraph3)
+        textOnPageCheck(userScenario.specificExpectedResults.get.expectedSubTitle, Selectors.subTitle)
         buttonCheck(userScenario.commonExpectedResults.expectedButtonText, Selectors.continueButton)
         linkCheck(userScenario.commonExpectedResults.expectedHelpLinkText, Selectors.getHelpLink, appConfig.contactUrl(userScenario.isAgent))
 
@@ -195,6 +229,9 @@ class PolicyHeldPageViewSpec extends ViewUnitTest {
         captionCheck(userScenario.commonExpectedResults.expectedCaption(taxYear))
         h1Check(userScenario.specificExpectedResults.get.expectedHeading)
         textOnPageCheck(userScenario.specificExpectedResults.get.expectedParagraph, Selectors.paragraph)
+        textOnPageCheck(userScenario.specificExpectedResults.get.expectedParagraph2, Selectors.paragraph2)
+        textOnPageCheck(userScenario.specificExpectedResults.get.expectedParagraph3, Selectors.paragraph3)
+        textOnPageCheck(userScenario.specificExpectedResults.get.expectedSubTitle, Selectors.subTitle)
         buttonCheck(userScenario.commonExpectedResults.expectedButtonText, Selectors.continueButton)
         linkCheck(userScenario.commonExpectedResults.expectedHelpLinkText, Selectors.getHelpLink, appConfig.contactUrl(userScenario.isAgent))
 

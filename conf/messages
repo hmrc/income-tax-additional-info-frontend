@@ -143,6 +143,7 @@ gains.gain-amount.question.label.agent = How much gain did your client make?
 gains.gain-amount.question.incorrect-format-error.agent = Enter the gain your client made in the correct format. For example, £193.54
 gains.gain-amount.question.amount-exceeds-max-error.agent = The amount of your client''s gain must be less than £100,000,000,000
 
+gains.policy-held.heading = Policy held
 gains.policy-held.question.title.individual = How many years have you held this policy?
 gains.policy-held.question.paragraph.individual = If you''ve held the policy for less than a year, enter 0.
 gains.policy-held.question.error-empty.individual = Enter the number of years you have held this policy. If less than a year, enter 0
