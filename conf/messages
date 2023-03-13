@@ -86,7 +86,7 @@ gains.gateway.question.bullet1.agent = your client's policy number, given to you
 gains.gateway.question.bullet2.agent = the chargeable event certificate, sent to your client by their insurer
 gains.gateway.question.error.agent = Select yes if your client made a gain on a UK policy or contract
 
-gains.policy-event.question.title = What event caused this gain?
+gains.policy-event.question.sub-title = What event caused this gain?
 gains.policy-event.question.paragraph1 = Select one option.
 gains.policy-event.question.bullet.1 = cash or other benefits were received on a full or part surrender of a policy
 gains.policy-event.question.bullet.2 = a policy matured or ended by the death of the life insured

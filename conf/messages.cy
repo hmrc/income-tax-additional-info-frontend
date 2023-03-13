@@ -86,7 +86,7 @@ gains.gateway.question.bullet1.agent = your client's policy number, given to you
 gains.gateway.question.bullet2.agent = the chargeable event certificate, sent to your client by their insurer
 gains.gateway.question.error.agent = Dewiswch ‘Iawn’ os gwnaeth eich cleient enillion ar bolisi neu gontract yn y DU
 
-gains.policy-event.question.title = What event caused this gain?
+gains.policy-event.question.sub-title = What event caused this gain?
 gains.policy-event.question.paragraph1 = Select one option.
 gains.policy-event.question.bullet.1 = os cafwyd arian parod neu fudd-daliadau eraill wrth ildio polisi’n llawn neu’n rhannol
 gains.policy-event.question.bullet.2 = gwnaeth polisi aeddfedu neu ddod i ben oherwydd marwolaeth y bywyd a yswiriwyd

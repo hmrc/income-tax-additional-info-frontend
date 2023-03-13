@@ -31,6 +31,7 @@ class PolicyEventPageViewSpec extends ViewUnitTest {
 
   object Selectors {
     val legendText = "#main-content > div > div > form > div > fieldset > legend"
+    val subTitle = "#main-content > div > div > p"
 
     val radioItemOne = "#main-content > div > div > form > div > fieldset > div > div:nth-child(1) > label"
     val radioItemTwo = "#main-content > div > div > form > div > fieldset > div > div:nth-child(2) > label"
@@ -38,12 +39,12 @@ class PolicyEventPageViewSpec extends ViewUnitTest {
     val radioItemFour = "#main-content > div > div > form > div > fieldset > div > div:nth-child(4) > label"
     val radioItemFive = "#main-content > div > div > form > div > fieldset > div > div:nth-child(5) > label"
 
-    val helpTitle = "#main-content > div > div > form > details:nth-child(2) > summary > span"
-    val helpParagraph = "#main-content > div > div > form > details:nth-child(2) > div > p"
-    val helpListItemOne = "#main-content > div > div > form > details:nth-child(2) > div > ul > li:nth-child(1)"
-    val helpListItemTwo = "#main-content > div > div > form > details:nth-child(2) > div > ul > li:nth-child(2)"
-    val helpListItemThree = "#main-content > div > div > form > details:nth-child(2) > div > ul > li:nth-child(3)"
-    val helpListItemFour = "#main-content > div > div > form > details:nth-child(2) > div > ul > li:nth-child(4)"
+    val helpTitle = "#main-content > div > div > details > summary > span"
+    val helpParagraph = "#main-content > div > div > details > div > p"
+    val helpListItemOne = "#main-content > div > div > details > div > ul > li:nth-child(1)"
+    val helpListItemTwo = "#main-content > div > div > details > div > ul > li:nth-child(2)"
+    val helpListItemThree = "#main-content > div > div > details > div > ul > li:nth-child(3)"
+    val helpListItemFour = "#main-content > div > div > details > div > ul > li:nth-child(4)"
 
     val continueButton = "#continue"
     val getHelpLink = "#help"
@@ -71,6 +72,7 @@ class PolicyEventPageViewSpec extends ViewUnitTest {
     val expectedRadioItemFour: String
     val expectedRadioItemFive: String
     val expectedButtonText: String
+    val expectedSubTitle: String
     val expectedHelpLinkText: String
     val expectedHelpDropdownTitle: String
     val expectedHelpContentParagraph: String
@@ -84,6 +86,7 @@ class PolicyEventPageViewSpec extends ViewUnitTest {
     override val expectedCaption: Int => String = (taxYear: Int) => s"Gains from life insurance policies and contracts for 6 April ${taxYear - 1} to 5 April $taxYear"
     override val expectedButtonText: String = "Continue"
     override val expectedHelpLinkText: String = "Get help with this page"
+    override val expectedSubTitle: String = "What event caused this gain?"
     override val expectedLegendText: String = "Select one option."
     override val expectedHelpDropdownTitle: String = "More about gains events"
     override val expectedRadioItemOne: String = "Full or part surrender"
@@ -102,6 +105,7 @@ class PolicyEventPageViewSpec extends ViewUnitTest {
     override val expectedCaption: Int => String = (taxYear: Int) => s"Enillion o bolisïau yswiriant bywyd a chontractau ar gyfer 6 Ebrill ${taxYear - 1} i 5 Ebrill $taxYear"
     override val expectedButtonText: String = "Yn eich blaen"
     override val expectedHelpLinkText: String = "Help gyda’r dudalen hon"
+    override val expectedSubTitle: String = "What event caused this gain?"
     override val expectedLegendText: String = "Select one option."
     override val expectedHelpDropdownTitle: String = "More about gains events"
     override val expectedRadioItemOne: String = "Full or part surrender"
@@ -117,36 +121,36 @@ class PolicyEventPageViewSpec extends ViewUnitTest {
   }
 
   object ExpectedIndividualEN extends SpecificExpectedResults {
-    override val expectedTitle: String = "What event caused this gain?"
-    override val expectedErrorTitle: String = "Error: What event caused this gain?"
-    override val expectedHeading: String = "What event caused this gain?"
+    override val expectedTitle: String = "Policy event"
+    override val expectedErrorTitle: String = "Error: Policy event"
+    override val expectedHeading: String = "Policy event"
     override val expectedErrorText: String = "Enter the cause of the gain."
     override val expectedWrongFormatErrorTitleText: String = "Error: Enter the cause of the gain in the correct format. For example: Sale of policy"
     override val expectedWrongFormatErrorText: String = "Enter the cause of the gain in the correct format. For example: Sale of policy"
   }
 
   object ExpectedIndividualCY extends SpecificExpectedResults {
-    override val expectedTitle: String = "What event caused this gain?"
-    override val expectedErrorTitle: String = "Error: What event caused this gain?"
-    override val expectedHeading: String = "What event caused this gain?"
+    override val expectedTitle: String = "Digwyddiad polisi"
+    override val expectedErrorTitle: String = "Error: Digwyddiad polisi"
+    override val expectedHeading: String = "Digwyddiad polisi"
     override val expectedErrorText: String = "Enter the cause of the gain."
     override val expectedWrongFormatErrorTitleText: String = "Error: Enter the cause of the gain in the correct format. For example: Sale of policy"
     override val expectedWrongFormatErrorText: String = "Enter the cause of the gain in the correct format. For example: Sale of policy"
   }
 
   object ExpectedAgentEN extends SpecificExpectedResults {
-    override val expectedTitle: String = "What event caused this gain?"
-    override val expectedErrorTitle: String = "Error: What event caused this gain?"
-    override val expectedHeading: String = "What event caused this gain?"
+    override val expectedTitle: String = "Policy event"
+    override val expectedErrorTitle: String = "Error: Policy event"
+    override val expectedHeading: String = "Policy event"
     override val expectedErrorText: String = "Enter the cause of the gain."
     override val expectedWrongFormatErrorTitleText: String = "Error: Enter the cause of the gain in the correct format. For example: Sale of policy"
     override val expectedWrongFormatErrorText: String = "Enter the cause of the gain in the correct format. For example: Sale of policy"
   }
 
   object ExpectedAgentCY extends SpecificExpectedResults {
-    override val expectedTitle: String = "What event caused this gain?"
-    override val expectedErrorTitle: String = "Error: What event caused this gain?"
-    override val expectedHeading: String = "What event caused this gain?"
+    override val expectedTitle: String = "Digwyddiad polisi"
+    override val expectedErrorTitle: String = "Error: Digwyddiad polisi"
+    override val expectedHeading: String = "Digwyddiad polisi"
     override val expectedErrorText: String = "Enter the cause of the gain."
     override val expectedWrongFormatErrorTitleText: String = "Error: Enter the cause of the gain in the correct format. For example: Sale of policy"
     override val expectedWrongFormatErrorText: String = "Enter the cause of the gain in the correct format. For example: Sale of policy"
@@ -175,6 +179,7 @@ class PolicyEventPageViewSpec extends ViewUnitTest {
         titleCheck(userScenario.specificExpectedResults.get.expectedTitle, userScenario.isWelsh)
         captionCheck(userScenario.commonExpectedResults.expectedCaption(taxYear))
         h1Check(userScenario.specificExpectedResults.get.expectedHeading)
+        textOnPageCheck(userScenario.commonExpectedResults.expectedSubTitle, Selectors.subTitle)
         textOnPageCheck(userScenario.commonExpectedResults.expectedLegendText, Selectors.legendText)
         textOnPageCheck(userScenario.commonExpectedResults.expectedRadioItemOne, Selectors.radioItemOne)
         textOnPageCheck(userScenario.commonExpectedResults.expectedRadioItemTwo, Selectors.radioItemTwo)
@@ -212,6 +217,7 @@ class PolicyEventPageViewSpec extends ViewUnitTest {
         titleCheck(userScenario.specificExpectedResults.get.expectedErrorTitle, userScenario.isWelsh)
         captionCheck(userScenario.commonExpectedResults.expectedCaption(taxYear))
         h1Check(userScenario.specificExpectedResults.get.expectedHeading)
+        textOnPageCheck(userScenario.commonExpectedResults.expectedSubTitle, Selectors.subTitle)
         textOnPageCheck(userScenario.commonExpectedResults.expectedLegendText, Selectors.legendText)
         textOnPageCheck(userScenario.commonExpectedResults.expectedRadioItemOne, Selectors.radioItemOne)
         textOnPageCheck(userScenario.commonExpectedResults.expectedRadioItemTwo, Selectors.radioItemTwo)
