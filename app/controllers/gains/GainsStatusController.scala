@@ -35,7 +35,7 @@ class GainsStatusController @Inject()(authorisedAction: AuthorisedAction,
   extends FrontendController(mcc) with I18nSupport {
 
   def form(isAgent: Boolean): Form[Boolean] = YesNoForm.yesNoForm(
-    s"gains.paid-tax-status.question.error.1.${if (isAgent) "agent" else "individual"}"
+    s"gains.status.question.radio.error.noEntry.${if (isAgent) "agent" else "individual"}"
   )
 
   def show(taxYear: Int): Action[AnyContent] = authorisedAction.async { implicit request =>
