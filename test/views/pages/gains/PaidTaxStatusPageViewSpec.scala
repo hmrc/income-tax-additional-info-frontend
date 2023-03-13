@@ -30,7 +30,7 @@ class PaidTaxStatusPageViewSpec extends ViewUnitTest {
   private val page: PaidTaxStatusPageView = inject[PaidTaxStatusPageView]
 
   object Selectors {
-    val hint = "#amount-hint"
+    val hint = "#value-hint"
     val continueButton = "#continue"
     val getHelpLink = "#help"
     val yesSelector = "#value"
@@ -43,6 +43,7 @@ class PaidTaxStatusPageViewSpec extends ViewUnitTest {
     val expectedTitle: String
     val expectedErrorTitle: String
     val expectedHeading: String
+    val expectedHint: String
     val expectedErrorText1: String
   }
 
@@ -71,30 +72,34 @@ class PaidTaxStatusPageViewSpec extends ViewUnitTest {
   }
 
   object ExpectedIndividualEN extends SpecificExpectedResults {
-    override val expectedTitle: String = "Did you pay tax on your gain?"
-    override val expectedErrorTitle: String = "Error: Did you pay tax on your gain?"
-    override val expectedHeading: String = "Did you pay tax on your gain?"
-    override val expectedErrorText1: String = "Select yes if you paid tax on your gain"
+    override val expectedTitle: String = "Was your gain treated as tax paid?"
+    override val expectedErrorTitle: String = "Error: Was your gain treated as tax paid?"
+    override val expectedHeading: String = "Was your gain treated as tax paid?"
+    override val expectedHint: String = "Select Yes if tax was deducted from your gain. This will be shown on your chargeable event certificate."
+    override val expectedErrorText1: String = "Select Yes if you paid tax on your gain"
   }
 
   object ExpectedIndividualCY extends SpecificExpectedResults {
-    override val expectedTitle: String = "A wnaethoch dalu treth ar eich ennill?"
-    override val expectedErrorTitle: String = "Error: A wnaethoch dalu treth ar eich ennill?"
-    override val expectedHeading: String = "A wnaethoch dalu treth ar eich ennill?"
+    override val expectedTitle: String = "Was your gain treated as tax paid?"
+    override val expectedErrorTitle: String = "Error: Was your gain treated as tax paid?"
+    override val expectedHeading: String = "Was your gain treated as tax paid?"
+    override val expectedHint: String = "Select Yes if tax was deducted from your gain. This will be shown on your chargeable event certificate."
     override val expectedErrorText1: String = "Dewiswch Ydw os taloch chi dreth ar eich ennill"
   }
 
   object ExpectedAgentEN extends SpecificExpectedResults {
-    override val expectedTitle: String = "Did your client pay tax on their gain?"
-    override val expectedErrorTitle: String = "Error: Did your client pay tax on their gain?"
-    override val expectedHeading: String = "Did your client pay tax on their gain?"
-    override val expectedErrorText1: String = "Select yes if your client paid tax on their gain"
+    override val expectedTitle: String = "Was your client's gain treated as tax paid?"
+    override val expectedErrorTitle: String = "Error: Was your client's gain treated as tax paid?"
+    override val expectedHeading: String = "Was your client's gain treated as tax paid?"
+    override val expectedHint: String = "Select Yes if tax was deducted from your client's gain. This will be shown on your client's chargeable event certificate."
+    override val expectedErrorText1: String = "Select Yes if your client paid tax on their gain"
   }
 
   object ExpectedAgentCY extends SpecificExpectedResults {
-    override val expectedTitle: String = "A wnaeth eich cleient dalu treth ar ei enillion?"
-    override val expectedErrorTitle: String = "Error: A wnaeth eich cleient dalu treth ar ei enillion?"
-    override val expectedHeading: String = "A wnaeth eich cleient dalu treth ar ei enillion?"
+    override val expectedTitle: String = "Was your client's gain treated as tax paid?"
+    override val expectedErrorTitle: String = "Error: Was your client's gain treated as tax paid?"
+    override val expectedHeading: String = "Was your client's gain treated as tax paid?"
+    override val expectedHint: String = "Select Yes if tax was deducted from your client's gain. This will be shown on your client's chargeable event certificate."
     override val expectedErrorText1: String = "Dewiswch ‘Iawn’ os gwnaeth eich cleient dalu treth ar ei enillion"
   }
 
@@ -118,6 +123,7 @@ class PaidTaxStatusPageViewSpec extends ViewUnitTest {
         titleCheck(userScenario.specificExpectedResults.get.expectedTitle, userScenario.isWelsh)
         captionCheck(userScenario.commonExpectedResults.expectedCaption(taxYear))
         h1Check(userScenario.specificExpectedResults.get.expectedHeading)
+        textOnPageCheck(userScenario.specificExpectedResults.get.expectedHint, Selectors.hint)
         radioButtonCheck(userScenario.commonExpectedResults.expectedYesText, 1, checked = false)
         radioButtonCheck(userScenario.commonExpectedResults.expectedNoText, 2, checked = false)
         buttonCheck(userScenario.commonExpectedResults.expectedButtonText, Selectors.continueButton)
@@ -141,6 +147,7 @@ class PaidTaxStatusPageViewSpec extends ViewUnitTest {
         titleCheck(userScenario.specificExpectedResults.get.expectedErrorTitle, userScenario.isWelsh)
         captionCheck(userScenario.commonExpectedResults.expectedCaption(taxYear))
         h1Check(userScenario.specificExpectedResults.get.expectedHeading)
+        textOnPageCheck(userScenario.specificExpectedResults.get.expectedHint, Selectors.hint)
         radioButtonCheck(userScenario.commonExpectedResults.expectedYesText, 1, checked = false)
         radioButtonCheck(userScenario.commonExpectedResults.expectedNoText, 2, checked = false)
         buttonCheck(userScenario.commonExpectedResults.expectedButtonText, Selectors.continueButton)

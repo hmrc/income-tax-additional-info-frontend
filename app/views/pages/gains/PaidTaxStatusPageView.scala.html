@@ -42,15 +42,16 @@
 
     @errorSummary(form.errors)
 
-    @heading(headingForUse, Some(messages("gains.caption", (taxYear - 1).toString, taxYear.toString)), "govuk-!-margin-bottom-0")
+    @heading(headingForUse, Some(messages("gains.caption", (taxYear - 1).toString, taxYear.toString)), "govuk-!-margin-bottom-1")
 
     @formWithCsrf(action = controllers.gains.routes.PaidTaxStatusController.submit(taxYear)) {
 
     @inputRadio(
-                    form = form,
-                    heading = "",
-                    classes = ("govuk-fieldset__legend--m"),
-                    inline = true
+        form = form,
+        heading = "",
+        hint = Some(Html(messages(s"gains.paid-tax-status.question.hint.${if(request.user.isAgent) "agent" else "individual"}"))),
+        classes = ("govuk-fieldset__legend--m"),
+        inline = true
     )
 
     @button()
