@@ -147,6 +147,7 @@ gains.gain-amount.question.label.agent = Faint oedd enillion eich cleient?
 gains.gain-amount.question.incorrect-format-error.agent = Nodwch enillion eich cleient yn y fformat cywir. Er enghraifft, £193.54
 gains.gain-amount.question.amount-exceeds-max-error.agent = Mae’n rhaid i enillion eich cleient fod yn llai na £100,000,000,000
 
+gains.policy-held.heading = Policy held
 gains.policy-held.question.title.individual = Ers sawl blwyddyn rydych wedi dal y polisi hwn?
 gains.policy-held.question.paragraph.individual = Os ydych wedi dal y polisi ers llai na blwyddyn, nodwch 0.
 gains.policy-held.question.error-empty.individual = Nodwch nifer y blynyddoedd yr ydych wedi dal y polisi hwn. Os yw’n llai na blwyddyn, nodwch 0
