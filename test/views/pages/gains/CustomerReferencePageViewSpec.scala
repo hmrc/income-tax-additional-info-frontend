@@ -59,14 +59,14 @@ class CustomerReferencePageViewSpec extends ViewUnitTest {
 
   object CommonExpectedEN extends CommonExpectedResults {
     override val expectedCaption: Int => String = (taxYear: Int) => s"Gains from life insurance policies and contracts for 6 April ${taxYear - 1} to 5 April $taxYear"
-    override val expectedHint: String = "For example, 'P8879' or 'LA/2881/07'."
+    override val expectedHint: String = "For example, 'P-89879-123' or 'LA/2881/07'."
     override val expectedButtonText: String = "Continue"
     override val expectedHelpLinkText: String = "Get help with this page"
   }
 
   object CommonExpectedCY extends CommonExpectedResults {
     override val expectedCaption: Int => String = (taxYear: Int) => s"Enillion o bolisïau yswiriant bywyd a chontractau ar gyfer 6 Ebrill ${taxYear - 1} i 5 Ebrill $taxYear"
-    override val expectedHint: String = "For example, 'P8879' or 'LA/2881/07'."
+    override val expectedHint: String = "For example, 'P-89879-123' or 'LA/2881/07'."
     override val expectedButtonText: String = "Yn eich blaen"
     override val expectedHelpLinkText: String = "Help gyda’r dudalen hon"
   }
@@ -75,40 +75,40 @@ class CustomerReferencePageViewSpec extends ViewUnitTest {
     override val expectedErrorTitle: String = "Error: Policy number"
     override val expectedHeading: String = "Policy number"
     override val expectedParagraph1: String = "Your insurer or ISA manager should have given you a policy number, also known as a 'customer reference', for your policy or contract."
-    override val expectedParagraph2: String = "Your policy number can include numbers, letters and special characters '/' or '-'."
+    override val expectedParagraph2: String = "Your policy number can include special characters (/) or (-), numbers and letters."
     override val expectedLabel: String = "What's your policy number?"
     override val expectedErrorText: String = "Enter your policy number"
-    override val expectedErrorText1: String = "Enter your policy number in the correct format. For example, 'P8879' or 'LA/2881/07'."
+    override val expectedErrorText1: String = "Enter your policy number in the correct format. For example, 'P-89879-123' or 'LA/2881/07'."
   }
 
   object ExpectedIndividualCY extends SpecificExpectedResults {
     override val expectedErrorTitle: String = "Error: Policy number"
     override val expectedHeading: String = "Policy number"
     override val expectedParagraph1: String = "Your insurer or ISA manager should have given you a policy number, also known as a 'customer reference', for your policy or contract."
-    override val expectedParagraph2: String = "Your policy number can include numbers, letters and special characters '/' or '-'."
+    override val expectedParagraph2: String = "Your policy number can include special characters (/) or (-), numbers and letters."
     override val expectedLabel: String = "What's your policy number?"
     override val expectedErrorText: String = "Enter your policy number"
-    override val expectedErrorText1: String = "Enter your policy number in the correct format. For example, 'P8879' or 'LA/2881/07'."
+    override val expectedErrorText1: String = "Enter your policy number in the correct format. For example, 'P-89879-123' or 'LA/2881/07'."
   }
 
   object ExpectedAgentEN extends SpecificExpectedResults {
     override val expectedErrorTitle: String = "Error: Policy number"
     override val expectedHeading: String = "Policy number"
     override val expectedParagraph1: String = "Your client's insurer or ISA manager should have given them a policy number, also known as a 'customer reference', for their policy or contract."
-    override val expectedParagraph2: String = "Your client's policy number can include numbers, letters and special characters '/' or '-'."
+    override val expectedParagraph2: String = "Your client's policy number can include special characters (/) or (-), numbers and letters."
     override val expectedLabel: String = "What's your client's policy number?"
     override val expectedErrorText: String = "Enter your client's policy number"
-    override val expectedErrorText1: String = "Enter your client's policy number in the correct format. For example, 'P8879' or 'LA/2881/07'."
+    override val expectedErrorText1: String = "Enter your client's policy number in the correct format. For example, 'P-89879-123' or 'LA/2881/07'."
   }
 
   object ExpectedAgentCY extends SpecificExpectedResults {
     override val expectedErrorTitle: String = "Error: Policy number"
     override val expectedHeading: String = "Policy number"
     override val expectedParagraph1: String = "Your client's insurer or ISA manager should have given them a policy number, also known as a 'customer reference', for their policy or contract."
-    override val expectedParagraph2: String = "Your client's policy number can include numbers, letters and special characters '/' or '-'."
+    override val expectedParagraph2: String = "Your client's policy number can include special characters (/) or (-), numbers and letters."
     override val expectedLabel: String = "What's your client's policy number?"
     override val expectedErrorText: String = "Enter your client's policy number"
-    override val expectedErrorText1: String = "Enter your client's policy number in the correct format. For example, 'P8879' or 'LA/2881/07'."
+    override val expectedErrorText1: String = "Enter your client's policy number in the correct format. For example, 'P-89879-123' or 'LA/2881/07'."
   }
 
   override protected val userScenarios: Seq[UserScenario[CommonExpectedResults, SpecificExpectedResults]] = Seq(
