@@ -25,7 +25,6 @@ class InputFieldFormSpec extends UnitTest{
   private val testInputNumber = "123"
   private val testInputAlphabet = "test"
   private val testInputAlphabetsWithSpace = "test this input"
-  private val testInputMixedAlphaNumeric = "INPOLY123A"
   private val testInputPolicyNumber = "LA/2881/07"
   private val testInputEmpty = ""
   private val testInputEmptySpace = ""

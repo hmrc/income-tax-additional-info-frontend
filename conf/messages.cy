@@ -230,8 +230,8 @@ gains.policies-add.link.text = Ychwanegu ennill arall o bolisi gwahanol
 gains.policies-add.summary.hidden.text.change = Newid manylion y polisi
 gains.policies-add.summary.hidden.text.remove = Tynnu’r polisi
 
-gains.policy-type.title.individual = What kind of policy gave you a gain?
-gains.policy-type.legend.individual = If you had a gain from more than one policy you can add this later.
+gains.policy-type.question.individual = What type of policy gave you a gain?
+gains.policy-type.question.paragraph.individual = Tell us the type of policy that gave you a gain. If you had a gain from more than one policy you can add this later.
 gains.policy-type.radio1 = Life Insurance
 gains.policy-type.radio2 = Life Annuity
 gains.policy-type.radio3 = Capital Redemption
@@ -246,16 +246,16 @@ gains.policy-type.help.content2.paragraph = A foreign policy is one:
 gains.policy-type.help.content2.bullet1.individual = started while you were a non-UK resident
 gains.policy-type.help.content2.bullet2 = where premiums were paid in another country
 gains.policy-type.help.content2.bullet3.individual = surrendered, paid-out or matured, while you were a non-UK resident or after your return to the UK
-gains.policy-type.error.missing-input.individual = Select the kind of policy that gave you a gain
+gains.policy-type.error.missing-input.individual = Select the type of policy that gave you a gain
 
-gains.policy-type.title.agent = What kind of policy gave your client a gain?
-gains.policy-type.legend.agent = If your client had a gain from more than one policy you can add this later.
+gains.policy-type.question.agent = What type of policy gave your client a gain?
+gains.policy-type.question.paragraph.agent = Tell us the type of policy that gave your client a gain. If your client had a gain from more than one policy you can add this later.
 gains.policy-type.radio4.agent = Voided ISA - a policy cancelled by your client''s ISA manager
 gains.policy-type.help.content1.bullet1.agent = life insurance policies cancelled by your client''s life insurance company
 gains.policy-type.help.content1.bullet2.agent = individual Savings Accounts cancelled by your client''s ISA manager, known as voided ISAs.
 gains.policy-type.help.content2.bullet1.agent = started while your client was a non-UK resident
 gains.policy-type.help.content2.bullet3.agent = surrendered, paid-out or matured, while your client was a non-UK resident or after their return to the UK
-gains.policy-type.error.missing-input.agent = Select the kind of policy that gave your client a gain
+gains.policy-type.error.missing-input.agent = Select the type of policy that gave your client a gain
 
 gains.policies-remove.question.title = Are you sure you want to remove this policy?
 
