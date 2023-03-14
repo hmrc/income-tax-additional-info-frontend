@@ -66,7 +66,7 @@
                 actions = Seq((controllers.gains.routes.PolicyHeldController.show(taxYear), messages("common.change"), Some(messages("gains.policy-summary.list.hidden.text.5"))))
             )),
             Some(summaryListRow(
-                HtmlContent(messages("gains.policy-summary.list.tax-paid-on-gain")),
+                HtmlContent(messages("gains.policy-summary.list.gain-treated-as-tax-paid")),
                 HtmlContent(messages("No")),
                 actions = Seq((controllers.gains.routes.PaidTaxStatusController.show(taxYear), messages("common.change"), Some(messages("gains.policy-summary.list.hidden.text.6"))))
             )),

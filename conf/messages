@@ -204,7 +204,7 @@ gains.paid-tax-amount.question.amount-exceeds-max-error = The amount of tax paid
 
 gains.policy-summary.question.title = Policy summary
 gains.policy-summary.list.amount-of-gain-made = Amount of gain made
-gains.policy-summary.list.tax-paid-on-gain = Tax paid on gain
+gains.policy-summary.list.gain-treated-as-tax-paid = Gain treated as tax paid
 gains.policy-summary.list.amount-of-relief-available = Amount of relief available
 
 gains.policy-summary.list.hidden.text.1 = type of policy
