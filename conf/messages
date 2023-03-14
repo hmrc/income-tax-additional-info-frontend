@@ -111,13 +111,15 @@ gains.status.question.radio.error.noEntry.individual = Select Yes if your policy
 gains.status.question.radio.heading.agent = Has your client''s policy paid them a gain in an earlier tax year?
 gains.status.question.radio.error.noEntry.agent = Select Yes if your client''s policy paid them a gain in an earlier tax year
 
-gains.paid-tax-status.question.title.individual = Did you pay tax on your gain?
+gains.paid-tax-status.question.title.individual = Was your gain treated as tax paid?
 gains.paid-tax-status.question.label.individual = How much tax did you pay?
-gains.paid-tax-status.question.error.1.individual = Select yes if you paid tax on your gain
+gains.paid-tax-status.question.hint.individual = Select Yes if tax was deducted from your gain. This will be shown on your chargeable event certificate.
+gains.paid-tax-status.question.error.1.individual = Select Yes if you paid tax on your gain
 
-gains.paid-tax-status.question.title.agent = Did your client pay tax on their gain?
+gains.paid-tax-status.question.title.agent = Was your client''s gain treated as tax paid?
 gains.paid-tax-status.question.label.agent = How much tax did your client pay?
-gains.paid-tax-status.question.error.1.agent = Select yes if your client paid tax on their gain
+gains.paid-tax-status.question.hint.agent = Select Yes if tax was deducted from your client''s gain. This will be shown on your client''s chargeable event certificate.
+gains.paid-tax-status.question.error.1.agent = Select Yes if your client paid tax on their gain
 
 gains.gain-amount.question.title = Chargeable event gain
 gains.gain-amount.question.paragraph.1.individual = Enter the amount shown on the chargeable event certificate provided by your insurer or ISA manager.
