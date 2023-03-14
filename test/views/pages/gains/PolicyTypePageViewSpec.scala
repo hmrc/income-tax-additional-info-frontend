@@ -30,24 +30,24 @@ class PolicyTypePageViewSpec extends ViewUnitTest {
   private val page: PolicyTypePageView = inject[PolicyTypePageView]
 
   object Selectors {
-    val legendText = "#main-content > div > div > form > div > fieldset > legend"
-
+    val paragraph = "#main-content > div > div > p"
+    val radioHeading = "#main-content > div > div > form > div > fieldset > legend > h1"
     val radioItemOne = "#main-content > div > div > form > div > fieldset > div > div:nth-child(1) > label"
     val radioItemTwo = "#main-content > div > div > form > div > fieldset > div > div:nth-child(2) > label"
     val radioItemThree = "#main-content > div > div > form > div > fieldset > div > div:nth-child(3) > label"
     val radioItemFour = "#main-content > div > div > form > div > fieldset > div > div:nth-child(4) > label"
     val radioItemFive = "#main-content > div > div > form > div > fieldset > div > div:nth-child(5) > label"
 
-    val helpOneTitle = "#main-content > div > div > form > details:nth-child(2) > summary > span"
-    val helpOneParagraph = "#main-content > div > div > form > details:nth-child(2) > div > p"
-    val helpOneListItemOne = "#main-content > div > div > form > details:nth-child(2) > div > ul > li:nth-child(1)"
-    val helpOneListItemTwo = "#main-content > div > div > form > details:nth-child(2) > div > ul > li:nth-child(2)"
+    val helpOneTitle = "#policy-type-details1 > summary > span"
+    val helpOneParagraph = "#policy-type-details1 > div > p"
+    val helpOneListItemOne = "#policy-type-details1  > div > ul > li:nth-child(1)"
+    val helpOneListItemTwo = "#policy-type-details1 > div > ul > li:nth-child(2)"
 
-    val helpTwoTitle = "#main-content > div > div > form > details:nth-child(3) > summary > span"
-    val helpTwoParagraph = "#main-content > div > div > form > details:nth-child(3) > div > p"
-    val helpTwoListItemOne = "#main-content > div > div > form > details:nth-child(3) > div > ul > li:nth-child(1)"
-    val helpTwoListItemTwo = "#main-content > div > div > form > details:nth-child(3) > div > ul > li:nth-child(2)"
-    val helpTwoListItemThree = "#main-content > div > div > form > details:nth-child(3) > div > ul > li:nth-child(3)"
+    val helpTwoTitle = "#policy-type-details2 > summary > span"
+    val helpTwoParagraph = "#policy-type-details2 > div > p"
+    val helpTwoListItemOne = "#policy-type-details2 > div > ul > li:nth-child(1)"
+    val helpTwoListItemTwo = "#policy-type-details2 > div > ul > li:nth-child(2)"
+    val helpTwoListItemThree = "#policy-type-details2 > div > ul > li:nth-child(3)"
 
     val continueButton = "#continue"
     val getHelpLink = "#help"
@@ -57,8 +57,8 @@ class PolicyTypePageViewSpec extends ViewUnitTest {
   trait SpecificExpectedResults {
     val expectedTitle: String
     val expectedErrorTitle: String
-    val expectedHeading: String
-    val expectedLegendText: String
+    val expectedParagraphText: String
+    val expectedRadioHeadingText: String
     val expectedRadioItemFour: String
     val expectedHelpContentOneBulletOne: String
     val expectedHelpContentOneBulletTwo: String
@@ -69,6 +69,7 @@ class PolicyTypePageViewSpec extends ViewUnitTest {
 
   trait CommonExpectedResults {
     val expectedCaption: Int => String
+    val expectedHeading: String
     val expectedRadioItemOne: String
     val expectedRadioItemTwo: String
     val expectedRadioItemThree: String
@@ -84,6 +85,7 @@ class PolicyTypePageViewSpec extends ViewUnitTest {
 
   object CommonExpectedEN extends CommonExpectedResults {
     override val expectedCaption: Int => String = (taxYear: Int) => s"Gains from life insurance policies and contracts for 6 April ${taxYear - 1} to 5 April $taxYear"
+    override val expectedHeading: String = "Policy type"
     override val expectedButtonText: String = "Continue"
     override val expectedHelpLinkText: String = "Get help with this page"
     override val expectedHelpDropdownTitleOne: String = "Help with voided ISAs and cancelled policies"
@@ -99,6 +101,7 @@ class PolicyTypePageViewSpec extends ViewUnitTest {
 
   object CommonExpectedCY extends CommonExpectedResults {
     override val expectedCaption: Int => String = (taxYear: Int) => s"Enillion o bolisïau yswiriant bywyd a chontractau ar gyfer 6 Ebrill ${taxYear - 1} i 5 Ebrill $taxYear"
+    override val expectedHeading: String = "Policy type"
     override val expectedButtonText: String = "Yn eich blaen"
     override val expectedHelpLinkText: String = "Help gyda’r dudalen hon"
     override val expectedHelpDropdownTitleOne: String = "Help with voided ISAs and cancelled policies"
@@ -113,55 +116,55 @@ class PolicyTypePageViewSpec extends ViewUnitTest {
   }
 
   object ExpectedIndividualEN extends SpecificExpectedResults {
-    override val expectedTitle: String = "What kind of policy gave you a gain?"
-    override val expectedErrorTitle: String = "Error: What kind of policy gave you a gain?"
-    override val expectedHeading: String = "What kind of policy gave you a gain?"
-    override val expectedLegendText: String = "If you had a gain from more than one policy you can add this later."
+    override val expectedTitle: String = "What type of policy gave you a gain?"
+    override val expectedErrorTitle: String = "Error: What type of policy gave you a gain?"
+    override val expectedParagraphText: String = "Tell us the type of policy that gave you a gain. If you had a gain from more than one policy you can add this later."
+    override val expectedRadioHeadingText: String = "What type of policy gave you a gain?"
     override val expectedRadioItemFour: String = "Voided ISA - a policy cancelled by your ISA manager"
     override val expectedHelpContentOneBulletOne: String = "life insurance policies cancelled by your life insurance company"
     override val expectedHelpContentOneBulletTwo: String = "individual Savings Accounts cancelled by your ISA manager, known as voided ISAs."
     override val expectedHelpContentTwoBulletOne: String = "started while you were a non-UK resident"
     override val expectedHelpContentTwoBulletThree: String = "surrendered, paid-out or matured, while you were a non-UK resident or after your return to the UK"
-    override val expectedErrorText: String = "Select the kind of policy that gave you a gain"
+    override val expectedErrorText: String = "Select the type of policy that gave you a gain"
   }
 
   object ExpectedIndividualCY extends SpecificExpectedResults {
-    override val expectedTitle: String = "What kind of policy gave you a gain?"
-    override val expectedErrorTitle: String = "Error: What kind of policy gave you a gain?"
-    override val expectedHeading: String = "What kind of policy gave you a gain?"
-    override val expectedLegendText: String = "If you had a gain from more than one policy you can add this later."
+    override val expectedTitle: String = "What type of policy gave you a gain?"
+    override val expectedErrorTitle: String = "Error: What type of policy gave you a gain?"
+    override val expectedParagraphText: String = "Tell us the type of policy that gave you a gain. If you had a gain from more than one policy you can add this later."
+    override val expectedRadioHeadingText: String = "What type of policy gave you a gain?"
     override val expectedRadioItemFour: String = "Voided ISA - a policy cancelled by your ISA manager"
     override val expectedHelpContentOneBulletOne: String = "life insurance policies cancelled by your life insurance company"
     override val expectedHelpContentOneBulletTwo: String = "individual Savings Accounts cancelled by your ISA manager, known as voided ISAs."
     override val expectedHelpContentTwoBulletOne: String = "started while you were a non-UK resident"
     override val expectedHelpContentTwoBulletThree: String = "surrendered, paid-out or matured, while you were a non-UK resident or after your return to the UK"
-    override val expectedErrorText: String = "Select the kind of policy that gave you a gain"
+    override val expectedErrorText: String = "Select the type of policy that gave you a gain"
   }
 
   object ExpectedAgentEN extends SpecificExpectedResults {
-    override val expectedTitle: String = "What kind of policy gave your client a gain?"
-    override val expectedErrorTitle: String = "Error: What kind of policy gave your client a gain?"
-    override val expectedHeading: String = "What kind of policy gave your client a gain?"
-    override val expectedLegendText: String = "If your client had a gain from more than one policy you can add this later."
+    override val expectedTitle: String = "What type of policy gave your client a gain?"
+    override val expectedErrorTitle: String = "Error: What type of policy gave your client a gain?"
+    override val expectedParagraphText: String = "Tell us the type of policy that gave your client a gain. If your client had a gain from more than one policy you can add this later."
+    override val expectedRadioHeadingText: String = "What type of policy gave your client a gain?"
     override val expectedRadioItemFour: String = "Voided ISA - a policy cancelled by your client's ISA manager"
     override val expectedHelpContentOneBulletOne: String = "life insurance policies cancelled by your client's life insurance company"
     override val expectedHelpContentOneBulletTwo: String = "individual Savings Accounts cancelled by your client's ISA manager, known as voided ISAs."
     override val expectedHelpContentTwoBulletOne: String = "started while your client was a non-UK resident"
     override val expectedHelpContentTwoBulletThree: String = "surrendered, paid-out or matured, while your client was a non-UK resident or after their return to the UK"
-    override val expectedErrorText: String = "Select the kind of policy that gave your client a gain"
+    override val expectedErrorText: String = "Select the type of policy that gave your client a gain"
   }
 
   object ExpectedAgentCY extends SpecificExpectedResults {
-    override val expectedTitle: String = "What kind of policy gave your client a gain?"
-    override val expectedErrorTitle: String = "Error: What kind of policy gave your client a gain?"
-    override val expectedHeading: String = "What kind of policy gave your client a gain?"
-    override val expectedLegendText: String = "If your client had a gain from more than one policy you can add this later."
+    override val expectedTitle: String = "What type of policy gave your client a gain?"
+    override val expectedErrorTitle: String = "Error: What type of policy gave your client a gain?"
+    override val expectedParagraphText: String = "Tell us the type of policy that gave your client a gain. If your client had a gain from more than one policy you can add this later."
+    override val expectedRadioHeadingText: String = "What type of policy gave your client a gain?"
     override val expectedRadioItemFour: String = "Voided ISA - a policy cancelled by your client's ISA manager"
     override val expectedHelpContentOneBulletOne: String = "life insurance policies cancelled by your client's life insurance company"
     override val expectedHelpContentOneBulletTwo: String = "individual Savings Accounts cancelled by your client's ISA manager, known as voided ISAs."
     override val expectedHelpContentTwoBulletOne: String = "started while your client was a non-UK resident"
     override val expectedHelpContentTwoBulletThree: String = "surrendered, paid-out or matured, while your client was a non-UK resident or after their return to the UK"
-    override val expectedErrorText: String = "Select the kind of policy that gave your client a gain"
+    override val expectedErrorText: String = "Select the type of policy that gave your client a gain"
   }
 
   override protected val userScenarios: Seq[UserScenario[CommonExpectedResults, SpecificExpectedResults]] = Seq(
@@ -183,8 +186,9 @@ class PolicyTypePageViewSpec extends ViewUnitTest {
         welshToggleCheck(userScenario.isWelsh)
         titleCheck(userScenario.specificExpectedResults.get.expectedTitle, userScenario.isWelsh)
         captionCheck(userScenario.commonExpectedResults.expectedCaption(taxYear))
-        h1Check(userScenario.specificExpectedResults.get.expectedHeading)
-        textOnPageCheck(userScenario.specificExpectedResults.get.expectedLegendText, Selectors.legendText)
+        h1Check(userScenario.commonExpectedResults.expectedHeading)
+        textOnPageCheck(userScenario.specificExpectedResults.get.expectedParagraphText, Selectors.paragraph)
+        textOnPageCheck(userScenario.specificExpectedResults.get.expectedRadioHeadingText, Selectors.radioHeading)
         textOnPageCheck(userScenario.commonExpectedResults.expectedRadioItemOne, Selectors.radioItemOne)
         textOnPageCheck(userScenario.commonExpectedResults.expectedRadioItemTwo, Selectors.radioItemTwo)
         textOnPageCheck(userScenario.commonExpectedResults.expectedRadioItemThree, Selectors.radioItemThree)
@@ -220,8 +224,9 @@ class PolicyTypePageViewSpec extends ViewUnitTest {
         welshToggleCheck(userScenario.isWelsh)
         titleCheck(userScenario.specificExpectedResults.get.expectedErrorTitle, userScenario.isWelsh)
         captionCheck(userScenario.commonExpectedResults.expectedCaption(taxYear))
-        h1Check(userScenario.specificExpectedResults.get.expectedHeading)
-        textOnPageCheck(userScenario.specificExpectedResults.get.expectedLegendText, Selectors.legendText)
+        h1Check(userScenario.commonExpectedResults.expectedHeading)
+        textOnPageCheck(userScenario.specificExpectedResults.get.expectedParagraphText, Selectors.paragraph)
+        textOnPageCheck(userScenario.specificExpectedResults.get.expectedRadioHeadingText, Selectors.radioHeading)
         textOnPageCheck(userScenario.commonExpectedResults.expectedRadioItemOne, Selectors.radioItemOne)
         textOnPageCheck(userScenario.commonExpectedResults.expectedRadioItemTwo, Selectors.radioItemTwo)
         textOnPageCheck(userScenario.commonExpectedResults.expectedRadioItemThree, Selectors.radioItemThree)
