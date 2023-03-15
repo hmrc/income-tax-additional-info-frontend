@@ -74,31 +74,31 @@ class GainsStatusPageViewSpec extends ViewUnitTest {
   }
 
   object ExpectedIndividualEN extends SpecificExpectedResults {
-    override val expectedTitle: String = "Has your policy paid you a gain in an earlier tax year?"
-    override val expectedErrorTitle: String = "Error: Has your policy paid you a gain in an earlier tax year?"
-    override val expectedRadioHeading: String = "Has your policy paid you a gain in an earlier tax year?"
-    override val expectedErrorText1: String = "Select Yes if your policy paid you a gain in an earlier tax year"
+    override val expectedTitle: String = "Have you had a gain from this policy in an earlier tax year?"
+    override val expectedErrorTitle: String = "Error: Have you had a gain from this policy in an earlier tax year?"
+    override val expectedRadioHeading: String = "Have you had a gain from this policy in an earlier tax year?"
+    override val expectedErrorText1: String = "Select Yes if you had a gain from this policy in an earlier tax year"
   }
 
   object ExpectedIndividualCY extends SpecificExpectedResults {
-    override val expectedTitle: String = "Has your policy paid you a gain in an earlier tax year?"
-    override val expectedErrorTitle: String = "Error: Has your policy paid you a gain in an earlier tax year?"
-    override val expectedRadioHeading: String = "Has your policy paid you a gain in an earlier tax year?"
-    override val expectedErrorText1: String = "Select Yes if your policy paid you a gain in an earlier tax year"
+    override val expectedTitle: String = "Have you had a gain from this policy in an earlier tax year?"
+    override val expectedErrorTitle: String = "Error: Have you had a gain from this policy in an earlier tax year?"
+    override val expectedRadioHeading: String = "Have you had a gain from this policy in an earlier tax year?"
+    override val expectedErrorText1: String = "Select Yes if you had a gain from this policy in an earlier tax year"
   }
 
   object ExpectedAgentEN extends SpecificExpectedResults {
-    override val expectedTitle: String = "Has your client's policy paid them a gain in an earlier tax year?"
-    override val expectedErrorTitle: String = "Error: Has your client's policy paid them a gain in an earlier tax year?"
-    override val expectedRadioHeading: String = "Has your client's policy paid them a gain in an earlier tax year?"
-    override val expectedErrorText1: String = "Select Yes if your client's policy paid them a gain in an earlier tax year"
+    override val expectedTitle: String = "Has your client had a gain from this policy in an earlier tax year?"
+    override val expectedErrorTitle: String = "Error: Has your client had a gain from this policy in an earlier tax year?"
+    override val expectedRadioHeading: String = "Has your client had a gain from this policy in an earlier tax year?"
+    override val expectedErrorText1: String = "Select Yes if your client had a gain from this policy in an earlier tax year"
   }
 
   object ExpectedAgentCY extends SpecificExpectedResults {
-    override val expectedTitle: String = "Has your client's policy paid them a gain in an earlier tax year?"
-    override val expectedErrorTitle: String = "Error: Has your client's policy paid them a gain in an earlier tax year?"
-    override val expectedRadioHeading: String = "Has your client's policy paid them a gain in an earlier tax year?"
-    override val expectedErrorText1: String = "Select Yes if your client's policy paid them a gain in an earlier tax year"
+    override val expectedTitle: String = "Has your client had a gain from this policy in an earlier tax year?"
+    override val expectedErrorTitle: String = "Error: Has your client had a gain from this policy in an earlier tax year?"
+    override val expectedRadioHeading: String = "Has your client had a gain from this policy in an earlier tax year?"
+    override val expectedErrorText1: String = "Select Yes if your client had a gain from this policy in an earlier tax year"
   }
 
   override protected val userScenarios: Seq[UserScenario[CommonExpectedResults, SpecificExpectedResults]] = Seq(
