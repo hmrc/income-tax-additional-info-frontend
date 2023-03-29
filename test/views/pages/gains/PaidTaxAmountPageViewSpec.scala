@@ -25,7 +25,7 @@ import play.api.mvc.AnyContent
 import support.ViewUnitTest
 import views.html.pages.gains.PaidTaxAmountPageView
 
-class TaxPaidAmountPageViewSpec extends ViewUnitTest {
+class PaidTaxAmountPageViewSpec extends ViewUnitTest {
 
   private val page: PaidTaxAmountPageView = inject[PaidTaxAmountPageView]
 
@@ -67,7 +67,7 @@ class TaxPaidAmountPageViewSpec extends ViewUnitTest {
     override val expectedHint: String = "Er enghraifft, £193.54"
     override val expectedButtonText: String = "Yn eich blaen"
     override val expectedHelpLinkText: String = "Help gyda’r dudalen hon"
-    override val expectedAmountExceedsMaxError= "The amount of tax paid must be less than £100,000,000,000"
+    override val expectedAmountExceedsMaxError= "Mae’n rhaid i swm y dreth a dalwyd fod yn llai na £100,000,000,000"
   }
 
   object ExpectedIndividualEN extends SpecificExpectedResults {
@@ -79,11 +79,11 @@ class TaxPaidAmountPageViewSpec extends ViewUnitTest {
   }
 
   object ExpectedIndividualCY extends SpecificExpectedResults {
-    override val expectedNoEntryError: String = "Enter the amount of tax you paid"
-    override val expectedIncorrectFormatError = "Enter the amount of tax you paid in the correct format. For example, £193.54"
-    override val expectedTitle: String = "How much tax did you pay on your gain?"
-    override val expectedHeading: String = "How much tax did you pay on your gain?"
-    override val expectedErrorTitle: String = "Error: How much tax did you pay on your gain?"
+    override val expectedNoEntryError: String = "Nodwch swm y dreth a daloch"
+    override val expectedIncorrectFormatError = "Nodwch swm y dreth a daloch yn y fformat cywir. Er enghraifft, £193.54"
+    override val expectedTitle: String = "Faint o dreth a daloch ar eich enillion?"
+    override val expectedHeading: String = "Faint o dreth a daloch ar eich enillion?"
+    override val expectedErrorTitle: String = "Gwall: Faint o dreth a daloch ar eich enillion?"
   }
 
   object ExpectedAgentEN extends SpecificExpectedResults {
@@ -95,11 +95,11 @@ class TaxPaidAmountPageViewSpec extends ViewUnitTest {
   }
 
   object ExpectedAgentCY extends SpecificExpectedResults {
-    override val expectedNoEntryError: String = "Enter the amount of tax your client paid"
-    override val expectedIncorrectFormatError = "Enter the amount of tax your client paid in the correct format. For example, £193.54"
-    override val expectedTitle: String = "How much tax did your client pay on their gain?"
-    override val expectedHeading: String = "How much tax did your client pay on their gain?"
-    override val expectedErrorTitle: String = "Error: How much tax did your client pay on their gain?"
+    override val expectedNoEntryError: String = "Nodwch swm y dreth a dalodd eich cleient"
+    override val expectedIncorrectFormatError = "Nodwch swm y dreth a dalodd eich cleient yn y fformat cywir. Er enghraifft, £193.54"
+    override val expectedTitle: String = "Faint o dreth a dalodd eich cleient ar ei enillion?"
+    override val expectedHeading: String = "Faint o dreth a dalodd eich cleient ar ei enillion?"
+    override val expectedErrorTitle: String = "Gwall: Faint o dreth a dalodd eich cleient ar ei enillion?"
   }
 
   override protected val userScenarios: Seq[UserScenario[CommonExpectedResults, SpecificExpectedResults]] = Seq(

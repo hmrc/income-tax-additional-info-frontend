@@ -70,7 +70,7 @@ class PolicyHeldPreviousPageViewSpec extends ViewUnitTest {
     override val expectedCaption: Int => String = (taxYear: Int) => s"Enillion o bolisïau yswiriant bywyd a chontractau ar gyfer 6 Ebrill ${taxYear - 1} i 5 Ebrill $taxYear"
     override val expectedButtonText: String = "Yn eich blaen"
     override val expectedHelpLinkText: String = "Help gyda’r dudalen hon"
-    override val expectedIncorrectFormatErrorText: String = "Enter the number of years in the correct format, for example 12"
+    override val expectedIncorrectFormatErrorText: String = "Nodwch nifer y blynyddoedd yn y fformat cywir, er enghraifft, 12"
     override val expectedYearsExceedErrorText: String = "Mae’n rhaid i nifer y blynyddoedd fod yn llai na 100"
   }
 
@@ -84,12 +84,12 @@ class PolicyHeldPreviousPageViewSpec extends ViewUnitTest {
   }
 
   object ExpectedIndividualCY extends SpecificExpectedResults {
-    override val expectedTitle: String = "Years since your last gain"
-    override val expectedHeading: String = "How many years since your last gain?"
-    override val expectedParagraph1: String = "If you were a UK resident while you were the beneficial owner of the policy, enter the 'number of years' from the chargeable event certificate you received from your insurer."
-    override val expectedParagraph2: String = "If you lived outside the UK while you were the beneficial owner of the policy, refer to how to reduce your tax amount (opens in new tab)"
-    override val expectedParagraph3: String = "If your last gain was less than a year ago, enter 0."
-    override val expectedEmptyErrorText: String = "Enter the number of years since your last gain. If less than a year ago enter 0"
+    override val expectedTitle: String = "Blynyddoedd ers eich ennill diwethaf"
+    override val expectedHeading: String = "Sawl blwyddyn sydd wedi bod ers eich ennill diwethaf?"
+    override val expectedParagraph1: String = "Os oeddech yn breswylydd yn y DU tra oeddech yn berchennog llesiannol y polisi, nodwch ‘nifer y blynyddoedd’ sydd ar y dystysgrif digwyddiad trethadwy a gawsoch gan eich yswiriwr."
+    override val expectedParagraph2: String = "Os oeddech yn byw y tu allan i’r DU tra oeddech yn berchennog llesiannol y polisi, dysgwch sut i ostwng swm eich treth (yn agor tab newydd)"
+    override val expectedParagraph3: String = "Os oedd eich ennill diwethaf llai na blwyddyn yn ôl, nodwch 0."
+    override val expectedEmptyErrorText: String = "Nodwch nifer y blynyddoedd ers eich ennill diwethaf. Os yw’n llai na blwyddyn yn ôl, nodwch 0"
 
   }
 
@@ -104,12 +104,12 @@ class PolicyHeldPreviousPageViewSpec extends ViewUnitTest {
   }
 
   object ExpectedAgentCY extends SpecificExpectedResults {
-    override val expectedTitle: String = "Years since your client's last gain"
-    override val expectedHeading: String = "How many years since their last gain?"
-    override val expectedParagraph1: String = "If your client was a UK resident while they were the beneficial owner of the policy, enter the 'number of years' from the chargeable event certificate they received from their insurer."
-    override val expectedParagraph2: String = "If your client lived outside the UK while they were the beneficial owner of the policy, refer to how to reduce their tax amount (opens in new tab)"
-    override val expectedParagraph3: String = "If their last gain was less than a year ago, enter 0."
-    override val expectedEmptyErrorText: String = "Enter the number of years since your client's last gain. If less than a year ago enter 0"
+    override val expectedTitle: String = "Blynyddoedd ers ennill diwethaf eich cleient"
+    override val expectedHeading: String = "Sawl blwyddyn sydd wedi bod ers ei ennill diwethaf?"
+    override val expectedParagraph1: String = "Os oedd eich cleient yn breswylydd yn y DU tra oedd yn berchennog llesiannol y polisi, nodwch ‘nifer y blynyddoedd’ sydd ar y dystysgrif digwyddiad trethadwy a gafodd gan ei yswiriwr."
+    override val expectedParagraph2: String = "Os oedd eich cleient yn byw y tu allan i’r DU tra oedd yn berchennog llesiannol y polisi, dysgwch sut i ostwng swm ei dreth (yn agor tab newydd)"
+    override val expectedParagraph3: String = "Os oedd ei ennill diwethaf llai na blwyddyn yn ôl, nodwch 0."
+    override val expectedEmptyErrorText: String = "Nodwch nifer y blynyddoedd ers enillion diwethaf eich cleient. Os llai na blwyddyn yn ôl, nodwch 0"
   }
 
   override protected val userScenarios: Seq[UserScenario[CommonExpectedResults, SpecificExpectedResults]] = Seq(

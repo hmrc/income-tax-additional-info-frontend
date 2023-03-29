@@ -67,14 +67,11 @@ class PoliciesEmptyPageViewSpec extends ViewUnitTest {
     override val expectedTitle: String = "Polisïau"
     override val expectedHeading: String = "Polisïau"
     override val expectedCaption: Int => String = (taxYear: Int) => s"Enillion o bolisïau yswiriant bywyd a chontractau ar gyfer 6 Ebrill ${taxYear - 1} i 5 Ebrill $taxYear"
-    override val expectedParagraph1: String = "You need to add one or more life insurance policy or contract."
-    override val expectedParagraph2: String = "If you don't have a policy to add you can return to the overview page and come back later."
-    override val expectedButtonText1: String = "Add a policy"
+    override val expectedParagraph1: String = "Mae angen i chi ychwanegu un neu fwy o bolisïau yswiriant bywyd neu gontract."
+    override val expectedParagraph2: String = "Os nad oes gennych bolisi i’w ychwanegu, gallwch fynd yn ôl i dudalen y trosolwg a dychwelyd yn nes ymlaen."
+    override val expectedButtonText1: String = "Ychwanegu polisi"
     override val expectedButtonText2: String = "Yn ôl i’r trosolwg"
     override val expectedHelpLinkText: String = "Help gyda’r dudalen hon"
-  }
-
-  object AgentExpectedCY extends SpecificExpectedResults {
   }
 
   override protected val userScenarios: Seq[UserScenario[CommonExpectedResults,SpecificExpectedResults]] = Seq(

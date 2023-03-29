@@ -49,11 +49,11 @@
 
     @heading(headingForUse, Some(messages("gains.caption", (taxYear - 1).toString, taxYear.toString)), "govuk-!-margin-bottom-4")
 
-    @p(Html(messages(s"gains.policy-held-previous.question.paragraph.1.${if(request.user.isAgent) "agent" else "individual"}")), "govuk-body govuk-!-margin-bottom-4", Some("para1"))
+    @p(Html(messages(s"common.gains.policy-held.paragraph.1.${if(request.user.isAgent) "agent" else "individual"}")), "govuk-body govuk-!-margin-bottom-4", Some("para1"))
 
-    @p(Html(messages(s"gains.policy-held-previous.question.paragraph.2.${if(request.user.isAgent) "agent" else "individual"}") +
+    @p(Html(messages(s"common.gains.policy-held.paragraph.2.${if(request.user.isAgent) "agent" else "individual"}") +
         """<a href="https://www.gov.uk/government/publications/gains-on-uk-life-insurance-policies-hs320-self-assessment-helpsheet/hs320-gains-on-uk-life-insurance-policies-2022#chargeable-event-gains--when-to-reduce-the-gain-advised-by-your-insurer" class="govuk-link govuk-link--no-visited-state" target="_blank"> """ +
-        messages(s"gains.policy-held-previous.question.paragraph.2.link-text.${if(request.user.isAgent) "agent" else "individual"}") + """</a>"""
+        messages(s"common.gains.policy-held.paragraph.2.link-text.${if(request.user.isAgent) "agent" else "individual"}") + """</a>"""
     ), "govuk-body govuk-!-margin-bottom-4", Some("para2"))
 
     @p(Html(messages(s"gains.policy-held.question.paragraph.${if(request.user.isAgent) "agent" else "individual"}")), "govuk-body govuk-!-margin-bottom-4", Some("para3"))

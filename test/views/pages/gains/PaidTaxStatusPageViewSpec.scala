@@ -76,15 +76,15 @@ class PaidTaxStatusPageViewSpec extends ViewUnitTest {
     override val expectedErrorTitle: String = "Error: Was your gain treated as tax paid?"
     override val expectedHeading: String = "Was your gain treated as tax paid?"
     override val expectedHint: String = "Select Yes if tax was deducted from your gain. This will be shown on your chargeable event certificate."
-    override val expectedErrorText1: String = "Select Yes if you paid tax on your gain"
+    override val expectedErrorText1: String = "Select Yes if tax was deducted from your gain"
   }
 
   object ExpectedIndividualCY extends SpecificExpectedResults {
-    override val expectedTitle: String = "Was your gain treated as tax paid?"
-    override val expectedErrorTitle: String = "Error: Was your gain treated as tax paid?"
-    override val expectedHeading: String = "Was your gain treated as tax paid?"
-    override val expectedHint: String = "Select Yes if tax was deducted from your gain. This will be shown on your chargeable event certificate."
-    override val expectedErrorText1: String = "Dewiswch Ydw os taloch chi dreth ar eich ennill"
+    override val expectedTitle: String = "A gafodd eich enillion eu trin fel treth a dalwyd?"
+    override val expectedErrorTitle: String = "Gwall: A gafodd eich enillion eu trin fel treth a dalwyd?"
+    override val expectedHeading: String = "A gafodd eich enillion eu trin fel treth a dalwyd?"
+    override val expectedHint: String = "Dewiswch ‘Iawn’ os cafodd treth ei didynnu oddi wrth eich enillion. Bydd hyn i’w weld ar eich tystysgrif digwyddiad trethadwy."
+    override val expectedErrorText1: String = "Dewiswch ‘Iawn’ os cafodd treth ei didynnu oddi wrth eich enillion"
   }
 
   object ExpectedAgentEN extends SpecificExpectedResults {
@@ -92,15 +92,15 @@ class PaidTaxStatusPageViewSpec extends ViewUnitTest {
     override val expectedErrorTitle: String = "Error: Was your client's gain treated as tax paid?"
     override val expectedHeading: String = "Was your client's gain treated as tax paid?"
     override val expectedHint: String = "Select Yes if tax was deducted from your client's gain. This will be shown on your client's chargeable event certificate."
-    override val expectedErrorText1: String = "Select Yes if your client paid tax on their gain"
+    override val expectedErrorText1: String = "Select Yes if tax was deducted from your client's gain"
   }
 
   object ExpectedAgentCY extends SpecificExpectedResults {
-    override val expectedTitle: String = "Was your client's gain treated as tax paid?"
-    override val expectedErrorTitle: String = "Error: Was your client's gain treated as tax paid?"
-    override val expectedHeading: String = "Was your client's gain treated as tax paid?"
-    override val expectedHint: String = "Select Yes if tax was deducted from your client's gain. This will be shown on your client's chargeable event certificate."
-    override val expectedErrorText1: String = "Dewiswch ‘Iawn’ os gwnaeth eich cleient dalu treth ar ei enillion"
+    override val expectedTitle: String = "A gafodd enillion eich cleient eu trin fel treth a dalwyd?"
+    override val expectedErrorTitle: String = "Gwall: A gafodd enillion eich cleient eu trin fel treth a dalwyd?"
+    override val expectedHeading: String = "A gafodd enillion eich cleient eu trin fel treth a dalwyd?"
+    override val expectedHint: String = "Dewiswch ‘Iawn’ os cafodd treth ei didynnu oddi wrth enillion eich cleient. Bydd hyn i’w weld ar dystysgrif digwyddiad trethadwy eich cleient."
+    override val expectedErrorText1: String = "Dewiswch ‘Iawn’ os cafodd treth ei didynnu oddi wrth enillion eich cleient"
   }
 
   override protected val userScenarios: Seq[UserScenario[CommonExpectedResults, SpecificExpectedResults]] = Seq(

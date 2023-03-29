@@ -32,7 +32,6 @@ class PoliciesAddPageViewSpec extends ViewUnitTest {
   private val policiesRemovePageUrl: String = s""
   private val policySummaryPageUrl: String = s"/update-and-submit-income-tax-return/additional-information/$taxYear/gains/policy-summary"
 
-
   object Selectors {
     val summaryListChangeLink = "#policy-change"
     val summaryListRemoveLink = "#policy-remove"
@@ -54,12 +53,13 @@ class PoliciesAddPageViewSpec extends ViewUnitTest {
 
   trait SpecificExpectedResults {
   }
+
   object CommonExpectedEN extends CommonExpectedResults {
     override val expectedTitle: String = "Policies"
     override val expectedHeading: String = "Policies"
     override val expectedCaption: Int => String = (taxYear: Int) => s"Gains from life insurance policies and contracts for 6 April ${taxYear - 1} to 5 April $taxYear"
     override val expectedSummaryListChangeLink: String = "Change Change the policy details"
-    override val expectedSummaryListRemoveLink: String = "Remove Remove the policy"
+    override val expectedSummaryListRemoveLink: String = "Remove Remove this policy"
     override val expectedAddPolicyLink: String = "Add another gain from a different policy"
     override val expectedButtonText: String = "Continue"
     override val expectedHelpLinkText: String = "Get help with this page"
@@ -69,15 +69,13 @@ class PoliciesAddPageViewSpec extends ViewUnitTest {
     override val expectedTitle: String = "Polisïau"
     override val expectedHeading: String = "Polisïau"
     override val expectedCaption: Int => String = (taxYear: Int) => s"Enillion o bolisïau yswiriant bywyd a chontractau ar gyfer 6 Ebrill ${taxYear - 1} i 5 Ebrill $taxYear"
-    override val expectedSummaryListChangeLink: String = "Newid Newid manylion y polisi"
-    override val expectedSummaryListRemoveLink: String = "Tynnu Tynnu’r polisi"
-    override val expectedAddPolicyLink: String = "Ychwanegu ennill arall o bolisi gwahanol"
+    override val expectedSummaryListChangeLink: String = "Newid Newid y math o bolisi"
+    override val expectedSummaryListRemoveLink: String = "Tynnu Tynnu’r polisi hwn"
+    override val expectedAddPolicyLink: String = "Ychwanegu enillion eraill o bolisi gwahanol"
     override val expectedButtonText: String = "Yn eich blaen"
     override val expectedHelpLinkText: String = "Help gyda’r dudalen hon"
   }
 
-  object AgentExpectedCY extends SpecificExpectedResults {
-  }
   override protected val userScenarios: Seq[UserScenario[CommonExpectedResults,SpecificExpectedResults]] = Seq(
     UserScenario(isWelsh = false, isAgent = false, CommonExpectedEN),
     UserScenario(isWelsh = false, isAgent = true, CommonExpectedEN),

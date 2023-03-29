@@ -34,11 +34,11 @@
 
 @(taxYear: Int)(implicit request: AuthorisationRequest[_], messages: Messages, appConfig: AppConfig)
 
-@titleForUse = @{messages(s"gains.policies-remove.question.title")}
+@titleForUse = @{messages("gains.policies-remove.question.title")}
 
 @headingForUse = @{titleForUse}
 @contentHtml = {
-    <p class="govuk-body">This will remove:</p>
+    <p class="govuk-body">@messages("gains.policies-remove.question.paragraph")</p>
     <dl class="govuk-summary-list">
         <div class="govuk-summary-list__row">
             <dt class="govuk-summary-list__key govuk-!-width-one-half">
@@ -58,7 +58,7 @@
         </div>
         <div class="govuk-summary-list__row">
             <dt class="govuk-summary-list__key">
-            @messages("gains.policy-summary.list.amount-of-gain-made")
+            @messages("common.gains.amount-of-gain-made")
             </dt>
             <dd class="govuk-summary-list__value">
                 <p class="govuk-body"></p>
@@ -82,7 +82,7 @@
     </div>
     <div class="govuk-summary-list__row">
         <dt class="govuk-summary-list__key">
-            @messages("gains.policy-summary.list.gain-treated-as-tax-paid")
+            @messages("common.gains.gain-treated-as-tax-paid")
         </dt>
         <dd class="govuk-summary-list__value">
             <p class="govuk-body"></p>
@@ -98,7 +98,7 @@
     </div>
     <div class="govuk-summary-list__row">
         <dt class="govuk-summary-list__key">
-            @messages("gains.policy-summary.list.amount-of-relief-available")
+            @messages("common.gains.amount-of-relief-available")
         </dt>
         <dd class="govuk-summary-list__value">
             <p class="govuk-body"></p>

@@ -101,18 +101,18 @@ class PolicyTypePageViewSpec extends ViewUnitTest {
 
   object CommonExpectedCY extends CommonExpectedResults {
     override val expectedCaption: Int => String = (taxYear: Int) => s"Enillion o bolisïau yswiriant bywyd a chontractau ar gyfer 6 Ebrill ${taxYear - 1} i 5 Ebrill $taxYear"
-    override val expectedHeading: String = "Policy type"
+    override val expectedHeading: String = "Math o bolisi"
     override val expectedButtonText: String = "Yn eich blaen"
     override val expectedHelpLinkText: String = "Help gyda’r dudalen hon"
-    override val expectedHelpDropdownTitleOne: String = "Help with voided ISAs and cancelled policies"
-    override val expectedHelpDropdownTitleTwo: String = "Help with foreign policies"
-    override val expectedRadioItemOne: String = "Life Insurance"
-    override val expectedRadioItemTwo: String = "Life Annuity"
-    override val expectedRadioItemThree: String = "Capital Redemption"
-    override val expectedRadioItemFive: String = "A foreign policy"
-    override val expectedHelpContentParagraphOne: String = "This can include:"
-    override val expectedHelpContentParagraphTwo: String = "A foreign policy is one:"
-    override val expectedHelpContentTwoBulletTwo: String = "where premiums were paid in another country"
+    override val expectedHelpDropdownTitleOne: String = "Help gyda chyfrifon ISA sydd wedi’u dirymu a pholisïau sydd wedi’u canslo"
+    override val expectedHelpDropdownTitleTwo: String = "Help gyda pholisïau tramor"
+    override val expectedRadioItemOne: String = "Yswiriant Bywyd"
+    override val expectedRadioItemTwo: String = "Blwydd-dal Bywyd"
+    override val expectedRadioItemThree: String = "Adbrynu Cyfalaf"
+    override val expectedRadioItemFive: String = "Polisi tramor"
+    override val expectedHelpContentParagraphOne: String = "Gall hyn gynnwys:"
+    override val expectedHelpContentParagraphTwo: String = "Polisi tramor yw un:"
+    override val expectedHelpContentTwoBulletTwo: String = "lle cafodd premiymau eu talu mewn gwlad arall"
   }
 
   object ExpectedIndividualEN extends SpecificExpectedResults {
@@ -129,16 +129,16 @@ class PolicyTypePageViewSpec extends ViewUnitTest {
   }
 
   object ExpectedIndividualCY extends SpecificExpectedResults {
-    override val expectedTitle: String = "What type of policy gave you a gain?"
-    override val expectedErrorTitle: String = "Error: What type of policy gave you a gain?"
-    override val expectedParagraphText: String = "Tell us the type of policy that gave you a gain. If you had a gain from more than one policy you can add this later."
-    override val expectedRadioHeadingText: String = "What type of policy gave you a gain?"
-    override val expectedRadioItemFour: String = "Voided ISA - a policy cancelled by your ISA manager"
-    override val expectedHelpContentOneBulletOne: String = "life insurance policies cancelled by your life insurance company"
-    override val expectedHelpContentOneBulletTwo: String = "individual Savings Accounts cancelled by your ISA manager, known as voided ISAs."
-    override val expectedHelpContentTwoBulletOne: String = "started while you were a non-UK resident"
-    override val expectedHelpContentTwoBulletThree: String = "surrendered, paid-out or matured, while you were a non-UK resident or after your return to the UK"
-    override val expectedErrorText: String = "Select the type of policy that gave you a gain"
+    override val expectedTitle: String = "Pa fath o bolisi a roddodd enillion i chi?"
+    override val expectedErrorTitle: String = "Gwall: Pa fath o bolisi a roddodd enillion i chi?"
+    override val expectedParagraphText: String = "Dywedwch wrthym pa fath o bolisi a roddodd enillion i chi. Os cawsoch enillion o fwy nag un polisi, gallwch ychwanegu’r rhain yn nes ymlaen."
+    override val expectedRadioHeadingText: String = "Pa fath o bolisi a roddodd enillion i chi?"
+    override val expectedRadioItemFour: String = "ISA sydd wedi’i ddirymu – polisi a ganslodd rheolwr eich ISA"
+    override val expectedHelpContentOneBulletOne: String = "polisïau yswiriant bywyd a ganslodd eich cwmni yswiriant bywyd"
+    override val expectedHelpContentOneBulletTwo: String = "Cyfrifon Cynilo Unigol a ganslwyd gan reolwr eich ISA, a elwir hefyd yn gyfrifon ISA sydd wedi’u dirymu."
+    override val expectedHelpContentTwoBulletOne: String = "a ddechreuodd tra oeddech yn berson nad oedd yn breswyl yn y DU"
+    override val expectedHelpContentTwoBulletThree: String = "a ildiwyd, a dalwyd neu a aeddfedwyd, tra oeddech yn berson nad oedd yn breswyl yn y DU neu ar ôl i chi ddychwelyd i’r DU"
+    override val expectedErrorText: String = "Dewiswch y math o bolisi a roddodd enillion i chi"
   }
 
   object ExpectedAgentEN extends SpecificExpectedResults {
@@ -155,16 +155,16 @@ class PolicyTypePageViewSpec extends ViewUnitTest {
   }
 
   object ExpectedAgentCY extends SpecificExpectedResults {
-    override val expectedTitle: String = "What type of policy gave your client a gain?"
-    override val expectedErrorTitle: String = "Error: What type of policy gave your client a gain?"
-    override val expectedParagraphText: String = "Tell us the type of policy that gave your client a gain. If your client had a gain from more than one policy you can add this later."
-    override val expectedRadioHeadingText: String = "What type of policy gave your client a gain?"
-    override val expectedRadioItemFour: String = "Voided ISA - a policy cancelled by your client's ISA manager"
-    override val expectedHelpContentOneBulletOne: String = "life insurance policies cancelled by your client's life insurance company"
-    override val expectedHelpContentOneBulletTwo: String = "individual Savings Accounts cancelled by your client's ISA manager, known as voided ISAs."
-    override val expectedHelpContentTwoBulletOne: String = "started while your client was a non-UK resident"
-    override val expectedHelpContentTwoBulletThree: String = "surrendered, paid-out or matured, while your client was a non-UK resident or after their return to the UK"
-    override val expectedErrorText: String = "Select the type of policy that gave your client a gain"
+    override val expectedTitle: String = "Pa fath o bolisi a roddodd enillion i’ch cleient?"
+    override val expectedErrorTitle: String = "Gwall: Pa fath o bolisi a roddodd enillion i’ch cleient?"
+    override val expectedParagraphText: String = "Dywedwch wrthym pa fath o bolisi a roddodd enillion i’ch cleient. Os cafodd eich cleient enillion o fwy nag un polisi, gallwch ychwanegu’r rhain yn nes ymlaen."
+    override val expectedRadioHeadingText: String = "Pa fath o bolisi a roddodd enillion i’ch cleient?"
+    override val expectedRadioItemFour: String = "ISA sydd wedi’i ddirymu – polisi a ganslodd rheolwr ISA eich cleient"
+    override val expectedHelpContentOneBulletOne: String = "polisïau yswiriant bywyd a ganslodd cwmni yswiriant bywyd eich cleient"
+    override val expectedHelpContentOneBulletTwo: String = "Cyfrifon Cynilo Unigol a ganslwyd gan reolwr ISA eich cleient, a elwir hefyd yn gyfrifon ISA sydd wedi’u dirymu."
+    override val expectedHelpContentTwoBulletOne: String = "a ddechreuodd tra oedd eich cleient yn berson nad oedd yn breswyl yn y DU"
+    override val expectedHelpContentTwoBulletThree: String = "a ildiwyd, a dalwyd neu a aeddfedwyd, tra oedd eich cleient yn berson nad oedd yn breswyl yn y DU neu ar ôl iddo ddychwelyd i’r DU"
+    override val expectedErrorText: String = "Dewiswch y math o bolisi a roddodd enillion i’ch cleient"
   }
 
   override protected val userScenarios: Seq[UserScenario[CommonExpectedResults, SpecificExpectedResults]] = Seq(

@@ -66,7 +66,7 @@ class CustomerReferencePageViewSpec extends ViewUnitTest {
 
   object CommonExpectedCY extends CommonExpectedResults {
     override val expectedCaption: Int => String = (taxYear: Int) => s"Enillion o bolisïau yswiriant bywyd a chontractau ar gyfer 6 Ebrill ${taxYear - 1} i 5 Ebrill $taxYear"
-    override val expectedHint: String = "For example, 'P-89879-123' or 'LA/2881/07'."
+    override val expectedHint: String = "Er enghraifft, `P-89879-123` neu `LA/2881/07`."
     override val expectedButtonText: String = "Yn eich blaen"
     override val expectedHelpLinkText: String = "Help gyda’r dudalen hon"
   }
@@ -82,13 +82,13 @@ class CustomerReferencePageViewSpec extends ViewUnitTest {
   }
 
   object ExpectedIndividualCY extends SpecificExpectedResults {
-    override val expectedErrorTitle: String = "Error: Policy number"
-    override val expectedHeading: String = "Policy number"
-    override val expectedParagraph1: String = "Your insurer or ISA manager should have given you a policy number, also known as a 'customer reference', for your policy or contract."
-    override val expectedParagraph2: String = "Your policy number can include special characters (/) or (-), numbers and letters."
-    override val expectedLabel: String = "What's your policy number?"
-    override val expectedErrorText: String = "Enter your policy number"
-    override val expectedErrorText1: String = "Enter your policy number in the correct format. For example, 'P-89879-123' or 'LA/2881/07'."
+    override val expectedErrorTitle: String = "Gwall: Rhif y polisi"
+    override val expectedHeading: String = "Rhif y polisi"
+    override val expectedParagraph1: String = "Dylai’ch yswiriwr neu reolwr eich ISA fod wedi rhoi rhif polisi i chi, a elwir hefyd yn `cyfeirnod y cwsmer`, ar gyfer eich polisi neu’ch contract."
+    override val expectedParagraph2: String = "Gall rhif eich polisi gynnwys y cymeriadau arbennig (/) neu (-), rhifau a llythrennau."
+    override val expectedLabel: String = "Beth yw rhif eich polisi?"
+    override val expectedErrorText: String = "Nodwch rif eich polisi"
+    override val expectedErrorText1: String = "Nodwch rif eich polisi yn y fformat cywir. Er enghraifft, `P-89879-123` neu `LA/2881/07`."
   }
 
   object ExpectedAgentEN extends SpecificExpectedResults {
@@ -102,13 +102,13 @@ class CustomerReferencePageViewSpec extends ViewUnitTest {
   }
 
   object ExpectedAgentCY extends SpecificExpectedResults {
-    override val expectedErrorTitle: String = "Error: Policy number"
-    override val expectedHeading: String = "Policy number"
-    override val expectedParagraph1: String = "Your client's insurer or ISA manager should have given them a policy number, also known as a 'customer reference', for their policy or contract."
-    override val expectedParagraph2: String = "Your client's policy number can include special characters (/) or (-), numbers and letters."
-    override val expectedLabel: String = "What's your client's policy number?"
-    override val expectedErrorText: String = "Enter your client's policy number"
-    override val expectedErrorText1: String = "Enter your client's policy number in the correct format. For example, 'P-89879-123' or 'LA/2881/07'."
+    override val expectedErrorTitle: String = "Gwall: Rhif y polisi"
+    override val expectedHeading: String = "Rhif y polisi"
+    override val expectedParagraph1: String = "Dylai yswiriwr neu reolwr ISA eich cleient fod wedi rhoi rhif polisi iddo, a elwir hefyd yn `cyfeirnod y cwsmer`, ar gyfer ei bolisi neu’i gontract."
+    override val expectedParagraph2: String = "Gall rhif polisi eich cleient gynnwys y cymeriadau arbennig (/) neu (-), rhifau a llythrennau."
+    override val expectedLabel: String = "Beth yw rhif polisi eich cleient?"
+    override val expectedErrorText: String = "Nodwch rif polisi eich cleient"
+    override val expectedErrorText1: String = "Nodwch rif polisi eich cleient yn y fformat cywir. Er enghraifft, `P-89879-123` neu `LA/2881/07`."
   }
 
   override protected val userScenarios: Seq[UserScenario[CommonExpectedResults, SpecificExpectedResults]] = Seq(
