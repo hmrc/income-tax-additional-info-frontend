@@ -79,7 +79,7 @@ class DeficiencyReliefPageViewSpec extends ViewUnitTest {
     override val expectedNoText: String = "No"
     override val expectedErrorText1: String = "Enter the amount available for relief"
     override val expectedErrorText2: String = "Enter the amount available for relief in the correct format. For example, '£193.54'"
-    override val expectedErrorText3: String = "The amount of Special Withholding Tax must be less than £100,000,000,000"
+    override val expectedErrorText3: String = "The amount of Deficiency Relief must be less than £100,000,000,000"
   }
 
   object CommonExpectedCY extends CommonExpectedResults {
@@ -90,8 +90,8 @@ class DeficiencyReliefPageViewSpec extends ViewUnitTest {
     override val expectedYesText: String = "Iawn"
     override val expectedNoText: String = "Na"
     override val expectedErrorText1: String = "Nodwch y swm sydd ar gael ar gyfer rhyddhad"
-    override val expectedErrorText2: String = "Nodwch y swm sydd ar gael ar gyfer rhyddhad yn y fformat cywir. Er enghraifft, ‘£193.54’"
-    override val expectedErrorText3: String = "Mae’n rhaid i swm y Dreth Ataliedig Arbennig fod yn llai na £100,000,000,000"
+    override val expectedErrorText2: String = "Nodwch y swm sydd ar gael ar gyfer rhyddhad yn y fformat cywir. Er enghraifft, £193.54"
+    override val expectedErrorText3: String = "Mae’n rhaid i swm y Rhyddhad am Ddiffyg fod yn llai na £100,000,000,000"
   }
 
   object ExpectedIndividualEN extends SpecificExpectedResults {
@@ -109,13 +109,13 @@ class DeficiencyReliefPageViewSpec extends ViewUnitTest {
 
   object ExpectedIndividualCY extends SpecificExpectedResults {
     override val expectedTitle: String = "A oes gennych hawl i Ryddhad am Ddiffyg?"
-    override val expectedErrorTitle: String = "Error: A oes gennych hawl i Ryddhad am Ddiffyg?"
+    override val expectedErrorTitle: String = "Gwall: A oes gennych hawl i Ryddhad am Ddiffyg?"
     override val expectedHeading: String = "Rhyddhad am ddiffyg"
     override val expectedParagraph1: String = "Mae’n bosibl y bydd hawl gennych i’r rhyddhad hwn:"
     override val expectedBullet1: Int => String = (taxYear: Int) => s"os daeth eich polisi neu flwydd-dal i ben rhwng 6 Ebrill ${taxYear - 1} a 5 Ebrill $taxYear"
     override val expectedBullet2: String = "os gwnaethoch enillion ar y polisi neu’r blwydd-dal mewn blwyddyn dreth gynharach"
     override val expectedBullet3: String = "os ydych yn talu treth ar y gyfradd uwch"
-    override val expectedLabel: String = "Pa swm sydd gael ar gyfer rhyddhad?"
+    override val expectedLabel: String = "Beth yw’r swm sydd ar gael ar gyfer rhyddhad?"
     override val expectedErrorText: String = "Dewiswch ‘Iawn’ os oes gennych hawl i ryddhad am ddiffyg"
 
   }
@@ -125,9 +125,9 @@ class DeficiencyReliefPageViewSpec extends ViewUnitTest {
     override val expectedErrorTitle: String = "Error: Is your client entitled to Deficiency relief?"
     override val expectedHeading: String = "Deficiency relief"
     override val expectedParagraph1: String = "Your client may be entitled to this relief if:"
-    override val expectedBullet1: Int => String = (taxYear: Int) => s"their policy or annuity ended between 6 April ${taxYear - 1} to 5 April $taxYear"
-    override val expectedBullet2: String = "they made gains on the policy or annuity in an earlier tax year"
-    override val expectedBullet3: String = "they pay higher rate tax"
+    override val expectedBullet1: Int => String = (taxYear: Int) => s"your client's policy or annuity ended between 6 April ${taxYear - 1} to 5 April $taxYear"
+    override val expectedBullet2: String = "your client made gains on the policy or annuity in an earlier tax year"
+    override val expectedBullet3: String = "your client pays higher rate tax"
     override val expectedLabel: String = "What amount is available for relief?"
     override val expectedErrorText: String = "Select yes if your client is entitled to deficiency relief"
 
@@ -135,13 +135,13 @@ class DeficiencyReliefPageViewSpec extends ViewUnitTest {
 
   object ExpectedAgentCY extends SpecificExpectedResults {
     override val expectedTitle: String = "A oes gan eich cleient yr hawl i Ryddhad am Ddiffyg?"
-    override val expectedErrorTitle: String = "Error: A oes gan eich cleient yr hawl i Ryddhad am Ddiffyg?"
+    override val expectedErrorTitle: String = "Gwall: A oes gan eich cleient yr hawl i Ryddhad am Ddiffyg?"
     override val expectedHeading: String = "Rhyddhad am ddiffyg"
-    override val expectedParagraph1: String = "Mae’n bosibl bod gan eich cleient hawl i’r rhyddhad hwn dan yr amgylchiadau canlynol:"
-    override val expectedBullet1: Int => String = (taxYear: Int) => s"daeth ei bolisi neu flwydd-dal i ben rhwng 6 Ebrill ${taxYear - 1} a 5 Ebrill $taxYear"
-    override val expectedBullet2: String = "gwnaeth enillion ar y polisi neu’r blwydd-dal yn ystod blwyddyn dreth gynharach"
-    override val expectedBullet3: String = "mae’n talu treth ar y gyfradd uwch"
-    override val expectedLabel: String = "Pa swm sydd gael ar gyfer rhyddhad?"
+    override val expectedParagraph1: String = "Mae’n bosibl y bydd gan eich cleient hawl i’r rhyddhad hwn:"
+    override val expectedBullet1: Int => String = (taxYear: Int) => s"os daeth ei bolisi neu’i flwydd-dal i ben rhwng 6 Ebrill ${taxYear - 1} a 5 Ebrill $taxYear"
+    override val expectedBullet2: String = "os gwnaeth eich cleient enillion ar y polisi neu’r blwydd-dal mewn blwyddyn dreth gynharach"
+    override val expectedBullet3: String = "os yw’ch cleient yn talu treth ar y gyfradd uwch"
+    override val expectedLabel: String = "Beth yw’r swm sydd ar gael ar gyfer rhyddhad?"
     override val expectedErrorText: String = "Dewiswch ‘Iawn’ os oes gan eich cleient yr hawl i Ryddhad am Ddiffyg"
 
   }

@@ -81,10 +81,10 @@ class GainsStatusPageViewSpec extends ViewUnitTest {
   }
 
   object ExpectedIndividualCY extends SpecificExpectedResults {
-    override val expectedTitle: String = "Have you had a gain from this policy in an earlier tax year?"
-    override val expectedErrorTitle: String = "Error: Have you had a gain from this policy in an earlier tax year?"
-    override val expectedRadioHeading: String = "Have you had a gain from this policy in an earlier tax year?"
-    override val expectedErrorText1: String = "Select Yes if you had a gain from this policy in an earlier tax year"
+    override val expectedTitle: String = "A ydych wedi cael enillion o’r polisi hwn mewn blwyddyn dreth gynharach?"
+    override val expectedErrorTitle: String = "Gwall: A ydych wedi cael enillion o’r polisi hwn mewn blwyddyn dreth gynharach?"
+    override val expectedRadioHeading: String = "A ydych wedi cael enillion o’r polisi hwn mewn blwyddyn dreth gynharach?"
+    override val expectedErrorText1: String = "Dewiswch ‘Iawn’ os gwnaeth eich polisi dalu enillion i chi mewn blwyddyn dreth gynharach"
   }
 
   object ExpectedAgentEN extends SpecificExpectedResults {
@@ -95,10 +95,10 @@ class GainsStatusPageViewSpec extends ViewUnitTest {
   }
 
   object ExpectedAgentCY extends SpecificExpectedResults {
-    override val expectedTitle: String = "Has your client had a gain from this policy in an earlier tax year?"
-    override val expectedErrorTitle: String = "Error: Has your client had a gain from this policy in an earlier tax year?"
-    override val expectedRadioHeading: String = "Has your client had a gain from this policy in an earlier tax year?"
-    override val expectedErrorText1: String = "Select Yes if your client had a gain from this policy in an earlier tax year"
+    override val expectedTitle: String = "A yw’ch cleient wedi cael enillion o’r polisi hwn mewn blwyddyn dreth gynharach?"
+    override val expectedErrorTitle: String = "Gwall: A yw’ch cleient wedi cael enillion o’r polisi hwn mewn blwyddyn dreth gynharach?"
+    override val expectedRadioHeading: String = "A yw’ch cleient wedi cael enillion o’r polisi hwn mewn blwyddyn dreth gynharach?"
+    override val expectedErrorText1: String = "Dewiswch ‘Iawn’ os gwnaeth polisi eich cleient dalu enillion iddo mewn blwyddyn dreth gynharach"
   }
 
   override protected val userScenarios: Seq[UserScenario[CommonExpectedResults, SpecificExpectedResults]] = Seq(

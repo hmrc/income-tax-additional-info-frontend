@@ -79,8 +79,8 @@ class GainsGatewayPageViewSpec extends ViewUnitTest {
     override val expectedCaption: Int => String = (taxYear: Int) => s"Enillion o bolisïau yswiriant bywyd a chontractau ar gyfer 6 Ebrill ${taxYear - 1} i 5 Ebrill $taxYear"
     override val yesText: String = "Iawn"
     override val noText: String = "Na"
-    override val expectedParagraph2: String = "You will need:"
-    override val expectedLink: String = "Find out more about Gains from life insurance policies and contracts (opens in new tab)"
+    override val expectedParagraph2: String = "Bydd angen y canlynol arnoch:"
+    override val expectedLink: String = "Dysgwch ragor am ‘Enillion o bolisïau yswiriant bywyd a chontractau’ (yn agor tab newydd)"
     override val expectedButtonText: String = "Yn eich blaen"
     override val expectedHelpLinkText: String = "Help gyda’r dudalen hon"
   }
@@ -98,12 +98,12 @@ class GainsGatewayPageViewSpec extends ViewUnitTest {
 
   object ExpectedIndividualCY extends SpecificExpectedResults {
     override val expectedTitle: String = "Enillion o bolisïau yswiriant bywyd a chontractau"
-    override val expectedErrorTitle: String = "Error: Enillion o bolisïau yswiriant bywyd a chontractau"
-    override val expectedRadioHeading: String = "A wnaethoch chi ennill ar bolisi neu gytundeb y DU?"
+    override val expectedErrorTitle: String = "Gwall: Enillion o bolisïau yswiriant bywyd a chontractau"
+    override val expectedRadioHeading: String = "A wnaethoch chi enillion ar bolisi neu gontract yn y DU?"
     override val expectedHeading: String = "Enillion o bolisïau yswiriant bywyd a chontractau"
-    override val expectedParagraph1: String = "We will ask about gains you have made on life insurance policies, life annuities and capital redemption policies"
-    override val expectedBullet1: String = "your policy number, given to you by your insurer or ISA manager"
-    override val expectedBullet2: String = "the chargeable event certificate, sent to you by your insurer"
+    override val expectedParagraph1: String = "Byddwn yn gofyn am enillion a wnaethoch ar bolisïau yswiriant bywyd, blwydd-dal bywyd a pholisïau adbrynu cyfalaf"
+    override val expectedBullet1: String = "rhif eich polisi, a roddodd eich yswiriwr neu reolwr eich ISA i chi"
+    override val expectedBullet2: String = "tystysgrif y digwyddiad trethadwy, a anfonodd eich yswiriwr atoch"
     override val expectedErrorText: String = "Dewiswch ‘Iawn’ os gwnaethoch enillion ar bolisi neu gontract yn y DU"
   }
 
@@ -120,12 +120,12 @@ class GainsGatewayPageViewSpec extends ViewUnitTest {
 
   object ExpectedAgentCY extends SpecificExpectedResults {
     override val expectedTitle: String = "Enillion o bolisïau yswiriant bywyd a chontractau"
-    override val expectedErrorTitle: String = "Error: Enillion o bolisïau yswiriant bywyd a chontractau"
+    override val expectedErrorTitle: String = "Gwall: Enillion o bolisïau yswiriant bywyd a chontractau"
     override val expectedRadioHeading: String = "A wnaeth eich cleient enillion ar bolisi neu gontract yn y DU?"
     override val expectedHeading: String = "Enillion o bolisïau yswiriant bywyd a chontractau"
-    override val expectedParagraph1: String = "We will ask about gains your client has made on life insurance policies, life annuities and capital redemption policies"
-    override val expectedBullet1: String = "your clients policy number, given to you by their insurer or ISA manager"
-    override val expectedBullet2: String = "the chargeable event certificate, sent to your client by their insurer"
+    override val expectedParagraph1: String = "Byddwn yn gofyn am enillion a wnaeth eich cleient ar bolisïau yswiriant bywyd, blwydd-dal bywyd a pholisïau adbrynu cyfalaf"
+    override val expectedBullet1: String = "rhif polisi eich cleient, a roddodd ei yswiriwr neu reolwr ei ISA i chi"
+    override val expectedBullet2: String = "tystysgrif y digwyddiad trethadwy, a anfonodd yswiriwr eich cleient ato"
     override val expectedErrorText: String = "Dewiswch ‘Iawn’ os gwnaeth eich cleient enillion ar bolisi neu gontract yn y DU"
   }
 

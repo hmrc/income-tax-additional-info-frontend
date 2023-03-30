@@ -84,7 +84,7 @@ class GainsSummaryPageViewSpec extends ViewUnitTest {
 
   object CommonExpectedCY extends CommonExpectedResults {
     override val expectedCaption: Int => String = (taxYear: Int) =>  s"Enillion o bolisïau yswiriant bywyd a chontractau ar gyfer 6 Ebrill ${taxYear - 1} i 5 Ebrill $taxYear"
-    override val expectedSummaryListKey1: String = "Ennill ar bolisi neu gytundeb y DU"
+    override val expectedSummaryListKey1: String = "Enillion ar bolisi neu gontract yn y DU"
     override val expectedSummaryListValue1: String = yesCy
     override val expectedSummaryListAction1: String = changeCy
     override val expectedSummaryListKey2: String = "LIFE123abc"

@@ -56,7 +56,7 @@
                     </span>
         </summary>
         <div class="govuk-details__text">
-            <p class="govuk-body" id="gains-amount-details-text1">@messages("gains.gain-amount.question.details-text.1")
+            <p class="govuk-body" id="gains-amount-details-text1">@messages(s"gains.gain-amount.question.details-text.1.${if(request.user.isAgent) "agent" else "individual"}")
             </p>
             <p class="govuk-body" id="gains-amount-url-text1">
                 <a href="https://www.gov.uk/government/publications/gains-on-uk-life-insurance-policies-hs320-self-assessment-helpsheet/hs320-gains-on-uk-life-insurance-policies-2021#chargeable-event-gains--when-to-reduce-the-gain-advised-by-your-insurer" class="govuk-link govuk-link--no-visited-state" target="_blank">@messages("gains.gain-amount.question.link.text.1")
@@ -67,8 +67,8 @@
             <p class="govuk-body" id="gains-amount-details-text2">@messages("gains.gain-amount.question.details-text.2")
             </p>
             <ul class="govuk-list govuk-list--bullet" >
-                <li id="gains-amount-bullet-1">@messages("gains.gain-amount.question.bullet.1")</li>
-                <li id="gains-amount-bullet-2">@messages("gains.gain-amount.question.bullet.2")</li>
+                <li id="gains-amount-bullet-1">@messages(s"gains.gain-amount.question.bullet.1.${if(request.user.isAgent) "agent" else "individual"}")</li>
+                <li id="gains-amount-bullet-2">@messages(s"gains.gain-amount.question.bullet.2.${if(request.user.isAgent) "agent" else "individual"}")</li>
             </ul>
             <p class="govuk-body" id="gains-amount-url-text">
                 <a href="https://www.gov.uk/government/publications/gains-on-uk-life-insurance-policies-hs320-self-assessment-helpsheet/hs320-gains-on-uk-life-insurance-policies-2021#chargeable-event-gains--when-to-reduce-the-gain-advised-by-your-insurer" class="govuk-link govuk-link--no-visited-state" target="_blank">@messages("gains.gain-amount.question.link.text.2")

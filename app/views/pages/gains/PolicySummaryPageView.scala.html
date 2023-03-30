@@ -51,7 +51,7 @@
                 actions = Seq((controllers.gains.routes.GainsGatewayController.show(taxYear), messages("common.change"), Some(messages("gains.policy-summary.list.hidden.text.2"))))
             )),
             Some(summaryListRow(
-                HtmlContent(messages("gains.policy-summary.list.amount-of-gain-made")),
+                HtmlContent(messages("common.gains.amount-of-gain-made")),
                 HtmlContent(messages("£1234")),
                 actions = Seq((controllers.gains.routes.GainsAmountController.show(taxYear), messages("common.change"), Some(messages("gains.policy-summary.list.hidden.text.3"))))
             )),
@@ -66,7 +66,7 @@
                 actions = Seq((controllers.gains.routes.PolicyHeldController.show(taxYear), messages("common.change"), Some(messages("gains.policy-summary.list.hidden.text.5"))))
             )),
             Some(summaryListRow(
-                HtmlContent(messages("gains.policy-summary.list.gain-treated-as-tax-paid")),
+                HtmlContent(messages("common.gains.gain-treated-as-tax-paid")),
                 HtmlContent(messages("No")),
                 actions = Seq((controllers.gains.routes.PaidTaxStatusController.show(taxYear), messages("common.change"), Some(messages("gains.policy-summary.list.hidden.text.6"))))
             )),
@@ -76,7 +76,7 @@
                 actions = Seq((controllers.gains.routes.GainsDeficiencyReliefController.show(taxYear), messages("common.change"), Some(messages("gains.policy-summary.list.hidden.text.7"))))
             )),
             Some(summaryListRow(
-                HtmlContent(messages("gains.policy-summary.list.amount-of-relief-available")),
+                HtmlContent(messages("common.gains.amount-of-relief-available")),
                 HtmlContent(messages("£267")),
                 actions = Seq((controllers.gains.routes.GainsGatewayController.show(taxYear), messages("common.change"), Some(messages("gains.policy-summary.list.hidden.text.8"))))
             ))
