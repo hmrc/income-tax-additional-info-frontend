@@ -26,9 +26,13 @@ import play.api.mvc.AnyContent
 import support.ViewUnitTest
 import views.html.pages.gains.GainsStatusPageView
 
+import java.util.UUID
+
 class GainsStatusPageViewSpec extends ViewUnitTest {
 
   private val page: GainsStatusPageView = inject[GainsStatusPageView]
+  private val sessionId: String = UUID.randomUUID().toString
+
 
   object Selectors {
     val yesSelector = "#value"
@@ -117,7 +121,7 @@ class GainsStatusPageViewSpec extends ViewUnitTest {
         implicit val userPriorDataRequest: AuthorisationRequest[AnyContent] = getAuthRequest(userScenario.isAgent)
         implicit val messages: Messages = getMessages(userScenario.isWelsh)
 
-        implicit val document: Document = Jsoup.parse(page(form, taxYear).body)
+        implicit val document: Document = Jsoup.parse(page(taxYear, form, sessionId).body)
 
         welshToggleCheck(userScenario.isWelsh)
         titleCheck(userScenario.specificExpectedResults.get.expectedTitle, userScenario.isWelsh)
@@ -133,7 +137,7 @@ class GainsStatusPageViewSpec extends ViewUnitTest {
         implicit val userPriorDataRequest: AuthorisationRequest[AnyContent] = getAuthRequest(userScenario.isAgent)
         implicit val messages: Messages = getMessages(userScenario.isWelsh)
 
-        implicit val document: Document = Jsoup.parse(page(form.fill(true), taxYear).body)
+        implicit val document: Document = Jsoup.parse(page(taxYear, form.fill(true), sessionId).body)
 
         welshToggleCheck(userScenario.isWelsh)
         titleCheck(userScenario.specificExpectedResults.get.expectedTitle, userScenario.isWelsh)
@@ -149,7 +153,7 @@ class GainsStatusPageViewSpec extends ViewUnitTest {
         implicit val userPriorDataRequest: AuthorisationRequest[AnyContent] = getAuthRequest(userScenario.isAgent)
         implicit val messages: Messages = getMessages(userScenario.isWelsh)
 
-        implicit val document: Document = Jsoup.parse(page(form.fill(false), taxYear).body)
+        implicit val document: Document = Jsoup.parse(page(taxYear, form.fill(false), sessionId).body)
 
         welshToggleCheck(userScenario.isWelsh)
         titleCheck(userScenario.specificExpectedResults.get.expectedTitle, userScenario.isWelsh)
@@ -173,7 +177,7 @@ class GainsStatusPageViewSpec extends ViewUnitTest {
         implicit val userPriorDataRequest: AuthorisationRequest[AnyContent] = getAuthRequest(userScenario.isAgent)
         implicit val messages: Messages = getMessages(userScenario.isWelsh)
 
-        implicit val document: Document = Jsoup.parse(page(form.bind(Map(yesNo -> "", yearInput -> "None")), taxYear).body)
+        implicit val document: Document = Jsoup.parse(page(taxYear, form.bind(Map(yesNo -> "", yearInput -> "None")), sessionId).body)
 
         welshToggleCheck(userScenario.isWelsh)
         titleCheck(userScenario.specificExpectedResults.get.expectedErrorTitle, userScenario.isWelsh)

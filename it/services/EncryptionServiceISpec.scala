@@ -16,6 +16,7 @@
 
 package services
 
+import models.AllGainsSessionModel
 import models.mongo.{EncryptedGainsUserDataModel, GainsUserDataModel}
 import org.joda.time.{DateTime, DateTimeZone}
 import support.IntegrationTest
@@ -28,7 +29,7 @@ class EncryptionServiceISpec extends IntegrationTest {
 
   "encryptGainsUserData" should {
 
-    val data: GainsUserDataModel = GainsUserDataModel("sessionId", "mtditid", "AA123456A", 1999, Some(completeGainsCyaModel), DateTime.now(DateTimeZone.UTC))
+    val data: GainsUserDataModel = GainsUserDataModel("sessionId", "mtditid", "AA123456A", 1999, Some(AllGainsSessionModel(Seq(completePolicyCyaModel))), DateTime.now(DateTimeZone.UTC))
 
     "encrypt all the user data apart from the look up ids and timestamp" in {
       val result = service.encryptGainsUserData(data)

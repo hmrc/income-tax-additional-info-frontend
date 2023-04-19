@@ -25,9 +25,13 @@ import play.api.mvc.AnyContent
 import support.ViewUnitTest
 import views.html.pages.gains.PaidTaxStatusPageView
 
+import java.util.UUID
+
 class PaidTaxStatusPageViewSpec extends ViewUnitTest {
 
   private val page: PaidTaxStatusPageView = inject[PaidTaxStatusPageView]
+  private val sessionId: String = UUID.randomUUID().toString
+
 
   object Selectors {
     val hint = "#value-hint"
@@ -117,7 +121,7 @@ class PaidTaxStatusPageViewSpec extends ViewUnitTest {
         implicit val messages: Messages = getMessages(userScenario.isWelsh)
 
         implicit val document: Document = Jsoup.parse(page(taxYear, YesNoForm.yesNoForm(
-          s"gains.paid-tax-status.question.error.1.${if (userScenario.isAgent) "agent" else "individual"}")).body)
+          s"gains.paid-tax-status.question.error.1.${if (userScenario.isAgent) "agent" else "individual"}"), sessionId).body)
 
         welshToggleCheck(userScenario.isWelsh)
         titleCheck(userScenario.specificExpectedResults.get.expectedTitle, userScenario.isWelsh)
@@ -141,7 +145,7 @@ class PaidTaxStatusPageViewSpec extends ViewUnitTest {
         implicit val document: Document = Jsoup.parse(page(taxYear, YesNoForm.yesNoForm(
           s"gains.paid-tax-status.question.error.1.${if (userScenario.isAgent) "agent" else "individual"}").bind(Map(
           YesNoForm.yesNo -> ""
-        ))).body)
+        )), sessionId).body)
 
         welshToggleCheck(userScenario.isWelsh)
         titleCheck(userScenario.specificExpectedResults.get.expectedErrorTitle, userScenario.isWelsh)

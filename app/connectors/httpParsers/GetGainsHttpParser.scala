@@ -18,26 +18,27 @@ package connectors.httpParsers
 
 import connectors.Parser
 import connectors.errors.ApiError
-import models.gains.prior.GainsPriorDataModel
+import models.gains.prior.IncomeSourceObject
 import play.api.http.Status.{INTERNAL_SERVER_ERROR, NO_CONTENT, OK, SERVICE_UNAVAILABLE}
 import uk.gov.hmrc.http.{HttpReads, HttpResponse}
 import utils.PagerDutyHelper.PagerDutyKeys.{INTERNAL_SERVER_ERROR_FROM_IF, SERVICE_UNAVAILABLE_FROM_IF, UNEXPECTED_RESPONSE_FROM_IF}
 import utils.PagerDutyHelper.pagerDutyLog
 
 object GetGainsHttpParser extends Parser {
-  type GetGainsResponse = Either[ApiError, GainsPriorDataModel]
+  type GetGainsResponse = Either[ApiError, IncomeSourceObject]
 
   override val parserName: String = "GetGainsHttpParser"
   override val service: String = "income-tax-additional-information"
 
   implicit object GetGainsDataHttpReads extends HttpReads[GetGainsResponse] {
+
     override def read(method: String, url: String, response: HttpResponse): GetGainsResponse = {
       response.status match {
-        case OK => response.json.validate[GainsPriorDataModel].fold[GetGainsResponse](
+        case OK => response.json.validate[IncomeSourceObject].fold[GetGainsResponse](
           _ => badSuccessJsonResponse,
           parsedModel => Right(parsedModel)
         )
-        case NO_CONTENT => Right(GainsPriorDataModel())
+        case NO_CONTENT => Right(IncomeSourceObject(None))
         case INTERNAL_SERVER_ERROR =>
           pagerDutyLog(INTERNAL_SERVER_ERROR_FROM_IF, response.body)
           handleError(response, response.status)

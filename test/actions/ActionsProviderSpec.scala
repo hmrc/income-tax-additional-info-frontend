@@ -26,15 +26,12 @@ import support.ControllerUnitTest
 import support.builders.UserBuilder.aUser
 import support.mocks.{MockAuthorisedAction, MockErrorHandler}
 
-import java.util.UUID
-
 class ActionsProviderSpec extends ControllerUnitTest
   with MockAuthorisedAction
   with MockErrorHandler {
 
   private val anyBlock = (_: Request[AnyContent]) => Ok("any-result")
   private val validTaxYears = validTaxYearList.mkString(",")
-  private val sessionDataId = UUID.randomUUID()
 
   private val actionsProvider = new ActionsProvider(
     mockAuthorisedAction,

@@ -22,25 +22,21 @@ import org.jsoup.nodes.Document
 import play.api.i18n.Messages
 import play.api.mvc.AnyContent
 import support.ViewUnitTest
-import views.html.pages.gains.PoliciesEmptyPageView
+import views.html.pages.gains.GainsSummaryPageView
 
 class PoliciesEmptyPageViewSpec extends ViewUnitTest {
 
-  private val page: PoliciesEmptyPageView = inject[PoliciesEmptyPageView]
-
-  private val policiesEmptyPageUrl: String = s"/update-and-submit-income-tax-return/additional-information/$taxYear/gains/policies-empty"
-  private val overviewUrl: String = appConfig.incomeTaxSubmissionOverviewUrl(taxYear);
+  private val page: GainsSummaryPageView = inject[GainsSummaryPageView]
 
   object Selectors {
     val paragraph1 = "#main-content > div > div > p:nth-child(2)"
     val paragraph2 = "#main-content > div > div > p:nth-child(4)"
     val button1 = "#continue"
-    val button2 = "#return-to-overview-button"
+    val button2 = "#returnToOverviewPageBtn"
     val getHelpLink = "#help"
   }
 
   trait CommonExpectedResults {
-    val expectedTitle: String
     val expectedHeading: String
     val expectedCaption: Int => String
     val expectedParagraph1: String
@@ -51,9 +47,9 @@ class PoliciesEmptyPageViewSpec extends ViewUnitTest {
   }
 
   trait SpecificExpectedResults {
+    val expectedTitle: String
   }
   object CommonExpectedEN extends CommonExpectedResults {
-    override val expectedTitle: String = "Policies"
     override val expectedHeading: String = "Policies"
     override val expectedCaption: Int => String = (taxYear: Int) => s"Gains from life insurance policies and contracts for 6 April ${taxYear - 1} to 5 April $taxYear"
     override val expectedParagraph1: String = "You need to add one or more life insurance policy or contract."
@@ -64,7 +60,6 @@ class PoliciesEmptyPageViewSpec extends ViewUnitTest {
   }
 
   object CommonExpectedCY extends CommonExpectedResults {
-    override val expectedTitle: String = "Polisïau"
     override val expectedHeading: String = "Polisïau"
     override val expectedCaption: Int => String = (taxYear: Int) => s"Enillion o bolisïau yswiriant bywyd a chontractau ar gyfer 6 Ebrill ${taxYear - 1} i 5 Ebrill $taxYear"
     override val expectedParagraph1: String = "Mae angen i chi ychwanegu un neu fwy o bolisïau yswiriant bywyd neu gontract."
@@ -74,11 +69,26 @@ class PoliciesEmptyPageViewSpec extends ViewUnitTest {
     override val expectedHelpLinkText: String = "Help gyda’r dudalen hon"
   }
 
+  object ExpectedIndividualEN extends SpecificExpectedResults {
+    override val expectedTitle = "Your policies"
+  }
+
+  object ExpectedIndividualCY extends SpecificExpectedResults {
+    override val expectedTitle = "Eich polisïau"
+  }
+  object ExpectedAgentEN extends SpecificExpectedResults {
+    override val expectedTitle = "Your client's policies"
+  }
+
+  object ExpectedAgentCY extends SpecificExpectedResults {
+    override val expectedTitle: String = "Polisïau eich cleient"
+  }
+
   override protected val userScenarios: Seq[UserScenario[CommonExpectedResults,SpecificExpectedResults]] = Seq(
-    UserScenario(isWelsh = false, isAgent = false, CommonExpectedEN),
-    UserScenario(isWelsh = false, isAgent = true, CommonExpectedEN),
-    UserScenario(isWelsh = true, isAgent = false, CommonExpectedCY),
-    UserScenario(isWelsh = true, isAgent = true, CommonExpectedCY)
+    UserScenario(isWelsh = false, isAgent = false, CommonExpectedEN, Some(ExpectedIndividualEN)),
+    UserScenario(isWelsh = false, isAgent = true, CommonExpectedEN, Some(ExpectedAgentEN)),
+    UserScenario(isWelsh = true, isAgent = false, CommonExpectedCY, Some(ExpectedIndividualCY)),
+    UserScenario(isWelsh = true, isAgent = true, CommonExpectedCY, Some(ExpectedAgentCY))
   )
 
   userScenarios.foreach { userScenario =>
@@ -87,10 +97,10 @@ class PoliciesEmptyPageViewSpec extends ViewUnitTest {
         implicit val userPriorDataRequest: AuthorisationRequest[AnyContent] = getAuthRequest(userScenario.isAgent)
         implicit val messages: Messages = getMessages(userScenario.isWelsh)
 
-        implicit val document: Document = Jsoup.parse(page(taxYear).body)
+        implicit val document: Document = Jsoup.parse(page(taxYear, Seq.empty).body)
 
         welshToggleCheck(userScenario.isWelsh)
-        titleCheck(userScenario.commonExpectedResults.expectedTitle, userScenario.isWelsh)
+        titleCheck(userScenario.specificExpectedResults.get.expectedTitle, userScenario.isWelsh)
         captionCheck(userScenario.commonExpectedResults.expectedCaption(taxYear))
         h1Check(userScenario.commonExpectedResults.expectedHeading)
         textOnPageCheck(userScenario.commonExpectedResults.expectedParagraph1, Selectors.paragraph1)

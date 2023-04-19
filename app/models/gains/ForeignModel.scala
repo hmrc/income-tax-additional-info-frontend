@@ -18,12 +18,31 @@ package models.gains
 
 import play.api.libs.json.{Json, OFormat}
 
+import java.util.UUID
+
 case class ForeignModel(
                          customerReference: Option[String] = None,
                          gainAmount: BigDecimal,
                          taxPaidAmount: Option[BigDecimal] = None,
                          yearsHeld: Option[Int] = None
-                       )
+                       ) {
+  def toPolicyCya: PolicyCyaModel = {
+    PolicyCyaModel(
+      sessionId = UUID.randomUUID().toString,
+      policyType = "Foreign Policy",
+      policyNumber = this.customerReference,
+      policyEvent = Some(""),
+      amountOfGain = Some(this.gainAmount),
+      previousGain = Some(this.yearsHeld.isDefined),
+      taxPaidAmount = this.taxPaidAmount,
+      yearsPolicyHeld = this.yearsHeld,
+      yearsPolicyHeldPrevious = Some(0),
+      treatedAsTaxPaid = Some(false),
+      entitledToDeficiencyRelief = Some(false),
+      deficiencyReliefAmount = Some(0)
+    )
+  }
+}
 
 object ForeignModel {
   implicit val formats: OFormat[ForeignModel] = Json.format[ForeignModel]

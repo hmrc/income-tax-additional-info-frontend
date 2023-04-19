@@ -19,31 +19,35 @@ package models.gains
 import play.api.libs.json.{JsObject, Json}
 import support.UnitTest
 
-class GainsCyaModelSpec extends UnitTest {
+import java.util.UUID
 
-  val modelMax: GainsCyaModel = GainsCyaModel(
-    Some(true), Some("123"), Some("cause"), Some(true), Some("2"), Some(123.11), Some("2"), Some(true), Some(123.11), Some(true), Some(123.11)
+class PolicyCyaModelSpec extends UnitTest {
+
+  val sessionId: String = UUID.randomUUID().toString
+  val modelMax: PolicyCyaModel = PolicyCyaModel(
+    sessionId, "Life Insurance", Some("123"), Some(0), Some(""), Some(true), Some(0), Some(0), Some(true), Some(123.11), Some(true), Some(123.11)
   )
 
-  val modelMin: GainsCyaModel = GainsCyaModel()
+  val modelMin: PolicyCyaModel = PolicyCyaModel(sessionId, "")
 
   val jsonMax: JsObject = Json.obj(
-    "gatewayQuestion" -> true,
-    "customerReference" -> "123",
-    "whatCausedThisGain" -> "cause",
+    "sessionId" -> sessionId,
+    "policyType" -> "Life Insurance",
+    "policyNumber" -> "123",
+    "amountOfGain" -> 0,
+    "policyEvent" -> "",
     "previousGain" -> true,
-    "yearsSinceLastGain" -> "2",
-    "howMuchGain" -> 123.11,
-    "policyYearsHeld" -> "2",
-    "paidTaxOnGain" -> true,
-    "taxPaid" -> 123.11,
+    "yearsPolicyHeld" -> 0,
+    "yearsPolicyHeldPrevious" -> 0,
+    "treatedAsTaxPaid" -> true,
+    "taxPaidAmount" -> 123.11,
     "entitledToDeficiencyRelief" -> true,
-    "amountAvailableForRelief" -> 123.11
+    "deficiencyReliefAmount" -> 123.11
   )
 
-  val jsonMin: JsObject = Json.obj()
+  val jsonMin: JsObject = Json.obj("sessionId" -> sessionId, "policyType" -> "")
 
-  "GainsCyaModel" should {
+  "PolicyCyaModel" should {
 
     "correctly parse to Json" when {
 
@@ -60,11 +64,11 @@ class GainsCyaModelSpec extends UnitTest {
     "correctly parse to a model" when {
 
       "the json contains all the data for the model" in {
-        jsonMax.as[GainsCyaModel] shouldBe modelMax
+        jsonMax.as[PolicyCyaModel] shouldBe modelMax
       }
 
       "the json contains no data" in {
-        jsonMin.as[GainsCyaModel] shouldBe modelMin
+        jsonMin.as[PolicyCyaModel] shouldBe modelMin
       }
 
     }

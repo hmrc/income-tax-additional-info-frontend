@@ -16,21 +16,23 @@
 
 package views.pages.gains
 
+import models.gains.PolicyCyaModel
 import models.requests.AuthorisationRequest
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import play.api.i18n.Messages
 import play.api.mvc.AnyContent
 import support.ViewUnitTest
-import views.html.pages.gains.{PoliciesRemovePageView}
+import views.html.pages.gains.PoliciesRemovePageView
+
+import java.util.UUID
 
 class PoliciesRemovePageViewSpec extends ViewUnitTest {
 
   private val page: PoliciesRemovePageView = inject[PoliciesRemovePageView]
+  private val sessionId: String = UUID.randomUUID().toString
 
-  private val policiesAddPageUrl: String = s"/update-and-submit-income-tax-return/additional-information/$taxYear/gains/policies-add"
-  private val policiesEmptyPageUrl: String = s"policies-empty"
-
+  private val policiesAddPageUrl: String = s"/update-and-submit-income-tax-return/additional-information/$taxYear/gains/summary"
 
   object Selectors {
     val summaryListItem1 = "#main-content > div > div > dl > div:nth-child(1) > dt"
@@ -100,7 +102,7 @@ class PoliciesRemovePageViewSpec extends ViewUnitTest {
     override val expectedHelpLinkText: String = "Help gyda’r dudalen hon"
   }
 
-  override protected val userScenarios: Seq[UserScenario[CommonExpectedResults,SpecificExpectedResults]] = Seq(
+  override protected val userScenarios: Seq[UserScenario[CommonExpectedResults, SpecificExpectedResults]] = Seq(
     UserScenario(isWelsh = false, isAgent = false, CommonExpectedEN),
     UserScenario(isWelsh = false, isAgent = true, CommonExpectedEN),
     UserScenario(isWelsh = true, isAgent = false, CommonExpectedCY),
@@ -109,11 +111,11 @@ class PoliciesRemovePageViewSpec extends ViewUnitTest {
 
   userScenarios.foreach { userScenario =>
     s"language is ${welshTest(userScenario.isWelsh)} and request is from an ${agentTest(userScenario.isAgent)}" should {
-      "render policies remove page" which {
+      "render policies remove page with deficiency relief" which {
         implicit val userPriorDataRequest: AuthorisationRequest[AnyContent] = getAuthRequest(userScenario.isAgent)
         implicit val messages: Messages = getMessages(userScenario.isWelsh)
 
-        implicit val document: Document = Jsoup.parse(page(taxYear).body)
+        implicit val document: Document = Jsoup.parse(page(taxYear, sessionId, PolicyCyaModel(sessionId, "Capital Redemption", policyEvent = Some("Sale or assignment of a policy"), entitledToDeficiencyRelief = Some(true), deficiencyReliefAmount = Some(BigDecimal(123.45)), treatedAsTaxPaid = Some(true))).body)
 
         welshToggleCheck(userScenario.isWelsh)
         titleCheck(userScenario.commonExpectedResults.expectedTitle, userScenario.isWelsh)
@@ -129,7 +131,6 @@ class PoliciesRemovePageViewSpec extends ViewUnitTest {
         textOnPageCheck(userScenario.commonExpectedResults.expectedSummaryListItem7, Selectors.summaryListItem7)
         textOnPageCheck(userScenario.commonExpectedResults.expectedSummaryListItem8, Selectors.summaryListItem8)
 
-        linkCheck(userScenario.commonExpectedResults.expectedButtonText, Selectors.removeButton,policiesEmptyPageUrl )
         linkCheck(userScenario.commonExpectedResults.expectedDontRemoveLinkText, Selectors.dontRemoveLink, policiesAddPageUrl)
 
         buttonCheck(userScenario.commonExpectedResults.expectedButtonText, Selectors.removeButton)
@@ -138,8 +139,91 @@ class PoliciesRemovePageViewSpec extends ViewUnitTest {
     }
   }
 
+  userScenarios.foreach { userScenario =>
+    s"language is ${welshTest(userScenario.isWelsh)} and request is from an ${agentTest(userScenario.isAgent)}" should {
+      "render policies remove page without deficiency relief" which {
+        implicit val userPriorDataRequest: AuthorisationRequest[AnyContent] = getAuthRequest(userScenario.isAgent)
+        implicit val messages: Messages = getMessages(userScenario.isWelsh)
 
+        implicit val document: Document = Jsoup.parse(page(taxYear, sessionId, PolicyCyaModel(sessionId, "Life Annuity", policyEvent = Some("Policy matured or a death"), entitledToDeficiencyRelief = Some(false), treatedAsTaxPaid = Some(false))).body)
 
+        welshToggleCheck(userScenario.isWelsh)
+        titleCheck(userScenario.commonExpectedResults.expectedTitle, userScenario.isWelsh)
+        captionCheck(userScenario.commonExpectedResults.expectedCaption(taxYear))
+        h1Check(userScenario.commonExpectedResults.expectedHeading)
 
+        textOnPageCheck(userScenario.commonExpectedResults.expectedSummaryListItem1, Selectors.summaryListItem1)
+        textOnPageCheck(userScenario.commonExpectedResults.expectedSummaryListItem2, Selectors.summaryListItem2)
+        textOnPageCheck(userScenario.commonExpectedResults.expectedSummaryListItem3, Selectors.summaryListItem3)
+        textOnPageCheck(userScenario.commonExpectedResults.expectedSummaryListItem4, Selectors.summaryListItem4)
+        textOnPageCheck(userScenario.commonExpectedResults.expectedSummaryListItem5, Selectors.summaryListItem5)
+        textOnPageCheck(userScenario.commonExpectedResults.expectedSummaryListItem6, Selectors.summaryListItem6)
+        textOnPageCheck(userScenario.commonExpectedResults.expectedSummaryListItem7, Selectors.summaryListItem7)
+
+        linkCheck(userScenario.commonExpectedResults.expectedDontRemoveLinkText, Selectors.dontRemoveLink, policiesAddPageUrl)
+
+        buttonCheck(userScenario.commonExpectedResults.expectedButtonText, Selectors.removeButton)
+        linkCheck(userScenario.commonExpectedResults.expectedHelpLinkText, Selectors.getHelpLink, appConfig.contactUrl(userScenario.isAgent))
+      }
+    }
+  }
+
+  userScenarios.foreach { userScenario =>
+    s"language is ${welshTest(userScenario.isWelsh)} and request is from an ${agentTest(userScenario.isAgent)}" should {
+      "render policies remove page with life insurance and full or part surrender" which {
+        implicit val userPriorDataRequest: AuthorisationRequest[AnyContent] = getAuthRequest(userScenario.isAgent)
+        implicit val messages: Messages = getMessages(userScenario.isWelsh)
+
+        implicit val document: Document = Jsoup.parse(page(taxYear, sessionId, PolicyCyaModel(sessionId, "Life Insurance", policyEvent = Some("Full or part surrender"), entitledToDeficiencyRelief = Some(false), treatedAsTaxPaid = Some(false))).body)
+
+        welshToggleCheck(userScenario.isWelsh)
+        titleCheck(userScenario.commonExpectedResults.expectedTitle, userScenario.isWelsh)
+        captionCheck(userScenario.commonExpectedResults.expectedCaption(taxYear))
+        h1Check(userScenario.commonExpectedResults.expectedHeading)
+
+        textOnPageCheck(userScenario.commonExpectedResults.expectedSummaryListItem1, Selectors.summaryListItem1)
+        textOnPageCheck(userScenario.commonExpectedResults.expectedSummaryListItem2, Selectors.summaryListItem2)
+        textOnPageCheck(userScenario.commonExpectedResults.expectedSummaryListItem3, Selectors.summaryListItem3)
+        textOnPageCheck(userScenario.commonExpectedResults.expectedSummaryListItem4, Selectors.summaryListItem4)
+        textOnPageCheck(userScenario.commonExpectedResults.expectedSummaryListItem5, Selectors.summaryListItem5)
+        textOnPageCheck(userScenario.commonExpectedResults.expectedSummaryListItem6, Selectors.summaryListItem6)
+        textOnPageCheck(userScenario.commonExpectedResults.expectedSummaryListItem7, Selectors.summaryListItem7)
+
+        linkCheck(userScenario.commonExpectedResults.expectedDontRemoveLinkText, Selectors.dontRemoveLink, policiesAddPageUrl)
+
+        buttonCheck(userScenario.commonExpectedResults.expectedButtonText, Selectors.removeButton)
+        linkCheck(userScenario.commonExpectedResults.expectedHelpLinkText, Selectors.getHelpLink, appConfig.contactUrl(userScenario.isAgent))
+      }
+    }
+  }
+
+  userScenarios.foreach { userScenario =>
+    s"language is ${welshTest(userScenario.isWelsh)} and request is from an ${agentTest(userScenario.isAgent)}" should {
+      "render policies remove page with foreign policy and ppb" which {
+        implicit val userPriorDataRequest: AuthorisationRequest[AnyContent] = getAuthRequest(userScenario.isAgent)
+        implicit val messages: Messages = getMessages(userScenario.isWelsh)
+
+        implicit val document: Document = Jsoup.parse(page(taxYear, sessionId, PolicyCyaModel(sessionId, "Foreign Policy", policyEvent = Some("Personal Portfolio Bond"), entitledToDeficiencyRelief = Some(false), treatedAsTaxPaid = Some(false))).body)
+
+        welshToggleCheck(userScenario.isWelsh)
+        titleCheck(userScenario.commonExpectedResults.expectedTitle, userScenario.isWelsh)
+        captionCheck(userScenario.commonExpectedResults.expectedCaption(taxYear))
+        h1Check(userScenario.commonExpectedResults.expectedHeading)
+
+        textOnPageCheck(userScenario.commonExpectedResults.expectedSummaryListItem1, Selectors.summaryListItem1)
+        textOnPageCheck(userScenario.commonExpectedResults.expectedSummaryListItem2, Selectors.summaryListItem2)
+        textOnPageCheck(userScenario.commonExpectedResults.expectedSummaryListItem3, Selectors.summaryListItem3)
+        textOnPageCheck(userScenario.commonExpectedResults.expectedSummaryListItem4, Selectors.summaryListItem4)
+        textOnPageCheck(userScenario.commonExpectedResults.expectedSummaryListItem5, Selectors.summaryListItem5)
+        textOnPageCheck(userScenario.commonExpectedResults.expectedSummaryListItem6, Selectors.summaryListItem6)
+        textOnPageCheck(userScenario.commonExpectedResults.expectedSummaryListItem7, Selectors.summaryListItem7)
+
+        linkCheck(userScenario.commonExpectedResults.expectedDontRemoveLinkText, Selectors.dontRemoveLink, policiesAddPageUrl)
+
+        buttonCheck(userScenario.commonExpectedResults.expectedButtonText, Selectors.removeButton)
+        linkCheck(userScenario.commonExpectedResults.expectedHelpLinkText, Selectors.getHelpLink, appConfig.contactUrl(userScenario.isAgent))
+      }
+    }
+  }
 
 }

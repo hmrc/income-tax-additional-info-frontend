@@ -17,9 +17,11 @@
 package controllers.gains
 
 import actions.AuthorisedAction
-import config.AppConfig
+import config.{AppConfig, ErrorHandler}
+import models.gains.PolicyCyaModel
 import play.api.i18n.I18nSupport
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
+import services.GainsSessionService
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 import views.html.pages.gains.GainsSummaryPageView
 
@@ -27,11 +29,20 @@ import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
 class GainsSummaryController @Inject()(authorisedAction: AuthorisedAction,
-                                       view: GainsSummaryPageView)
+                                       view: GainsSummaryPageView,
+                                       gainsSessionService: GainsSessionService,
+                                       errorHandler: ErrorHandler)
                                       (implicit appConfig: AppConfig, mcc: MessagesControllerComponents, ec: ExecutionContext)
   extends FrontendController(mcc) with I18nSupport {
 
   def show(taxYear: Int): Action[AnyContent] = authorisedAction.async { implicit request =>
-    Future.successful(Ok(view(taxYear)))
+    gainsSessionService.getSessionData(taxYear).flatMap {
+      case Left(_) => Future.successful(errorHandler.internalServerError())
+      case Right(cya) =>
+        Future.successful(cya.fold(Ok(view(taxYear, Seq[PolicyCyaModel]()))) {
+          data => data.gains.map(value => Ok(view(taxYear, value.allGains))).get
+        })
+    }
   }
+
 }

@@ -19,6 +19,7 @@
 @import views.html.templates.helpers.InputText
 @import views.html.templates.helpers.Button
 @import views.html.templates.helpers.Link
+@import models.gains.PolicyCyaModel
 
 @import models.requests.AuthorisationRequest
 
@@ -27,16 +28,18 @@
         heading: Heading,
         govukWarningText : GovukWarningText,
         inputText: InputText,
+        formWithCsrf: FormWithCSRF,
         button: Button,
         link: Link,
         govukSummaryList: GovukSummaryList
 )
 
-@(taxYear: Int)(implicit request: AuthorisationRequest[_], messages: Messages, appConfig: AppConfig)
+@(taxYear: Int, session: String, gain: PolicyCyaModel)(implicit request: AuthorisationRequest[_], messages: Messages, appConfig: AppConfig)
 
 @titleForUse = @{messages("gains.policies-remove.question.title")}
 
 @headingForUse = @{titleForUse}
+
 @contentHtml = {
     <p class="govuk-body">@messages("gains.policies-remove.question.paragraph")</p>
     <dl class="govuk-summary-list">
@@ -45,7 +48,18 @@
                 @messages("common.gains.policy-type")
             </dt>
             <dd class="govuk-summary-list__value">
-                <p class="govuk-body"></p>
+                <p class="govuk-body">@{
+                        {
+                            gain.policyType match {
+                                case "Life Insurance" => messages("gains.policy-type.radio1")
+                                case "Life Annuity" => messages("gains.policy-type.radio2")
+                                case "Capital Redemption" => messages("gains.policy-type.radio3")
+                                case "Voided ISA" => messages("gains.policy-type.radio4.individual")
+                                case "Foreign Policy" => messages("gains.policy-type.radio5")
+                                case _ => ""
+                            }
+                        }
+                    }</p>
             </dd>
         </div>
         <div class="govuk-summary-list__row">
@@ -53,7 +67,7 @@
             @messages("common.gains.policy-number")
             </dt>
             <dd class="govuk-summary-list__value">
-                <p class="govuk-body"></p>
+                <p class="govuk-body">@{gain.policyNumber}</p>
             </dd>
         </div>
         <div class="govuk-summary-list__row">
@@ -61,7 +75,7 @@
             @messages("common.gains.amount-of-gain-made")
             </dt>
             <dd class="govuk-summary-list__value">
-                <p class="govuk-body"></p>
+                <p class="govuk-body">@{s"£${gain.amountOfGain.getOrElse("")}"}</p>
             </dd>
         </div>
     <div class="govuk-summary-list__row">
@@ -69,7 +83,15 @@
             @messages("common.gains.policy-event")
         </dt>
         <dd class="govuk-summary-list__value">
-            <p class="govuk-body"></p>
+            <p class="govuk-body">@{
+                gain.policyEvent.getOrElse("") match {
+                        case "Full or part surrender" => messages("gains.policy-event.radio1")
+                        case "Policy matured or a death" => messages("gains.policy-event.radio2")
+                        case "Sale or assignment of a policy" => messages("gains.policy-event.radio3")
+                        case "Personal Portfolio Bond" => messages("gains.policy-event.radio4")
+                        case _ => messages("gains.policy-event.radio5")
+                    }
+                }</p>
         </dd>
     </div>
     <div class="govuk-summary-list__row">
@@ -77,7 +99,7 @@
             @messages("common.gains.years-policy-held")
         </dt>
         <dd class="govuk-summary-list__value">
-            <p class="govuk-body"></p>
+            <p class="govuk-body">@{gain.yearsPolicyHeld}</p>
         </dd>
     </div>
     <div class="govuk-summary-list__row">
@@ -85,7 +107,13 @@
             @messages("common.gains.gain-treated-as-tax-paid")
         </dt>
         <dd class="govuk-summary-list__value">
-            <p class="govuk-body"></p>
+            <p class="govuk-body">
+                @{
+                    if(gain.treatedAsTaxPaid.contains(true)) { messages("common.yes") }
+                    else if (!gain.treatedAsTaxPaid.isDefined) { "" }
+                    else { messages("common.no") }
+                }
+            </p>
         </dd>
     </div>
     <div class="govuk-summary-list__row">
@@ -93,23 +121,35 @@
             @messages("common.gains.deficiency-relief-status")
         </dt>
         <dd class="govuk-summary-list__value">
-            <p class="govuk-body"></p>
+            <p class="govuk-body">
+                @{
+                    if(gain.entitledToDeficiencyRelief.contains(true)) { messages("common.yes") }
+                    else if(!gain.entitledToDeficiencyRelief.isDefined) { "" }
+                    else { messages("common.no") }
+                }
+            </p>
         </dd>
     </div>
-    <div class="govuk-summary-list__row">
-        <dt class="govuk-summary-list__key">
-            @messages("common.gains.amount-of-relief-available")
-        </dt>
-        <dd class="govuk-summary-list__value">
-            <p class="govuk-body"></p>
-        </dd>
-    </div>
+        @{if(gain.entitledToDeficiencyRelief.contains(true)) {
+        <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">
+                {messages("common.gains.amount-of-relief-available")}
+            </dt>
+            <dd class="govuk-summary-list__value">
+                <p class="govuk-body">£{gain.deficiencyReliefAmount.getOrElse(0)}</p>
+            </dd>
+        </div>
+        }}
+
     </dl>
+
     <div class="govuk-button-group govuk-!-margin-bottom-7">
-        <a href="policies-empty" role="button" draggable="false" class="govuk-button govuk-button--warning" data-module="govuk-button" id="remove">
-        @messages("common.remove")
-        </a>
-        <a class="govuk-link" id="cancel-remove" href="@controllers.gains.routes.PoliciesAddController.show(taxYear).url">@messages("common.dontRemove")</a>
+        @formWithCsrf(action = controllers.gains.routes.PoliciesRemoveController.submit(taxYear, session)) {
+            <button role="button" draggable="false" class="govuk-button govuk-button--warning" data-module="govuk-button" id="remove" type="submit">
+                @messages("common.remove")
+            </button>
+        <a class="govuk-link" id="cancel-remove" href="@controllers.gains.routes.GainsSummaryController.show(taxYear).url">@messages("common.dontRemove")</a>
+        }
     </div>
 }
 

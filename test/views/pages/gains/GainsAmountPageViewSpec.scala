@@ -25,9 +25,12 @@ import play.api.mvc.AnyContent
 import support.ViewUnitTest
 import views.html.pages.gains.GainsAmountPageView
 
+import java.util.UUID
+
 class GainsAmountPageViewSpec extends ViewUnitTest {
 
   private val page: GainsAmountPageView = inject[GainsAmountPageView]
+  private val sessionId: String = UUID.randomUUID().toString
 
   object Selectors {
     val paragraph1 = "#gains-amount-paragraph-1"
@@ -161,7 +164,7 @@ class GainsAmountPageViewSpec extends ViewUnitTest {
           s"gains.gain-amount.question.amount-exceeds-max-error.${if (userScenario.isAgent) "agent" else "individual"}",
           None,
 
-        )).body)
+        ), sessionId).body)
 
         welshToggleCheck(userScenario.isWelsh)
         titleCheck(userScenario.commonExpectedResults.expectedTitle, userScenario.isWelsh)
@@ -194,7 +197,7 @@ class GainsAmountPageViewSpec extends ViewUnitTest {
           s"gains.gain-amount.question.incorrect-format-error.${if (userScenario.isAgent) "agent" else "individual"}",
           s"gains.gain-amount.question.amount-exceeds-max-error.${if (userScenario.isAgent) "agent" else "individual"}",
           None
-        ).bind(Map(AmountForm.amount -> ""))).body)
+        ).bind(Map(AmountForm.amount -> "")), sessionId).body)
 
         welshToggleCheck(userScenario.isWelsh)
         captionCheck(userScenario.commonExpectedResults.expectedCaption(taxYear))
@@ -229,7 +232,7 @@ class GainsAmountPageViewSpec extends ViewUnitTest {
           s"gains.gain-amount.question.incorrect-format-error.${if (userScenario.isAgent) "agent" else "individual"}",
           s"gains.gain-amount.question.amount-exceeds-max-error.${if (userScenario.isAgent) "agent" else "individual"}",
           None
-        ).bind(Map(AmountForm.amount -> "abc"))).body)
+        ).bind(Map(AmountForm.amount -> "abc")), sessionId).body)
 
         welshToggleCheck(userScenario.isWelsh)
 
@@ -250,7 +253,7 @@ class GainsAmountPageViewSpec extends ViewUnitTest {
           s"gains.gain-amount.question.incorrect-format-error.${if (userScenario.isAgent) "agent" else "individual"}",
           s"gains.gain-amount.question.amount-exceeds-max-error.${if (userScenario.isAgent) "agent" else "individual"}",
           None
-        ).bind(Map(AmountForm.amount -> "10000000000000"))).body)
+        ).bind(Map(AmountForm.amount -> "10000000000000")), sessionId).body)
 
         welshToggleCheck(userScenario.isWelsh)
 

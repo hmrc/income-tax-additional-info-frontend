@@ -145,7 +145,7 @@ class GainsGatewayPageViewSpec extends ViewUnitTest {
         implicit val userPriorDataRequest: AuthorisationRequest[AnyContent] = getAuthRequest(userScenario.isAgent)
         implicit val messages: Messages = getMessages(userScenario.isWelsh)
 
-        implicit val document: Document = Jsoup.parse(page(form, taxYear).body)
+        implicit val document: Document = Jsoup.parse(page(taxYear, form).body)
 
         welshToggleCheck(userScenario.isWelsh)
         titleCheck(userScenario.specificExpectedResults.get.expectedTitle, userScenario.isWelsh)
@@ -172,7 +172,7 @@ class GainsGatewayPageViewSpec extends ViewUnitTest {
         implicit val userPriorDataRequest: AuthorisationRequest[AnyContent] = getAuthRequest(userScenario.isAgent)
         implicit val messages: Messages = getMessages(userScenario.isWelsh)
 
-        implicit val document: Document = Jsoup.parse(page(form = form.bind(Map(YesNoForm.yesNo -> "")), taxYear).body)
+        implicit val document: Document = Jsoup.parse(page(taxYear, form = form.bind(Map(YesNoForm.yesNo -> ""))).body)
 
         welshToggleCheck(userScenario.isWelsh)
         titleCheck(userScenario.specificExpectedResults.get.expectedErrorTitle, userScenario.isWelsh)

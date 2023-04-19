@@ -16,7 +16,8 @@
 
 package services
 
-import models.gains.{EncryptedGainsCyaModel, GainsCyaModel}
+import models.{AllGainsSessionModel, EncryptedAllGainsSessionModel}
+import models.gains.{EncryptedPolicyCyaModel, PolicyCyaModel}
 import models.mongo._
 import utils.AesGcmAdCrypto
 import utils.CypherSyntax.{DecryptableOps, EncryptableOps}
@@ -34,7 +35,7 @@ class EncryptionService @Inject()(implicit val encryptionService: AesGcmAdCrypto
       mtdItId = gainsUserDataModel.mtdItId,
       nino = gainsUserDataModel.nino,
       taxYear = gainsUserDataModel.taxYear,
-      gains = gainsUserDataModel.gains.map(encryptGainsCyaModel),
+      gains = gainsUserDataModel.gains.map(value => encryptAllGainsSessionModel(value)),
       lastUpdated = gainsUserDataModel.lastUpdated
     )
   }
@@ -47,42 +48,59 @@ class EncryptionService @Inject()(implicit val encryptionService: AesGcmAdCrypto
       mtdItId = gainsUserDataModel.mtdItId,
       nino = gainsUserDataModel.nino,
       taxYear = gainsUserDataModel.taxYear,
-      gains = gainsUserDataModel.gains.map(decryptGainsCyaModel),
+      gains = gainsUserDataModel.gains.map(decryptAllGainsSessionModel),
       lastUpdated = gainsUserDataModel.lastUpdated
     )
   }
 
-  private def encryptGainsCyaModel(gains: GainsCyaModel)
-                                  (implicit associatedText: String): EncryptedGainsCyaModel = {
-    EncryptedGainsCyaModel(
-      gains.gatewayQuestion.map(_.encrypted),
-      gains.customerReference.map(_.encrypted),
-      gains.whatCausedThisGain.map(_.encrypted),
-      gains.previousGain.map(_.encrypted),
-      gains.yearsSinceLastGain.map(_.encrypted),
-      gains.howMuchGain.map(_.encrypted),
-      gains.policyYearsHeld.map(_.encrypted),
-      gains.paidTaxOnGain.map(_.encrypted),
-      gains.taxPaid.map(_.encrypted),
-      gains.entitledToDeficiencyRelief.map(_.encrypted),
-      gains.amountAvailableForRelief.map(_.encrypted)
+  private def encryptAllGainsSessionModel(allGainsSessionModel: AllGainsSessionModel)
+                                           (implicit associatedText: String): EncryptedAllGainsSessionModel = {
+    EncryptedAllGainsSessionModel(
+      allGains = allGainsSessionModel.allGains.map(encryptPolicyCyaModel)
     )
   }
 
-  private def decryptGainsCyaModel(gains: EncryptedGainsCyaModel)
-                                  (implicit associatedText: String): GainsCyaModel = {
-    GainsCyaModel(
-      gains.gatewayQuestion.map(_.decrypted[Boolean]),
-      gains.customerReference.map(_.decrypted[String]),
-      gains.whatCausedThisGain.map(_.decrypted[String]),
-      gains.previousGain.map(_.decrypted[Boolean]),
-      gains.yearsSinceLastGain.map(_.decrypted[String]),
-      gains.howMuchGain.map(_.decrypted[BigDecimal]),
-      gains.policyYearsHeld.map(_.decrypted[String]),
-      gains.paidTaxOnGain.map(_.decrypted[Boolean]),
-      gains.taxPaid.map(_.decrypted[BigDecimal]),
-      gains.entitledToDeficiencyRelief.map(_.decrypted[Boolean]),
-      gains.amountAvailableForRelief.map(_.decrypted[BigDecimal])
+  private def decryptAllGainsSessionModel(allGainsSessionModel: EncryptedAllGainsSessionModel)
+                                           (implicit associatedText: String): AllGainsSessionModel = {
+    AllGainsSessionModel(
+      allGains = allGainsSessionModel.allGains.map(decryptPolicyCyaModel)
     )
+  }
+
+  private def encryptPolicyCyaModel(gains: PolicyCyaModel)
+                                  (implicit associatedText: String): EncryptedPolicyCyaModel = {
+    EncryptedPolicyCyaModel(
+      gains.sessionId.encrypted,
+      gains.policyType.encrypted,
+      gains.policyNumber.map(_.encrypted),
+      gains.amountOfGain.map(_.encrypted),
+      gains.policyEvent.map(_.encrypted),
+      gains.previousGain.map(_.encrypted),
+      gains.yearsPolicyHeld.map(_.toString.encrypted),
+      gains.yearsPolicyHeldPrevious.map(_.toString.encrypted),
+      gains.treatedAsTaxPaid.map(_.encrypted),
+      gains.taxPaidAmount.map(_.encrypted),
+      gains.entitledToDeficiencyRelief.map(_.encrypted),
+      gains.deficiencyReliefAmount.map(_.encrypted)
+    )
+  }
+
+  private def decryptPolicyCyaModel(gains: EncryptedPolicyCyaModel)
+                                  (implicit associatedText: String): PolicyCyaModel = {
+    PolicyCyaModel(
+      gains.sessionId.decrypted[String],
+      gains.policyType.decrypted[String],
+      gains.policyNumber.map(_.decrypted[String]),
+      gains.amountOfGain.map(_.decrypted[BigDecimal]),
+      gains.policyEvent.map(_.decrypted[String]),
+      gains.previousGain.map(_.decrypted[Boolean]),
+      gains.yearsPolicyHeld.map(_.decrypted[String].toInt),
+      gains.yearsPolicyHeldPrevious.map(_.decrypted[String].toInt),
+      gains.treatedAsTaxPaid.map(_.decrypted[Boolean]),
+      gains.taxPaidAmount.map(_.decrypted[BigDecimal]),
+      gains.entitledToDeficiencyRelief.map(_.decrypted[Boolean]),
+      gains.deficiencyReliefAmount.map(_.decrypted[BigDecimal])
+    )
+
   }
 }

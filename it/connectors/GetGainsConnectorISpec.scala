@@ -18,11 +18,10 @@ package connectors
 
 import connectors.errors.{ApiError, SingleErrorBody}
 import connectors.httpParsers.GetGainsHttpParser.GetGainsResponse
-import models.gains.prior.GainsPriorDataModel
+import models.gains.prior.IncomeSourceObject
 import play.api.http.Status._
 import play.api.libs.json.Json
 import play.api.test.Helpers.OK
-import support.utils.TaxYearUtils.convertStringTaxYear
 import support.{ConnectorIntegrationTest, IntegrationTest}
 import uk.gov.hmrc.http.HeaderCarrier
 
@@ -35,25 +34,24 @@ class GetGainsConnectorISpec extends IntegrationTest with ConnectorIntegrationTe
 
   implicit override val headerCarrier: HeaderCarrier = HeaderCarrier().withExtraHeaders("mtditid" -> mtditid, "X-Session-ID" -> sessionId)
 
-  val taxYearParameter: String = convertStringTaxYear(taxYear)
-  val url = s"/income-tax/insurance-policies/income/$nino/$taxYearParameter"
+  val url = s"/income-tax-submission-service/income-tax/nino/$nino/sources/session\\?taxYear=$taxYear"
 
   "GetGainsConnector" should {
     "Return a success result" when {
       "request returns a 204" in {
-        stubGetWithHeadersCheck(s"/income-tax-additional-information/income-tax/nino/$nino/sources/session\\?taxYear=$taxYearParameter", NO_CONTENT,
+        stubGetWithHeadersCheck(url, NO_CONTENT,
           "{}", "X-Session-ID" -> sessionId, "mtditid" -> mtditid)
 
         val result: GetGainsResponse = Await.result(connector.getUserData(taxYear), Duration.Inf)
-        result shouldBe Right(GainsPriorDataModel())
+        result shouldBe Right(IncomeSourceObject(None))
       }
 
       "request returns a 200" in {
 
-        stubGetWithHeadersCheck(s"/income-tax-additional-information/income-tax/nino/$nino/sources/session\\?taxYear=$taxYearParameter", OK,
-          Json.toJson(GainsPriorDataModel()).toString(), "X-Session-ID" -> sessionId, "mtditid" -> mtditid)
+        stubGetWithHeadersCheck(url, OK,
+          Json.toJson(IncomeSourceObject(Some(gainsPriorDataModel))).toString(), "X-Session-ID" -> sessionId, "mtditid" -> mtditid)
         val result: GetGainsResponse = Await.result(connector.getUserData(taxYear), Duration.Inf)
-        result shouldBe Right(GainsPriorDataModel())
+        result shouldBe Right(IncomeSourceObject(Some(gainsPriorDataModel)))
       }
     }
 
@@ -61,7 +59,7 @@ class GetGainsConnectorISpec extends IntegrationTest with ConnectorIntegrationTe
 
       "request returns a 200 but invalid json" in {
 
-        stubGetWithHeadersCheck(s"/income-tax-additional-information/income-tax/nino/$nino/sources/session\\?taxYear=$taxYearParameter", OK,
+        stubGetWithHeadersCheck(url, OK,
           Json.toJson("""{"invalid": true}""").toString(), "X-Session-ID" -> sessionId, "mtditid" -> mtditid)
 
         val result: GetGainsResponse = Await.result(connector.getUserData(taxYear), Duration.Inf)
@@ -70,7 +68,7 @@ class GetGainsConnectorISpec extends IntegrationTest with ConnectorIntegrationTe
 
       "request returns a 500" in {
 
-        stubGetWithHeadersCheck(s"/income-tax-additional-information/income-tax/nino/$nino/sources/session\\?taxYear=$taxYearParameter", INTERNAL_SERVER_ERROR,
+        stubGetWithHeadersCheck(url, INTERNAL_SERVER_ERROR,
           """{"code": "FAILED", "reason": "failed"}""", "X-Session-ID" -> sessionId, "mtditid" -> mtditid)
 
         val result: GetGainsResponse = Await.result(connector.getUserData(taxYear), Duration.Inf)
@@ -79,7 +77,7 @@ class GetGainsConnectorISpec extends IntegrationTest with ConnectorIntegrationTe
 
       "request returns a 503" in {
 
-        stubGetWithHeadersCheck(s"/income-tax-additional-information/income-tax/nino/$nino/sources/session\\?taxYear=$taxYearParameter", SERVICE_UNAVAILABLE,
+        stubGetWithHeadersCheck(url, SERVICE_UNAVAILABLE,
           """{"code": "FAILED", "reason": "failed"}""", "X-Session-ID" -> sessionId, "mtditid" -> mtditid)
 
         val result: GetGainsResponse = Await.result(connector.getUserData(taxYear), Duration.Inf)
@@ -88,7 +86,7 @@ class GetGainsConnectorISpec extends IntegrationTest with ConnectorIntegrationTe
 
       "request returns an unexpected result" in {
 
-        stubGetWithHeadersCheck(s"/income-tax-additional-information/income-tax/nino/$nino/sources/session\\?taxYear=$taxYearParameter", IM_A_TEAPOT,
+        stubGetWithHeadersCheck(url, IM_A_TEAPOT,
           """{"code": "FAILED", "reason": "failed"}""", "X-Session-ID" -> sessionId, "mtditid" -> mtditid)
 
         val result: GetGainsResponse = Await.result(connector.getUserData(taxYear), Duration.Inf)

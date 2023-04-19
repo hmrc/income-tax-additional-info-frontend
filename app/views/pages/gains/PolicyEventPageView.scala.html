@@ -43,7 +43,7 @@
         p: P
 )
 
-@(taxYear: Int, form: Form[(String, String)])(implicit request: AuthorisationRequest[_], messages: Messages, appConfig: AppConfig)
+@(taxYear: Int, form: Form[(String, String)], session: String)(implicit request: AuthorisationRequest[_], messages: Messages, appConfig: AppConfig)
 
 @titleForUse = @{messages(s"common.gains.policy-event")}
 
@@ -81,7 +81,8 @@
 
     @p(Html(messages("gains.policy-event.question.sub-title")), "govuk-heading-m", None)
 
-    @formWithCsrf(action = controllers.gains.routes.PolicyEventController.submit(taxYear)) {
+
+    @formWithCsrf(action = controllers.gains.routes.PolicyEventController.submit(taxYear, session)) {
         @govukRadios(Radios(
             fieldset = Some(Fieldset(
                 legend = Some(Legend(
@@ -95,25 +96,29 @@
         items = Seq(
             RadioItem(
                 content = Text(messages("gains.policy-event.radio1")),
-                value = Some("Full or part surrender")
+                value = Some("Full or part surrender"),
+                checked = form("policy-event").value.contains("Full or part surrender")
             ),
             RadioItem(
                 content = Text(messages("gains.policy-event.radio2")),
-                value = Some("Policy matured or a death")
+                value = Some("Policy matured or a death"),
+                checked = form("policy-event").value.contains("Policy matured or a death")
             ),
             RadioItem(
                 content = Text(messages("gains.policy-event.radio3")),
-                value = Some("Sale or assignment of a policy")
+                value = Some("Sale or assignment of a policy"),
+                checked = form("policy-event").value.contains("Sale or assignment of a policy")
             ),
             RadioItem(
                 content = Text({messages(s"gains.policy-event.radio4")}),
-                value = Some("Personal Portfolio Bond")
+                value = Some("Personal Portfolio Bond"),
+                checked = form("policy-event").value.contains("Personal Portfolio Bond")
             ),
             RadioItem(
                 content = Text(messages("gains.policy-event.radio5")),
                 id = Some("other-text"),
                 value = Some("Other"),
-                checked = if (form("other-text").hasErrors) true else false,
+                checked = if (form("other-text").hasErrors | form("policy-event").value.contains("Other")) true else false,
                 conditionalHtml =
                     Some(
                         inputText(

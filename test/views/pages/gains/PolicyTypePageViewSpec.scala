@@ -25,9 +25,13 @@ import play.api.mvc.AnyContent
 import support.ViewUnitTest
 import views.html.pages.gains.PolicyTypePageView
 
+import java.util.UUID
+
 class PolicyTypePageViewSpec extends ViewUnitTest {
 
   private val page: PolicyTypePageView = inject[PolicyTypePageView]
+  private val sessionId: String = UUID.randomUUID().toString
+
 
   object Selectors {
     val paragraph = "#main-content > div > div > p"
@@ -181,7 +185,7 @@ class PolicyTypePageViewSpec extends ViewUnitTest {
         implicit val messages: Messages = getMessages(userScenario.isWelsh)
 
         implicit val document: Document = Jsoup.parse(page(taxYear,
-          RadioButtonPolicyTypeForm.radioButtonCustomOptionForm(messages(s"gains.policy-type.error.missing-input.${if (userScenario.isAgent) "agent" else "individual"}"))).body)
+          RadioButtonPolicyTypeForm.radioButtonCustomOptionForm(messages(s"gains.policy-type.error.missing-input.${if (userScenario.isAgent) "agent" else "individual"}")), sessionId).body)
 
         welshToggleCheck(userScenario.isWelsh)
         titleCheck(userScenario.specificExpectedResults.get.expectedTitle, userScenario.isWelsh)
@@ -218,7 +222,7 @@ class PolicyTypePageViewSpec extends ViewUnitTest {
         implicit val document: Document = Jsoup.parse(page(taxYear,
           RadioButtonPolicyTypeForm.radioButtonCustomOptionForm(messages(s"gains.policy-type.error.missing-input.${if (userScenario.isAgent) "agent" else "individual"}")).bind(
             Map(RadioButtonPolicyTypeForm.selectedOption -> "error")
-          ).withError("", "")
+          ).withError("", ""), sessionId
         ).body)
 
         welshToggleCheck(userScenario.isWelsh)

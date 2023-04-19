@@ -16,13 +16,15 @@
 
 package controllers.gains
 
+import models.gains.prior.IncomeSourceObject
 import play.api.http.HeaderNames
-import play.api.http.Status.{BAD_REQUEST, OK}
+import play.api.http.Status.{BAD_REQUEST, OK, SEE_OTHER}
 import play.api.libs.ws.WSResponse
 import support.IntegrationTest
 
 class GainsGatewayControllerISpec extends IntegrationTest {
 
+  clearSession()
   private def url(taxYear: Int): String = {
     s"/update-and-submit-income-tax-return/additional-information/$taxYear/gains/gains-gateway"
   }
@@ -31,6 +33,7 @@ class GainsGatewayControllerISpec extends IntegrationTest {
     "render the gains gateway page" in {
       lazy val result: WSResponse = {
         authoriseAgentOrIndividual(isAgent = false)
+        emptyUserDataStub()
         urlGet(url(taxYear), headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)))
       }
 
@@ -40,18 +43,87 @@ class GainsGatewayControllerISpec extends IntegrationTest {
     "render the gains gateway page for an agent" in {
       lazy val result: WSResponse = {
         authoriseAgentOrIndividual(isAgent = true)
+        emptyUserDataStub()
         urlGet(url(taxYear), headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)))
       }
 
       result.status shouldBe OK
     }
+
+    "render the gains gateway page with no prior" in {
+      lazy val result: WSResponse = {
+        authoriseAgentOrIndividual(isAgent = false)
+        urlGet(url(taxYear), headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)))
+      }
+
+      result.status shouldBe OK
+    }
+
+    "render gains gateway when prior data is empty" in {
+      lazy val result: WSResponse = {
+        authoriseAgentOrIndividual(isAgent = false)
+        userDataStub(IncomeSourceObject(Some(gainsPriorDataModel)), nino, taxYear)
+        urlGet(url(taxYear), headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)))
+      }
+
+      result.status shouldBe OK
+    }
+
+    "redirect to policies summary page when cya and prior data is present" in {
+      lazy val result: WSResponse = {
+        populateSessionData()
+        authoriseAgentOrIndividual(isAgent = false)
+        userDataStub(IncomeSourceObject(Some(gainsPriorDataModel)), nino, taxYear)
+        urlGet(url(taxYear), headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)))
+      }
+
+      result.status shouldBe SEE_OTHER
+    }
+
   }
 
   ".submit" should {
+    "redirect to policy type page if successful" in {
+      lazy val result: WSResponse = {
+        clearSession()
+        populateSessionData()
+        authoriseAgentOrIndividual(isAgent = false)
+        emptyUserDataStub()
+        urlPost(s"${url(taxYear)}/$sessionId", headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)), body = Map("value" -> "true"))
+      }
+
+      result.status shouldBe SEE_OTHER
+      result.headers("Location").head shouldBe s"/update-and-submit-income-tax-return/additional-information/$taxYear/gains/policy-type/$sessionId"
+    }
+
+    "redirect to policy type page if successful with no data" in {
+      lazy val result: WSResponse = {
+        clearSession()
+        authoriseAgentOrIndividual(isAgent = false)
+        emptyUserDataStub()
+        urlPost(s"${url(taxYear)}/$sessionId", headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)), body = Map("value" -> "true"))
+      }
+
+      result.status shouldBe SEE_OTHER
+      result.headers("Location").head shouldBe s"/update-and-submit-income-tax-return/additional-information/$taxYear/gains/policy-type/$sessionId"
+    }
+
+
+    "redirect to policy summary page if user chooses 'No'" in {
+      lazy val result: WSResponse = {
+        authoriseAgentOrIndividual(isAgent = false)
+        emptyUserDataStub()
+        urlPost(s"${url(taxYear)}/$sessionId", headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)), body = Map("value" -> "false"))
+      }
+
+      result.status shouldBe SEE_OTHER
+      result.headers("Location").head shouldBe s"/update-and-submit-income-tax-return/additional-information/$taxYear/gains/policy-summary/$sessionId"
+    }
+
     "show page with error text if form is empty" in {
       lazy val result: WSResponse = {
         authoriseAgentOrIndividual(isAgent = false)
-        urlPost(url(taxYear), headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)), body = Map[String, String]())
+        urlPost(s"${url(taxYear)}/$sessionId", headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)), body = Map[String, String]())
       }
 
       result.status shouldBe BAD_REQUEST

@@ -18,6 +18,8 @@ package models.gains
 
 import play.api.libs.json.{Json, OFormat}
 
+import java.util.UUID
+
 case class LifeAnnuityModel(
                              customerReference: Option[String] = None,
                              event: Option[String] = None,
@@ -26,7 +28,23 @@ case class LifeAnnuityModel(
                              yearsHeld: Option[Int] = None,
                              yearsHeldSinceLastGain: Option[Int] = None,
                              deficiencyRelief: Option[BigDecimal] = None
-                           )
+                           ) {
+  def toPolicyCya: PolicyCyaModel = {
+    PolicyCyaModel(
+      sessionId = UUID.randomUUID().toString,
+      policyType = "Life Annuity",
+      policyNumber = Some(this.customerReference.getOrElse("")),
+      amountOfGain = Some(this.gainAmount),
+      policyEvent = Some(""),
+      previousGain = Some(this.yearsHeld.isDefined),
+      yearsPolicyHeld = this.yearsHeld,
+      yearsPolicyHeldPrevious = Some(this.yearsHeldSinceLastGain.getOrElse(0)),
+      treatedAsTaxPaid = Some(this.taxPaid.getOrElse(false)),
+      entitledToDeficiencyRelief = Some(this.deficiencyRelief.isDefined),
+      deficiencyReliefAmount = this.deficiencyRelief
+    )
+  }
+}
 
 object LifeAnnuityModel {
   implicit val formats: OFormat[LifeAnnuityModel] = Json.format[LifeAnnuityModel]

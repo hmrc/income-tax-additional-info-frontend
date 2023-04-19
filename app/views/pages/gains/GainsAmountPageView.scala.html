@@ -34,7 +34,7 @@
       link: Link
  )
 
-    @(taxYear: Int, form: Form[BigDecimal])(implicit request: AuthorisationRequest[_], messages: Messages, appConfig: AppConfig)
+    @(taxYear: Int, form: Form[BigDecimal], session: String)(implicit request: AuthorisationRequest[_], messages: Messages, appConfig: AppConfig)
 
     @titleForUse = @{messages(s"gains.gain-amount.question.title")}
 
@@ -77,7 +77,7 @@
         </div>
     </details>
 
-        @formWithCsrf(action = controllers.gains.routes.GainsAmountController.submit(taxYear)) {
+        @formWithCsrf(action = controllers.gains.routes.GainsAmountController.submit(taxYear, session)) {
         @inputText(
         form = form,
         id = "amount",

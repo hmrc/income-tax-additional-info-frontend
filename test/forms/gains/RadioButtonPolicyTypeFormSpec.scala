@@ -64,7 +64,7 @@ class RadioButtonPolicyTypeFormSpec extends UnitTest {
 
     "return A foreign policy" when {
       "A foreign policy is selected" in {
-        val expectedResult = "A foreign policy"
+        val expectedResult = "Foreign Policy"
         val result = customOptionForm.bind(Map("policy-type" -> "foreignPolicy")).get
 
         result shouldBe expectedResult

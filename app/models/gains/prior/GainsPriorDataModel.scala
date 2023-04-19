@@ -16,16 +16,34 @@
 
 package models.gains.prior
 
-import models.gains.{CapitalRedemptionModel, ForeignModel, LifeAnnuityModel, LifeInsuranceModel, VoidedIsaModel}
+import models.gains.{CapitalRedemptionModel, ForeignModel, LifeAnnuityModel, LifeInsuranceModel, PolicyCyaModel, VoidedIsaModel}
 import play.api.libs.json.{Json, OFormat}
 
+case class IncomeSourceObject(gains: Option[GainsPriorDataModel])
+
+object IncomeSourceObject {
+  implicit val format: OFormat[IncomeSourceObject] = Json.format[IncomeSourceObject]
+}
 case class GainsPriorDataModel(
-                                 lifeInsurance: Seq[LifeInsuranceModel] = Seq.empty,
-                                 capitalRedemption: Option[Seq[CapitalRedemptionModel]] = None,
-                                 lifeAnnuity: Option[Seq[LifeAnnuityModel]] = None,
-                                 voidedIsa: Option[Seq[VoidedIsaModel]] = None,
-                                 foreign: Option[Seq[ForeignModel]] = None
-                               )
+                                submittedOn: String,
+                                lifeInsurance: Seq[LifeInsuranceModel] = Seq.empty,
+                                capitalRedemption: Option[Seq[CapitalRedemptionModel]] = None,
+                                lifeAnnuity: Option[Seq[LifeAnnuityModel]] = None,
+                                voidedIsa: Option[Seq[VoidedIsaModel]] = None,
+                                foreign: Option[Seq[ForeignModel]] = None
+                              ) {
+  def toPolicyCya: Seq[PolicyCyaModel] = {
+    (for {
+      lifeInsurance <- Some(lifeInsurance.map(_.toPolicyCya))
+      capitalRedemption <- capitalRedemption.map(_.map(_.toPolicyCya))
+      lifeAnnuity <- lifeAnnuity.map(_.map(_.toPolicyCya))
+      foreign <- foreign.map(_.map(_.toPolicyCya))
+      allPolicies <- Some(lifeInsurance ++ capitalRedemption ++ lifeAnnuity ++ foreign)
+    } yield {
+      allPolicies
+    }).getOrElse(Seq[PolicyCyaModel]())
+  }
+}
 
 object GainsPriorDataModel {
   implicit val format: OFormat[GainsPriorDataModel] = Json.format[GainsPriorDataModel]

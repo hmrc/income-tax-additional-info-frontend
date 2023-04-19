@@ -37,7 +37,7 @@
         link: Link
 )
 
-@(taxYear: Int, form: Form[(Boolean, Option[BigDecimal])])(implicit request: AuthorisationRequest[_], messages: Messages, appConfig: AppConfig)
+@(taxYear: Int, form: Form[(Boolean, Option[BigDecimal])], session: String)(implicit request: AuthorisationRequest[_], messages: Messages, appConfig: AppConfig)
 
 @titleForUse = @{messages(s"gains.deficiency-relief-status.question.radio.heading.${if(request.user.isAgent) "agent" else "individual"}")}
 
@@ -47,7 +47,7 @@
 
     @errorSummary(form.errors.distinct)
 
-    @formWithCsrf(action = controllers.gains.routes.GainsDeficiencyReliefController.submit(taxYear)) {
+    @formWithCsrf(action = controllers.gains.routes.GainsDeficiencyReliefController.submit(taxYear, session)) {
 
     @heading(headingForUse, Some(messages("gains.caption", (taxYear - 1).toString, taxYear.toString)))
 

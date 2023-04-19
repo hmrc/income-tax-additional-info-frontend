@@ -25,9 +25,12 @@ import play.api.mvc.AnyContent
 import support.ViewUnitTest
 import views.html.pages.gains.PolicyHeldPreviousPageView
 
+import java.util.UUID
+
 class PolicyHeldPreviousPageViewSpec extends ViewUnitTest {
 
   private val page: PolicyHeldPreviousPageView = inject[PolicyHeldPreviousPageView]
+  private val sessionId: String = UUID.randomUUID().toString
 
   object Selectors {
     val title = "#main-content > div > div > h1"
@@ -128,7 +131,7 @@ class PolicyHeldPreviousPageViewSpec extends ViewUnitTest {
         implicit val document: Document = Jsoup.parse(page(taxYear, InputYearForm.inputYearsForm(
           s"gains.policy-held-previous.question.error-empty.${if (userScenario.isAgent) "agent" else "individual"}",
           s"gains.policy-held-previous.question.error-incorrect.format",
-          "common.gains.policy.question.error-yearsExceedsMaximum")).body)
+          "common.gains.policy.question.error-yearsExceedsMaximum"), sessionId).body)
 
         welshToggleCheck(userScenario.isWelsh)
         titleCheck(userScenario.specificExpectedResults.get.expectedTitle, userScenario.isWelsh)
@@ -153,7 +156,7 @@ class PolicyHeldPreviousPageViewSpec extends ViewUnitTest {
           s"gains.policy-held-previous.question.error-empty.${if (userScenario.isAgent) "agent" else "individual"}",
           s"gains.policy-held-previous.question.error-incorrect.format",
           "common.gains.policy.question.error-yearsExceedsMaximum"
-        ).bind(Map(InputYearForm.numberOfYears -> ""))).body)
+        ).bind(Map(InputYearForm.numberOfYears -> "")), sessionId).body)
 
         welshToggleCheck(userScenario.isWelsh)
         captionCheck(userScenario.commonExpectedResults.expectedCaption(taxYear))
@@ -176,7 +179,7 @@ class PolicyHeldPreviousPageViewSpec extends ViewUnitTest {
           s"gains.policy-held-previous.question.error-empty.${if (userScenario.isAgent) "agent" else "individual"}",
           s"gains.policy-held-previous.question.error-incorrect.format",
           "common.gains.policy.question.error-yearsExceedsMaximum"
-        ).bind(Map(InputYearForm.numberOfYears -> "100"))).body)
+        ).bind(Map(InputYearForm.numberOfYears -> "100")), sessionId).body)
 
         welshToggleCheck(userScenario.isWelsh)
         captionCheck(userScenario.commonExpectedResults.expectedCaption(taxYear))
@@ -199,7 +202,7 @@ class PolicyHeldPreviousPageViewSpec extends ViewUnitTest {
           s"gains.policy-held-previous.question.error-empty.${if (userScenario.isAgent) "agent" else "individual"}",
           s"gains.policy-held-previous.question.error-incorrect.format",
           "common.gains.policy.question.error-yearsExceedsMaximum"
-        ).bind(Map(InputYearForm.numberOfYears -> "100.100.100"))).body)
+        ).bind(Map(InputYearForm.numberOfYears -> "100.100.100")), sessionId).body)
 
         welshToggleCheck(userScenario.isWelsh)
         captionCheck(userScenario.commonExpectedResults.expectedCaption(taxYear))
