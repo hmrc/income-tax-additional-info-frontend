@@ -25,9 +25,13 @@ import play.api.mvc.AnyContent
 import support.ViewUnitTest
 import views.html.pages.gains.GainsDeficiencyReliefPageView
 
+import java.util.UUID
+
 class DeficiencyReliefPageViewSpec extends ViewUnitTest {
 
   private val page: GainsDeficiencyReliefPageView = inject[GainsDeficiencyReliefPageView]
+  private val sessionId: String = UUID.randomUUID().toString
+
 
   private val exceedsMaxLimit = "1000000000000"
 
@@ -164,7 +168,7 @@ class DeficiencyReliefPageViewSpec extends ViewUnitTest {
           s"gains.deficiency-relief-status.question.input.error.noEntry",
           s"gains.deficiency-relief-status.question.input.error.incorrectFormat",
           s"gains.deficiency-relief-status.question.input.error.amountExceedsMax",
-          s"")).body)
+          s""), sessionId).body)
 
         welshToggleCheck(userScenario.isWelsh)
         titleCheck(userScenario.specificExpectedResults.get.expectedTitle, userScenario.isWelsh)
@@ -198,7 +202,7 @@ class DeficiencyReliefPageViewSpec extends ViewUnitTest {
           s"").bind(Map(
           RadioButtonAmountForm.amount -> "",
           RadioButtonAmountForm.yesNo -> ""
-        ))).body)
+        )), sessionId).body)
 
         welshToggleCheck(userScenario.isWelsh)
         titleCheck(userScenario.specificExpectedResults.get.expectedErrorTitle, userScenario.isWelsh)
@@ -231,7 +235,7 @@ class DeficiencyReliefPageViewSpec extends ViewUnitTest {
           s"").bind(Map(
           RadioButtonAmountForm.amount -> "",
           RadioButtonAmountForm.yesNo -> "true"
-        ))).body)
+        )), sessionId).body)
 
         welshToggleCheck(userScenario.isWelsh)
 
@@ -255,7 +259,7 @@ class DeficiencyReliefPageViewSpec extends ViewUnitTest {
           s"").bind(Map(
           RadioButtonAmountForm.amount -> "f",
           RadioButtonAmountForm.yesNo -> "true"
-        ))).body)
+        )), sessionId).body)
 
         welshToggleCheck(userScenario.isWelsh)
 
@@ -279,7 +283,7 @@ class DeficiencyReliefPageViewSpec extends ViewUnitTest {
           s"").bind(Map(
           RadioButtonAmountForm.amount -> exceedsMaxLimit,
           RadioButtonAmountForm.yesNo -> "true"
-        ))).body)
+        )), sessionId).body)
 
         welshToggleCheck(userScenario.isWelsh)
 

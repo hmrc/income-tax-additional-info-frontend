@@ -16,49 +16,53 @@
 
 package controllers.gains
 
-import forms.RadioButtonYearForm.{yearInput, yesNo}
-import models.gains.prior.IncomeSourceObject
+import forms.gains.InputFieldForm
+import models.gains.prior.{GainsPriorDataModel, IncomeSourceObject}
+import models.gains.LifeInsuranceModel
 import play.api.http.HeaderNames
 import play.api.http.Status.{BAD_REQUEST, OK, SEE_OTHER}
 import play.api.libs.ws.WSResponse
 import support.IntegrationTest
 
-class GainsStatusControllerISpec extends IntegrationTest {
 
+class PolicyNameControllerISpec extends IntegrationTest {
+
+  clearSession()
   populateSessionData()
   private def url(taxYear: Int): String = {
-    s"/update-and-submit-income-tax-return/additional-information/$taxYear/gains/gains-status/$sessionId"
+    s"/update-and-submit-income-tax-return/additional-information/$taxYear/gains/policy-name/$sessionId"
   }
 
   ".show" should {
-    "render the gains status page for individual user" in {
+
+    "render the customer reference page" in {
       lazy val result: WSResponse = {
         authoriseAgentOrIndividual(isAgent = false)
+        userDataStub(IncomeSourceObject(Some(GainsPriorDataModel("", Seq(LifeInsuranceModel(customerReference = Some("abc123"), gainAmount = BigDecimal(123.45)))))), nino, taxYear)
         urlGet(url(taxYear), headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)))
       }
 
       result.status shouldBe OK
     }
 
-    "render the gains status page for an agent" in {
+    "render the paid tax status page for an agent" in {
+      lazy val result: WSResponse = {
+        authoriseAgentOrIndividual(isAgent = true)
+        urlGet(url(taxYear), headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)))
+      }
+      result.status shouldBe OK
+    }
+
+    "render the policy number page with pre-filled data" in {
+      clearSession()
+      populateWithSessionDataModel(Seq(completePolicyCyaModel.copy(policyNumber= Some("abc123"))))
       lazy val result: WSResponse = {
         authoriseAgentOrIndividual(isAgent = true)
         urlGet(url(taxYear), headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)))
       }
 
       result.status shouldBe OK
-    }
-
-    "render the gains status with pre-filled data" in {
-      clearSession()
-      populateWithSessionDataModel(Seq(completePolicyCyaModel.copy(previousGain = Some(true))))
-      lazy val result: WSResponse = {
-        authoriseAgentOrIndividual(isAgent = false)
-        urlGet(url(taxYear), headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)))
-      }
-
-      result.status shouldBe OK
-      result.body.contains("Yes")
+      result.body.contains("abc123")
     }
 
     "return an internal server error" in {
@@ -82,20 +86,33 @@ class GainsStatusControllerISpec extends IntegrationTest {
   }
 
   ".submit" should {
-    "redirect to policy held previous page if successful" in {
+    "redirect to gains amount page if successful" in {
       clearSession()
       populateSessionData()
       lazy val result: WSResponse = {
         authoriseAgentOrIndividual(isAgent = false)
         userDataStub(IncomeSourceObject(Some(gainsPriorDataModel)), nino, taxYear)
-        urlPost(url(taxYear), headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)), body = Map(yesNo -> "true"))
+        urlPost(url(taxYear), headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)), body = Map(InputFieldForm.value -> "mixedAlphaNumOnly1"))
       }
 
       result.status shouldBe SEE_OTHER
-      result.headers("Location").head shouldBe s"/update-and-submit-income-tax-return/additional-information/$taxYear/gains/policy-held-previous/$sessionId"
+      result.headers("Location").head shouldBe s"/update-and-submit-income-tax-return/additional-information/$taxYear/gains/gains-amount/$sessionId"
     }
 
-    "show page with error text if form is empty" in {
+    "redirect to summary when model is full if successful" in {
+      clearSession()
+      populateWithSessionDataModel(Seq(completePolicyCyaModel))
+      lazy val result: WSResponse = {
+        authoriseAgentOrIndividual(isAgent = false)
+        userDataStub(IncomeSourceObject(Some(gainsPriorDataModel)), nino, taxYear)
+        urlPost(url(taxYear), headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)), body = Map(InputFieldForm.value -> "mixedAlphaNumOnly1"))
+      }
+
+      result.status shouldBe SEE_OTHER
+      result.headers("Location").head shouldBe s"/update-and-submit-income-tax-return/additional-information/$taxYear/gains/policy-summary/${sessionId}"
+    }
+
+    "show page with error text if form is invalid" in {
       lazy val result: WSResponse = {
         authoriseAgentOrIndividual(isAgent = false)
         urlPost(url(taxYear), headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)), body = Map[String, String]())
@@ -104,37 +121,32 @@ class GainsStatusControllerISpec extends IntegrationTest {
       result.status shouldBe BAD_REQUEST
     }
 
-    "redirect to summary when model is full if successful" in {
-      clearSession()
-      populateWithSessionDataModel(Seq(completePolicyCyaModel.copy(previousGain = Some(false))))
+    "show page with error text if input is the wrong format" in {
       lazy val result: WSResponse = {
         authoriseAgentOrIndividual(isAgent = false)
-        userDataStub(IncomeSourceObject(Some(gainsPriorDataModel)), nino, taxYear)
-        urlPost(url(taxYear), headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)), body = Map(yesNo -> "false"))
+        urlPost(url(taxYear), headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)), body = Map[String, String](
+          "value" -> "!@£"
+        ))
       }
 
-      result.status shouldBe SEE_OTHER
-      result.headers("Location").head shouldBe s"/update-and-submit-income-tax-return/additional-information/$taxYear/gains/policy-summary/${sessionId}"
+      result.status shouldBe BAD_REQUEST
     }
 
-    "redirect to policy held page if successful" in {
-      clearSession()
-      populateSessionData()
+    "return an internal server error when session is invalid" in {
       lazy val result: WSResponse = {
         authoriseAgentOrIndividual(isAgent = false)
-        userDataStub(IncomeSourceObject(Some(gainsPriorDataModel)), nino, taxYear)
-        urlPost(url(taxYear), headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)), body = Map(yesNo -> "false"))
+        urlPost(url(taxYear) + "bad-session", headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)), body = Map(InputFieldForm.value -> "mixedAlphaNumOnly1"))
       }
 
-      result.status shouldBe SEE_OTHER
-      result.headers("Location").head shouldBe s"/update-and-submit-income-tax-return/additional-information/$taxYear/gains/policy-held/${sessionId}"
+      result.status shouldBe 500
     }
 
     "return an internal server error when no data is present" in {
       clearSession()
       lazy val result: WSResponse = {
         authoriseAgentOrIndividual(isAgent = false)
-        urlPost(url(1900), headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)), body = Map(yesNo -> "true", yearInput -> "10"))
+        emptyUserDataStub()
+        urlPost(url(1900), headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)), body = Map(InputFieldForm.value -> "mixedAlphaNumOnly1"))
       }
 
       result.status shouldBe 500

@@ -27,7 +27,7 @@ object RadioButtonPolicyTypeForm {
   private val lifeAnnuityOption = "Life Annuity"
   private val capitalRedemptionOption = "Capital Redemption"
   private val voidedIsaOption = "Voided ISA"
-  private val foreignPolicyOption = "A foreign policy"
+  private val foreignPolicyOption = "Foreign Policy"
 
   def formatter(missingInputError: String, errorArgs: Seq[Any] = Seq.empty): Formatter[String] = new Formatter[String] {
     override def bind(key: String, data: Map[String, String]): Either[Seq[FormError], String] = {

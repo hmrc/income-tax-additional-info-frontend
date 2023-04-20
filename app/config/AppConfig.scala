@@ -64,6 +64,9 @@ class AppConfig @Inject()(servicesConfig: ServicesConfig) {
   lazy val encryptionKey: String = servicesConfig.getString("mongodb.encryption.key")
   lazy val mongoTTL: Int = Duration(servicesConfig.getString("mongodb.timeToLive")).toMinutes.toInt
 
+  val incomeTaxSubmissionUrl = "microservice.services.income-tax-submission.url"
+  lazy val incomeTaxSubmissionBEBaseUrl: String = servicesConfig.getString(incomeTaxSubmissionUrl) + "/income-tax-submission-service"
+
   def incomeTaxSubmissionBaseUrl: String = servicesConfig.getString(incomeTaxSubmissionFrontendUrlKey) +
     servicesConfig.getString(key = "microservice.services.income-tax-submission-frontend.context")
 

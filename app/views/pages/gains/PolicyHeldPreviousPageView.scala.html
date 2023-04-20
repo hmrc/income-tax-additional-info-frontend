@@ -34,7 +34,7 @@
         link: Link
 )
 
-@(taxYear: Int, form: Form[Option[Int]])(implicit request: AuthorisationRequest[_], messages: Messages, appConfig: AppConfig)
+@(taxYear: Int, form: Form[Option[Int]], session: String)(implicit request: AuthorisationRequest[_], messages: Messages, appConfig: AppConfig)
 
 @titleForUse = @{messages(s"gains.policy-held-previous.question.title.${if(request.user.isAgent) "agent" else "individual"}")}
 
@@ -58,7 +58,7 @@
 
     <p id="p3" class="govuk-body">@messages(s"gains.policy-held-previous.question.paragraph.3.${if(request.user.isAgent) "agent" else "individual"}")</p>
 
-    @formWithCsrf(action = controllers.gains.routes.PolicyHeldPreviousController.submit(taxYear)) {
+    @formWithCsrf(action = controllers.gains.routes.PolicyHeldPreviousController.submit(taxYear, session)) {
         @inputText(
             form = form,
             id = "year",

@@ -18,7 +18,10 @@
 @import views.html.templates.helpers.Heading
 @import views.html.templates.helpers.Link
 @import views.html.templates.helpers.SummaryList
+@import views.html.templates.helpers.Button
 
+@import java.util.UUID._
+@import models.gains.PolicyCyaModel
 @import models.requests.AuthorisationRequest
 
 @this(
@@ -26,117 +29,91 @@
     heading: Heading,
     govukWarningText: GovukWarningText,
     govukButton: GovukButton,
+    button: Button,
     summaryList: SummaryList,
     link: Link
 )
 
-@(taxYear: Int)(implicit request: AuthorisationRequest[_], messages: Messages, appConfig: AppConfig)
+@(taxYear: Int, gain: Seq[PolicyCyaModel])(implicit request: AuthorisationRequest[_], messages: Messages, appConfig: AppConfig)
 
 @titleForUse = @{messages(s"gains.summary.title.${if(request.user.isAgent) "agent" else "individual"}")}
 
 @headingForUse = @{titleForUse}
 
+@emptyContent = {
+    @heading(messages("common.gains.policies"), Some(messages("gains.caption", (taxYear - 1).toString, taxYear.toString)))
+
+    <p class="govuk-body">@messages("gains.policies-empty.question.paragraph1")</p>
+
+    @button(
+        "gains.policies-empty.question.button",
+        href = Some(controllers.gains.routes.PolicyTypeController.show(taxYear, s"session-$randomUUID").url)
+    )
+
+    <p class="govuk-body">@messages("gains.policies-empty.question.paragraph2")</p>
+
+    <div class="govuk-form-group">
+        @button(
+            href = Some(appConfig.incomeTaxSubmissionOverviewUrl(taxYear)),
+            alternativeText = "common.return.to.overview",
+            attributes = Map("id" -> "returnToOverviewPageBtn"),
+            classes = Some("govuk-button--secondary")
+        )
+    </div>
+}
+
+@content = {
+    @heading(headingForUse, Some(messages("gains.caption", (taxYear - 1).toString, taxYear.toString)), "govuk-!-margin-bottom-5")
+
+<dl class="govuk-summary-list govuk-!-margin-bottom-9">
+    @{gain.map(elem =>
+    <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key govuk-!-font-weight-regular">
+           {elem.policyNumber.getOrElse("")}
+        </dt>
+        <dd class="govuk-summary-list__value">
+            {
+            elem.policyType match {
+                case "Life Insurance" => messages("gains.policy-type.radio1")
+                case "Life Annuity" => messages("gains.policy-type.radio2")
+                case "Capital Redemption" => messages("gains.policy-type.radio3")
+                case "Voided ISA" => messages("gains.policy-type.radio4.individual")
+                case "Foreign Policy" => messages("gains.policy-type.radio5")
+                case _ => ""
+            }
+            }
+        </dd>
+        <dd class="govuk-summary-list__actions">
+            <a class="govuk-link" id="policy-change" href={controllers.gains.routes.PolicySummaryController.show(taxYear, elem.sessionId).url}>
+                <span aria-hidden ="true" > {messages("common.change")} </span>
+                <span class="govuk-visually-hidden"> {messages("gains.policies-add.summary.hidden.text.change")} </span>
+            </a>
+        </dd>
+        <dd class="govuk-summary-list__actions">
+            <a class="govuk-link" id="policy-remove" href={controllers.gains.routes.PoliciesRemoveController.show(taxYear, elem.sessionId).url}>
+                <span aria-hidden ="true" > {messages("common.remove")} </span>
+                <span class="govuk-visually-hidden"> {messages("gains.policies-add.summary.hidden.text.remove")} </span>
+            </a>
+        </dd>
+    </div>
+    )}
+</dl>
+
+<p class="govuk-body">
+    <a href=@controllers.gains.routes.PolicyTypeController.show(taxYear, s"session-$randomUUID") class="govuk-link">
+        @messages("gains.policies-add.link.text")
+    </a>
+</p>
+
+    @button(
+        href = Some(appConfig.incomeTaxSubmissionOverviewUrl(taxYear)),
+        alternativeText = "common.return.to.overview",
+        attributes = Map("id" -> "returnToOverviewPageBtn")
+    )
+}
+
 @layout(pageTitle = titleForUse, taxYear = Some(taxYear), isAgent = request.user.isAgent) {
-
-@heading(headingForUse, Some(messages("gains.caption", (taxYear - 1).toString, taxYear.toString)), "govuk-!-margin-bottom-5")
-
-    @summaryList(
-        classes = Some("govuk-!-margin-bottom-8"),
-        rows = Seq(
-            SummaryListRow(
-                key = Key(
-                content = Text(messages(s"gains.summary.key")),
-                classes = "govuk-!-width-one-half"
-                ),
-                value = Value(
-                content = Text(messages(s"common.yes"))
-                ),
-                actions = Some(
-                    Actions(
-                    items = Seq(
-                        ActionItem(
-                        href = "#",
-                        content = Text(messages(s"common.change"))
-                        )
-                    )
-                )
-            )
-        ),
-        SummaryListRow(
-            key = Key(
-            content = Text("LIFE123abc"),
-            classes = "govuk-!-width-one-half"
-            ),
-            value = Value(
-            content = Text("")
-            ),
-            actions = Some(
-                Actions(
-                    items = Seq(
-                        ActionItem(
-                            href = "#",
-                            content = Text(messages(s"common.change"))
-                            )
-                        )
-                    )
-                )
-            )
-        )
-    )
-
-    <h2 class="govuk-heading-m">@messages(s"gains.summary.sub-title")</h2>
-
-    @summaryList(
-        classes = Some("govuk-!-margin-bottom-8"),
-        rows = Seq(
-            SummaryListRow(
-                key = Key(
-                content = Text(messages(s"gains.summary.key.cancelled")),
-                classes = "govuk-!-width-one-half"
-                ),
-                value = Value(
-                content = Text(messages(s"common.yes"))
-                ),
-                actions = Some(
-                    Actions(
-                        items = Seq(
-                            ActionItem(
-                                href = "#",
-                                content = Text(messages(s"common.change"))
-                            )
-                        )
-                    )
-                )
-            ),
-            SummaryListRow(
-                key = Key(
-                content = Text("CONTRACT123XYZ"),
-                classes = "govuk-!-width-one-half"
-                ),
-                value = Value(
-                content = Text("")
-                ),
-                actions = Some(
-                    Actions(
-                        items = Seq(
-                            ActionItem(
-                                href = "#",
-                                content = Text(messages(s"common.change"))
-                            )
-                        )
-                    )
-                )
-            )
-        )
-    )
-
-    @govukButton(
-        Button(
-            preventDoubleClick = Some(true),
-            content = Text(messages(s"common.return.to.overview")),
-            href = Some("#")
-        )
-    )
+    @{if(!gain.nonEmpty) emptyContent else content}
 }
 
 @{

@@ -17,6 +17,7 @@
 package controllers.gains
 
 import forms.RadioButtonAmountForm
+import models.gains.prior.IncomeSourceObject
 import play.api.http.HeaderNames
 import play.api.http.Status.{BAD_REQUEST, OK, SEE_OTHER}
 import play.api.libs.ws.WSResponse
@@ -24,8 +25,11 @@ import support.IntegrationTest
 
 class PaidTaxStatusControllerISpec extends IntegrationTest {
 
+  clearSession()
+  populateSessionData()
+
   private def url(taxYear: Int): String = {
-    s"/update-and-submit-income-tax-return/additional-information/$taxYear/gains/paid-tax-status"
+    s"/update-and-submit-income-tax-return/additional-information/$taxYear/gains/paid-tax-status/$sessionId"
   }
 
   ".show" should {
@@ -44,17 +48,65 @@ class PaidTaxStatusControllerISpec extends IntegrationTest {
       }
       result.status shouldBe OK
     }
+
+    "render the gains status with pre-filled data" in {
+      clearSession()
+      populateWithSessionDataModel(Seq(completePolicyCyaModel.copy(treatedAsTaxPaid = Some(true))))
+      lazy val result: WSResponse = {
+        authoriseAgentOrIndividual(isAgent = false)
+        urlGet(url(taxYear), headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)))
+      }
+
+      result.status shouldBe OK
+      result.body.contains("Yes")
+    }
+
+    "return an internal server error" in {
+      lazy val result: WSResponse = {
+        authoriseAgentOrIndividual(isAgent = false)
+        urlGet(url(taxYear) + "bad-session", headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)))
+      }
+
+      result.status shouldBe 500
+    }
+
+    "redirect to income tax submission overview page if no session data is found" in {
+      clearSession()
+      lazy val result: WSResponse = {
+        authoriseAgentOrIndividual(isAgent = false)
+        urlGet(url(taxYear), headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)))
+      }
+
+      result.status shouldBe SEE_OTHER
+    }
   }
 
   ".submit" should {
-    "redirect to income tax submission overview if successful" in {
+    "redirect to deficiency relief page if successful" in {
+      clearSession()
+      populateSessionData()
       lazy val result: WSResponse = {
         authoriseAgentOrIndividual(isAgent = false)
+        userDataStub(IncomeSourceObject(Some(gainsPriorDataModel)), nino, taxYear)
         urlPost(url(taxYear), headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)), body = Map(RadioButtonAmountForm.yesNo -> "true", RadioButtonAmountForm.amount -> "100"))
       }
 
       result.status shouldBe SEE_OTHER
-      result.headers("Location").head shouldBe appConfig.incomeTaxSubmissionOverviewUrl(taxYear)
+      result.headers("Location").head shouldBe s"/update-and-submit-income-tax-return/additional-information/$taxYear/gains/deficiency-relief-status/$sessionId"
+
+    }
+
+    "redirect to summary when model is full if successful" in {
+      clearSession()
+      populateWithSessionDataModel(Seq(completePolicyCyaModel))
+      lazy val result: WSResponse = {
+        authoriseAgentOrIndividual(isAgent = false)
+        userDataStub(IncomeSourceObject(Some(gainsPriorDataModel)), nino, taxYear)
+        urlPost(url(taxYear), headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)), body = Map(RadioButtonAmountForm.yesNo -> "false"))
+      }
+
+      result.status shouldBe SEE_OTHER
+      result.headers("Location").head shouldBe s"/update-and-submit-income-tax-return/additional-information/$taxYear/gains/policy-summary/${sessionId}"
     }
 
     "show page with error text if no radio is selected" in {

@@ -18,6 +18,8 @@ package models.gains
 
 import play.api.libs.json.{Json, OFormat}
 
+import java.util.UUID
+
 case class CapitalRedemptionModel(
                                    customerReference: Option[String] = None,
                                    event: Option[String] = None,
@@ -26,7 +28,23 @@ case class CapitalRedemptionModel(
                                    yearsHeld: Option[Int] = None,
                                    yearsHeldSinceLastGain: Option[Int] = None,
                                    deficiencyRelief: Option[BigDecimal] = None
-                                 )
+                                 ) {
+  def toPolicyCya: PolicyCyaModel = {
+    PolicyCyaModel(
+      sessionId = UUID.randomUUID().toString,
+      policyType = "Capital Redemption",
+      policyNumber = this.customerReference,
+      amountOfGain = Some(this.gainAmount),
+      policyEvent = Some(""),
+      previousGain = Some(this.yearsHeld.isDefined),
+      yearsPolicyHeld = this.yearsHeld,
+      yearsPolicyHeldPrevious = Some(0),
+      treatedAsTaxPaid = Some(this.taxPaid.isDefined),
+      entitledToDeficiencyRelief = Some(this.deficiencyRelief.isDefined),
+      deficiencyReliefAmount = this.deficiencyRelief
+    )
+  }
+}
 
 object CapitalRedemptionModel {
   implicit val formats: OFormat[CapitalRedemptionModel] = Json.format[CapitalRedemptionModel]

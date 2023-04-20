@@ -104,7 +104,6 @@ class GainsSubmissionConnectorISpec extends IntegrationTest {
       val headersSentToGainsSubmission= Seq(new HttpHeader(HeaderNames.xSessionId, "sessionIdValue"), new HttpHeader("mtditid", mtditid))
 
       val internalHost = "localhost"
-      val externalHost = "127.0.0.1"
 
       "the host is 'Internal'" in {
         implicit val hc: HeaderCarrier = HeaderCarrier(sessionId = Some(SessionId("sessionIdValue"))).withExtraHeaders("mtditid"->mtditid)

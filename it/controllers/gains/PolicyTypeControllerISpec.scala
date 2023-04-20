@@ -16,6 +16,7 @@
 
 package controllers.gains
 
+import models.gains.prior.IncomeSourceObject
 import play.api.http.HeaderNames
 import play.api.http.Status.{BAD_REQUEST, OK, SEE_OTHER}
 import play.api.libs.ws.WSResponse
@@ -23,11 +24,14 @@ import support.IntegrationTest
 
 class PolicyTypeControllerISpec extends IntegrationTest {
 
+  clearSession()
+  populateSessionData()
   private def url(taxYear: Int): String = {
-    s"/update-and-submit-income-tax-return/additional-information/$taxYear/gains/policy-type"
+    s"/update-and-submit-income-tax-return/additional-information/$taxYear/gains/policy-type/$sessionId"
   }
 
   ".show" should {
+
     "render the policy type page" in {
       lazy val result: WSResponse = {
         authoriseAgentOrIndividual(isAgent = false)
@@ -45,17 +49,62 @@ class PolicyTypeControllerISpec extends IntegrationTest {
 
       result.status shouldBe OK
     }
+
+    "render the page with no data for new session" in {
+      lazy val result: WSResponse = {
+        authoriseAgentOrIndividual(isAgent = false)
+        urlGet(url(taxYear) + "bad-session", headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)))
+      }
+
+      result.status shouldBe OK
+    }
+
+    "render the policy type page with pre-filled data" in {
+      clearSession()
+      populateWithSessionDataModel(Seq(completePolicyCyaModel.copy(policyType = "Life Insurance")))
+      lazy val result: WSResponse = {
+        authoriseAgentOrIndividual(isAgent = true)
+        urlGet(url(taxYear), headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)))
+      }
+
+      result.status shouldBe OK
+      result.body.contains("Life Insurance")
+    }
+
+    "redirect to income tax submission overview page if no session data is found" in {
+      clearSession()
+      lazy val result: WSResponse = {
+        authoriseAgentOrIndividual(isAgent = false)
+        urlGet(url(taxYear), headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)))
+      }
+
+      result.status shouldBe SEE_OTHER
+    }
   }
 
   ".submit" should {
-    "redirect to income tax submission overview if successful" in {
+    "redirect to policy name if successful" in {
+      clearSession()
+      populateSessionData()
       lazy val result: WSResponse = {
         authoriseAgentOrIndividual(isAgent = false)
+        userDataStub(IncomeSourceObject(Some(gainsPriorDataModel)), nino, taxYear)
         urlPost(url(taxYear), headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)), body = Map("policy-type" -> "lifeInsurance"))
       }
 
       result.status shouldBe SEE_OTHER
-      result.headers("Location").head shouldBe appConfig.incomeTaxSubmissionOverviewUrl(taxYear)
+      result.headers("Location").head shouldBe s"/update-and-submit-income-tax-return/additional-information/$taxYear/gains/policy-name/$sessionId"
+    }
+
+    "redirect to policy name if successful in new journey" in {
+      lazy val result: WSResponse = {
+        authoriseAgentOrIndividual(isAgent = false)
+        userDataStub(IncomeSourceObject(Some(gainsPriorDataModel)), nino, taxYear)
+        urlPost(url(taxYear) + "new-session", headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)), body = Map("policy-type" -> "lifeInsurance"))
+      }
+
+      result.status shouldBe SEE_OTHER
+      result.headers("Location").head shouldBe s"/update-and-submit-income-tax-return/additional-information/$taxYear/gains/policy-name/${sessionId}new-session"
     }
 
     "show page with error text if no selection is made" in {
@@ -65,6 +114,29 @@ class PolicyTypeControllerISpec extends IntegrationTest {
       }
 
       result.status shouldBe BAD_REQUEST
+    }
+
+    "redirect to summary when model is full if successful" in {
+      clearSession()
+      populateWithSessionDataModel(Seq(completePolicyCyaModel))
+      lazy val result: WSResponse = {
+        authoriseAgentOrIndividual(isAgent = false)
+        userDataStub(IncomeSourceObject(Some(gainsPriorDataModel)), nino, taxYear)
+        urlPost(url(taxYear), headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)), body = Map("policy-type" -> "lifeInsurance"))
+      }
+
+      result.status shouldBe SEE_OTHER
+      result.headers("Location").head shouldBe s"/update-and-submit-income-tax-return/additional-information/$taxYear/gains/policy-summary/${sessionId}"
+    }
+
+    "return an internal server error when no data is present" in {
+      clearSession()
+      lazy val result: WSResponse = {
+        authoriseAgentOrIndividual(isAgent = false)
+        urlPost(url(taxYear), headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)), body = Map("policy-type" -> "lifeInsurance"))
+      }
+
+      result.status shouldBe 500
     }
   }
 }

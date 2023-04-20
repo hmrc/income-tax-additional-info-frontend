@@ -25,15 +25,18 @@ import play.api.mvc.AnyContent
 import support.ViewUnitTest
 import views.html.pages.gains.PolicyHeldPageView
 
+import java.util.UUID
+
 class PolicyHeldPageViewSpec extends ViewUnitTest {
 
   private val page: PolicyHeldPageView = inject[PolicyHeldPageView]
+  private val sessionId: String = UUID.randomUUID().toString
 
   object Selectors {
     val paragraph = "#para1"
     val paragraph2 = "#para2"
     val paragraph3 = "#para3"
-    val subTitle = "#main-content > div > div > form > p"
+    val subTitle = "#subTitle"
     val continueButton = "#continue"
     val getHelpLink = "#help"
     val yearErrorHref = "#year"
@@ -137,7 +140,7 @@ class PolicyHeldPageViewSpec extends ViewUnitTest {
         implicit val document: Document = Jsoup.parse(page(taxYear, InputYearForm.inputYearsForm(
           s"gains.policy-held.question.error-empty.${if (userScenario.isAgent) "agent" else "individual"}",
           s"gains.policy-held.question.error-incorrect.format.${if (userScenario.isAgent) "agent" else "individual"}",
-          "common.gains.policy.question.error-yearsExceedsMaximum")).body)
+          "common.gains.policy.question.error-yearsExceedsMaximum"), sessionId).body)
 
         welshToggleCheck(userScenario.isWelsh)
         titleCheck(userScenario.commonExpectedResults.expectedTitle, userScenario.isWelsh)
@@ -163,7 +166,7 @@ class PolicyHeldPageViewSpec extends ViewUnitTest {
           s"gains.policy-held.question.error-empty.${if (userScenario.isAgent) "agent" else "individual"}",
           s"gains.policy-held.question.error-incorrect.format.${if (userScenario.isAgent) "agent" else "individual"}",
           "common.gains.policy.question.error-yearsExceedsMaximum"
-        ).bind(Map(InputYearForm.numberOfYears -> ""))).body)
+        ).bind(Map(InputYearForm.numberOfYears -> "")), sessionId).body)
 
         welshToggleCheck(userScenario.isWelsh)
         titleCheck(userScenario.commonExpectedResults.expectedErrorTitle, userScenario.isWelsh)
@@ -188,7 +191,7 @@ class PolicyHeldPageViewSpec extends ViewUnitTest {
           s"gains.policy-held.question.error-empty.${if (userScenario.isAgent) "agent" else "individual"}",
           s"gains.policy-held.question.error-incorrect.format.${if (userScenario.isAgent) "agent" else "individual"}",
           "common.gains.policy.question.error-yearsExceedsMaximum"
-        ).bind(Map(InputYearForm.numberOfYears -> "100"))).body)
+        ).bind(Map(InputYearForm.numberOfYears -> "100")), sessionId).body)
 
         welshToggleCheck(userScenario.isWelsh)
         titleCheck(userScenario.commonExpectedResults.expectedErrorTitle, userScenario.isWelsh)
@@ -213,7 +216,7 @@ class PolicyHeldPageViewSpec extends ViewUnitTest {
           s"gains.policy-held.question.error-empty.${if (userScenario.isAgent) "agent" else "individual"}",
           s"gains.policy-held.question.error-incorrect.format.${if (userScenario.isAgent) "agent" else "individual"}",
           "common.gains.policy.question.error-yearsExceedsMaximum"
-        ).bind(Map(InputYearForm.numberOfYears -> "100.100.100"))).body)
+        ).bind(Map(InputYearForm.numberOfYears -> "100.100.100")), sessionId).body)
 
         welshToggleCheck(userScenario.isWelsh)
         titleCheck(userScenario.commonExpectedResults.expectedErrorTitle, userScenario.isWelsh)

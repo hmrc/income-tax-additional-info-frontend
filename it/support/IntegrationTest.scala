@@ -17,20 +17,28 @@
 package support
 
 import akka.actor.ActorSystem
+import com.github.tomakehurst.wiremock.stubbing.StubMapping
 import config.AppConfig
-import models.User
+import connectors.GetGainsConnector
+import models.{AllGainsSessionModel, User}
 import models.authorisation.SessionValues
-import models.gains.GainsCyaModel
+import models.gains.{LifeInsuranceModel, PolicyCyaModel}
+import models.gains.prior.{GainsPriorDataModel, IncomeSourceObject}
 import org.scalatest.BeforeAndAfterAll
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
 import org.scalatestplus.play.guice.GuiceOneServerPerSuite
 import play.api.http.HeaderNames
+import play.api.http.Status.OK
 import play.api.inject.guice.GuiceApplicationBuilder
+import play.api.libs.json.Json
 import play.api.libs.ws.{BodyWritable, WSClient, WSResponse}
 import play.api.mvc.Result
 import play.api.{Application, Environment, Mode}
+import repositories.GainsUserDataRepository
+import services.GainsSessionService
 import support.builders.UserBuilder.aUser
+import support.builders.requests.AuthorisationRequestBuilder
 import support.helpers.{PlaySessionCookieBaker, WireMockServer}
 import support.providers.TaxYearProvider
 import support.stubs.WireMockStubs
@@ -147,7 +155,27 @@ trait IntegrationTest extends AnyWordSpec
     SessionKeys.authToken -> "mock-bearer-token"
   ) ++ extraData)
 
-  val completeGainsCyaModel: GainsCyaModel = GainsCyaModel(
-      Some(true), Some("123"), Some("cause"), Some(true), Some("2"), Some(123.11), Some("2"), Some(true), Some(123.11), Some(true), Some(123.11)
+  val completePolicyCyaModel: PolicyCyaModel = PolicyCyaModel(
+      sessionId, "", Some("123"), Some(0), Some(""), Some(true), Some(0), Some(0), Some(true), Some(123.11), Some(true), Some(123.11)
     )
+
+  val gainsPriorDataModel: GainsPriorDataModel = GainsPriorDataModel("submittedOn", lifeInsurance = Seq(LifeInsuranceModel(Some("abc123"), Some("event"), BigDecimal(123.45), Some(true), Some(5), Some(10))))
+  val gainsUserDataRepository: GainsUserDataRepository = app.injector.instanceOf[GainsUserDataRepository]
+  val getGainsDataConnector: GetGainsConnector = app.injector.instanceOf[GetGainsConnector]
+  val gainsSessionService: GainsSessionService = new GainsSessionService(gainsUserDataRepository, getGainsDataConnector)
+
+  def populateSessionData(): Boolean =
+    await(gainsSessionService.createSessionData(AllGainsSessionModel(Seq(PolicyCyaModel(sessionId, ""))), taxYear)(false)(true)(AuthorisationRequestBuilder.anAuthorisationRequest, ec))
+
+  def populateWithSessionDataModel(cya: Seq[PolicyCyaModel]): Boolean =
+    await(gainsSessionService.createSessionData(AllGainsSessionModel(cya), taxYear)(false)(true)(AuthorisationRequestBuilder.anAuthorisationRequest, ec))
+  def clearSession(): Boolean = await(gainsUserDataRepository.clear(taxYear))
+  def userDataStub(userData: IncomeSourceObject, nino: String, taxYear: Int): StubMapping = {
+    stubGetWithHeadersCheck(
+      s"/income-tax-submission-service/income-tax/nino/$nino/sources/session\\?taxYear=$taxYear", OK,
+      Json.toJson(userData).toString(), "X-Session-ID" -> sessionId, "mtditid" -> mtditid)
+  }
+  def emptyUserDataStub(nino: String = nino, taxYear: Int = taxYear): StubMapping = {
+    userDataStub(IncomeSourceObject(None), nino, taxYear)
+  }
 }

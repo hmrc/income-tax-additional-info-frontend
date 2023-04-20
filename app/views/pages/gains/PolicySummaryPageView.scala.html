@@ -18,6 +18,7 @@
 @import views.html.templates.helpers.Heading
 @import views.html.templates.helpers.Button
 @import utils.ViewUtils.summaryListRow
+@import models.gains.PolicyCyaModel
 
 @import models.requests.AuthorisationRequest
 
@@ -25,67 +26,129 @@
         layout: Layout,
         heading: Heading,
         button: Button,
+        formWithCsrf: FormWithCSRF,
         govukSummaryList: GovukSummaryList
 )
 
-@(taxYear: Int)(implicit request: AuthorisationRequest[_], messages: Messages, appConfig: AppConfig)
+@(taxYear: Int, gain: Seq[PolicyCyaModel], session: String)(implicit request: AuthorisationRequest[_], messages: Messages, appConfig: AppConfig)
 
 @titleForUse = @{messages(s"gains.policy-summary.question.title")}
 
 @headingForUse = @{titleForUse}
 
-@layout(pageTitle = titleForUse, taxYear = Some(taxYear), isAgent = request.user.isAgent) {
+@withoutData = {
+    @layout(pageTitle = messages(s"gains.policy-summary.empty.title.${if(request.user.isAgent) "agent" else "individual"}"), taxYear = Some(taxYear), isAgent = request.user.isAgent) {
 
-    @heading(headingForUse, Some(messages("gains.caption", (taxYear - 1).toString, taxYear.toString)))
-
-    @{
+        @heading(messages(s"gains.policy-summary.empty.title.${if(request.user.isAgent) "agent" else "individual"}"), Some(messages("gains.caption", (taxYear - 1).toString, taxYear.toString)))
+        @{
         govukSummaryList(SummaryList(Seq(
-            Some(summaryListRow(
-                HtmlContent(messages("common.gains.policy-type")),
-                HtmlContent(messages("Life Insurance")),
+            summaryListRow(
+                HtmlContent(messages("gains.summary.key")),
+                HtmlContent(messages("common.no")),
                 actions = Seq((controllers.gains.routes.GainsGatewayController.show(taxYear), messages("common.change"), Some(messages("gains.policy-summary.list.hidden.text.1"))))
-            )),
-            Some(summaryListRow(
-                HtmlContent(messages("common.gains.policy-number")),
-                HtmlContent(messages("LIFE1234")),
-                actions = Seq((controllers.gains.routes.GainsGatewayController.show(taxYear), messages("common.change"), Some(messages("gains.policy-summary.list.hidden.text.2"))))
-            )),
-            Some(summaryListRow(
-                HtmlContent(messages("common.gains.amount-of-gain-made")),
-                HtmlContent(messages("£1234")),
-                actions = Seq((controllers.gains.routes.GainsAmountController.show(taxYear), messages("common.change"), Some(messages("gains.policy-summary.list.hidden.text.3"))))
-            )),
-            Some(summaryListRow(
-                HtmlContent(messages("common.gains.policy-event")),
-                HtmlContent(messages("Full or part surrender")),
-                actions = Seq((controllers.gains.routes.PolicyEventController.show(taxYear), messages("common.change"), Some(messages("common.gains.policy-event"))))
-            )),
-            Some(summaryListRow(
-                HtmlContent(messages("common.gains.years-policy-held")),
-                HtmlContent(messages("1")),
-                actions = Seq((controllers.gains.routes.PolicyHeldController.show(taxYear), messages("common.change"), Some(messages("gains.policy-summary.list.hidden.text.5"))))
-            )),
-            Some(summaryListRow(
-                HtmlContent(messages("common.gains.gain-treated-as-tax-paid")),
-                HtmlContent(messages("No")),
-                actions = Seq((controllers.gains.routes.PaidTaxStatusController.show(taxYear), messages("common.change"), Some(messages("gains.policy-summary.list.hidden.text.6"))))
-            )),
-                Some(summaryListRow(
-                HtmlContent(messages("common.gains.deficiency-relief-status")),
-                HtmlContent(messages("No")),
-                actions = Seq((controllers.gains.routes.GainsDeficiencyReliefController.show(taxYear), messages("common.change"), Some(messages("gains.policy-summary.list.hidden.text.7"))))
-            )),
-            Some(summaryListRow(
-                HtmlContent(messages("common.gains.amount-of-relief-available")),
-                HtmlContent(messages("£267")),
-                actions = Seq((controllers.gains.routes.GainsGatewayController.show(taxYear), messages("common.change"), Some(messages("gains.policy-summary.list.hidden.text.8"))))
-            ))
-        ).flatten))
+            )
+        )))
+        }
+        @formWithCsrf(action = Call("GET", appConfig.incomeTaxSubmissionOverviewUrl(taxYear), "")) {
+            @button(alternativeText = "common.return.to.overview", classes = Some("govuk-!-margin-top-6 govuk-button"), attributes = Map("id" -> "returnToOverviewPageBtn", "type" -> "submit"))
+        }
     }
-
-    @button("common.saveAndContinue", classes = Some("govuk-!-margin-top-6"))
-
 }
+
+@withData = {
+    @layout(pageTitle = titleForUse, taxYear = Some(taxYear), isAgent = request.user.isAgent) {
+
+        @heading(headingForUse, Some(messages("gains.caption", (taxYear - 1).toString, taxYear.toString)))
+
+        @{
+        gain.filter(_.sessionId == session).map(gains =>
+            govukSummaryList(SummaryList(Seq(
+                Some(summaryListRow(
+                    HtmlContent(messages("common.gains.policy-type")),
+                    HtmlContent(
+                        gains.policyType match {
+                            case "Life Insurance" => messages("gains.policy-type.radio1")
+                            case "Life Annuity" => messages("gains.policy-type.radio2")
+                            case "Capital Redemption" => messages("gains.policy-type.radio3")
+                            case "Voided ISA" => messages("gains.policy-type.radio4.individual")
+                            case "Foreign Policy" => messages("gains.policy-type.radio5")
+                            case _ => ""
+                        }
+                    ),
+                    actions = Seq((controllers.gains.routes.PolicyTypeController.show(taxYear, gains.sessionId), messages("common.change"), Some(messages("gains.policy-summary.list.hidden.text.1"))))
+                )),
+                Some(summaryListRow(
+                    HtmlContent(messages("common.gains.policy-number")),
+                    HtmlContent(gains.policyNumber.getOrElse("")),
+                    actions = Seq((controllers.gains.routes.PolicyNameController.show(taxYear, gains.sessionId), messages("common.change"), Some(messages("gains.policy-summary.list.hidden.text.2"))))
+                )),
+                Some(summaryListRow(
+                    HtmlContent(messages("common.gains.amount-of-gain-made")),
+                    HtmlContent(s"£${gains.amountOfGain.getOrElse(BigDecimal(0)).toString}"),
+                    actions = Seq((controllers.gains.routes.GainsAmountController.show(taxYear, gains.sessionId), messages("common.change"), Some(messages("gains.policy-summary.list.hidden.text.3"))))
+                )),
+                Some(summaryListRow(
+                    HtmlContent(messages("common.gains.policy-event")),
+                    HtmlContent(
+                        gains.policyEvent.getOrElse("") match {
+                            case "Full or part surrender" => messages("gains.policy-event.radio1")
+                            case "Policy matured or a death" => messages("gains.policy-event.radio2")
+                            case "Sale or assignment of a policy" => messages("gains.policy-event.radio3")
+                            case "Personal Portfolio Bond" => messages("gains.policy-event.radio4")
+                            case _ => messages("gains.policy-event.radio5")
+                        }
+
+                    ),
+                    actions = Seq((controllers.gains.routes.PolicyEventController.show(taxYear, gains.sessionId), messages("common.change"), Some(messages("common.gains.policy-event"))))
+                )),
+                Some(summaryListRow(
+                    HtmlContent(messages("gains.policy-summary.list.tax-paid-on-gain")),
+                    HtmlContent({if(gains.previousGain.getOrElse(false)) messages("common.yes") else messages("common.no")}),
+                    actions = Seq((controllers.gains.routes.GainsStatusController.show(taxYear, gains.sessionId), messages("common.change"), Some(messages("common.gains.policy-event"))))
+                )),
+                {
+                if (gains.previousGain.getOrElse(false)) {
+                Some(summaryListRow(
+                    HtmlContent(messages("gains.policy-summary.list.yearsSince")),
+                    HtmlContent(gains.yearsPolicyHeldPrevious.getOrElse(0).toString),
+                    actions = Seq((controllers.gains.routes.PolicyHeldPreviousController.show(taxYear, gains.sessionId), messages("common.change"), Some(messages("gains.policy-summary.list.hidden.text.4"))))
+                ))
+                } else { None }
+                },
+                Some(summaryListRow(
+                    HtmlContent(messages("common.gains.years-policy-held")),
+                    HtmlContent(gains.yearsPolicyHeld.getOrElse(0).toString),
+                    actions = Seq((controllers.gains.routes.PolicyHeldController.show(taxYear, gains.sessionId), messages("common.change"), Some(messages("gains.policy-summary.list.hidden.text.5"))))
+                )),
+                Some(summaryListRow(
+                    HtmlContent(messages("common.gains.gain-treated-as-tax-paid")),
+                    HtmlContent({if(gains.treatedAsTaxPaid.getOrElse(false)) messages("common.yes") else messages("common.no")}),
+                    actions = Seq((controllers.gains.routes.PaidTaxStatusController.show(taxYear, gains.sessionId), messages("common.change"), Some(messages("gains.policy-summary.list.hidden.text.6"))))
+                )),
+                Some(summaryListRow(
+                    HtmlContent(messages("common.gains.deficiency-relief-status")),
+                    HtmlContent({if(gains.entitledToDeficiencyRelief.getOrElse(false)) messages("common.yes") else messages("common.no")}),
+                    actions = Seq((controllers.gains.routes.GainsDeficiencyReliefController.show(taxYear, gains.sessionId), messages("common.change"), Some(messages("gains.policy-summary.list.hidden.text.7"))))
+                )),
+                {
+                if (gains.entitledToDeficiencyRelief.getOrElse(false)) {
+                    Some(summaryListRow(
+                        HtmlContent(messages("common.gains.amount-of-relief-available")),
+                        HtmlContent("£" + gains.deficiencyReliefAmount.getOrElse("0")),
+                        actions = Seq((controllers.gains.routes.GainsDeficiencyReliefController.show(taxYear, gains.sessionId), messages("common.change"), Some(messages("gains.policy-summary.list.hidden.text.8"))))
+                    ))
+                } else { None }
+                }
+            ).flatten))
+        )
+        }
+        @formWithCsrf(action = controllers.gains.routes.PolicySummaryController.submit(taxYear)) {
+            @button(alternativeText = "common.saveAndContinue", classes = Some("govuk-!-margin-top-6 govuk-button"), attributes = Map("id" -> "continue", "type" -> "submit"))
+        }
+    }
+}
+
+@if(gain.headOption.getOrElse(PolicyCyaModel("", "")).policyType == ""){ @withoutData } else { @withData }
 
 @{
     // $COVERAGE-OFF$

@@ -47,7 +47,6 @@ common.error.invalid_Year_Format = Nodwch nifer y blynyddoedd yn y fformat cywir
 common.monetary.input.hint = Er enghraifft, £193.54
 common.gains.policy.question.error-yearsExceedsMaximum = Mae’n rhaid i nifer y blynyddoedd fod yn llai na 100
 
-common.gains.customer-reference = Cyfeirnod y cwsmer
 common.gains.policy-event = Digwyddiad polisi
 common.gains.deficiency-relief-status = Rhyddhad am ddiffyg
 common.gains.policies = Polisïau
@@ -70,17 +69,17 @@ common.gains.policy-held.paragraph.2.link-text.agent  = sut i ostwng swm ei dret
 gains.caption = Enillion o bolisïau yswiriant bywyd a chontractau ar gyfer 6 Ebrill {0} i 5 Ebrill {1}
 
 ################# Gains from life insurance policies and contracts messages #################
-gains.customer-reference.question.paragraph.1.individual = Dylai’ch yswiriwr neu reolwr eich ISA fod wedi rhoi rhif polisi i chi, a elwir hefyd yn `cyfeirnod y cwsmer`, ar gyfer eich polisi neu’ch contract.
-gains.customer-reference.question.paragraph.2.individual = Gall rhif eich polisi gynnwys y cymeriadau arbennig (/) neu (-), rhifau a llythrennau.
-gains.customer-reference.label.individual = Beth yw rhif eich polisi?
-gains.customer-reference.question.hint = Er enghraifft, `P-89879-123` neu `LA/2881/07`.
-gains.customer-reference.question.error-message.1.individual = Nodwch rif eich polisi
-gains.customer-reference.question.error-message.2.individual = Nodwch rif eich polisi yn y fformat cywir. Er enghraifft, `P-89879-123` neu `LA/2881/07`.
-gains.customer-reference.question.paragraph.1.agent = Dylai yswiriwr neu reolwr ISA eich cleient fod wedi rhoi rhif polisi iddo, a elwir hefyd yn `cyfeirnod y cwsmer`, ar gyfer ei bolisi neu’i gontract.
-gains.customer-reference.question.paragraph.2.agent = Gall rhif polisi eich cleient gynnwys y cymeriadau arbennig (/) neu (-), rhifau a llythrennau.
-gains.customer-reference.label.agent = Beth yw rhif polisi eich cleient?
-gains.customer-reference.question.error-message.1.agent = Nodwch rif polisi eich cleient
-gains.customer-reference.question.error-message.2.agent = Nodwch rif polisi eich cleient yn y fformat cywir. Er enghraifft, `P-89879-123` neu `LA/2881/07`.
+gains.policy-name.question.paragraph.1.individual = Dylai’ch yswiriwr neu reolwr eich ISA fod wedi rhoi rhif polisi i chi, a elwir hefyd yn `cyfeirnod y cwsmer`, ar gyfer eich polisi neu’ch contract.
+gains.policy-name.question.paragraph.2.individual = Gall rhif eich polisi gynnwys y cymeriadau arbennig (/) neu (-), rhifau a llythrennau.
+gains.policy-name.label.individual = Beth yw rhif eich polisi?
+gains.policy-name.question.hint = Er enghraifft, `P-89879-123` neu `LA/2881/07`.
+gains.policy-name.question.error-message.1.individual = Nodwch rif eich polisi
+gains.policy-name.question.error-message.2.individual = Nodwch rif eich polisi yn y fformat cywir. Er enghraifft, `P-89879-123` neu `LA/2881/07`.
+gains.policy-name.question.paragraph.1.agent = Dylai yswiriwr neu reolwr ISA eich cleient fod wedi rhoi rhif polisi iddo, a elwir hefyd yn `cyfeirnod y cwsmer`, ar gyfer ei bolisi neu’i gontract.
+gains.policy-name.question.paragraph.2.agent = Gall rhif polisi eich cleient gynnwys y cymeriadau arbennig (/) neu (-), rhifau a llythrennau.
+gains.policy-name.label.agent = Beth yw rhif polisi eich cleient?
+gains.policy-name.question.error-message.1.agent = Nodwch rif polisi eich cleient
+gains.policy-name.question.error-message.2.agent = Nodwch rif polisi eich cleient yn y fformat cywir. Er enghraifft, `P-89879-123` neu `LA/2881/07`.
 
 gains.gateway.question.title = Enillion o bolisïau yswiriant bywyd a chontractau
 gains.gateway.question.radio.heading.individual = A wnaethoch chi enillion ar bolisi neu gontract yn y DU?
@@ -208,6 +207,8 @@ gains.paid-tax-amount.question.incorrect-format-error.agent = Nodwch swm y dreth
 gains.paid-tax-amount.question.amount-exceeds-max-error = Mae’n rhaid i swm y dreth a dalwyd fod yn llai na £100,000,000,000
 
 gains.policy-summary.question.title = Crynodeb o’r polisi
+gains.policy-summary.list.tax-paid-on-gain = Enillion blaenorol
+gains.policy-summary.list.yearsSince = Years since last gain
 
 gains.policy-summary.list.hidden.text.1 = math o bolisi
 gains.policy-summary.list.hidden.text.2 = rhif y polisi
@@ -216,6 +217,9 @@ gains.policy-summary.list.hidden.text.5 = nifer y blynyddoedd a ddaliwyd y polis
 gains.policy-summary.list.hidden.text.6 = statws y dreth a dalwyd
 gains.policy-summary.list.hidden.text.7 = statws y rhyddhad am ddiffyg
 gains.policy-summary.list.hidden.text.8 = swm y rhyddhad sydd ar gael
+
+gains.policy-summary.empty.title.individual = Check your gains from life insurance policies and contracts
+gains.policy-summary.empty.title.agent = Check your client''s gains from life insurance policies and contracts
 
 gains.summary.title.individual = Eich polisïau
 gains.summary.sub-title = Polisïau wedi’u canslo

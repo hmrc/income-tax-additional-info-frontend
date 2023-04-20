@@ -17,9 +17,10 @@
 package repositories
 
 import com.mongodb.client.result.InsertOneResult
-import models.User
-import models.gains.GainsCyaModel
+import models.{AllGainsSessionModel, User}
+import models.gains.{PolicyCyaModel}
 import models.mongo._
+import models.requests.AuthorisationRequest
 import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
 import play.api.mvc.AnyContent
 import play.api.test.{DefaultAwaitTimeout, FakeRequest, FutureAwaits}
@@ -43,7 +44,7 @@ class UserDataRepositoryISpec extends IntegrationTest with FutureAwaits with Def
     mtditid,
     nino,
     taxYear,
-    Some(completeGainsCyaModel)
+    Some(AllGainsSessionModel(Seq(completePolicyCyaModel)))
   )
 
   implicit val request: FakeRequest[AnyContent] = FakeRequest()
@@ -73,15 +74,13 @@ class UserDataRepositoryISpec extends IntegrationTest with FutureAwaits with Def
 
       val initialData: GainsUserDataModel = GainsUserDataModel(
         testUser.sessionId, testUser.mtditid, testUser.nino, taxYear,
-        Some(completeGainsCyaModel)
+        Some(AllGainsSessionModel(Seq(completePolicyCyaModel)))
       )
 
-      val newGainsCyaModel: GainsCyaModel = GainsCyaModel(
-        Some(true), Some("123"), Some("cause"), Some(true), Some("5"), Some(321.11), Some("5"), Some(true), Some(321.11), Some(true), Some(321.11)
-      )
+      val newGainsCyaModel: PolicyCyaModel = completePolicyCyaModel.copy(amountOfGain = Some(321.11), taxPaidAmount = Some(321.11))
 
       val newUserData: GainsUserDataModel = initialData.copy(
-        gains = Some(newGainsCyaModel)
+        gains = Some(AllGainsSessionModel(Seq(newGainsCyaModel)))
       )
 
       await(gainsRepo.create(initialData))
@@ -94,13 +93,13 @@ class UserDataRepositoryISpec extends IntegrationTest with FutureAwaits with Def
       res mustBe true
       count mustBe 1
 
-      val data: Option[GainsUserDataModel] = await(gainsRepo.find(taxYear)(testUser).map {
+      val data: Option[GainsUserDataModel] = await(gainsRepo.find(taxYear)(AuthorisationRequest(testUser, request)).map {
         case Right(value) => value
         case Left(value) => None
       })
 
-      data.get.gains.get.howMuchGain.get shouldBe 321.11
-      data.get.gains.get.taxPaid.get shouldBe 321.11
+      data.get.gains.get.allGains.head.amountOfGain.get shouldBe 321.11
+      data.get.gains.get.allGains.head.taxPaidAmount.get shouldBe 321.11
     }
 
     "return a leftDataNotUpdated if the document cannot be found" in {
@@ -118,27 +117,25 @@ class UserDataRepositoryISpec extends IntegrationTest with FutureAwaits with Def
       mtditid, None, nino, "individual", sessionId
     )
 
-    val newGainsCyaModel: GainsCyaModel = GainsCyaModel(
-      Some(true), Some("123"), Some("cause"), Some(true), Some("5"), Some(321.11), Some("5"), Some(true), Some(321.11), Some(true), Some(321.11)
-    )
+    val newGainsCyaModel: PolicyCyaModel = completePolicyCyaModel.copy(amountOfGain = Some(321.11), taxPaidAmount = Some(321.11))
 
     "get a document" in {
       count mustBe 1
-      val dataAfter: Option[GainsUserDataModel] = await(gainsRepo.find(taxYear)(testUser).map {
+      val dataAfter: Option[GainsUserDataModel] = await(gainsRepo.find(taxYear)(AuthorisationRequest(testUser, request)).map {
         case Right(value) => value
         case Left(value) => None
       })
 
-      dataAfter.get.gains mustBe Some(newGainsCyaModel)
+      dataAfter.get.gains mustBe Some(AllGainsSessionModel(List(newGainsCyaModel)))
     }
 
     "return a EncryptionDecryptionError" in {
-      await(gainsInvalidRepo.find(taxYear)(testUser)) mustBe
+      await(gainsInvalidRepo.find(taxYear)(AuthorisationRequest(testUser, request))) mustBe
         Left(EncryptionDecryptionError("Failed encrypting data"))
     }
 
     "return a No CYA data found" in {
-      await(gainsRepo.find(taxYear)(testUser.copy(sessionId = "invalid"))) mustBe Right(None)
+      await(gainsRepo.find(taxYear)(AuthorisationRequest(testUser.copy(sessionId = "invalid"), request))) mustBe Right(None)
     }
   }
 

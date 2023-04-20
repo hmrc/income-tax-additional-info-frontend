@@ -23,11 +23,13 @@ import org.jsoup.nodes.Document
 import play.api.i18n.Messages
 import play.api.mvc.AnyContent
 import support.ViewUnitTest
-import views.html.pages.gains.CustomerReferencePageView
+import views.html.pages.gains.PolicyNamePageView
 
-class CustomerReferencePageViewSpec extends ViewUnitTest {
+import java.util.UUID
 
-  private val page: CustomerReferencePageView = inject[CustomerReferencePageView]
+class PolicyNamePageViewSpec extends ViewUnitTest {
+
+  private val page: PolicyNamePageView = inject[PolicyNamePageView]
   private val inputFormat = "policyNumber"
 
   object Selectors {
@@ -125,8 +127,8 @@ class CustomerReferencePageViewSpec extends ViewUnitTest {
         implicit val messages: Messages = getMessages(userScenario.isWelsh)
 
         implicit val document: Document = Jsoup.parse(page(taxYear, InputFieldForm.inputFieldForm(userScenario.isAgent, inputFormat,
-          s"gains.customer-reference.question.error-message.1.${if (userScenario.isAgent) "agent" else "individual"}",
-          s"gains.customer-reference.question.error-message.2.${if (userScenario.isAgent) "agent" else "individual"}")).body)
+          s"gains.policy-name.question.error-message.1.${if (userScenario.isAgent) "agent" else "individual"}",
+          s"gains.policy-name.question.error-message.2.${if (userScenario.isAgent) "agent" else "individual"}"), UUID.randomUUID().toString).body)
 
         welshToggleCheck(userScenario.isWelsh)
         captionCheck(userScenario.commonExpectedResults.expectedCaption(taxYear))
@@ -148,9 +150,9 @@ class CustomerReferencePageViewSpec extends ViewUnitTest {
         implicit val messages: Messages = getMessages(userScenario.isWelsh)
 
         implicit val document: Document = Jsoup.parse(page(taxYear, InputFieldForm.inputFieldForm(userScenario.isAgent, inputFormat,
-          s"gains.customer-reference.question.error-message.1.${if (userScenario.isAgent) "agent" else "individual"}",
-          s"gains.customer-reference.question.error-message.2.${if (userScenario.isAgent) "agent" else "individual"}")
-          .bind(Map(InputFieldForm.value -> ""))).body)
+          s"gains.policy-name.question.error-message.1.${if (userScenario.isAgent) "agent" else "individual"}",
+          s"gains.policy-name.question.error-message.2.${if (userScenario.isAgent) "agent" else "individual"}")
+          .bind(Map(InputFieldForm.value -> "")), UUID.randomUUID().toString).body)
 
         welshToggleCheck(userScenario.isWelsh)
         titleCheck(userScenario.specificExpectedResults.get.expectedErrorTitle, userScenario.isWelsh)
@@ -176,9 +178,9 @@ class CustomerReferencePageViewSpec extends ViewUnitTest {
         implicit val messages: Messages = getMessages(userScenario.isWelsh)
 
         implicit val document: Document = Jsoup.parse(page(taxYear, InputFieldForm.inputFieldForm(userScenario.isAgent, inputFormat,
-          s"gains.customer-reference.question.error-message.1.${if (userScenario.isAgent) "agent" else "individual"}",
-          s"gains.customer-reference.question.error-message.2.${if (userScenario.isAgent) "agent" else "individual"}")
-          .bind(Map(InputFieldForm.value -> "aaa"))).body)
+          s"gains.policy-name.question.error-message.1.${if (userScenario.isAgent) "agent" else "individual"}",
+          s"gains.policy-name.question.error-message.2.${if (userScenario.isAgent) "agent" else "individual"}")
+          .bind(Map(InputFieldForm.value -> "aaa")), UUID.randomUUID().toString).body)
 
         welshToggleCheck(userScenario.isWelsh)
 

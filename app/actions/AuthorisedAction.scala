@@ -73,7 +73,7 @@ class AuthorisedAction @Inject()(authService: AuthorisationService,
               logger.info(logMessage)
               Future.successful(Redirect(appConfig.signInUrl))
             } { sessionId =>
-              block(AuthorisationRequest(models.User(mtdItId, None, nino, sessionId, affinityGroup.toString), request))
+              block(AuthorisationRequest(models.User(mtdItId, None, nino, affinityGroup.toString, sessionId), request))
             }
 
           case (_, None) =>
@@ -115,7 +115,7 @@ class AuthorisedAction @Inject()(authService: AuthorisationService,
                   logger.info(logMessage)
                   Future(Redirect(appConfig.signInUrl))
                 } { sessionId =>
-                  block(AuthorisationRequest(models.User(mtdItId, Some(arn), nino, sessionId, AffinityGroup.Agent.toString), request))
+                  block(AuthorisationRequest(models.User(mtdItId, Some(arn), nino, AffinityGroup.Agent.toString, sessionId), request))
                 }
 
               case None =>

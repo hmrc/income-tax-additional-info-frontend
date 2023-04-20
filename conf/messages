@@ -49,7 +49,6 @@ common.gains.policy.question.error-yearsExceedsMaximum = The number of years mus
 
 common.gains.deficiency-relief-status = Deficiency relief
 common.gains.policy-event = Policy event
-common.gains.customer-reference = Customer reference
 common.gains.policy-number = Policy number
 common.gains.policy-type = Policy type
 common.gains.years-policy-held = Years policy held
@@ -70,17 +69,17 @@ common.gains.policy-held.paragraph.2.link-text.agent  = how to reduce their tax 
 gains.caption = Gains from life insurance policies and contracts for 6 April {0} to 5 April {1}
 
 ################# Gains from life insurance policies and contracts messages #################
-gains.customer-reference.question.paragraph.1.individual = Your insurer or ISA manager should have given you a policy number, also known as a ''customer reference'', for your policy or contract.
-gains.customer-reference.question.paragraph.2.individual = Your policy number can include special characters (/) or (-), numbers and letters.
-gains.customer-reference.label.individual = What''s your policy number?
-gains.customer-reference.question.hint = For example, ''P-89879-123'' or ''LA/2881/07''.
-gains.customer-reference.question.error-message.1.individual = Enter your policy number
-gains.customer-reference.question.error-message.2.individual = Enter your policy number in the correct format. For example, ''P-89879-123'' or ''LA/2881/07''.
-gains.customer-reference.question.paragraph.1.agent = Your client''s insurer or ISA manager should have given them a policy number, also known as a ''customer reference'', for their policy or contract.
-gains.customer-reference.question.paragraph.2.agent = Your client''s policy number can include special characters (/) or (-), numbers and letters.
-gains.customer-reference.label.agent = What''s your client''s policy number?
-gains.customer-reference.question.error-message.1.agent = Enter your client''s policy number
-gains.customer-reference.question.error-message.2.agent = Enter your client''s policy number in the correct format. For example, ''P-89879-123'' or ''LA/2881/07''.
+gains.policy-name.question.paragraph.1.individual = Your insurer or ISA manager should have given you a policy number, also known as a ''customer reference'', for your policy or contract.
+gains.policy-name.question.paragraph.2.individual = Your policy number can include special characters (/) or (-), numbers and letters.
+gains.policy-name.label.individual = What''s your policy number?
+gains.policy-name.question.hint = For example, ''P-89879-123'' or ''LA/2881/07''.
+gains.policy-name.question.error-message.1.individual = Enter your policy number
+gains.policy-name.question.error-message.2.individual = Enter your policy number in the correct format. For example, ''P-89879-123'' or ''LA/2881/07''.
+gains.policy-name.question.paragraph.1.agent = Your client''s insurer or ISA manager should have given them a policy number, also known as a ''customer reference'', for their policy or contract.
+gains.policy-name.question.paragraph.2.agent = Your client''s policy number can include special characters (/) or (-), numbers and letters.
+gains.policy-name.label.agent = What''s your client''s policy number?
+gains.policy-name.question.error-message.1.agent = Enter your client''s policy number
+gains.policy-name.question.error-message.2.agent = Enter your client''s policy number in the correct format. For example, ''P-89879-123'' or ''LA/2881/07''.
 
 gains.gateway.question.title = Gains from life insurance policies and contracts
 gains.gateway.question.radio.heading.individual = Did you make a gain on a UK policy or contract?
@@ -209,6 +208,8 @@ gains.paid-tax-amount.question.incorrect-format-error.agent = Enter the amount o
 gains.paid-tax-amount.question.amount-exceeds-max-error = The amount of tax paid must be less than £100,000,000,000
 
 gains.policy-summary.question.title = Policy summary
+gains.policy-summary.list.tax-paid-on-gain = Previous gain
+gains.policy-summary.list.yearsSince = Years since last gain
 
 gains.policy-summary.list.hidden.text.1 = type of policy
 gains.policy-summary.list.hidden.text.2 = policy number
@@ -217,6 +218,9 @@ gains.policy-summary.list.hidden.text.5 = number of years policy held
 gains.policy-summary.list.hidden.text.6 = tax paid status
 gains.policy-summary.list.hidden.text.7 = deficiency relief status
 gains.policy-summary.list.hidden.text.8 = amount of relief available
+
+gains.policy-summary.empty.title.individual = Check your gains from life insurance policies and contracts
+gains.policy-summary.empty.title.agent = Check your client''s gains from life insurance policies and contracts
 
 gains.summary.title.individual = Your policies
 gains.summary.sub-title = Cancelled policies

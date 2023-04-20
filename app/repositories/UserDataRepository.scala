@@ -19,6 +19,7 @@ package repositories
 import com.mongodb.client.model.ReturnDocument
 import models.User
 import models.mongo._
+import models.requests.AuthorisationRequest
 import org.joda.time.{DateTime, DateTimeZone}
 import org.mongodb.scala.bson.conversions.Bson
 import org.mongodb.scala.model.Filters.{and, equal}
@@ -44,7 +45,7 @@ trait UserDataRepository[C <: UserDataTemplate] {
 
   def decryptionMethod: C => UserData
 
-  def create(userData: UserData): Future[Either[DatabaseError, Boolean]] = {
+  def create[T](userData: UserData): Future[Either[DatabaseError, Boolean]] = {
     lazy val start = s"[$repoName][create]"
     Try {
       encryptionMethod(userData)
@@ -63,17 +64,17 @@ trait UserDataRepository[C <: UserDataTemplate] {
     }
   }
 
-  def find[T](taxYear: Int)(implicit user: User): Future[Either[DatabaseError, Option[UserData]]] = {
+  def find[T](taxYear: Int)(implicit request: AuthorisationRequest[_]): Future[Either[DatabaseError, Option[UserData]]] = {
     lazy val start = s"[$repoName][find]"
 
     val userData = collection.findOneAndUpdate(
-      filter = filter(user.sessionId, user.mtditid, user.nino, taxYear),
+      filter = filter(request.user.sessionId, request.user.mtditid, request.user.nino, taxYear),
       update = set("lastUpdated", toBson(DateTime.now(DateTimeZone.UTC))(MongoJodaFormats.dateTimeWrites)),
       options = FindOneAndUpdateOptions().returnDocument(ReturnDocument.AFTER)
     ).toFutureOption().map {
       case Some(data) => Right(Some(data))
       case None =>
-        logger.info(s"$start No CYA data found for user. SessionId: ${user.sessionId}")
+        logger.info(s"$start No CYA data found for user. SessionId: ${request.user.sessionId}")
         Right(None)
     }.recover {
       case exception: Exception =>

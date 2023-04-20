@@ -25,9 +25,13 @@ import play.api.mvc.AnyContent
 import support.ViewUnitTest
 import views.html.pages.gains.PolicyEventPageView
 
+import java.util.UUID
+
 class PolicyEventPageViewSpec extends ViewUnitTest {
 
   private val page: PolicyEventPageView = inject[PolicyEventPageView]
+  private val sessionId: String = UUID.randomUUID().toString
+
 
   object Selectors {
     val legendText = "#main-content > div > div > form > div > fieldset > legend"
@@ -151,7 +155,7 @@ class PolicyEventPageViewSpec extends ViewUnitTest {
           RadioButtonPolicyEventForm.radioButtonCustomOptionForm(
             messages(s"gains.policy-event.question.error-message"),
             messages(s"gains.policy-event.selection.error-message"),
-            messages(s"gains.policy-event.question.incorrect-format.error-message"))).body)
+            messages(s"gains.policy-event.question.incorrect-format.error-message")), sessionId).body)
 
         welshToggleCheck(userScenario.isWelsh)
         titleCheck(userScenario.commonExpectedResults.expectedTitle, userScenario.isWelsh)
@@ -188,7 +192,7 @@ class PolicyEventPageViewSpec extends ViewUnitTest {
             messages(s"gains.policy-event.selection.error-message"),
             messages(s"gains.policy-event.question.incorrect-format.error-message")).bind(
             Map(RadioButtonPolicyEventForm.selectedOption -> "")
-          ).withError("", "")
+          ).withError("", ""), sessionId
         ).body)
 
         welshToggleCheck(userScenario.isWelsh)
@@ -230,7 +234,7 @@ class PolicyEventPageViewSpec extends ViewUnitTest {
             messages(s"gains.policy-event.question.incorrect-format.error-message")).bind(
             Map(RadioButtonPolicyEventForm.selectedOption -> "Other",
               RadioButtonPolicyEventForm.input -> "")
-          ).withError("", "")
+          ).withError("", ""), sessionId
         ).body)
 
         welshToggleCheck(userScenario.isWelsh)
@@ -255,7 +259,7 @@ class PolicyEventPageViewSpec extends ViewUnitTest {
             messages(s"gains.policy-event.question.incorrect-format.error-message")).bind(
             Map(RadioButtonPolicyEventForm.selectedOption -> "Other",
               RadioButtonPolicyEventForm.input -> "55 55 55")
-          ).withError("", "")
+          ).withError("", ""), sessionId
         ).body)
 
         welshToggleCheck(userScenario.isWelsh)

@@ -16,15 +16,19 @@
 
 package controllers.gains
 
+import models.gains.prior.IncomeSourceObject
 import play.api.http.HeaderNames
-import play.api.http.Status.OK
+import play.api.http.Status.{OK, SEE_OTHER}
 import play.api.libs.ws.WSResponse
 import support.IntegrationTest
 
 class PoliciesRemoveControllerISpec extends IntegrationTest {
 
+  clearSession()
+  populateSessionData()
+
   private def url(taxYear: Int): String = {
-    s"/update-and-submit-income-tax-return/additional-information/$taxYear/gains/policies-remove-confirmation"
+    s"/update-and-submit-income-tax-return/additional-information/$taxYear/gains/policies-remove-confirmation/$sessionId"
   }
 
   ".show" should {
@@ -43,6 +47,30 @@ class PoliciesRemoveControllerISpec extends IntegrationTest {
         urlGet(url(taxYear), headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)))
       }
       result.status shouldBe OK
+    }
+
+    "redirect to income tax submission overview page if no session data is found" in {
+      clearSession()
+      lazy val result: WSResponse = {
+        authoriseAgentOrIndividual(isAgent = false)
+        urlGet(url(taxYear), headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)))
+      }
+
+      result.status shouldBe SEE_OTHER
+    }
+  }
+
+  ".submit" should {
+    "redirect to gains summary page if successful" in {
+      lazy val result: WSResponse = {
+        populateSessionData()
+        authoriseAgentOrIndividual(isAgent = false)
+        userDataStub(IncomeSourceObject(Some(gainsPriorDataModel)), nino, taxYear)
+        urlPost(url(taxYear), headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)), body = "")
+      }
+
+      result.status shouldBe SEE_OTHER
+      result.headers("Location").head shouldBe s"/update-and-submit-income-tax-return/additional-information/$taxYear/gains/summary"
     }
   }
 

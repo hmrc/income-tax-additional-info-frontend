@@ -17,11 +17,13 @@
 package controllers.gains
 
 import actions.AuthorisedAction
-import config.AppConfig
+import config.{AppConfig, ErrorHandler}
 import forms.RadioButtonAmountForm
+import models.AllGainsSessionModel
 import play.api.data.Form
 import play.api.i18n.I18nSupport
 import play.api.mvc._
+import services.GainsSessionService
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 import views.html.pages.gains.GainsDeficiencyReliefPageView
 
@@ -30,7 +32,9 @@ import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class GainsDeficiencyReliefController @Inject()(authorisedAction: AuthorisedAction,
-                                                view: GainsDeficiencyReliefPageView)
+                                                view: GainsDeficiencyReliefPageView,
+                                                gainsSessionService: GainsSessionService,
+                                                errorHandler: ErrorHandler)
                                                (implicit appConfig: AppConfig, mcc: MessagesControllerComponents, ec: ExecutionContext)
   extends FrontendController(mcc) with I18nSupport {
 
@@ -43,19 +47,45 @@ class GainsDeficiencyReliefController @Inject()(authorisedAction: AuthorisedActi
 
   )
 
-  def show(taxYear: Int): Action[AnyContent] = authorisedAction.async { implicit request =>
-    Future.successful(Ok(view(taxYear, form(request.user.isAgent))))
+  def show(taxYear: Int, sessionId: String): Action[AnyContent] = authorisedAction.async { implicit request =>
+    gainsSessionService.getSessionData(taxYear).flatMap {
+      case Left(_) => Future.successful(errorHandler.internalServerError())
+      case Right(cya) =>
+        Future.successful(cya.fold(Redirect(appConfig.incomeTaxSubmissionOverviewUrl(taxYear))) {
+          cyaData =>
+            cyaData.gains.fold(Ok(view(taxYear, form(request.user.isAgent), sessionId))) {
+              data =>
+                data.allGains.filter(_.sessionId == sessionId).head.entitledToDeficiencyRelief match {
+                  case None => Ok(view(taxYear, form(request.user.isAgent), sessionId))
+                  case Some(value) => Ok(view(taxYear, form(request.user.isAgent).fill(
+                    (value, data.allGains.filter(_.sessionId == sessionId).head.deficiencyReliefAmount match {
+                      case None => Some(BigDecimal("0"))
+                      case Some(amount) => Some(amount)
+                    })), sessionId))
+                }
+            }
+        })
+    }
   }
 
-  def submit(taxYear: Int): Action[AnyContent] = authorisedAction.async { implicit request =>
-    form(request.user.isAgent).bindFromRequest().fold(
-      formWithErrors => {
-        Future.successful(BadRequest(view(taxYear, formWithErrors)))
-      }, {
-        _ =>
-          Future(Redirect(appConfig.incomeTaxSubmissionOverviewUrl(taxYear)))
-      })
+
+  def submit(taxYear: Int, sessionId: String): Action[AnyContent] = authorisedAction.async { implicit request =>
+    form(request.user.isAgent).bindFromRequest().fold(formWithErrors => {
+      Future.successful(BadRequest(view(taxYear, formWithErrors, sessionId)))
+    }, {
+      value =>
+        gainsSessionService.getAndHandle(taxYear)(Future.successful(errorHandler.internalServerError())) { (cya, prior) =>
+          (cya, prior) match {
+            case (Some(cya), _) =>
+              val index = cya.allGains.indexOf(cya.allGains.filter(_.sessionId == sessionId).head)
+              val newData = cya.allGains(index).copy(entitledToDeficiencyRelief = Some(value._1), deficiencyReliefAmount = value._2)
+              val updated = cya.allGains.updated(index, newData)
+              gainsSessionService.updateSessionData(AllGainsSessionModel(updated), taxYear)(errorHandler.internalServerError()) {
+                  Redirect(controllers.gains.routes.PolicySummaryController.show(taxYear, sessionId))
+              }
+            case _ => Future.successful(Redirect(controllers.gains.routes.PolicySummaryController.show(taxYear, sessionId)))
+          }
+        }.flatten
+    })
   }
-
-
 }

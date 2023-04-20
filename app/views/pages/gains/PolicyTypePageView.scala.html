@@ -39,7 +39,7 @@
         p: P
 )
 
-@(taxYear: Int, form: Form[String])(implicit request: AuthorisationRequest[_], messages: Messages, appConfig: AppConfig)
+@(taxYear: Int, form: Form[String], session: String)(implicit request: AuthorisationRequest[_], messages: Messages, appConfig: AppConfig)
 
 @titleForUse = @{messages(s"gains.policy-type.question.${if(request.user.isAgent) "agent" else "individual"}")}
 
@@ -91,7 +91,8 @@
             id = Some("policy-type-details2")
     )
 
-    @formWithCsrf(action = controllers.gains.routes.PolicyTypeController.submit(taxYear)) {
+
+    @formWithCsrf(action = controllers.gains.routes.PolicyTypeController.submit(taxYear, session)) {
         @govukRadios(Radios(
             fieldset = Some(Fieldset(
                 legend = Some(Legend(
@@ -105,23 +106,28 @@
         items = Seq(
             RadioItem(
                 content = Text(messages("gains.policy-type.radio1")),
-                value = Some("lifeInsurance")
+                value = Some("lifeInsurance"),
+                checked = if (form.data.get("policy-type").getOrElse("") == "Life Insurance") true else false
             ),
             RadioItem(
                 content = Text(messages("gains.policy-type.radio2")),
-                value = Some("lifeAnnuity")
+                value = Some("lifeAnnuity"),
+                checked = if (form.data.get("policy-type").getOrElse("") == "Life Annuity") true else false
             ),
             RadioItem(
                 content = Text(messages("gains.policy-type.radio3")),
-                value = Some("capitalRedemption")
+                value = Some("capitalRedemption"),
+                checked = if (form.data.get("policy-type").getOrElse("") == "Capital Redemption") true else false
             ),
             RadioItem(
                 content = Text({messages(s"gains.policy-type.radio4.${if(request.user.isAgent) "agent" else "individual"}")}),
-                value = Some("voidedIsa")
+                value = Some("voidedIsa"),
+                checked = if (form.data.get("policy-type").getOrElse("") == "Voided ISA") true else false
             ),
             RadioItem(
                 content = Text(messages("gains.policy-type.radio5")),
-                value = Some("foreignPolicy")
+                value = Some("foreignPolicy"),
+                checked = if (form.data.get("policy-type").getOrElse("") == "A foreign policy") true else false
             )
         )
         ))

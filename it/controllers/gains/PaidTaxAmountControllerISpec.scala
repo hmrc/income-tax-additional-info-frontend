@@ -24,6 +24,8 @@ import support.IntegrationTest
 
 class PaidTaxAmountControllerISpec extends IntegrationTest {
 
+  clearSession()
+  populateSessionData()
   private def url(taxYear: Int): String = {
     s"/update-and-submit-income-tax-return/additional-information/$taxYear/gains/paid-tax-amount"
   }
@@ -50,6 +52,7 @@ class PaidTaxAmountControllerISpec extends IntegrationTest {
 
   ".submit" should {
     "redirect to income tax submission overview if successful" in {
+      populateSessionData()
       lazy val result: WSResponse = {
         authoriseAgentOrIndividual(isAgent = false)
         urlPost(url(taxYear), headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)), body = Map(AmountForm.amount -> "100"))

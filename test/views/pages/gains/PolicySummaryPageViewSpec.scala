@@ -16,6 +16,7 @@
 
 package views.pages.gains
 
+import models.gains.PolicyCyaModel
 import models.requests.AuthorisationRequest
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
@@ -24,18 +25,21 @@ import play.api.mvc.AnyContent
 import support.ViewUnitTest
 import views.html.pages.gains.PolicySummaryPageView
 
+import java.util.UUID
+
 class PolicySummaryPageViewSpec extends ViewUnitTest {
 
   private val page: PolicySummaryPageView = inject[PolicySummaryPageView]
+  private val sessionId = UUID.randomUUID().toString
 
-  private val policyTypePageUrl: String = s"/update-and-submit-income-tax-return/additional-information/$taxYear/gains/gains-gateway"
-  private val policyNamePageUrl: String = s"/update-and-submit-income-tax-return/additional-information/$taxYear/gains/gains-gateway"
-  private val gainsAmountPageUrl: String = s"/update-and-submit-income-tax-return/additional-information/$taxYear/gains/gains-amount"
-  private val policyEventPageUrl: String = s"/update-and-submit-income-tax-return/additional-information/$taxYear/gains/policy-event"
-  private val policyHeldPageUrl: String = s"/update-and-submit-income-tax-return/additional-information/$taxYear/gains/policy-held"
-  private val paidTaxStatusPageUrl: String = s"/update-and-submit-income-tax-return/additional-information/$taxYear/gains/paid-tax-status"
-  private val deficiencyReliefStatusUrl: String = s"/update-and-submit-income-tax-return/additional-information/$taxYear/gains/deficiency-relief-status"
-  private val amountReliefAvailableUrl: String = s"/update-and-submit-income-tax-return/additional-information/$taxYear/gains/gains-gateway"
+  private val policyTypePageUrl: String = s"/update-and-submit-income-tax-return/additional-information/$taxYear/gains/policy-type/$sessionId"
+  private val policyNamePageUrl: String = s"/update-and-submit-income-tax-return/additional-information/$taxYear/gains/policy-name/$sessionId"
+  private val gainsAmountPageUrl: String = s"/update-and-submit-income-tax-return/additional-information/$taxYear/gains/gains-amount/$sessionId"
+  private val policyEventPageUrl: String = s"/update-and-submit-income-tax-return/additional-information/$taxYear/gains/policy-event/$sessionId"
+  private val policyHeldPageUrl: String = s"/update-and-submit-income-tax-return/additional-information/$taxYear/gains/policy-held/$sessionId"
+  private val paidTaxStatusPageUrl: String = s"/update-and-submit-income-tax-return/additional-information/$taxYear/gains/paid-tax-status/$sessionId"
+  private val deficiencyReliefStatusUrl: String = s"/update-and-submit-income-tax-return/additional-information/$taxYear/gains/deficiency-relief-status/$sessionId"
+  private val amountReliefAvailableUrl: String = s"/update-and-submit-income-tax-return/additional-information/$taxYear/gains/deficiency-relief-status/$sessionId"
 
   object Selectors {
     def summaryListItem(i: Int): String = s"#main-content > div > div > dl > div:nth-child($i) > dt"
@@ -134,7 +138,9 @@ class PolicySummaryPageViewSpec extends ViewUnitTest {
         implicit val userPriorDataRequest: AuthorisationRequest[AnyContent] = getAuthRequest(userScenario.isAgent)
         implicit val messages: Messages = getMessages(userScenario.isWelsh)
 
-        implicit val document: Document = Jsoup.parse(page(taxYear).body)
+        implicit val document: Document = Jsoup.parse(page(taxYear, Seq(PolicyCyaModel(
+          sessionId = sessionId, policyType = "Life Insurance", policyNumber = Some("abc123"), amountOfGain = Some(BigDecimal(100)), policyEvent = Some("Policy matured or a death"), previousGain = Some(true), yearsPolicyHeld = Some(5), yearsPolicyHeldPrevious = Some(6), treatedAsTaxPaid = Some(true), taxPaidAmount = Some(BigDecimal(123.45)), entitledToDeficiencyRelief = Some(true), deficiencyReliefAmount = Some(BigDecimal(123.45))
+        )), sessionId).body)
 
         welshToggleCheck(userScenario.isWelsh)
         titleCheck(userScenario.commonExpectedResults.expectedTitle, userScenario.isWelsh)
@@ -145,19 +151,124 @@ class PolicySummaryPageViewSpec extends ViewUnitTest {
         textOnPageCheck(userScenario.commonExpectedResults.expectedSummaryListItem2, Selectors.summaryListItem(2))
         textOnPageCheck(userScenario.commonExpectedResults.expectedSummaryListItem3, Selectors.summaryListItem(3))
         textOnPageCheck(userScenario.commonExpectedResults.expectedSummaryListItem4, Selectors.summaryListItem(4))
-        textOnPageCheck(userScenario.commonExpectedResults.expectedSummaryListItem5, Selectors.summaryListItem(5))
-        textOnPageCheck(userScenario.commonExpectedResults.expectedSummaryListItem6, Selectors.summaryListItem(6))
-        textOnPageCheck(userScenario.commonExpectedResults.expectedSummaryListItem7, Selectors.summaryListItem(7))
-        textOnPageCheck(userScenario.commonExpectedResults.expectedSummaryListItem8, Selectors.summaryListItem(8))
+        textOnPageCheck(userScenario.commonExpectedResults.expectedSummaryListItem5, Selectors.summaryListItem(7))
+        textOnPageCheck(userScenario.commonExpectedResults.expectedSummaryListItem6, Selectors.summaryListItem(8))
+        textOnPageCheck(userScenario.commonExpectedResults.expectedSummaryListItem7, Selectors.summaryListItem(9))
+        textOnPageCheck(userScenario.commonExpectedResults.expectedSummaryListItem8, Selectors.summaryListItem(10))
 
         linkCheck(userScenario.commonExpectedResults.expectedSummaryListChangeLink1, Selectors.summaryListChangeLink(1), policyTypePageUrl)
         linkCheck(userScenario.commonExpectedResults.expectedSummaryListChangeLink2, Selectors.summaryListChangeLink(2), policyNamePageUrl)
         linkCheck(userScenario.commonExpectedResults.expectedSummaryListChangeLink3, Selectors.summaryListChangeLink(3), gainsAmountPageUrl)
         linkCheck(userScenario.commonExpectedResults.expectedSummaryListChangeLink4, Selectors.summaryListChangeLink(4), policyEventPageUrl)
-        linkCheck(userScenario.commonExpectedResults.expectedSummaryListChangeLink5, Selectors.summaryListChangeLink(5), policyHeldPageUrl)
-        linkCheck(userScenario.commonExpectedResults.expectedSummaryListChangeLink6, Selectors.summaryListChangeLink(6), paidTaxStatusPageUrl)
-        linkCheck(userScenario.commonExpectedResults.expectedSummaryListChangeLink7, Selectors.summaryListChangeLink(7), deficiencyReliefStatusUrl)
-        linkCheck(userScenario.commonExpectedResults.expectedSummaryListChangeLink8, Selectors.summaryListChangeLink(8), amountReliefAvailableUrl)
+        linkCheck(userScenario.commonExpectedResults.expectedSummaryListChangeLink5, Selectors.summaryListChangeLink(7), policyHeldPageUrl)
+        linkCheck(userScenario.commonExpectedResults.expectedSummaryListChangeLink6, Selectors.summaryListChangeLink(8), paidTaxStatusPageUrl)
+        linkCheck(userScenario.commonExpectedResults.expectedSummaryListChangeLink7, Selectors.summaryListChangeLink(9), deficiencyReliefStatusUrl)
+        linkCheck(userScenario.commonExpectedResults.expectedSummaryListChangeLink8, Selectors.summaryListChangeLink(10), amountReliefAvailableUrl)
+
+        buttonCheck(userScenario.commonExpectedResults.expectedButtonText, Selectors.continueButton)
+        linkCheck(userScenario.commonExpectedResults.expectedHelpLinkText, Selectors.getHelpLink, appConfig.contactUrl(userScenario.isAgent))
+      }
+    }
+  }
+
+  userScenarios.foreach { userScenario =>
+    s"language is ${welshTest(userScenario.isWelsh)} and request is from an ${agentTest(userScenario.isAgent)}" should {
+      "render policy summary page with false values" which {
+        implicit val userPriorDataRequest: AuthorisationRequest[AnyContent] = getAuthRequest(userScenario.isAgent)
+        implicit val messages: Messages = getMessages(userScenario.isWelsh)
+
+        implicit val document: Document = Jsoup.parse(page(taxYear, Seq(PolicyCyaModel(
+          sessionId = sessionId, policyType = "Life Annuity", policyNumber = Some("abc123"), amountOfGain = Some(BigDecimal(100)), policyEvent = Some("Full or part surrender"), previousGain = Some(false), yearsPolicyHeld = Some(5), yearsPolicyHeldPrevious = Some(6), treatedAsTaxPaid = Some(false), taxPaidAmount = Some(BigDecimal(123.45)), entitledToDeficiencyRelief = Some(false)
+        )), sessionId).body)
+
+        welshToggleCheck(userScenario.isWelsh)
+        titleCheck(userScenario.commonExpectedResults.expectedTitle, userScenario.isWelsh)
+        captionCheck(userScenario.commonExpectedResults.expectedCaption(taxYear))
+        h1Check(userScenario.commonExpectedResults.expectedHeading)
+
+        textOnPageCheck(userScenario.commonExpectedResults.expectedSummaryListItem1, Selectors.summaryListItem(1))
+        textOnPageCheck(userScenario.commonExpectedResults.expectedSummaryListItem2, Selectors.summaryListItem(2))
+        textOnPageCheck(userScenario.commonExpectedResults.expectedSummaryListItem3, Selectors.summaryListItem(3))
+        textOnPageCheck(userScenario.commonExpectedResults.expectedSummaryListItem4, Selectors.summaryListItem(4))
+        textOnPageCheck(userScenario.commonExpectedResults.expectedSummaryListItem5, Selectors.summaryListItem(6))
+        textOnPageCheck(userScenario.commonExpectedResults.expectedSummaryListItem6, Selectors.summaryListItem(7))
+
+        linkCheck(userScenario.commonExpectedResults.expectedSummaryListChangeLink1, Selectors.summaryListChangeLink(1), policyTypePageUrl)
+        linkCheck(userScenario.commonExpectedResults.expectedSummaryListChangeLink2, Selectors.summaryListChangeLink(2), policyNamePageUrl)
+        linkCheck(userScenario.commonExpectedResults.expectedSummaryListChangeLink3, Selectors.summaryListChangeLink(3), gainsAmountPageUrl)
+        linkCheck(userScenario.commonExpectedResults.expectedSummaryListChangeLink4, Selectors.summaryListChangeLink(4), policyEventPageUrl)
+        linkCheck(userScenario.commonExpectedResults.expectedSummaryListChangeLink5, Selectors.summaryListChangeLink(6), policyHeldPageUrl)
+        linkCheck(userScenario.commonExpectedResults.expectedSummaryListChangeLink6, Selectors.summaryListChangeLink(7), paidTaxStatusPageUrl)
+
+        buttonCheck(userScenario.commonExpectedResults.expectedButtonText, Selectors.continueButton)
+        linkCheck(userScenario.commonExpectedResults.expectedHelpLinkText, Selectors.getHelpLink, appConfig.contactUrl(userScenario.isAgent))
+      }
+    }
+  }
+
+  userScenarios.foreach { userScenario =>
+    s"language is ${welshTest(userScenario.isWelsh)} and request is from an ${agentTest(userScenario.isAgent)}" should {
+      "render policy summary page with Capital Redemption and sale or assignment" which {
+        implicit val userPriorDataRequest: AuthorisationRequest[AnyContent] = getAuthRequest(userScenario.isAgent)
+        implicit val messages: Messages = getMessages(userScenario.isWelsh)
+
+        implicit val document: Document = Jsoup.parse(page(taxYear, Seq(PolicyCyaModel(
+          sessionId = sessionId, policyType = "Capital Redemption", policyNumber = Some("abc123"), amountOfGain = Some(BigDecimal(100)), policyEvent = Some("Sale or assignment of a policy"), previousGain = Some(false), yearsPolicyHeld = Some(5), yearsPolicyHeldPrevious = Some(6), treatedAsTaxPaid = Some(false), taxPaidAmount = Some(BigDecimal(123.45)), entitledToDeficiencyRelief = Some(false)
+        )), sessionId).body)
+
+        welshToggleCheck(userScenario.isWelsh)
+        titleCheck(userScenario.commonExpectedResults.expectedTitle, userScenario.isWelsh)
+        captionCheck(userScenario.commonExpectedResults.expectedCaption(taxYear))
+        h1Check(userScenario.commonExpectedResults.expectedHeading)
+
+        textOnPageCheck(userScenario.commonExpectedResults.expectedSummaryListItem1, Selectors.summaryListItem(1))
+        textOnPageCheck(userScenario.commonExpectedResults.expectedSummaryListItem2, Selectors.summaryListItem(2))
+        textOnPageCheck(userScenario.commonExpectedResults.expectedSummaryListItem3, Selectors.summaryListItem(3))
+        textOnPageCheck(userScenario.commonExpectedResults.expectedSummaryListItem4, Selectors.summaryListItem(4))
+        textOnPageCheck(userScenario.commonExpectedResults.expectedSummaryListItem5, Selectors.summaryListItem(6))
+        textOnPageCheck(userScenario.commonExpectedResults.expectedSummaryListItem6, Selectors.summaryListItem(7))
+
+        linkCheck(userScenario.commonExpectedResults.expectedSummaryListChangeLink1, Selectors.summaryListChangeLink(1), policyTypePageUrl)
+        linkCheck(userScenario.commonExpectedResults.expectedSummaryListChangeLink2, Selectors.summaryListChangeLink(2), policyNamePageUrl)
+        linkCheck(userScenario.commonExpectedResults.expectedSummaryListChangeLink3, Selectors.summaryListChangeLink(3), gainsAmountPageUrl)
+        linkCheck(userScenario.commonExpectedResults.expectedSummaryListChangeLink4, Selectors.summaryListChangeLink(4), policyEventPageUrl)
+        linkCheck(userScenario.commonExpectedResults.expectedSummaryListChangeLink5, Selectors.summaryListChangeLink(6), policyHeldPageUrl)
+        linkCheck(userScenario.commonExpectedResults.expectedSummaryListChangeLink6, Selectors.summaryListChangeLink(7), paidTaxStatusPageUrl)
+
+        buttonCheck(userScenario.commonExpectedResults.expectedButtonText, Selectors.continueButton)
+        linkCheck(userScenario.commonExpectedResults.expectedHelpLinkText, Selectors.getHelpLink, appConfig.contactUrl(userScenario.isAgent))
+      }
+    }
+  }
+
+  userScenarios.foreach { userScenario =>
+    s"language is ${welshTest(userScenario.isWelsh)} and request is from an ${agentTest(userScenario.isAgent)}" should {
+      "render policy summary page with fp and ppb" which {
+        implicit val userPriorDataRequest: AuthorisationRequest[AnyContent] = getAuthRequest(userScenario.isAgent)
+        implicit val messages: Messages = getMessages(userScenario.isWelsh)
+
+        implicit val document: Document = Jsoup.parse(page(taxYear, Seq(PolicyCyaModel(
+          sessionId = sessionId, policyType = "Foreign Policy", policyNumber = Some("abc123"), amountOfGain = Some(BigDecimal(100)), policyEvent = Some("Personal Portfolio Bond"), previousGain = Some(false), yearsPolicyHeld = Some(5), yearsPolicyHeldPrevious = Some(6), treatedAsTaxPaid = Some(false), taxPaidAmount = Some(BigDecimal(123.45)), entitledToDeficiencyRelief = Some(false)
+        )), sessionId).body)
+
+        welshToggleCheck(userScenario.isWelsh)
+        titleCheck(userScenario.commonExpectedResults.expectedTitle, userScenario.isWelsh)
+        captionCheck(userScenario.commonExpectedResults.expectedCaption(taxYear))
+        h1Check(userScenario.commonExpectedResults.expectedHeading)
+
+        textOnPageCheck(userScenario.commonExpectedResults.expectedSummaryListItem1, Selectors.summaryListItem(1))
+        textOnPageCheck(userScenario.commonExpectedResults.expectedSummaryListItem2, Selectors.summaryListItem(2))
+        textOnPageCheck(userScenario.commonExpectedResults.expectedSummaryListItem3, Selectors.summaryListItem(3))
+        textOnPageCheck(userScenario.commonExpectedResults.expectedSummaryListItem4, Selectors.summaryListItem(4))
+        textOnPageCheck(userScenario.commonExpectedResults.expectedSummaryListItem5, Selectors.summaryListItem(6))
+        textOnPageCheck(userScenario.commonExpectedResults.expectedSummaryListItem6, Selectors.summaryListItem(7))
+
+        linkCheck(userScenario.commonExpectedResults.expectedSummaryListChangeLink1, Selectors.summaryListChangeLink(1), policyTypePageUrl)
+        linkCheck(userScenario.commonExpectedResults.expectedSummaryListChangeLink2, Selectors.summaryListChangeLink(2), policyNamePageUrl)
+        linkCheck(userScenario.commonExpectedResults.expectedSummaryListChangeLink3, Selectors.summaryListChangeLink(3), gainsAmountPageUrl)
+        linkCheck(userScenario.commonExpectedResults.expectedSummaryListChangeLink4, Selectors.summaryListChangeLink(4), policyEventPageUrl)
+        linkCheck(userScenario.commonExpectedResults.expectedSummaryListChangeLink5, Selectors.summaryListChangeLink(6), policyHeldPageUrl)
+        linkCheck(userScenario.commonExpectedResults.expectedSummaryListChangeLink6, Selectors.summaryListChangeLink(7), paidTaxStatusPageUrl)
 
         buttonCheck(userScenario.commonExpectedResults.expectedButtonText, Selectors.continueButton)
         linkCheck(userScenario.commonExpectedResults.expectedHelpLinkText, Selectors.getHelpLink, appConfig.contactUrl(userScenario.isAgent))

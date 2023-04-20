@@ -17,24 +17,51 @@
 package controllers.gains
 
 import actions.AuthorisedAction
-import config.AppConfig
+import config.{AppConfig, ErrorHandler}
+import models.AllGainsSessionModel
+import models.gains.PolicyCyaModel
 import play.api.i18n.I18nSupport
 import play.api.mvc._
+import services.GainsSessionService
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 import views.html.pages.gains.PoliciesRemovePageView
 
 import javax.inject.{Inject, Singleton}
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class PoliciesRemoveController @Inject()(authorisedAction: AuthorisedAction,
-                                         view: PoliciesRemovePageView)
-                                        (implicit appConfig: AppConfig, mcc: MessagesControllerComponents)
+                                         view: PoliciesRemovePageView,
+                                         gainsSessionService: GainsSessionService,
+                                         errorHandler: ErrorHandler)
+                                        (implicit appConfig: AppConfig, mcc: MessagesControllerComponents, ec: ExecutionContext)
   extends FrontendController(mcc) with I18nSupport {
 
 
-  def show(taxYear: Int): Action[AnyContent] = authorisedAction.async { implicit request =>
-    Future.successful(Ok(view(taxYear)))
+  def show(taxYear: Int, sessionId: String): Action[AnyContent] = authorisedAction.async { implicit request =>
+    val emptyPolicyCyaModel: PolicyCyaModel = PolicyCyaModel("", "")
+    gainsSessionService.getSessionData(taxYear).flatMap {
+      case Left(_) => Future.successful(errorHandler.internalServerError())
+      case Right(cya) => Future.successful(cya.fold(Redirect(appConfig.incomeTaxSubmissionOverviewUrl(taxYear))) {
+        cyaData =>
+          Future.successful(
+            Ok(view(taxYear, sessionId, cyaData.gains.getOrElse(AllGainsSessionModel(Seq(emptyPolicyCyaModel))).allGains.find(_.sessionId == sessionId).getOrElse(emptyPolicyCyaModel)))
+          ).value.get.get
+      })
+    }
+  }
+
+  def submit(taxYear: Int, sessionId: String): Action[AnyContent] = authorisedAction.async { implicit request =>
+    gainsSessionService.getAndHandle(taxYear)(Future.successful(errorHandler.internalServerError())) { (cya, prior) =>
+      (cya, prior) match {
+        case (Some(cya), _) =>
+          val newData = AllGainsSessionModel(cya.allGains.filterNot(_.sessionId == sessionId))
+          gainsSessionService.updateSessionData(newData, taxYear)(errorHandler.internalServerError()) {
+            Redirect(controllers.gains.routes.GainsSummaryController.show(taxYear))
+          }
+        case _ => Future.successful(Redirect(controllers.gains.routes.PolicySummaryController.show(taxYear, sessionId)))
+      }
+    }.flatten
   }
 
 }

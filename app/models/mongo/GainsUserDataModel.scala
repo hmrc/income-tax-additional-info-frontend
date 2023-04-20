@@ -16,21 +16,22 @@
 
 package models.mongo
 
-import models.gains.{EncryptedGainsCyaModel, GainsCyaModel}
+import models.{AllGainsSessionModel, EncryptedAllGainsSessionModel}
 import org.joda.time.{DateTime, DateTimeZone}
 import play.api.libs.json.{Format, Json, OFormat}
+import uk.gov.hmrc.mongo.play.json.formats.MongoJodaFormats
 import uk.gov.hmrc.mongo.play.json.formats.MongoJodaFormats.dateTimeFormat
 
 case class GainsUserDataModel(
-                          sessionId: String,
-                          mtdItId: String,
-                          nino: String,
-                          taxYear: Int,
-                          gains: Option[GainsCyaModel] = None,
-                          lastUpdated: DateTime = DateTime.now(DateTimeZone.UTC)
-                        ) extends UserDataTemplate
+                               sessionId: String,
+                               mtdItId: String,
+                               nino: String,
+                               taxYear: Int,
+                               gains: Option[AllGainsSessionModel] = None,
+                               lastUpdated: DateTime = DateTime.now(DateTimeZone.UTC)
+                             ) extends UserDataTemplate
 
-object GainsUserDataModel {
+object GainsUserDataModel extends MongoJodaFormats {
 
   implicit val mongoJodaDateTimeFormats: Format[DateTime] = dateTimeFormat
 
@@ -38,18 +39,17 @@ object GainsUserDataModel {
 }
 
 case class EncryptedGainsUserDataModel(
-                                   sessionId: String,
-                                   mtdItId: String,
-                                   nino: String,
-                                   taxYear: Int,
-                                   gains: Option[EncryptedGainsCyaModel] = None,
-                                   lastUpdated: DateTime = DateTime.now(DateTimeZone.UTC)
-                                 ) extends UserDataTemplate
+                                        sessionId: String,
+                                        mtdItId: String,
+                                        nino: String,
+                                        taxYear: Int,
+                                        gains: Option[EncryptedAllGainsSessionModel] = None,
+                                        lastUpdated: DateTime = DateTime.now(DateTimeZone.UTC)
+                                      ) extends UserDataTemplate
 
 object EncryptedGainsUserDataModel {
 
   implicit val mongoJodaDateTimeFormats: Format[DateTime] = dateTimeFormat
-
 
   implicit val format: Format[EncryptedGainsUserDataModel] = Json.format[EncryptedGainsUserDataModel]
 }

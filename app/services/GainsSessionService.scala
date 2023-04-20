@@ -18,10 +18,10 @@ package services
 
 import connectors.GetGainsConnector
 import connectors.httpParsers.GetGainsHttpParser.GetGainsResponse
-import models.User
-import models.gains.GainsCyaModel
+import models.AllGainsSessionModel
 import models.gains.prior.GainsPriorDataModel
 import models.mongo.{DatabaseError, GainsUserDataModel}
+import models.requests.AuthorisationRequest
 import org.joda.time.{DateTime, DateTimeZone}
 import play.api.i18n.Lang.logger
 import repositories.GainsUserDataRepository
@@ -35,17 +35,17 @@ class GainsSessionService @Inject()(
                                      getGainsDataConnector: GetGainsConnector
                                    ) {
 
-  private def getPriorData(taxYear: Int)(implicit user: User, hc: HeaderCarrier): Future[GetGainsResponse] = {
-    getGainsDataConnector.getUserData(taxYear)(user, hc.withExtraHeaders("mtditid" -> user.mtditid))
+  private def getPriorData(taxYear: Int)(implicit request: AuthorisationRequest[_], hc: HeaderCarrier): Future[GetGainsResponse] = {
+    getGainsDataConnector.getUserData(taxYear)(request.user, hc.withExtraHeaders("mtditid" -> request.user.mtditid))
   }
 
-  def createSessionData[A](cyaModel: GainsCyaModel, taxYear: Int)(onFail: A)(onSuccess: A)
-                          (implicit user: User, ec: ExecutionContext): Future[A] = {
+  def createSessionData[A](cyaModel: AllGainsSessionModel, taxYear: Int)(onFail: A)(onSuccess: A)
+                          (implicit request: AuthorisationRequest[_], ec: ExecutionContext): Future[A] = {
 
     val userData = GainsUserDataModel(
-      user.sessionId,
-      user.mtditid,
-      user.nino,
+      request.user.sessionId,
+      request.user.mtditid,
+      request.user.nino,
       taxYear,
       Some(cyaModel),
       DateTime.now(DateTimeZone.UTC)
@@ -58,23 +58,24 @@ class GainsSessionService @Inject()(
     }
   }
 
-  private def getSessionData(taxYear: Int)(implicit user: User, ec: ExecutionContext): Future[Either[DatabaseError, Option[GainsUserDataModel]]] = {
+  def getSessionData(taxYear: Int)(implicit request: AuthorisationRequest[_],
+                                   ec: ExecutionContext): Future[Either[DatabaseError, Option[GainsUserDataModel]]] = {
 
     gainsUserDataRepository.find(taxYear).map {
-      case Left(value) =>
+      case Left(error) =>
         logger.error("[GainsSessionService][getSessionData] Could not find user session.")
-        Left(value)
+        Left(error)
       case Right(userData) => Right(userData)
     }
   }
 
-  def updateSessionData[A](cyaModel: GainsCyaModel, taxYear: Int)(onFail: A)(onSuccess: A)
-                          (implicit user: User, ec: ExecutionContext): Future[A] = {
+  def updateSessionData[A](cyaModel: AllGainsSessionModel, taxYear: Int)(onFail: A)(onSuccess: A)
+                          (implicit request: AuthorisationRequest[_], ec: ExecutionContext): Future[A] = {
 
     val userData = GainsUserDataModel(
-      user.sessionId,
-      user.mtditid,
-      user.nino,
+      request.user.sessionId,
+      request.user.mtditid,
+      request.user.nino,
       taxYear,
       Some(cyaModel),
       DateTime.now(DateTimeZone.UTC)
@@ -87,8 +88,18 @@ class GainsSessionService @Inject()(
 
   }
 
-  def getAndHandle[R](taxYear: Int)(onFail: R)(block: (Option[GainsCyaModel], Option[GainsPriorDataModel]) => R)
-                     (implicit user: User, ec: ExecutionContext, hc: HeaderCarrier): Future[R] = {
+  def deleteSessionData[A](cyaModel: AllGainsSessionModel, taxYear: Int)(onFail: A)(onSuccess: A)
+                          (implicit request: AuthorisationRequest[_], ec: ExecutionContext): Future[A] = {
+
+    gainsUserDataRepository.clear(taxYear)(request.user).map {
+      case true => onSuccess
+      case _ => onFail
+    }
+
+  }
+
+  def getAndHandle[R](taxYear: Int)(onFail: R)(block: (Option[AllGainsSessionModel], Option[GainsPriorDataModel]) => R)
+                     (implicit request: AuthorisationRequest[_], ec: ExecutionContext, hc: HeaderCarrier): Future[R] = {
     for {
       optionalCya <- getSessionData(taxYear)
       priorDataResponse <- getPriorData(taxYear)
@@ -96,7 +107,7 @@ class GainsSessionService @Inject()(
       priorDataResponse match {
         case Right(prior) => optionalCya match {
           case Left(_) => onFail
-          case Right(cyaData) => block(cyaData.flatMap(_.gains), Some(prior))
+          case Right(cyaData) => block(cyaData.flatMap(_.gains), prior.gains)
         }
         case Left(_) => onFail
       }

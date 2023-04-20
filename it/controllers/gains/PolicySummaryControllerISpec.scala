@@ -16,21 +16,27 @@
 
 package controllers.gains
 
+import models.gains.LifeInsuranceModel
+import models.gains.prior.IncomeSourceObject
 import play.api.http.HeaderNames
-import play.api.http.Status.OK
+import play.api.http.Status.{OK, SEE_OTHER}
 import play.api.libs.ws.WSResponse
 import support.IntegrationTest
 
 class PolicySummaryControllerISpec extends IntegrationTest {
 
+  clearSession()
+  populateSessionData()
+
   private def url(taxYear: Int): String = {
-    s"/update-and-submit-income-tax-return/additional-information/$taxYear/gains/policy-summary"
+    s"/update-and-submit-income-tax-return/additional-information/$taxYear/gains/policy-summary/$sessionId"
   }
 
   ".show" should {
     "render the policy summary page" in {
       lazy val result: WSResponse = {
         authoriseAgentOrIndividual(isAgent = false)
+        userDataStub(IncomeSourceObject(Some(gainsPriorDataModel)), nino, taxYear)
         urlGet(url(taxYear), headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)))
       }
 
@@ -40,9 +46,61 @@ class PolicySummaryControllerISpec extends IntegrationTest {
     "render the policy summary page for an agent" in {
       lazy val result: WSResponse = {
         authoriseAgentOrIndividual(isAgent = true)
+        userDataStub(IncomeSourceObject(Some(gainsPriorDataModel)), nino, taxYear)
         urlGet(url(taxYear), headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)))
       }
+
       result.status shouldBe OK
+    }
+
+    "render an empty summary page" in {
+      lazy val result: WSResponse = {
+        clearSession()
+        authoriseAgentOrIndividual(isAgent = true)
+        emptyUserDataStub()
+        urlGet(url(taxYear), headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)))
+      }
+
+      result.status shouldBe OK
+      result.body.contains("Gain on a UK policy or contract")
+    }
+
+    "render the page with prior data" in {
+      lazy val result: WSResponse = {
+        clearSession()
+        authoriseAgentOrIndividual(isAgent = true)
+        userDataStub(IncomeSourceObject(Some(gainsPriorDataModel.copy(lifeInsurance = Seq(LifeInsuranceModel(gainAmount = BigDecimal(123.45)))))), nino, taxYear)
+        urlGet(url(taxYear), headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)))
+      }
+
+      result.status shouldBe OK
+    }
+
+    "render the page with prior and cya data" in {
+      lazy val result: WSResponse = {
+        populateSessionData()
+        authoriseAgentOrIndividual(isAgent = true)
+        userDataStub(IncomeSourceObject(Some(gainsPriorDataModel.copy(lifeInsurance = Seq(LifeInsuranceModel(gainAmount = BigDecimal(123.45)))))), nino, taxYear)
+        urlGet(url(taxYear), headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)))
+      }
+
+      result.status shouldBe OK
+    }
+  }
+
+  ".submit" should {
+    "redirect to the gains summary page" in {
+      lazy val result: WSResponse = {
+        populateSessionData()
+        authoriseAgentOrIndividual(isAgent = false)
+        userDataStub(IncomeSourceObject(Some(gainsPriorDataModel)), nino, taxYear)
+        urlPost(
+          s"/update-and-submit-income-tax-return/additional-information/$taxYear/gains/policy-summary/", headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)), body = ""
+        )
+      }
+
+      result.status shouldBe SEE_OTHER
+      result.headers("Location").head shouldBe s"/update-and-submit-income-tax-return/additional-information/$taxYear/gains/summary"
     }
   }
 
