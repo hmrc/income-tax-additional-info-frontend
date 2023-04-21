@@ -72,6 +72,14 @@ trait WireMockStubs {
     stubFor(mappingWithHeaders.willReturn(aResponse().withStatus(status).withBody(responseBody)))
   }
 
+  protected def stubPut(url: String, status: Int, responseBody: String, requestHeaders: Seq[HttpHeader] = Seq.empty): StubMapping = {
+    val mappingWithHeaders: MappingBuilder = requestHeaders.foldLeft(put(urlMatching(url))) { (result, nxt) =>
+      result.withHeader(nxt.key(), equalTo(nxt.firstValue()))
+    }
+
+    stubFor(mappingWithHeaders.willReturn(aResponse().withStatus(status).withBody(responseBody)))
+  }
+
   private def successfulAuthResponse(affinityGroup: Option[AffinityGroup], confidenceLevel: ConfidenceLevel, enrolments: JsObject*): JsObject = {
     affinityGroup match {
       case Some(group) => Json.obj(

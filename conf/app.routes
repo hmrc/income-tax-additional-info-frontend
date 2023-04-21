@@ -56,8 +56,8 @@ POST        /:taxYear/gains/policy-held-previous/:sessionId            controlle
 GET         /:taxYear/gains/policy-type/:sessionId                     controllers.gains.PolicyTypeController.show(taxYear: Int, sessionId: String)
 POST        /:taxYear/gains/policy-type/:sessionId                     controllers.gains.PolicyTypeController.submit(taxYear: Int, sessionId: String)
 
-GET         /:taxYear/gains/paid-tax-amount                            controllers.gains.PaidTaxAmountController.show(taxYear: Int)
-POST        /:taxYear/gains/paid-tax-amount                            controllers.gains.PaidTaxAmountController.submit(taxYear: Int)
+GET         /:taxYear/gains/paid-tax-amount/:sessionId                 controllers.gains.PaidTaxAmountController.show(taxYear: Int, sessionId: String)
+POST        /:taxYear/gains/paid-tax-amount/:sessionId                 controllers.gains.PaidTaxAmountController.submit(taxYear: Int, sessionId: String)
 
 GET         /:taxYear/gains/policy-summary/:sessionId                  controllers.gains.PolicySummaryController.show(taxYear: Int, sessionId: String)
 POST        /:taxYear/gains/policy-summary                             controllers.gains.PolicySummaryController.submit(taxYear: Int)

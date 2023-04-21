@@ -17,19 +17,22 @@
 package connectors
 
 import config.AppConfig
-import connectors.httpParsers.GainsSubmissionHttpParser._
-import models.gains.GainsSubmissionModel
+import connectors.httpParsers.ExcludeJourneyHttpParser._
+import play.api.libs.json.{JsObject, Json}
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
 
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
-class GainsSubmissionConnector @Inject()(val http: HttpClient, appConfig: AppConfig)
-                                        (implicit ec: ExecutionContext) extends RawResponseReads {
+class ExcludeJourneyConnector @Inject()(
+                                         http: HttpClient,
+                                         appConfig: AppConfig
+                                       )(implicit ec: ExecutionContext) {
 
-  def submitGains(body: GainsSubmissionModel, nino: String, taxYear: Int)
-                 (implicit hc: HeaderCarrier): Future[GainsSubmissionResponse] = {
-    val gainsSubmissionUrl: String = appConfig.additionalInformationServiceBaseUrl + s"/income-tax/insurance-policies/income/$nino/$taxYear"
-    http.PUT[GainsSubmissionModel, GainsSubmissionResponse](gainsSubmissionUrl, body)
+  def excludeJourney(journeyKey: String, taxYear: Int, nino: String)(implicit hc: HeaderCarrier): Future[ExcludeJourneyResponse] = {
+    http.POST[JsObject, ExcludeJourneyResponse](
+      appConfig.incomeTaxSubmissionBEBaseUrl + s"/income-tax/nino/$nino/sources/exclude-journey/$taxYear", Json.obj("journey" -> journeyKey)
+    )
   }
+
 }

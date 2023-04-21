@@ -91,7 +91,8 @@ class PolicySummaryControllerISpec extends IntegrationTest {
   ".submit" should {
     "redirect to the gains summary page" in {
       lazy val result: WSResponse = {
-        populateSessionData()
+        clearSession()
+        populateWithSessionDataModel(Seq(completePolicyCyaModel))
         authoriseAgentOrIndividual(isAgent = false)
         userDataStub(IncomeSourceObject(Some(gainsPriorDataModel)), nino, taxYear)
         urlPost(
@@ -102,6 +103,21 @@ class PolicySummaryControllerISpec extends IntegrationTest {
       result.status shouldBe SEE_OTHER
       result.headers("Location").head shouldBe s"/update-and-submit-income-tax-return/additional-information/$taxYear/gains/summary"
     }
+  }
+
+  "redirect to submission overview and exclude journey" in {
+    lazy val result: WSResponse = {
+      clearSession()
+      populateSessionData()
+      authoriseAgentOrIndividual(isAgent = false)
+      userDataStub(IncomeSourceObject(Some(gainsPriorDataModel)), nino, taxYear)
+      urlPost(
+        s"/update-and-submit-income-tax-return/additional-information/$taxYear/gains/policy-summary/", headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)), body = ""
+      )
+    }
+
+    result.status shouldBe SEE_OTHER
+    result.headers("Location").head shouldBe appConfig.incomeTaxSubmissionOverviewUrl(taxYear)
   }
 
 }

@@ -18,11 +18,11 @@ package controllers.gains
 
 import actions.AuthorisedAction
 import config.{AppConfig, ErrorHandler}
-import models.AllGainsSessionModel
+import models.{AllGainsSessionModel, User}
 import models.gains.PolicyCyaModel
 import play.api.i18n.I18nSupport
 import play.api.mvc._
-import services.GainsSessionService
+import services.{ExcludeJourneyService, GainsSessionService, GainsSubmissionService}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 import views.html.pages.gains.PolicySummaryPageView
 
@@ -34,6 +34,8 @@ import scala.concurrent.{Await, ExecutionContext, Future}
 class PolicySummaryController @Inject()(authorisedAction: AuthorisedAction,
                                         view: PolicySummaryPageView,
                                         gainsSessionService: GainsSessionService,
+                                        gainsSubmissionService: GainsSubmissionService,
+                                        excludeJourneyService: ExcludeJourneyService,
                                         errorHandler: ErrorHandler)
                                        (implicit appConfig: AppConfig, mcc: MessagesControllerComponents, ec: ExecutionContext)
   extends FrontendController(mcc) with I18nSupport {
@@ -61,8 +63,21 @@ class PolicySummaryController @Inject()(authorisedAction: AuthorisedAction,
     }
   }
 
-  def submit(taxYear: Int): Action[AnyContent] = authorisedAction.async {
-    Future.successful(Redirect(controllers.gains.routes.GainsSummaryController.show(taxYear)))
+  def submit(taxYear: Int): Action[AnyContent] = authorisedAction.async { implicit request =>
+    gainsSessionService.getAndHandle(taxYear)(errorHandler.internalServerError()) {
+      implicit val user: User = request.user
+      (cya, prior) =>
+        (cya, prior) match {
+          case (Some(cya), _) => if (cya.allGains.headOption.getOrElse(PolicyCyaModel("", "")).policyType == "") {
+            excludeJourneyService.excludeJourney("gains", taxYear, request.user.nino)
+            Redirect(appConfig.incomeTaxSubmissionOverviewUrl(taxYear))
+          } else {
+            gainsSubmissionService.submitGains(Some(cya.toSubmissionModel), request.user.nino, request.user.mtditid, taxYear)
+            Redirect(controllers.gains.routes.GainsSummaryController.show(taxYear))
+          }
+          case (_, _) => errorHandler.internalServerError()
+        }
+    }
   }
 
 }

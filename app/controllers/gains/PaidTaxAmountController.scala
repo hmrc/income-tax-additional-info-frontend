@@ -17,11 +17,13 @@
 package controllers.gains
 
 import actions.AuthorisedAction
-import config.AppConfig
+import config.{AppConfig, ErrorHandler}
 import forms.AmountForm
+import models.AllGainsSessionModel
 import play.api.data.Form
 import play.api.i18n.I18nSupport
 import play.api.mvc._
+import services.GainsSessionService
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 import views.html.pages.gains.PaidTaxAmountPageView
 
@@ -30,7 +32,9 @@ import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class PaidTaxAmountController @Inject()(authorisedAction: AuthorisedAction,
-                                        view: PaidTaxAmountPageView)
+                                        view: PaidTaxAmountPageView,
+                                        gainsSessionService: GainsSessionService,
+                                        errorHandler: ErrorHandler)
                                        (implicit appConfig: AppConfig, mcc: MessagesControllerComponents, ec: ExecutionContext)
   extends FrontendController(mcc) with I18nSupport {
 
@@ -40,17 +44,43 @@ class PaidTaxAmountController @Inject()(authorisedAction: AuthorisedAction,
       s"gains.paid-tax-amount.question.incorrect-format-error.${if (isAgent) "agent" else "individual"}",
       "gains.paid-tax-amount.question.amount-exceeds-max-error"
     )
-  def show(taxYear: Int): Action[AnyContent] = authorisedAction.async { implicit request =>
-    Future.successful(Ok(view(taxYear, form(request.user.isAgent))))
+
+  def show(taxYear: Int, sessionId: String): Action[AnyContent] = authorisedAction.async { implicit request =>
+    gainsSessionService.getSessionData(taxYear).flatMap {
+      case Left(_) => Future.successful(errorHandler.internalServerError())
+      case Right(cya) =>
+        Future.successful(cya.fold(Redirect(appConfig.incomeTaxSubmissionOverviewUrl(taxYear))) {
+          cyaData =>
+            cyaData.gains.fold(Ok(view(taxYear, form(request.user.isAgent), sessionId))) {
+              data =>
+                data.allGains.filter(_.sessionId == sessionId) match {
+                  case value => if (value.head.taxPaidAmount.getOrElse(0) != 0) {
+                    Ok(view(taxYear, form(request.user.isAgent).fill(value.head.taxPaidAmount.getOrElse(BigDecimal(0))), sessionId))
+                  } else {
+                    Ok(view(taxYear, form(request.user.isAgent), sessionId))
+                  }
+                }
+            }
+        })
+    }
   }
 
-
-  def submit(taxYear: Int): Action[AnyContent] = authorisedAction.async { implicit request =>
-    form(request.user.isAgent).bindFromRequest().fold(
-      formWithErrors =>
-        Future.successful(BadRequest(view(taxYear, formWithErrors))),
-      _ =>
-        Future(Redirect(appConfig.incomeTaxSubmissionOverviewUrl(taxYear)))
-    )
+  def submit(taxYear: Int, sessionId: String): Action[AnyContent] = authorisedAction.async { implicit request =>
+    form(request.user.isAgent).bindFromRequest().fold(formWithErrors => {
+      Future.successful(BadRequest(view(taxYear, formWithErrors, sessionId)))
+    }, {
+      amount =>
+        gainsSessionService.getAndHandle(taxYear)(Future.successful(errorHandler.internalServerError())) { (cya, prior) =>
+          (cya, prior) match {
+            case (Some(cya), _) =>
+              val index = cya.allGains.indexOf(cya.allGains.filter(_.sessionId == sessionId).head)
+              val newData = cya.allGains(index).copy(taxPaidAmount = Some(amount))
+              val updated = cya.allGains.updated(index, newData)
+              gainsSessionService.updateSessionData(AllGainsSessionModel(updated), taxYear)(errorHandler.internalServerError()) {
+                  Redirect(controllers.gains.routes.PolicySummaryController.show(taxYear, sessionId))
+              }
+          }
+        }.flatten
+    })
   }
 }

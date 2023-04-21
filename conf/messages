@@ -56,6 +56,8 @@ common.gains.policies = Policies
 common.gains.amount-of-gain-made = Amount of gain made
 common.gains.gain-treated-as-tax-paid = Gain treated as tax paid
 common.gains.amount-of-relief-available = Amount of relief available
+common.gains.taxPaidAmount = Tax paid on gain
+common.gains.voidedIsa = Voided ISA
 
 common.gains.policy-held.paragraph.1.individual = If you were a UK resident while you were the beneficial owner of the policy, enter the ''number of years'' from the chargeable event certificate you received from your insurer.
 common.gains.policy-held.paragraph.2.individual = If you lived outside the UK while you were the beneficial owner of the policy, refer to
@@ -144,7 +146,6 @@ gains.gain-amount.question.bullet.1.individual = your policy qualifies for restr
 gains.gain-amount.question.bullet.2.individual = you were a non-UK resident while you were a beneficial owner of the policy
 gains.gain-amount.question.link.text.1 = Find out more about calculating your gain (opens in new tab)
 gains.gain-amount.question.link.text.2 = Find out more about reducing chargeable event gains (opens in new tab)
-
 
 gains.gain-amount.question.error.empty_field.agent = Enter the gain your client made. For example, £193.54
 gains.gain-amount.question.details-text.1.agent = Sometimes you may need to calculate your client''s gain or reduce it.
