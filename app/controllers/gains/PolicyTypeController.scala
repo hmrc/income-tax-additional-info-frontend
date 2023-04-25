@@ -79,7 +79,7 @@ class PolicyTypeController @Inject()(authorisedAction: AuthorisedAction,
                   val newG = cya.allGains.filter(_.sessionId == sessionId).head.copy(policyType = policy)
                   gains.updated(gains.indexOf(gains.find(_.sessionId == sessionId).get), newG)
                 }
-              gainsSessionService.updateSessionData(AllGainsSessionModel(newData), taxYear)(errorHandler.internalServerError()) {
+              gainsSessionService.updateSessionData(AllGainsSessionModel(newData, cya.gateway), taxYear)(errorHandler.internalServerError()) {
                 if (newData.filter(_.sessionId == sessionId).head.isFinished) {
                   Redirect(controllers.gains.routes.PolicySummaryController.show(taxYear, sessionId))
                 } else {
@@ -87,7 +87,7 @@ class PolicyTypeController @Inject()(authorisedAction: AuthorisedAction,
                 }
               }
             case _ => Future.successful(
-              Redirect(controllers.gains.routes.PolicySummaryController.show(taxYear, cya.getOrElse(AllGainsSessionModel(Seq.empty)).allGains.last.sessionId))
+              Redirect(controllers.gains.routes.PolicySummaryController.show(taxYear, cya.getOrElse(AllGainsSessionModel(Seq.empty, gateway = true)).allGains.last.sessionId))
             )
           }
         }.flatten

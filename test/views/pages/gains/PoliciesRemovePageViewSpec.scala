@@ -60,6 +60,7 @@ class PoliciesRemovePageViewSpec extends ViewUnitTest {
     val expectedSummaryListItem6: String
     val expectedSummaryListItem7: String
     val expectedSummaryListItem8: String
+    val expectedSummaryListItem9: String
     val expectedButtonText: String
     val expectedDontRemoveLinkText: String
     val expectedHelpLinkText: String
@@ -80,6 +81,7 @@ class PoliciesRemovePageViewSpec extends ViewUnitTest {
     override val expectedSummaryListItem6: String = "Gain treated as tax paid"
     override val expectedSummaryListItem7: String = "Deficiency relief"
     override val expectedSummaryListItem8: String = "Amount of relief available"
+    override val expectedSummaryListItem9: String = "Tax paid on gain"
     override val expectedButtonText: String = "Remove"
     override val expectedDontRemoveLinkText: String = "Don't remove"
     override val expectedHelpLinkText: String = "Get help with this page"
@@ -97,6 +99,7 @@ class PoliciesRemovePageViewSpec extends ViewUnitTest {
     override val expectedSummaryListItem6: String = "Enillion yn cael eu trin fel treth a dalwyd"
     override val expectedSummaryListItem7: String = "Rhyddhad am ddiffyg"
     override val expectedSummaryListItem8: String = "Swm y rhyddhad sydd ar gael"
+    override val expectedSummaryListItem9: String = "Treth a dalwyd ar yr enillion"
     override val expectedButtonText: String = "Tynnu"
     override val expectedDontRemoveLinkText: String = "Paid â thynnu"
     override val expectedHelpLinkText: String = "Help gyda’r dudalen hon"
@@ -217,6 +220,35 @@ class PoliciesRemovePageViewSpec extends ViewUnitTest {
         textOnPageCheck(userScenario.commonExpectedResults.expectedSummaryListItem5, Selectors.summaryListItem5)
         textOnPageCheck(userScenario.commonExpectedResults.expectedSummaryListItem6, Selectors.summaryListItem6)
         textOnPageCheck(userScenario.commonExpectedResults.expectedSummaryListItem7, Selectors.summaryListItem7)
+
+        linkCheck(userScenario.commonExpectedResults.expectedDontRemoveLinkText, Selectors.dontRemoveLink, policiesAddPageUrl)
+
+        buttonCheck(userScenario.commonExpectedResults.expectedButtonText, Selectors.removeButton)
+        linkCheck(userScenario.commonExpectedResults.expectedHelpLinkText, Selectors.getHelpLink, appConfig.contactUrl(userScenario.isAgent))
+      }
+    }
+  }
+
+  userScenarios.foreach { userScenario =>
+    s"language is ${welshTest(userScenario.isWelsh)} and request is from an ${agentTest(userScenario.isAgent)}" should {
+      "render policies remove page with voided isa" which {
+        implicit val userPriorDataRequest: AuthorisationRequest[AnyContent] = getAuthRequest(userScenario.isAgent)
+        implicit val messages: Messages = getMessages(userScenario.isWelsh)
+
+        implicit val document: Document = Jsoup.parse(page(taxYear, sessionId, PolicyCyaModel(sessionId, "Voided ISA", policyEvent = Some("Some other event"), entitledToDeficiencyRelief = Some(false), treatedAsTaxPaid = Some(false))).body)
+
+        welshToggleCheck(userScenario.isWelsh)
+        titleCheck(userScenario.commonExpectedResults.expectedTitle, userScenario.isWelsh)
+        captionCheck(userScenario.commonExpectedResults.expectedCaption(taxYear))
+        h1Check(userScenario.commonExpectedResults.expectedHeading)
+
+        textOnPageCheck(userScenario.commonExpectedResults.expectedSummaryListItem1, Selectors.summaryListItem1)
+        textOnPageCheck(userScenario.commonExpectedResults.expectedSummaryListItem2, Selectors.summaryListItem2)
+        textOnPageCheck(userScenario.commonExpectedResults.expectedSummaryListItem3, Selectors.summaryListItem3)
+        textOnPageCheck(userScenario.commonExpectedResults.expectedSummaryListItem4, Selectors.summaryListItem4)
+        textOnPageCheck(userScenario.commonExpectedResults.expectedSummaryListItem5, Selectors.summaryListItem5)
+        textOnPageCheck(userScenario.commonExpectedResults.expectedSummaryListItem9, Selectors.summaryListItem6)
+
 
         linkCheck(userScenario.commonExpectedResults.expectedDontRemoveLinkText, Selectors.dontRemoveLink, policiesAddPageUrl)
 

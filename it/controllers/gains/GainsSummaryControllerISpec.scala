@@ -52,7 +52,7 @@ class GainsSummaryControllerISpec extends IntegrationTest {
     }
 
     "render the empty summary page when no gains are found" in {
-      gainsSessionService.updateSessionData(AllGainsSessionModel(Seq[PolicyCyaModel]()), taxYear)(false)(true)(AuthorisationRequestBuilder.anAuthorisationRequest, ec)
+      gainsSessionService.updateSessionData(AllGainsSessionModel(Seq[PolicyCyaModel](), gateway = true), taxYear)(false)(true)(AuthorisationRequestBuilder.anAuthorisationRequest, ec)
       lazy val result: WSResponse = {
         authoriseAgentOrIndividual(isAgent = false)
         urlGet(url(taxYear), headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)))

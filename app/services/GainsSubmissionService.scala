@@ -33,7 +33,7 @@ class GainsSubmissionService @Inject()(gainsSubmissionConnector: GainsSubmission
 
     lazy val logger: Logger = Logger(this.getClass.getName)
 
-    val nonOptBody: GainsSubmissionModel = body.getOrElse(GainsSubmissionModel(Seq(), None, None, None, None))
+    val nonOptBody: GainsSubmissionModel = body.getOrElse(GainsSubmissionModel(Seq[LifeInsuranceModel](), None, None, None, None))
 
     nonOptBody match {
       case GainsSubmissionModel(Seq(), None, None, None, None) =>

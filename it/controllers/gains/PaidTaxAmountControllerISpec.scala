@@ -17,6 +17,7 @@
 package controllers.gains
 
 import forms.AmountForm
+import models.gains.prior.IncomeSourceObject
 import play.api.http.HeaderNames
 import play.api.http.Status.{BAD_REQUEST, OK, SEE_OTHER}
 import play.api.libs.ws.WSResponse
@@ -27,7 +28,7 @@ class PaidTaxAmountControllerISpec extends IntegrationTest {
   clearSession()
   populateSessionData()
   private def url(taxYear: Int): String = {
-    s"/update-and-submit-income-tax-return/additional-information/$taxYear/gains/paid-tax-amount"
+    s"/update-and-submit-income-tax-return/additional-information/$taxYear/gains/paid-tax-amount/$sessionId"
   }
 
   ".show" should {
@@ -48,18 +49,49 @@ class PaidTaxAmountControllerISpec extends IntegrationTest {
 
       result.status shouldBe OK
     }
+
+    "render the gains amount page with pre-filled data" in {
+      clearSession()
+      populateWithSessionDataModel(Seq(completePolicyCyaModel.copy(taxPaidAmount = Some(123.45))))
+      lazy val result: WSResponse = {
+        authoriseAgentOrIndividual(isAgent = true)
+        urlGet(url(taxYear), headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)))
+      }
+
+      result.status shouldBe OK
+    }
+
+    "return an internal server error" in {
+      lazy val result: WSResponse = {
+        authoriseAgentOrIndividual(isAgent = false)
+        urlGet(url(taxYear) + "bad-session", headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)))
+      }
+
+      result.status shouldBe 500
+    }
+
+    "redirect to income tax submission overview page if no session data is found" in {
+      clearSession()
+      lazy val result: WSResponse = {
+        authoriseAgentOrIndividual(isAgent = false)
+        urlGet(url(taxYear), headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)))
+      }
+
+      result.status shouldBe SEE_OTHER
+    }
   }
 
   ".submit" should {
-    "redirect to income tax submission overview if successful" in {
+    "redirect to policy summary if successful" in {
       populateSessionData()
       lazy val result: WSResponse = {
         authoriseAgentOrIndividual(isAgent = false)
+        userDataStub(IncomeSourceObject(Some(gainsPriorDataModel)), nino, taxYear)
         urlPost(url(taxYear), headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)), body = Map(AmountForm.amount -> "100"))
       }
 
       result.status shouldBe SEE_OTHER
-      result.headers("Location").head shouldBe appConfig.incomeTaxSubmissionOverviewUrl(taxYear)
+      result.headers("Location").head shouldBe s"/update-and-submit-income-tax-return/additional-information/$taxYear/gains/policy-summary/$sessionId"
     }
 
     "show page with error text if form is invalid" in {
@@ -89,4 +121,5 @@ class PaidTaxAmountControllerISpec extends IntegrationTest {
       result.status shouldBe BAD_REQUEST
     }
   }
+
 }

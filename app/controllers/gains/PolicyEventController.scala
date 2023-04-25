@@ -81,7 +81,7 @@ class PolicyEventController @Inject()(authorisedAction: AuthorisedAction,
               val index = cya.allGains.indexOf(cya.allGains.find(_.sessionId == sessionId).get)
               val newData = cya.allGains(index).copy(policyEvent = if (policyEvent._1 != "Other") Some(policyEvent._1) else Some(policyEvent._2))
               val updated = cya.allGains.updated(index, newData)
-              gainsSessionService.updateSessionData(AllGainsSessionModel(updated), taxYear)(errorHandler.internalServerError()) {
+              gainsSessionService.updateSessionData(AllGainsSessionModel(updated, cya.gateway), taxYear)(errorHandler.internalServerError()) {
                 if (newData.isFinished) {
                   Redirect(controllers.gains.routes.PolicySummaryController.show(taxYear, sessionId))
                 } else {

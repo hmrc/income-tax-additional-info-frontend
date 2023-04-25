@@ -96,7 +96,7 @@ class GainsSubmissionConnectorISpec extends IntegrationTest {
     Some(Seq(validForeignModel))
   )
 
-  val expectedHeaders = Seq(new HttpHeader("mtditid", mtditid))
+  val expectedHeaders: Seq[HttpHeader] = Seq(new HttpHeader("mtditid", mtditid))
 
   "GainsSubmissionConnectorSpec" should {
 
@@ -109,7 +109,7 @@ class GainsSubmissionConnectorISpec extends IntegrationTest {
         implicit val hc: HeaderCarrier = HeaderCarrier(sessionId = Some(SessionId("sessionIdValue"))).withExtraHeaders("mtditid"->mtditid)
         val connector = new GainsSubmissionConnector(httpClient, appConfig(internalHost))
 
-        stubPost(s"/income-tax-additional-information/income-tax/insurance-policies/income/$nino/$taxYear", NO_CONTENT, "{}",
+        stubPut(s"/income-tax-additional-information/income-tax/insurance-policies/income/$nino/$taxYear", NO_CONTENT, "{}",
           headersSentToGainsSubmission)
 
         val result: GainsSubmissionResponse = Await.result(connector.submitGains(validGainsSubmissionModel, nino, taxYear)(hc), Duration.Inf)
@@ -119,19 +119,19 @@ class GainsSubmissionConnectorISpec extends IntegrationTest {
     }
     "Return a success result" when {
       "Gains submission returns a 204" in {
-        stubPost(s"/income-tax-additional-information/income-tax/insurance-policies/income/$nino/$taxYear", NO_CONTENT, "{}", expectedHeaders)
+        stubPut(s"/income-tax-additional-information/income-tax/insurance-policies/income/$nino/$taxYear", NO_CONTENT, "{}", expectedHeaders)
         val result: GainsSubmissionResponse = Await.result(connector.submitGains(validGainsSubmissionModel, nino, taxYear), Duration.Inf)
         result shouldBe Right(NO_CONTENT)
       }
 
       "Gains submission returns a 400" in {
-        stubPost(s"/income-tax-additional-information/income-tax/insurance-policies/income/$nino/$taxYear", BAD_REQUEST, "{}", expectedHeaders)
+        stubPut(s"/income-tax-additional-information/income-tax/insurance-policies/income/$nino/$taxYear", BAD_REQUEST, "{}", expectedHeaders)
         val result = Await.result(connector.submitGains(validGainsSubmissionModel, nino, taxYear), Duration.Inf)
         result shouldBe Left(ApiError(BAD_REQUEST, SingleErrorBody("PARSING_ERROR", "Error while parsing response from API")))
       }
 
       "Gains submission returns an error parsing from API 500 response" in {
-        stubPost(s"/income-tax-additional-information/income-tax/insurance-policies/income/$nino/$taxYear", INTERNAL_SERVER_ERROR, "{}", expectedHeaders)
+        stubPut(s"/income-tax-additional-information/income-tax/insurance-policies/income/$nino/$taxYear", INTERNAL_SERVER_ERROR, "{}", expectedHeaders)
         val result = Await.result(connector.submitGains(validGainsSubmissionModel, nino, taxYear), Duration.Inf)
         result shouldBe Left(ApiError(INTERNAL_SERVER_ERROR, SingleErrorBody("PARSING_ERROR", "Error while parsing response from API")))
       }
@@ -143,7 +143,7 @@ class GainsSubmissionConnectorISpec extends IntegrationTest {
           "reason" -> "Unexpected status returned from API"
         )
 
-        stubPost(s"/income-tax-additional-information/income-tax/insurance-policies/income/$nino/$taxYear", CREATED, responseBody.toString(), expectedHeaders)
+        stubPut(s"/income-tax-additional-information/income-tax/insurance-policies/income/$nino/$taxYear", CREATED, responseBody.toString(), expectedHeaders)
         val result = await(connector.submitGains(validGainsSubmissionModel, nino, taxYear))
         result shouldBe Left(ApiError(INTERNAL_SERVER_ERROR, SingleErrorBody("INTERNAL_SERVER_ERROR", "Unexpected status returned from API")))
       }
@@ -155,7 +155,7 @@ class GainsSubmissionConnectorISpec extends IntegrationTest {
           "reason" -> "the service is currently unavailable"
         )
 
-        stubPost(s"/income-tax-additional-information/income-tax/insurance-policies/income/$nino/$taxYear", SERVICE_UNAVAILABLE, responseBody.toString(), expectedHeaders)
+        stubPut(s"/income-tax-additional-information/income-tax/insurance-policies/income/$nino/$taxYear", SERVICE_UNAVAILABLE, responseBody.toString(), expectedHeaders)
         val result = Await.result(connector.submitGains(validGainsSubmissionModel, nino, taxYear), Duration.Inf)
         result shouldBe Left(ApiError(SERVICE_UNAVAILABLE, SingleErrorBody("SERVICE_UNAVAILABLE", "the service is currently unavailable")))
       }

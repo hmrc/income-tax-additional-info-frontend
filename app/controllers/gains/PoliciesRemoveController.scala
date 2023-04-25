@@ -45,7 +45,8 @@ class PoliciesRemoveController @Inject()(authorisedAction: AuthorisedAction,
       case Right(cya) => Future.successful(cya.fold(Redirect(appConfig.incomeTaxSubmissionOverviewUrl(taxYear))) {
         cyaData =>
           Future.successful(
-            Ok(view(taxYear, sessionId, cyaData.gains.getOrElse(AllGainsSessionModel(Seq(emptyPolicyCyaModel))).allGains.find(_.sessionId == sessionId).getOrElse(emptyPolicyCyaModel)))
+            Ok(view(taxYear, sessionId, cyaData.gains.getOrElse(
+              AllGainsSessionModel(Seq(emptyPolicyCyaModel), gateway = true)).allGains.find(_.sessionId == sessionId).getOrElse(emptyPolicyCyaModel)))
           ).value.get.get
       })
     }
@@ -55,7 +56,7 @@ class PoliciesRemoveController @Inject()(authorisedAction: AuthorisedAction,
     gainsSessionService.getAndHandle(taxYear)(Future.successful(errorHandler.internalServerError())) { (cya, prior) =>
       (cya, prior) match {
         case (Some(cya), _) =>
-          val newData = AllGainsSessionModel(cya.allGains.filterNot(_.sessionId == sessionId))
+          val newData = AllGainsSessionModel(cya.allGains.filterNot(_.sessionId == sessionId), cya.gateway)
           gainsSessionService.updateSessionData(newData, taxYear)(errorHandler.internalServerError()) {
             Redirect(controllers.gains.routes.GainsSummaryController.show(taxYear))
           }

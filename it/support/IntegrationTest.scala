@@ -138,6 +138,18 @@ trait IntegrationTest extends AnyWordSpec
     await(wsClient.url(fullUrl(url)).withFollowRedirects(follow).withHttpHeaders(newHeaders: _*).post(body))
   }
 
+  def urlPut[T](url: String,
+                body: T,
+                welsh: Boolean = false,
+                follow: Boolean = false,
+                headers: Seq[(String, String)] = Seq())
+               (implicit wsClient: WSClient, bodyWritable: BodyWritable[T]): WSResponse = {
+
+    val headersWithNoCheck = headers ++ Seq("Csrf-Token" -> "nocheck")
+    val newHeaders = if (welsh) Seq(HeaderNames.ACCEPT_LANGUAGE -> "cy") ++ headersWithNoCheck else headersWithNoCheck
+    await(wsClient.url(fullUrl(url)).withFollowRedirects(follow).withHttpHeaders(newHeaders: _*).put(body))
+  }
+
   private def fullUrl(endOfUrl: String): String = s"http://localhost:$port" + endOfUrl
 
   protected def await[T](awaitable: Awaitable[T]): T = Await.result(awaitable, Duration.Inf)
@@ -156,25 +168,32 @@ trait IntegrationTest extends AnyWordSpec
   ) ++ extraData)
 
   val completePolicyCyaModel: PolicyCyaModel = PolicyCyaModel(
-      sessionId, "", Some("123"), Some(0), Some(""), Some(true), Some(0), Some(0), Some(true), Some(123.11), Some(true), Some(123.11)
-    )
+    sessionId, "Life Insurance", Some("123"), Some(0), Some(""), Some(true), Some(0), Some(0), Some(true), Some(123.11), Some(true), Some(123.11)
+  )
 
-  val gainsPriorDataModel: GainsPriorDataModel = GainsPriorDataModel("submittedOn", lifeInsurance = Seq(LifeInsuranceModel(Some("abc123"), Some("event"), BigDecimal(123.45), Some(true), Some(5), Some(10))))
+  val gainsPriorDataModel: GainsPriorDataModel =
+    GainsPriorDataModel("submittedOn", lifeInsurance = Seq(LifeInsuranceModel(Some("abc123"), Some("event"), BigDecimal(123.45), Some(true), Some(5), Some(10))))
   val gainsUserDataRepository: GainsUserDataRepository = app.injector.instanceOf[GainsUserDataRepository]
   val getGainsDataConnector: GetGainsConnector = app.injector.instanceOf[GetGainsConnector]
   val gainsSessionService: GainsSessionService = new GainsSessionService(gainsUserDataRepository, getGainsDataConnector)
 
   def populateSessionData(): Boolean =
-    await(gainsSessionService.createSessionData(AllGainsSessionModel(Seq(PolicyCyaModel(sessionId, ""))), taxYear)(false)(true)(AuthorisationRequestBuilder.anAuthorisationRequest, ec))
+    await(gainsSessionService.createSessionData(AllGainsSessionModel(Seq(PolicyCyaModel(sessionId, "")), gateway = true), taxYear)(false)(true)(AuthorisationRequestBuilder.anAuthorisationRequest, ec))
+
+  def populateSessionDataWithFalseGateway(): Boolean =
+    await(gainsSessionService.createSessionData(AllGainsSessionModel(Seq(), gateway = false), taxYear)(false)(true)(AuthorisationRequestBuilder.anAuthorisationRequest, ec))
 
   def populateWithSessionDataModel(cya: Seq[PolicyCyaModel]): Boolean =
-    await(gainsSessionService.createSessionData(AllGainsSessionModel(cya), taxYear)(false)(true)(AuthorisationRequestBuilder.anAuthorisationRequest, ec))
+    await(gainsSessionService.createSessionData(AllGainsSessionModel(cya, gateway = true), taxYear)(false)(true)(AuthorisationRequestBuilder.anAuthorisationRequest, ec))
+
   def clearSession(): Boolean = await(gainsUserDataRepository.clear(taxYear))
+
   def userDataStub(userData: IncomeSourceObject, nino: String, taxYear: Int): StubMapping = {
     stubGetWithHeadersCheck(
       s"/income-tax-submission-service/income-tax/nino/$nino/sources/session\\?taxYear=$taxYear", OK,
       Json.toJson(userData).toString(), "X-Session-ID" -> sessionId, "mtditid" -> mtditid)
   }
+
   def emptyUserDataStub(nino: String = nino, taxYear: Int = taxYear): StubMapping = {
     userDataStub(IncomeSourceObject(None), nino, taxYear)
   }
