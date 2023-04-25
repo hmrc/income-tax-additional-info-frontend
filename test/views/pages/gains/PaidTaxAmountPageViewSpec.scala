@@ -25,9 +25,12 @@ import play.api.mvc.AnyContent
 import support.ViewUnitTest
 import views.html.pages.gains.PaidTaxAmountPageView
 
+import java.util.UUID
+
 class PaidTaxAmountPageViewSpec extends ViewUnitTest {
 
   private val page: PaidTaxAmountPageView = inject[PaidTaxAmountPageView]
+  private val sessionId: String = UUID.randomUUID().toString
 
   object Selectors {
     val gainsAmountNumberHint = "#amount-hint"
@@ -121,7 +124,7 @@ class PaidTaxAmountPageViewSpec extends ViewUnitTest {
           s"gains.paid-tax-amount.question.amount-exceeds-max-error.${if (userScenario.isAgent) "agent" else "individual"}",
           None,
 
-        )).body)
+        ), sessionId).body)
 
         welshToggleCheck(userScenario.isWelsh)
         titleCheck(userScenario.specificExpectedResults.get.expectedTitle, userScenario.isWelsh)
@@ -145,7 +148,7 @@ class PaidTaxAmountPageViewSpec extends ViewUnitTest {
           s"gains.paid-tax-amount.question.incorrect-format-error.${if (userScenario.isAgent) "agent" else "individual"}",
           "gains.paid-tax-amount.question.amount-exceeds-max-error.",
           None
-        ).bind(Map(AmountForm.amount -> ""))).body)
+        ).bind(Map(AmountForm.amount -> "")), sessionId).body)
 
         welshToggleCheck(userScenario.isWelsh)
         captionCheck(userScenario.commonExpectedResults.expectedCaption(taxYear))
@@ -172,7 +175,7 @@ class PaidTaxAmountPageViewSpec extends ViewUnitTest {
           s"gains.paid-tax-amount.question.incorrect-format-error.${if (userScenario.isAgent) "agent" else "individual"}",
           "gains.paid-tax-amount.question.amount-exceeds-max-error",
           None
-        ).bind(Map(AmountForm.amount -> "abc"))).body)
+        ).bind(Map(AmountForm.amount -> "abc")), sessionId).body)
 
         welshToggleCheck(userScenario.isWelsh)
         captionCheck(userScenario.commonExpectedResults.expectedCaption(taxYear))
@@ -199,7 +202,7 @@ class PaidTaxAmountPageViewSpec extends ViewUnitTest {
           s"gains.paid-tax-amount.question.incorrect-format-error.${if (userScenario.isAgent) "agent" else "individual"}",
           "gains.paid-tax-amount.question.amount-exceeds-max-error",
           None
-        ).bind(Map(AmountForm.amount -> "10000000000000"))).body)
+        ).bind(Map(AmountForm.amount -> "10000000000000")), sessionId).body)
 
         welshToggleCheck(userScenario.isWelsh)
         captionCheck(userScenario.commonExpectedResults.expectedCaption(taxYear))
@@ -215,4 +218,5 @@ class PaidTaxAmountPageViewSpec extends ViewUnitTest {
 
     }
   }
+
 }

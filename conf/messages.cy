@@ -56,6 +56,8 @@ common.gains.years-policy-held = Nifer y blynyddoedd a ddaliwyd y polisi
 common.gains.amount-of-gain-made = Swm yr enillion a wnaed
 common.gains.gain-treated-as-tax-paid = Enillion yn cael eu trin fel treth a dalwyd
 common.gains.amount-of-relief-available = Swm y rhyddhad sydd ar gael
+common.gains.taxPaidAmount = Treth a dalwyd ar yr enillion
+common.gains.voidedIsa = ISA sydd wedi’i ddirymu
 
 common.gains.policy-held.paragraph.1.individual = Os oeddech yn breswylydd yn y DU tra oeddech yn berchennog llesiannol y polisi, nodwch ‘nifer y blynyddoedd’ sydd ar y dystysgrif digwyddiad trethadwy a gawsoch gan eich yswiriwr.
 common.gains.policy-held.paragraph.2.individual = Os oeddech yn byw y tu allan i’r DU tra oeddech yn berchennog llesiannol y polisi, dysgwch
@@ -208,7 +210,7 @@ gains.paid-tax-amount.question.amount-exceeds-max-error = Mae’n rhaid i swm y 
 
 gains.policy-summary.question.title = Crynodeb o’r polisi
 gains.policy-summary.list.tax-paid-on-gain = Enillion blaenorol
-gains.policy-summary.list.yearsSince = Years since last gain
+gains.policy-summary.list.yearsSince = Blynyddoedd ers ennill diwethaf
 
 gains.policy-summary.list.hidden.text.1 = math o bolisi
 gains.policy-summary.list.hidden.text.2 = rhif y polisi
@@ -218,8 +220,8 @@ gains.policy-summary.list.hidden.text.6 = statws y dreth a dalwyd
 gains.policy-summary.list.hidden.text.7 = statws y rhyddhad am ddiffyg
 gains.policy-summary.list.hidden.text.8 = swm y rhyddhad sydd ar gael
 
-gains.policy-summary.empty.title.individual = Check your gains from life insurance policies and contracts
-gains.policy-summary.empty.title.agent = Check your client''s gains from life insurance policies and contracts
+gains.policy-summary.empty.title.individual = Gwirio’ch enillion o bolisïau yswiriant bywyd a chontractau
+gains.policy-summary.empty.title.agent = Gwirio enillion eich cleient o bolisïau yswiriant bywyd a chontractau
 
 gains.summary.title.individual = Eich polisïau
 gains.summary.sub-title = Polisïau wedi’u canslo

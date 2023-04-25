@@ -73,7 +73,7 @@ class PolicyHeldPreviousController @Inject()(authorisedAction: AuthorisedAction,
               val index = cya.allGains.indexOf(cya.allGains.filter(_.sessionId == sessionId).head)
               val newData = cya.allGains(index).copy(yearsPolicyHeldPrevious = amount)
               val updated = cya.allGains.updated(index, newData)
-              gainsSessionService.updateSessionData(AllGainsSessionModel(updated), taxYear)(errorHandler.internalServerError()) {
+              gainsSessionService.updateSessionData(AllGainsSessionModel(updated, cya.gateway), taxYear)(errorHandler.internalServerError()) {
                 if (newData.isFinished) {
                   Redirect(controllers.gains.routes.PolicySummaryController.show(taxYear, sessionId))
                 } else {

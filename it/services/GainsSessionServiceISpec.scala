@@ -25,20 +25,20 @@ import support.builders.requests.AuthorisationRequestBuilder
 class GainsSessionServiceISpec extends IntegrationTest {
 
   val gainsSessionServiceInvalidEncryption: GainsSessionService = appWithInvalidEncryptionKey.injector.instanceOf[GainsSessionService]
-  gainsSessionService.createSessionData(AllGainsSessionModel(Seq(PolicyCyaModel(sessionId, ""))), taxYear)(false)(true)(AuthorisationRequestBuilder.anAuthorisationRequest, ec)
+  gainsSessionService.createSessionData(AllGainsSessionModel(Seq(PolicyCyaModel(sessionId, "")), gateway = true), taxYear)(false)(true)(AuthorisationRequestBuilder.anAuthorisationRequest, ec)
 
   "create" should {
     "return false when failing to decrypt the model" in {
       val result =
-        await(gainsSessionServiceInvalidEncryption.createSessionData(AllGainsSessionModel(Seq(completePolicyCyaModel)), taxYear)(false)(true)(AuthorisationRequestBuilder.anAuthorisationRequest, ec))
+        await(gainsSessionServiceInvalidEncryption.createSessionData(AllGainsSessionModel(Seq(completePolicyCyaModel), gateway = true), taxYear)(false)(true)(AuthorisationRequestBuilder.anAuthorisationRequest, ec))
       result shouldBe false
     }
     "return true when succesful and false when adding a duplicate" in {
       await(gainsUserDataRepository.collection.drop().toFuture())
       await(gainsUserDataRepository.ensureIndexes)
-      val initialResult = await(gainsSessionService.createSessionData(AllGainsSessionModel(Seq(completePolicyCyaModel)), taxYear)(false)(true)(AuthorisationRequestBuilder.anAuthorisationRequest, ec))
+      val initialResult = await(gainsSessionService.createSessionData(AllGainsSessionModel(Seq(completePolicyCyaModel), gateway = true), taxYear)(false)(true)(AuthorisationRequestBuilder.anAuthorisationRequest, ec))
       val duplicateResult =
-        await(gainsSessionService.createSessionData(AllGainsSessionModel(Seq(completePolicyCyaModel)), taxYear)(false)(true)(AuthorisationRequestBuilder.anAuthorisationRequest, ec))
+        await(gainsSessionService.createSessionData(AllGainsSessionModel(Seq(completePolicyCyaModel), gateway = true), taxYear)(false)(true)(AuthorisationRequestBuilder.anAuthorisationRequest, ec))
       initialResult shouldBe true
       duplicateResult shouldBe false
     }
@@ -46,7 +46,7 @@ class GainsSessionServiceISpec extends IntegrationTest {
 
   "update" should {
     "return false when failing to decrypt the model" in {
-      val result = await(gainsSessionServiceInvalidEncryption.updateSessionData(AllGainsSessionModel(Seq(completePolicyCyaModel)), taxYear)(false)(true)(AuthorisationRequestBuilder.anAuthorisationRequest, ec))
+      val result = await(gainsSessionServiceInvalidEncryption.updateSessionData(AllGainsSessionModel(Seq(completePolicyCyaModel), gateway = true), taxYear)(false)(true)(AuthorisationRequestBuilder.anAuthorisationRequest, ec))
       result shouldBe false
     }
   }

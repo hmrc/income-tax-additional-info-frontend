@@ -34,14 +34,22 @@ case class PolicyCyaModel(
                            deficiencyReliefAmount: Option[BigDecimal] = None
                          ) {
   def isFinished: Boolean = {
-    policyNumber.isDefined &&
-      amountOfGain.isDefined &&
-      policyEvent.isDefined &&
-      (previousGain.contains(true) && yearsPolicyHeldPrevious.isDefined | previousGain.contains(false)) &&
-      yearsPolicyHeld.isDefined &&
-      treatedAsTaxPaid.isDefined &&
-      //taxPaidAmount.isDefined &&
-      (entitledToDeficiencyRelief.contains(true) && deficiencyReliefAmount.isDefined | entitledToDeficiencyRelief.contains(false))
+    if (policyType == "Voided ISA") {
+      policyNumber.isDefined &&
+        amountOfGain.isDefined &&
+        policyEvent.isDefined &&
+        (previousGain.contains(true) && yearsPolicyHeldPrevious.isDefined | previousGain.contains(false)) &&
+        yearsPolicyHeld.isDefined &&
+        taxPaidAmount.isDefined
+    } else {
+      policyNumber.isDefined &&
+        amountOfGain.isDefined &&
+        policyEvent.isDefined &&
+        (previousGain.contains(true) && yearsPolicyHeldPrevious.isDefined | previousGain.contains(false)) &&
+        yearsPolicyHeld.isDefined &&
+        treatedAsTaxPaid.isDefined &&
+        (entitledToDeficiencyRelief.contains(true) && deficiencyReliefAmount.isDefined | entitledToDeficiencyRelief.contains(false))
+    }
   }
 }
 

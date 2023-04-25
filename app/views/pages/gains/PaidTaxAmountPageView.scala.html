@@ -31,7 +31,7 @@
         button: Button
 )
 
-@(taxYear: Int, form: Form[BigDecimal])(implicit request: AuthorisationRequest[_], messages: Messages, appConfig: AppConfig)
+@(taxYear: Int, form: Form[BigDecimal], session: String)(implicit request: AuthorisationRequest[_], messages: Messages, appConfig: AppConfig)
 
 @titleForUse = @{messages(s"gains.paid-tax-amount.question.title.${if(request.user.isAgent) "agent" else "individual"}")}
 
@@ -43,22 +43,24 @@
 
 @heading(headingForUse, Some(messages("gains.caption", (taxYear - 1).toString, taxYear.toString)), "govuk-!-margin-bottom-2")
 
-    @formWithCsrf(action = controllers.gains.routes.PaidTaxAmountController.submit(taxYear)) {
-    @inputText(
-    form = form,
-    id = "amount",
-    name = "amount",
-    currency = true,
-    label = messages(s"gains.paid-tax-amount.question.label.${if(request.user.isAgent) "agent" else "individual"}"),
-    labelHidden = true,
-    hint = Some(messages(s"common.monetary.input.hint")),
-    classes = Some("govuk-input--width-5")
-    )
+    @formWithCsrf(action = controllers.gains.routes.PaidTaxAmountController.submit(taxYear, session)) {
+
+        @inputText(
+            form = form,
+            id = "amount",
+            name = "amount",
+            currency = true,
+            label = messages(s"gains.paid-tax-amount.question.label.${if(request.user.isAgent) "agent" else "individual"}"),
+            labelHidden = true,
+            hint = Some(messages(s"common.monetary.input.hint")),
+            classes = Some("govuk-input--width-5")
+        )
 
     @button()
-    }
 
     }
+
+}
 
 @{
 // $COVERAGE-OFF$

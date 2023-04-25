@@ -18,7 +18,7 @@ package repositories
 
 import com.mongodb.client.result.InsertOneResult
 import models.{AllGainsSessionModel, User}
-import models.gains.{PolicyCyaModel}
+import models.gains.PolicyCyaModel
 import models.mongo._
 import models.requests.AuthorisationRequest
 import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
@@ -44,7 +44,7 @@ class UserDataRepositoryISpec extends IntegrationTest with FutureAwaits with Def
     mtditid,
     nino,
     taxYear,
-    Some(AllGainsSessionModel(Seq(completePolicyCyaModel)))
+    Some(AllGainsSessionModel(Seq(completePolicyCyaModel), gateway = true))
   )
 
   implicit val request: FakeRequest[AnyContent] = FakeRequest()
@@ -74,13 +74,13 @@ class UserDataRepositoryISpec extends IntegrationTest with FutureAwaits with Def
 
       val initialData: GainsUserDataModel = GainsUserDataModel(
         testUser.sessionId, testUser.mtditid, testUser.nino, taxYear,
-        Some(AllGainsSessionModel(Seq(completePolicyCyaModel)))
+        Some(AllGainsSessionModel(Seq(completePolicyCyaModel), gateway = true))
       )
 
       val newGainsCyaModel: PolicyCyaModel = completePolicyCyaModel.copy(amountOfGain = Some(321.11), taxPaidAmount = Some(321.11))
 
       val newUserData: GainsUserDataModel = initialData.copy(
-        gains = Some(AllGainsSessionModel(Seq(newGainsCyaModel)))
+        gains = Some(AllGainsSessionModel(Seq(newGainsCyaModel), gateway = true))
       )
 
       await(gainsRepo.create(initialData))
@@ -126,7 +126,7 @@ class UserDataRepositoryISpec extends IntegrationTest with FutureAwaits with Def
         case Left(value) => None
       })
 
-      dataAfter.get.gains mustBe Some(AllGainsSessionModel(List(newGainsCyaModel)))
+      dataAfter.get.gains mustBe Some(AllGainsSessionModel(List(newGainsCyaModel), gateway = true))
     }
 
     "return a EncryptionDecryptionError" in {
@@ -137,6 +137,7 @@ class UserDataRepositoryISpec extends IntegrationTest with FutureAwaits with Def
     "return a No CYA data found" in {
       await(gainsRepo.find(taxYear)(AuthorisationRequest(testUser.copy(sessionId = "invalid"), request))) mustBe Right(None)
     }
+
   }
 
   "the set indexes" should {

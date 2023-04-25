@@ -56,14 +56,14 @@ class EncryptionService @Inject()(implicit val encryptionService: AesGcmAdCrypto
   private def encryptAllGainsSessionModel(allGainsSessionModel: AllGainsSessionModel)
                                            (implicit associatedText: String): EncryptedAllGainsSessionModel = {
     EncryptedAllGainsSessionModel(
-      allGains = allGainsSessionModel.allGains.map(encryptPolicyCyaModel)
+      allGains = allGainsSessionModel.allGains.map(encryptPolicyCyaModel), allGainsSessionModel.gateway
     )
   }
 
   private def decryptAllGainsSessionModel(allGainsSessionModel: EncryptedAllGainsSessionModel)
                                            (implicit associatedText: String): AllGainsSessionModel = {
     AllGainsSessionModel(
-      allGains = allGainsSessionModel.allGains.map(decryptPolicyCyaModel)
+      allGains = allGainsSessionModel.allGains.map(decryptPolicyCyaModel), allGainsSessionModel.gateway
     )
   }
 

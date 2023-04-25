@@ -73,6 +73,10 @@ class PolicyCyaModelSpec extends UnitTest {
 
     }
 
+    "return true when model is full for voided isa" in {
+      modelMax.copy(policyType = "Voided ISA").isFinished shouldBe true
+    }
+
   }
 
 }
