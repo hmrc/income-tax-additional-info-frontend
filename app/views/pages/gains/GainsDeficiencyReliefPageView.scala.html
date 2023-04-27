@@ -58,7 +58,7 @@
             <li>@messages(s"gains.deficiency-relief-status.question.bullet3.${if(request.user.isAgent) "agent" else "individual"}")</li>
         </ul>
 
-    <p class="govuk-body">@link("https://www.gov.uk/government/publications/gains-on-uk-life-insurance-policies-hs320-self-assessment-helpsheet/hs320-gains-on-uk-life-insurance-policies-2021#deficiency-relief","gains.deficiency-relief-status.question.paragraph2.link",None,true,fullStop=false)</p>
+    <p class="govuk-body"><a href="https://www.gov.uk/government/publications/gains-on-uk-life-insurance-policies-hs320-self-assessment-helpsheet/hs320-gains-on-uk-life-insurance-policies-2021#deficiency-relief" class="govuk-link">@messages(s"gains.deficiency-relief-status.question.paragraph2.link")</a>.</p>
 
     @inputRadio(
                 form = form,

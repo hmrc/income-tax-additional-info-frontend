@@ -24,7 +24,6 @@ import play.api.i18n.Messages
 import play.api.mvc.AnyContent
 import support.ViewUnitTest
 import views.html.pages.gains.PolicyNamePageView
-
 import java.util.UUID
 
 class PolicyNamePageViewSpec extends ViewUnitTest {
@@ -86,7 +85,7 @@ class PolicyNamePageViewSpec extends ViewUnitTest {
   object ExpectedIndividualCY extends SpecificExpectedResults {
     override val expectedErrorTitle: String = "Gwall: Rhif y polisi"
     override val expectedHeading: String = "Rhif y polisi"
-    override val expectedParagraph1: String = "Dylai’ch yswiriwr neu reolwr eich ISA fod wedi rhoi rhif polisi i chi, a elwir hefyd yn `cyfeirnod y cwsmer`, ar gyfer eich polisi neu’ch contract."
+    override val expectedParagraph1: String = "Dylai’ch yswiriwr neu reolwr eich ISA fod wedi rhoi rhif polisi i chi, a elwir hefyd yn `cyfeirnod y cwsmer`,ar gyfer eich polisi neu’ch contract."
     override val expectedParagraph2: String = "Gall rhif eich polisi gynnwys y cymeriadau arbennig (/) neu (-), rhifau a llythrennau."
     override val expectedLabel: String = "Beth yw rhif eich polisi?"
     override val expectedErrorText: String = "Nodwch rif eich polisi"
@@ -106,7 +105,7 @@ class PolicyNamePageViewSpec extends ViewUnitTest {
   object ExpectedAgentCY extends SpecificExpectedResults {
     override val expectedErrorTitle: String = "Gwall: Rhif y polisi"
     override val expectedHeading: String = "Rhif y polisi"
-    override val expectedParagraph1: String = "Dylai yswiriwr neu reolwr ISA eich cleient fod wedi rhoi rhif polisi iddo, a elwir hefyd yn `cyfeirnod y cwsmer`, ar gyfer ei bolisi neu’i gontract."
+    override val expectedParagraph1: String = "Dylai yswiriwr neu reolwr ISA eich cleient fod wedi rhoi rhif polisi iddo, a elwir hefyd yn `cyfeirnod y cwsmer`,ar gyfer ei bolisi neu’i gontract."
     override val expectedParagraph2: String = "Gall rhif polisi eich cleient gynnwys y cymeriadau arbennig (/) neu (-), rhifau a llythrennau."
     override val expectedLabel: String = "Beth yw rhif polisi eich cleient?"
     override val expectedErrorText: String = "Nodwch rif polisi eich cleient"
