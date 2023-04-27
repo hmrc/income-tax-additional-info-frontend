@@ -71,13 +71,13 @@ common.gains.policy-held.paragraph.2.link-text.agent  = sut i ostwng swm ei dret
 gains.caption = Enillion o bolisïau yswiriant bywyd a chontractau ar gyfer 6 Ebrill {0} i 5 Ebrill {1}
 
 ################# Gains from life insurance policies and contracts messages #################
-gains.policy-name.question.paragraph.1.individual = Dylai’ch yswiriwr neu reolwr eich ISA fod wedi rhoi rhif polisi i chi, a elwir hefyd yn `cyfeirnod y cwsmer`, ar gyfer eich polisi neu’ch contract.
+gains.policy-name.question.paragraph.1.individual = Dylai’ch yswiriwr neu reolwr eich ISA fod wedi rhoi rhif polisi i chi, a elwir hefyd yn `cyfeirnod y cwsmer`,ar gyfer eich polisi neu’ch contract.
 gains.policy-name.question.paragraph.2.individual = Gall rhif eich polisi gynnwys y cymeriadau arbennig (/) neu (-), rhifau a llythrennau.
 gains.policy-name.label.individual = Beth yw rhif eich polisi?
 gains.policy-name.question.hint = Er enghraifft, `P-89879-123` neu `LA/2881/07`.
 gains.policy-name.question.error-message.1.individual = Nodwch rif eich polisi
 gains.policy-name.question.error-message.2.individual = Nodwch rif eich polisi yn y fformat cywir. Er enghraifft, `P-89879-123` neu `LA/2881/07`.
-gains.policy-name.question.paragraph.1.agent = Dylai yswiriwr neu reolwr ISA eich cleient fod wedi rhoi rhif polisi iddo, a elwir hefyd yn `cyfeirnod y cwsmer`, ar gyfer ei bolisi neu’i gontract.
+gains.policy-name.question.paragraph.1.agent = Dylai yswiriwr neu reolwr ISA eich cleient fod wedi rhoi rhif polisi iddo, a elwir hefyd yn `cyfeirnod y cwsmer`,ar gyfer ei bolisi neu’i gontract.
 gains.policy-name.question.paragraph.2.agent = Gall rhif polisi eich cleient gynnwys y cymeriadau arbennig (/) neu (-), rhifau a llythrennau.
 gains.policy-name.label.agent = Beth yw rhif polisi eich cleient?
 gains.policy-name.question.error-message.1.agent = Nodwch rif polisi eich cleient
