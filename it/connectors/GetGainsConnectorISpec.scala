@@ -38,8 +38,8 @@ class GetGainsConnectorISpec extends IntegrationTest with ConnectorIntegrationTe
 
   "GetGainsConnector" should {
     "Return a success result" when {
-      "request returns a 204" in {
-        stubGetWithHeadersCheck(url, NO_CONTENT,
+      "request returns a 404" in {
+        stubGetWithHeadersCheck(url, NOT_FOUND,
           "{}", "X-Session-ID" -> sessionId, "mtditid" -> mtditid)
 
         val result: GetGainsResponse = Await.result(connector.getUserData(taxYear), Duration.Inf)

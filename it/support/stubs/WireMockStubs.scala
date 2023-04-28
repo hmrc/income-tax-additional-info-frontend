@@ -26,6 +26,7 @@ import play.api.libs.json.{JsObject, Json}
 import support.builders.UserBuilder.aUser
 import uk.gov.hmrc.auth.core.{AffinityGroup, ConfidenceLevel}
 
+
 trait WireMockStubs {
 
   protected def stubGetWithHeadersCheck(url: String,
@@ -78,6 +79,28 @@ trait WireMockStubs {
     }
 
     stubFor(mappingWithHeaders.willReturn(aResponse().withStatus(status).withBody(responseBody)))
+  }
+
+  def stubDeleteWithoutResponseBody(url: String, status: Int, requestHeaders: Seq[HttpHeader] = Seq.empty): StubMapping = {
+    val mappingWithHeaders: MappingBuilder = requestHeaders.foldLeft(delete(urlMatching(url))) { (result, nxt) =>
+      result.withHeader(nxt.key(), equalTo(nxt.firstValue()))
+    }
+    stubFor(mappingWithHeaders
+      .willReturn(
+        aResponse()
+          .withStatus(status)))
+  }
+
+  def stubDeleteWithResponseBody(url: String, status: Int, response: String, requestHeaders: Seq[HttpHeader] = Seq.empty): StubMapping = {
+    val mappingWithHeaders: MappingBuilder = requestHeaders.foldLeft(delete(urlMatching(url))) { (result, nxt) =>
+      result.withHeader(nxt.key(), equalTo(nxt.firstValue()))
+    }
+    stubFor(mappingWithHeaders
+      .willReturn(
+        aResponse()
+          .withStatus(status)
+          .withBody(response)
+      ))
   }
 
   private def successfulAuthResponse(affinityGroup: Option[AffinityGroup], confidenceLevel: ConfidenceLevel, enrolments: JsObject*): JsObject = {

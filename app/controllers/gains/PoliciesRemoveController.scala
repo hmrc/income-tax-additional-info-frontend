@@ -22,7 +22,7 @@ import models.AllGainsSessionModel
 import models.gains.PolicyCyaModel
 import play.api.i18n.I18nSupport
 import play.api.mvc._
-import services.GainsSessionService
+import services.{DeleteGainsService, GainsSessionService, GainsSubmissionService}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 import views.html.pages.gains.PoliciesRemovePageView
 
@@ -33,6 +33,8 @@ import scala.concurrent.{ExecutionContext, Future}
 class PoliciesRemoveController @Inject()(authorisedAction: AuthorisedAction,
                                          view: PoliciesRemovePageView,
                                          gainsSessionService: GainsSessionService,
+                                         gainsSubmissionService: GainsSubmissionService,
+                                         deleteGainsService: DeleteGainsService,
                                          errorHandler: ErrorHandler)
                                         (implicit appConfig: AppConfig, mcc: MessagesControllerComponents, ec: ExecutionContext)
   extends FrontendController(mcc) with I18nSupport {
@@ -58,9 +60,15 @@ class PoliciesRemoveController @Inject()(authorisedAction: AuthorisedAction,
         case (Some(cya), _) =>
           val newData = AllGainsSessionModel(cya.allGains.filterNot(_.sessionId == sessionId), cya.gateway)
           gainsSessionService.updateSessionData(newData, taxYear)(errorHandler.internalServerError()) {
-            Redirect(controllers.gains.routes.GainsSummaryController.show(taxYear))
+            if (newData.allGains.isEmpty) {
+              deleteGainsService.deleteGainsData(request.user.nino, taxYear, request.user.mtditid)
+              Redirect(controllers.gains.routes.GainsSummaryController.show(taxYear))
+            } else {
+              gainsSubmissionService.submitGains(Some(newData.toSubmissionModel), request.user.nino, request.user.mtditid, taxYear)
+              Redirect(controllers.gains.routes.GainsSummaryController.show(taxYear))
+            }
           }
-        case _ => Future.successful(Redirect(controllers.gains.routes.PolicySummaryController.show(taxYear, sessionId)))
+        case _ => Future.successful(Redirect(controllers.gains.routes.GainsSummaryController.show(taxYear)))
       }
     }.flatten
   }
