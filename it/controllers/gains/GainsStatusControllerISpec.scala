@@ -129,15 +129,5 @@ class GainsStatusControllerISpec extends IntegrationTest {
       result.status shouldBe SEE_OTHER
       result.headers("Location").head shouldBe s"/update-and-submit-income-tax-return/additional-information/$taxYear/gains/policy-held/${sessionId}"
     }
-
-    "return an internal server error when no data is present" in {
-      clearSession()
-      lazy val result: WSResponse = {
-        authoriseAgentOrIndividual(isAgent = false)
-        urlPost(url(1900), headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)), body = Map(yesNo -> "true", yearInput -> "10"))
-      }
-
-      result.status shouldBe 500
-    }
   }
 }

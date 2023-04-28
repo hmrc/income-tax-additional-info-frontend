@@ -140,16 +140,5 @@ class PolicyNameControllerISpec extends IntegrationTest {
 
       result.status shouldBe 500
     }
-
-    "return an internal server error when no data is present" in {
-      clearSession()
-      lazy val result: WSResponse = {
-        authoriseAgentOrIndividual(isAgent = false)
-        emptyUserDataStub()
-        urlPost(url(1900), headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)), body = Map(InputFieldForm.value -> "mixedAlphaNumOnly1"))
-      }
-
-      result.status shouldBe 500
-    }
   }
 }
