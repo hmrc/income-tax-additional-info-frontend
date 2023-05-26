@@ -113,7 +113,7 @@ class GainsGatewayPageViewSpec extends ViewUnitTest {
     override val expectedRadioHeading: String = "Did your client make a gain on a UK policy or contract?"
     override val expectedHeading: String = "Gains from life insurance policies and contracts"
     override val expectedParagraph1: String = "We will ask about gains your client has made on life insurance policies, life annuities and capital redemption policies"
-    override val expectedBullet1: String = "your clients policy number, given to you by their insurer or ISA manager"
+    override val expectedBullet1: String = "your client's policy number, given to you by their insurer or ISA manager"
     override val expectedBullet2: String = "the chargeable event certificate, sent to your client by their insurer"
     override val expectedErrorText: String = "Select yes if your client made a gain on a UK policy or contract"
   }

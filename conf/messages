@@ -94,7 +94,7 @@ gains.gateway.question.error.individual = Select Yes if you made a gain on a UK 
 
 gains.gateway.question.radio.heading.agent = Did your client make a gain on a UK policy or contract?
 gains.gateway.question.paragraph1.agent = We will ask about gains your client has made on life insurance policies, life annuities and capital redemption policies
-gains.gateway.question.bullet1.agent = your client's policy number, given to you by their insurer or ISA manager
+gains.gateway.question.bullet1.agent = your client''s policy number, given to you by their insurer or ISA manager
 gains.gateway.question.bullet2.agent = the chargeable event certificate, sent to your client by their insurer
 gains.gateway.question.error.agent = Select yes if your client made a gain on a UK policy or contract
 
@@ -182,7 +182,7 @@ gains.policy-held-previous.question.error-empty.agent = Enter the number of year
 gains.deficiency-relief-status.question.radio.heading.individual = Are you entitled to deficiency relief?
 gains.deficiency-relief-status.question.radio.heading.agent = Is your client entitled to Deficiency relief?
 gains.deficiency-relief-status.question.input.amount = What amount is available for relief?
-gains.deficiency-relief-status.question.paragraph2.link = Find out more about Deficiency relief
+gains.deficiency-relief-status.question.paragraph2.link = Find out more about Deficiency relief (opens in new tab)
 
 gains.deficiency-relief-status.question.paragraph1.individual = You may be entitled to this relief if:
 gains.deficiency-relief-status.question.bullet1.individual = your policy or annuity ended between 6 April {0} to 5 April {1}
