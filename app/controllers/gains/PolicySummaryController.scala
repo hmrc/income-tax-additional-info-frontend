@@ -17,12 +17,16 @@
 package controllers.gains
 
 import actions.AuthorisedAction
+import audit.{AuditModel, AuditService, CreateOrAmendGainsAuditDetail}
 import config.{AppConfig, ErrorHandler}
+import models.gains.prior.GainsPriorDataModel
+import models.gains.{DecodedGainsSubmissionPayload, GainsSubmissionModel, PolicyCyaModel}
 import models.{AllGainsSessionModel, User}
-import models.gains.{GainsSubmissionModel, PolicyCyaModel}
 import play.api.i18n.I18nSupport
 import play.api.mvc._
-import services.{ExcludeJourneyService, GainsSessionService, GainsSubmissionService}
+import services.{ExcludeJourneyService, GainsSessionService, GainsSubmissionService, NrsService}
+import uk.gov.hmrc.http.HeaderCarrier
+import uk.gov.hmrc.play.audit.http.connector.AuditResult
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 import views.html.pages.gains.PolicySummaryPageView
 
@@ -36,10 +40,11 @@ class PolicySummaryController @Inject()(authorisedAction: AuthorisedAction,
                                         gainsSessionService: GainsSessionService,
                                         gainsSubmissionService: GainsSubmissionService,
                                         excludeJourneyService: ExcludeJourneyService,
-                                        errorHandler: ErrorHandler)
+                                        errorHandler: ErrorHandler,
+                                        auditService: AuditService,
+                                        nrsService: NrsService)
                                        (implicit appConfig: AppConfig, mcc: MessagesControllerComponents, ec: ExecutionContext)
   extends FrontendController(mcc) with I18nSupport {
-
 
   def show(taxYear: Int, sessionId: String): Action[AnyContent] = authorisedAction.async { implicit request =>
     gainsSessionService.getAndHandle(taxYear)(errorHandler.internalServerError()) {
@@ -63,7 +68,9 @@ class PolicySummaryController @Inject()(authorisedAction: AuthorisedAction,
           case (_, _) =>
             Await.result(
               gainsSessionService.createSessionData(
-                AllGainsSessionModel(Seq(PolicyCyaModel(sessionId, "")), cya.getOrElse(AllGainsSessionModel(Seq(PolicyCyaModel(sessionId, "")), gateway = true)).gateway), taxYear)(errorHandler.internalServerError()) {
+                AllGainsSessionModel(Seq(PolicyCyaModel(sessionId, "")),
+                  cya.getOrElse(AllGainsSessionModel(Seq(PolicyCyaModel(sessionId, "")), gateway = true)).gateway),
+                  taxYear)(errorHandler.internalServerError()) {
                 Ok(view(taxYear, cya.getOrElse(AllGainsSessionModel(Seq(PolicyCyaModel(sessionId, "")), gateway = true)).allGains, sessionId))
               }, Duration.Inf
             )
@@ -80,17 +87,35 @@ class PolicySummaryController @Inject()(authorisedAction: AuthorisedAction,
             Await.result(excludeJourneyService.excludeJourney("gains", taxYear, request.user.nino).flatMap {
               case Right(_) =>
                 gainsSubmissionService.submitGains(Some(GainsSubmissionModel()), request.user.nino, request.user.mtditid, taxYear)
+                nrsSubmission(Some(GainsSubmissionModel()), prior, user.nino, user.mtditid, user.affinityGroup, taxYear)
                 Future(Redirect(appConfig.incomeTaxSubmissionOverviewUrl(taxYear)))
               case Left(_) =>
                 Future(errorHandler.internalServerError())
             }, Duration.Inf)
           } else {
             gainsSubmissionService.submitGains(Some(cya.toSubmissionModel), request.user.nino, request.user.mtditid, taxYear)
+            nrsSubmission(Some(cya.toSubmissionModel), prior, user.nino, user.mtditid, user.affinityGroup, taxYear)
             Redirect(controllers.gains.routes.GainsSummaryController.show(taxYear))
           }
           case (_, _) => errorHandler.internalServerError()
         }
     }
+  }
+
+  private def nrsSubmission(body: Option[GainsSubmissionModel], prior: Option[GainsPriorDataModel],
+                            nino: String, mtditid: String, affinityGroup: String, taxYear: Int)
+                           (implicit request: Request[_]): Unit = {
+    val model = CreateOrAmendGainsAuditDetail(body, prior, prior.isDefined, nino, mtditid, affinityGroup.toLowerCase, taxYear)
+    auditSubmission(model)
+    if (appConfig.nrsEnabled) {
+      nrsService.submit(nino, new DecodedGainsSubmissionPayload(body, prior), mtditid)
+    }
+  }
+
+  private def auditSubmission(details: CreateOrAmendGainsAuditDetail)
+                             (implicit hc: HeaderCarrier): Future[AuditResult] = {
+    val event = AuditModel("CreateOrAmendInterestSavingsUpdate", "createOrAmendInterestSavingsUpdate", details)
+    auditService.auditModel(event)
   }
 
 }
