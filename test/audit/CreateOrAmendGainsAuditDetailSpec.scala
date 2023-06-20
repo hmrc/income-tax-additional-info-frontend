@@ -79,7 +79,7 @@ class CreateOrAmendGainsAuditDetailSpec extends UnitTest {
 
   val prior: GainsPriorDataModel = GainsPriorDataModel(
     "2020-01-04T05:01:01Z",
-    Seq(validLifeInsuranceModel),
+    Some(Seq(validLifeInsuranceModel)),
     Some(Seq(validCapitalRedemptionModel)),
     Some(Seq(validLifeAnnuityModel)),
     Some(Seq(validVoidedIsaModel)),

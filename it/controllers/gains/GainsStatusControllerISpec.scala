@@ -16,7 +16,7 @@
 
 package controllers.gains
 
-import forms.RadioButtonYearForm.{yearInput, yesNo}
+import forms.RadioButtonYearForm.yesNo
 import models.gains.prior.IncomeSourceObject
 import play.api.http.HeaderNames
 import play.api.http.Status.{BAD_REQUEST, OK, SEE_OTHER}

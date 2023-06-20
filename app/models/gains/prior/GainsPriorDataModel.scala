@@ -26,7 +26,7 @@ object IncomeSourceObject {
 }
 case class GainsPriorDataModel(
                                 submittedOn: String,
-                                lifeInsurance: Seq[LifeInsuranceModel] = Seq.empty,
+                                lifeInsurance: Option[Seq[LifeInsuranceModel]] = None,
                                 capitalRedemption: Option[Seq[CapitalRedemptionModel]] = None,
                                 lifeAnnuity: Option[Seq[LifeAnnuityModel]] = None,
                                 voidedIsa: Option[Seq[VoidedIsaModel]] = None,
@@ -34,7 +34,7 @@ case class GainsPriorDataModel(
                               ) {
   def toPolicyCya: Seq[PolicyCyaModel] = {
     (for {
-      lifeInsurance <- Some(lifeInsurance.map(_.toPolicyCya))
+      lifeInsurance <- lifeInsurance.map(_.map(_.toPolicyCya))
       capitalRedemption <- capitalRedemption.map(_.map(_.toPolicyCya))
       lifeAnnuity <- lifeAnnuity.map(_.map(_.toPolicyCya))
       foreign <- foreign.map(_.map(_.toPolicyCya))

@@ -70,7 +70,7 @@ class PolicySummaryControllerISpec extends IntegrationTest {
       lazy val result: WSResponse = {
         clearSession()
         authoriseAgentOrIndividual(isAgent = true)
-        userDataStub(IncomeSourceObject(Some(gainsPriorDataModel.copy(lifeInsurance = Seq(LifeInsuranceModel(gainAmount = BigDecimal(123.45)))))), nino, taxYear)
+        userDataStub(IncomeSourceObject(Some(gainsPriorDataModel.copy(lifeInsurance = Some(Seq(LifeInsuranceModel(gainAmount = BigDecimal(123.45))))))), nino, taxYear)
         urlGet(url(taxYear), headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)))
       }
 
@@ -81,7 +81,7 @@ class PolicySummaryControllerISpec extends IntegrationTest {
       lazy val result: WSResponse = {
         populateSessionData()
         authoriseAgentOrIndividual(isAgent = true)
-        userDataStub(IncomeSourceObject(Some(gainsPriorDataModel.copy(lifeInsurance = Seq(LifeInsuranceModel(gainAmount = BigDecimal(123.45)))))), nino, taxYear)
+        userDataStub(IncomeSourceObject(Some(gainsPriorDataModel.copy(lifeInsurance = Some(Seq(LifeInsuranceModel(gainAmount = BigDecimal(123.45))))))), nino, taxYear)
         urlGet(url(taxYear), headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)))
       }
 

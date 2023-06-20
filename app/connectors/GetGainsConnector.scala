@@ -30,7 +30,7 @@ class GetGainsConnector @Inject()(val http: HttpClient,
                                   val config: AppConfig)(implicit ec: ExecutionContext) extends TaxYearHelper {
 
   def getUserData(taxYear: Int)(implicit user: User, hc: HeaderCarrier): Future[GetGainsResponse] = {
-    val getGainsDataUrl: String = config.incomeTaxSubmissionBEBaseUrl + s"/income-tax/nino/${user.nino}/sources/session?taxYear=$taxYear"
+    val getGainsDataUrl: String = config.additionalInformationServiceBaseUrl + s"/income-tax/insurance-policies/income/${user.nino}/$taxYear"
 
     http.GET[GetGainsResponse](getGainsDataUrl)
   }

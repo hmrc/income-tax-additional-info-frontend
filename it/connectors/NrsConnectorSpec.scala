@@ -94,7 +94,7 @@ class NrsConnectorSpec extends IntegrationTest {
 
   val priorData: GainsPriorDataModel = GainsPriorDataModel(
     "2020-01-04T05:01:01Z",
-    Seq(validLifeInsuranceModel),
+    Some(Seq(validLifeInsuranceModel)),
     Some(Seq(validCapitalRedemptionModel)),
     Some(Seq(validLifeAnnuityModel)),
     Some(Seq(validVoidedIsaModel)),
@@ -113,7 +113,7 @@ class NrsConnectorSpec extends IntegrationTest {
       stubPost(url, OK, "{}")
       val result = await(connector.postNrsConnector(nino, decodedModel))
 
-      result shouldBe Right()
+      result shouldBe Right(())
     }
 
     "return an InternalServerError" in {

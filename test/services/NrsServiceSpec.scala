@@ -95,7 +95,7 @@ class NrsServiceSpec extends UnitTest {
 
   val priorData: GainsPriorDataModel = GainsPriorDataModel(
     "2020-01-04T05:01:01Z",
-    Seq(validLifeInsuranceModel),
+    Some(Seq(validLifeInsuranceModel)),
     Some(Seq(validCapitalRedemptionModel)),
     Some(Seq(validLifeAnnuityModel)),
     Some(Seq(validVoidedIsaModel)),

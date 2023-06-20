@@ -24,25 +24,25 @@ class GainsPriorDataModelSpec extends UnitTest {
 
   val modelMax: GainsPriorDataModel = GainsPriorDataModel(
     "",
-    Seq[LifeInsuranceModel](LifeInsuranceModel(gainAmount = 123.11)),
-    Some(Seq(CapitalRedemptionModel(gainAmount = 123.11))),
-    Some(Seq(LifeAnnuityModel(gainAmount = 123.11))),
-    Some(Seq(VoidedIsaModel(gainAmount = 123.11))),
-    Some(Seq(ForeignModel(gainAmount = 123.11)))
+    Some(Seq[LifeInsuranceModel](LifeInsuranceModel(gainAmount = 123.11))),
+    Some(Seq[CapitalRedemptionModel](CapitalRedemptionModel(gainAmount = 123.11))),
+    Some(Seq[LifeAnnuityModel](LifeAnnuityModel(gainAmount = 123.11))),
+    Some(Seq[VoidedIsaModel](VoidedIsaModel(gainAmount = 123.11))),
+    Some(Seq[ForeignModel](ForeignModel(gainAmount = 123.11)))
   )
 
   val modelMin: GainsPriorDataModel = GainsPriorDataModel("")
 
   val jsonMax: JsObject = Json.obj(
     "submittedOn" -> "",
-    "lifeInsurance" -> Seq[LifeInsuranceModel](LifeInsuranceModel(gainAmount = 123.11)),
+    "lifeInsurance" -> Some(Seq[LifeInsuranceModel](LifeInsuranceModel(gainAmount = 123.11))),
     "capitalRedemption" -> Some(Seq(CapitalRedemptionModel(gainAmount = 123.11))),
     "lifeAnnuity" -> Some(Seq(LifeAnnuityModel(gainAmount = 123.11))),
     "voidedIsa" -> Some(Seq(VoidedIsaModel(gainAmount = 123.11))),
     "foreign" -> Some(Seq(ForeignModel(gainAmount = 123.11)))
   )
 
-  val jsonMin: JsObject = Json.obj("submittedOn" -> "", "lifeInsurance" -> Seq[LifeInsuranceModel]())
+  val jsonMin: JsObject = Json.obj("submittedOn" -> "")
 
   "GainsPriorDataModel" should {
 
