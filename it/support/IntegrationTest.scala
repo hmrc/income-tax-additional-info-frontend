@@ -172,7 +172,7 @@ trait IntegrationTest extends AnyWordSpec
   )
 
   val gainsPriorDataModel: GainsPriorDataModel =
-    GainsPriorDataModel("submittedOn", lifeInsurance = Seq(LifeInsuranceModel(Some("abc123"), Some("event"), BigDecimal(123.45), Some(true), Some(5), Some(10))))
+    GainsPriorDataModel("submittedOn", lifeInsurance = Some(Seq(LifeInsuranceModel(Some("abc123"), Some("event"), BigDecimal(123.45), Some(true), Some(5), Some(10)))))
   val gainsUserDataRepository: GainsUserDataRepository = app.injector.instanceOf[GainsUserDataRepository]
   val getGainsDataConnector: GetGainsConnector = app.injector.instanceOf[GetGainsConnector]
   val gainsSessionService: GainsSessionService = new GainsSessionService(gainsUserDataRepository, getGainsDataConnector)
@@ -190,7 +190,7 @@ trait IntegrationTest extends AnyWordSpec
 
   def userDataStub(userData: IncomeSourceObject, nino: String, taxYear: Int): StubMapping = {
     stubGetWithHeadersCheck(
-      s"/income-tax-submission-service/income-tax/nino/$nino/sources/session\\?taxYear=$taxYear", OK,
+      s"/income-tax-additional-information/income-tax/insurance-policies/income/$nino/$taxYear", OK,
       Json.toJson(userData).toString(), "X-Session-ID" -> sessionId, "mtditid" -> mtditid)
   }
 

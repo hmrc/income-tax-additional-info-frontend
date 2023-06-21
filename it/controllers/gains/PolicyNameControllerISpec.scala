@@ -38,7 +38,7 @@ class PolicyNameControllerISpec extends IntegrationTest {
     "render the customer reference page" in {
       lazy val result: WSResponse = {
         authoriseAgentOrIndividual(isAgent = false)
-        userDataStub(IncomeSourceObject(Some(GainsPriorDataModel("", Seq(LifeInsuranceModel(customerReference = Some("abc123"), gainAmount = BigDecimal(123.45)))))), nino, taxYear)
+        userDataStub(IncomeSourceObject(Some(GainsPriorDataModel("", Some(Seq(LifeInsuranceModel(customerReference = Some("abc123"), gainAmount = BigDecimal(123.45))))))), nino, taxYear)
         urlGet(url(taxYear), headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)))
       }
 

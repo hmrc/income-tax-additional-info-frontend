@@ -19,6 +19,8 @@ package connectors
 import connectors.errors.{ApiError, MultiErrorsBody, SingleErrorBody}
 import play.api.http.Status.INTERNAL_SERVER_ERROR
 import uk.gov.hmrc.http.HttpResponse
+import utils.PagerDutyHelper.PagerDutyKeys.BAD_SUCCESS_JSON_FROM_IF
+import utils.PagerDutyHelper.pagerDutyLog
 
 trait Parser {
 
@@ -30,6 +32,7 @@ trait Parser {
   }
 
   def badSuccessJsonResponse[Response]: Either[ApiError, Response] = {
+    pagerDutyLog(BAD_SUCCESS_JSON_FROM_IF, s"[$parserName][read] Invalid Json from $service API.")
     Left(ApiError(INTERNAL_SERVER_ERROR, SingleErrorBody.parsingError))
   }
 

@@ -34,7 +34,7 @@ class GetGainsConnectorISpec extends IntegrationTest with ConnectorIntegrationTe
 
   implicit override val headerCarrier: HeaderCarrier = HeaderCarrier().withExtraHeaders("mtditid" -> mtditid, "X-Session-ID" -> sessionId)
 
-  val url = s"/income-tax-submission-service/income-tax/nino/$nino/sources/session\\?taxYear=$taxYear"
+  val url = s"/income-tax-additional-information/income-tax/insurance-policies/income/${user.nino}/$taxYear"
 
   "GetGainsConnector" should {
     "Return a success result" when {
