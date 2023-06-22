@@ -64,7 +64,7 @@ class GainsGatewayController @Inject()(authorisedAction: AuthorisedAction,
           case (Some(cya), _) => if (!cya.gateway) {
               Future.successful(Redirect(controllers.gains.routes.PolicySummaryController.show(taxYear, request.user.sessionId)))
           } else {
-            Future.successful(Ok(view(taxYear, form(request.user.isAgent))))
+            Future.successful(Redirect(controllers.gains.routes.GainsSummaryController.show(taxYear)))
           }
           case (_, _) => Future.successful(Ok(view(taxYear, form(request.user.isAgent))))
         }

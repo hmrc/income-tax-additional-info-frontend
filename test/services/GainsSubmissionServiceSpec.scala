@@ -40,7 +40,7 @@ class GainsSubmissionServiceSpec extends UnitTest {
       val gainAmount: BigDecimal = 123.45
 
       val cyaData = GainsSubmissionModel(
-        Seq(LifeInsuranceModel(None, None, gainAmount,None, None, None, None)),
+        Some(Seq(LifeInsuranceModel(None, None, gainAmount,None, None, None, None))),
         Some(Seq(CapitalRedemptionModel(None, None, gainAmount, None, None, None, None))),
         Some(Seq(LifeAnnuityModel(None, None, gainAmount, None, None, None, None))),
         Some(Seq(VoidedIsaModel(None, None, gainAmount, None, None, None))),
@@ -77,7 +77,7 @@ class GainsSubmissionServiceSpec extends UnitTest {
 
         implicit val executionContext: ExecutionContext = ExecutionContext.Implicits.global
         lazy val result: GainsSubmissionResponse = {
-          val blankData = GainsSubmissionModel(Seq(), None, None, None, None)
+          val blankData = GainsSubmissionModel(None, None, None, None, None)
 
           (blankData, nino, mtdItid, taxYear, emptyHeaderCarrier.withExtraHeaders("mtditid"-> mtdItid))
           Future.successful(Right(NO_CONTENT))

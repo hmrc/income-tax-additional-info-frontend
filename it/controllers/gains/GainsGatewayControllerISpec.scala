@@ -93,7 +93,7 @@ class GainsGatewayControllerISpec extends IntegrationTest {
       result.status shouldBe SEE_OTHER
     }
 
-    "render the gains gateway page with only cya" in {
+    "redirect to summary with only cya" in {
       lazy val result: WSResponse = {
         clearSession()
         populateSessionData()
@@ -102,7 +102,7 @@ class GainsGatewayControllerISpec extends IntegrationTest {
         urlGet(url(taxYear), headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)))
       }
 
-      result.status shouldBe OK
+      result.status shouldBe SEE_OTHER
     }
 
   }

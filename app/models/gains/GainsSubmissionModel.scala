@@ -19,7 +19,7 @@ package models.gains
 import play.api.libs.json.{Json, OFormat}
 
 case class GainsSubmissionModel(
-                                 lifeInsurance: Seq[LifeInsuranceModel] = Seq.empty,
+                                 lifeInsurance: Option[Seq[LifeInsuranceModel]] = None,
                                  capitalRedemption: Option[Seq[CapitalRedemptionModel]] = None,
                                  lifeAnnuity: Option[Seq[LifeAnnuityModel]] = None,
                                  voidedIsa: Option[Seq[VoidedIsaModel]] = None,

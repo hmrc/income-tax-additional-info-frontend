@@ -33,10 +33,10 @@ class GainsSubmissionService @Inject()(gainsSubmissionConnector: GainsSubmission
 
     lazy val logger: Logger = Logger(this.getClass.getName)
 
-    val nonOptBody: GainsSubmissionModel = body.getOrElse(GainsSubmissionModel(Seq[LifeInsuranceModel](), None, None, None, None))
+    val nonOptBody: GainsSubmissionModel = body.getOrElse(GainsSubmissionModel())
 
     nonOptBody match {
-      case GainsSubmissionModel(Seq(), None, None, None, None) =>
+      case GainsSubmissionModel(None, None, None, None, None) =>
         logger.info("[GainsSubmissionService][submitGains] User has no data inSession to submit" +
           "Not submitting data to IF.")
         Future(Right(NO_CONTENT))
