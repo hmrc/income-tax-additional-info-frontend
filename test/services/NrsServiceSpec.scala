@@ -86,7 +86,7 @@ class NrsServiceSpec extends UnitTest {
   )
 
   val gainsCyaModel: GainsSubmissionModel = GainsSubmissionModel(
-    Seq(validLifeInsuranceModel),
+    Some(Seq(validLifeInsuranceModel)),
     Some(Seq(validCapitalRedemptionModel)),
     Some(Seq(validLifeAnnuityModel)),
     Some(Seq(validVoidedIsaModel)),
@@ -110,7 +110,7 @@ class NrsServiceSpec extends UnitTest {
 
       "return the connector response" in {
 
-        val expectedResult: NrsSubmissionResponse = Right()
+        val expectedResult: NrsSubmissionResponse = Right(())
 
         val headerCarrierWithTrueClientDetails = headerCarrierWithSession.copy(trueClientIp = Some("127.0.0.1"), trueClientPort = Some("80"))
 
@@ -128,7 +128,7 @@ class NrsServiceSpec extends UnitTest {
 
       "return the connector response" in {
 
-        val expectedResult: NrsSubmissionResponse = Right()
+        val expectedResult: NrsSubmissionResponse = Right(())
 
         (connector.postNrsConnector(_: String, _: DecodedGainsSubmissionPayload)(_: HeaderCarrier, _: Writes[DecodedGainsSubmissionPayload]))
           .expects(nino, decodedModel, headerCarrierWithSession.withExtraHeaders("mtditid" -> mtditid), writesObject)

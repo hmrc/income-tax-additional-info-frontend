@@ -70,7 +70,7 @@ class CreateOrAmendGainsAuditDetailSpec extends UnitTest {
   )
 
   val body: GainsSubmissionModel = GainsSubmissionModel(
-    Seq(validLifeInsuranceModel),
+    Some(Seq(validLifeInsuranceModel)),
     Some(Seq(validCapitalRedemptionModel)),
     Some(Seq(validLifeAnnuityModel)),
     Some(Seq(validVoidedIsaModel)),

@@ -65,7 +65,7 @@ case class AllGainsSessionModel(allGains: Seq[PolicyCyaModel], gateway: Boolean)
     )
 
     GainsSubmissionModel(
-      lifeInsurance = life, capitalRedemption = Some(capital), lifeAnnuity = Some(lifeAnnuity), voidedIsa = Some(voided), foreign = Some(foreign)
+      lifeInsurance = Some(life), capitalRedemption = Some(capital), lifeAnnuity = Some(lifeAnnuity), voidedIsa = Some(voided), foreign = Some(foreign)
     )
   }
 }

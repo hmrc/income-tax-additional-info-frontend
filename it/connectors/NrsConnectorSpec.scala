@@ -85,7 +85,7 @@ class NrsConnectorSpec extends IntegrationTest {
   )
 
   val gainsCyaModel: GainsSubmissionModel = GainsSubmissionModel(
-    Seq(validLifeInsuranceModel),
+    Some(Seq(validLifeInsuranceModel)),
     Some(Seq(validCapitalRedemptionModel)),
     Some(Seq(validLifeAnnuityModel)),
     Some(Seq(validVoidedIsaModel)),
