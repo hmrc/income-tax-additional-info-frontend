@@ -20,10 +20,10 @@ import akka.actor.ActorSystem
 import com.github.tomakehurst.wiremock.stubbing.StubMapping
 import config.AppConfig
 import connectors.GetGainsConnector
-import models.{AllGainsSessionModel, User}
 import models.authorisation.SessionValues
+import models.gains.prior.GainsPriorDataModel
 import models.gains.{LifeInsuranceModel, PolicyCyaModel}
-import models.gains.prior.{GainsPriorDataModel, IncomeSourceObject}
+import models.{AllGainsSessionModel, User}
 import org.scalatest.BeforeAndAfterAll
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
@@ -188,13 +188,13 @@ trait IntegrationTest extends AnyWordSpec
 
   def clearSession(): Boolean = await(gainsUserDataRepository.clear(taxYear))
 
-  def userDataStub(userData: IncomeSourceObject, nino: String, taxYear: Int): StubMapping = {
+  def userDataStub(userData: GainsPriorDataModel, nino: String, taxYear: Int): StubMapping = {
     stubGetWithHeadersCheck(
       s"/income-tax-additional-information/income-tax/insurance-policies/income/$nino/$taxYear", OK,
       Json.toJson(userData).toString(), "X-Session-ID" -> sessionId, "mtditid" -> mtditid)
   }
 
   def emptyUserDataStub(nino: String = nino, taxYear: Int = taxYear): StubMapping = {
-    userDataStub(IncomeSourceObject(None), nino, taxYear)
+    userDataStub(GainsPriorDataModel(""), nino, taxYear)
   }
 }

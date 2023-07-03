@@ -53,7 +53,7 @@ class GainsAmountController @Inject()(authorisedAction: AuthorisedAction,
             cyaData.gains.fold(Ok(view(taxYear, form(request.user.isAgent), sessionId))) {
               data =>
                 data.allGains.filter(_.sessionId == sessionId) match {
-                  case value => if (value.head.amountOfGain.getOrElse(0) != 0) {
+                  case value => if (value.head.amountOfGain.getOrElse(BigDecimal(0)) != 0) {
                     Ok(view(taxYear, form(request.user.isAgent).fill(value.head.amountOfGain.getOrElse(BigDecimal(0))), sessionId))
                   } else {
                     Ok(view(taxYear, form(request.user.isAgent), sessionId))
@@ -83,6 +83,7 @@ class GainsAmountController @Inject()(authorisedAction: AuthorisedAction,
                   Redirect(controllers.gains.routes.PolicyEventController.show(taxYear, sessionId))
                 }
               }
+            case (_, _) => Future.successful(Redirect(appConfig.incomeTaxSubmissionOverviewUrl(taxYear)))
           }
         }.flatten
     })

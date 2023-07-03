@@ -17,9 +17,8 @@
 package controllers.gains
 
 import models.gains.LifeInsuranceModel
-import models.gains.prior.IncomeSourceObject
 import play.api.http.HeaderNames
-import play.api.http.Status.{OK, SEE_OTHER}
+import play.api.http.Status.{NO_CONTENT, OK, SEE_OTHER}
 import play.api.libs.ws.WSResponse
 import support.IntegrationTest
 
@@ -31,12 +30,15 @@ class PolicySummaryControllerISpec extends IntegrationTest {
   private def url(taxYear: Int): String = {
     s"/update-and-submit-income-tax-return/additional-information/$taxYear/gains/policy-summary/$sessionId"
   }
+  private val postUrl: String = s"/update-and-submit-income-tax-return/additional-information/$taxYear/gains/policy-summary"
+  private val submissionUrl: String = s"/income-tax-submission-service/income-tax/nino/AA123456A/sources/exclude-journey/$taxYear"
+  private val nrsUrl: String = s"/income-tax-nrs-proxy/$nino/itsa-personal-income-submission"
 
   ".show" should {
     "render the policy summary page" in {
       lazy val result: WSResponse = {
         authoriseAgentOrIndividual(isAgent = false)
-        userDataStub(IncomeSourceObject(Some(gainsPriorDataModel)), nino, taxYear)
+        userDataStub(gainsPriorDataModel, nino, taxYear)
         urlGet(url(taxYear), headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)))
       }
 
@@ -46,7 +48,7 @@ class PolicySummaryControllerISpec extends IntegrationTest {
     "render the policy summary page for an agent" in {
       lazy val result: WSResponse = {
         authoriseAgentOrIndividual(isAgent = true)
-        userDataStub(IncomeSourceObject(Some(gainsPriorDataModel)), nino, taxYear)
+        userDataStub(gainsPriorDataModel, nino, taxYear)
         urlGet(url(taxYear), headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)))
       }
 
@@ -70,7 +72,7 @@ class PolicySummaryControllerISpec extends IntegrationTest {
       lazy val result: WSResponse = {
         clearSession()
         authoriseAgentOrIndividual(isAgent = true)
-        userDataStub(IncomeSourceObject(Some(gainsPriorDataModel.copy(lifeInsurance = Some(Seq(LifeInsuranceModel(gainAmount = BigDecimal(123.45))))))), nino, taxYear)
+        userDataStub(gainsPriorDataModel.copy(lifeInsurance = Some(Seq(LifeInsuranceModel(gainAmount = BigDecimal(123.45))))), nino, taxYear)
         urlGet(url(taxYear), headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)))
       }
 
@@ -79,9 +81,10 @@ class PolicySummaryControllerISpec extends IntegrationTest {
 
     "render the page with prior and cya data" in {
       lazy val result: WSResponse = {
+        clearSession()
         populateSessionData()
         authoriseAgentOrIndividual(isAgent = true)
-        userDataStub(IncomeSourceObject(Some(gainsPriorDataModel.copy(lifeInsurance = Some(Seq(LifeInsuranceModel(gainAmount = BigDecimal(123.45))))))), nino, taxYear)
+        userDataStub(gainsPriorDataModel.copy(lifeInsurance = Some(Seq(LifeInsuranceModel(gainAmount = BigDecimal(123.45))))), nino, taxYear)
         urlGet(url(taxYear), headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)))
       }
 
@@ -95,40 +98,35 @@ class PolicySummaryControllerISpec extends IntegrationTest {
         clearSession()
         populateWithSessionDataModel(Seq(completePolicyCyaModel))
         authoriseAgentOrIndividual(isAgent = false)
-        userDataStub(IncomeSourceObject(Some(gainsPriorDataModel)), nino, taxYear)
-        urlPost(
-          s"/update-and-submit-income-tax-return/additional-information/$taxYear/gains/policy-summary/", headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)), body = ""
-        )
+        userDataStub(gainsPriorDataModel, nino, taxYear)
+        urlPost(postUrl, headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)), body = "")
       }
 
       result.status shouldBe SEE_OTHER
       result.headers("Location").head shouldBe s"/update-and-submit-income-tax-return/additional-information/$taxYear/gains/summary"
     }
 
-    "return an internal server error" in {
-      lazy val result: WSResponse = {
-        clearSession()
-        authoriseAgentOrIndividual(isAgent = false)
-        userDataStub(IncomeSourceObject(Some(gainsPriorDataModel)), nino, taxYear)
-        urlPost(
-          s"/update-and-submit-income-tax-return/additional-information/$taxYear/gains/policy-summary", headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)), body = ""
-        )
-      }
-
-      result.status shouldBe 500
-    }
-
-    "return an internal server error when excluding journey" in {
+    "redirect to overview after submission" in {
       lazy val result: WSResponse = {
         clearSession()
         populateSessionDataWithFalseGateway()
         authoriseAgentOrIndividual(isAgent = false)
-        userDataStub(IncomeSourceObject(Some(gainsPriorDataModel)), nino, taxYear)
-        urlPost(
-          s"/update-and-submit-income-tax-return/additional-information/$taxYear/gains/policy-summary",
-          headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)),
-          body = Map("journey" -> "gains")
-        )
+        emptyUserDataStub()
+        stubPost(submissionUrl, NO_CONTENT, "{}")
+        stubPost(nrsUrl, OK, "{}")
+        urlPost(postUrl, headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)), body = "")
+      }
+
+      result.status shouldBe SEE_OTHER
+      result.headers("Location").head shouldBe appConfig.incomeTaxSubmissionOverviewUrl(taxYear)
+    }
+
+    "return an internal server error" in {
+      lazy val result: WSResponse = {
+        clearSession()
+        authoriseAgentOrIndividual(isAgent = false)
+        userDataStub(gainsPriorDataModel, nino, taxYear)
+        urlPost(postUrl, headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)), body = Map("journey" -> "gains"))
       }
 
       result.status shouldBe 500

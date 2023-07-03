@@ -125,7 +125,7 @@
                 if (gains.policyType == "Voided ISA") {
                     Some(summaryListRow(
                         HtmlContent(messages("common.gains.taxPaidAmount")),
-                        HtmlContent(s"£${gains.taxPaidAmount.getOrElse(0).toString}"),
+                        HtmlContent(s"£${gains.taxPaidAmount.getOrElse(BigDecimal(0)).toString}"),
                         actions = Seq((controllers.gains.routes.PaidTaxAmountController.show(taxYear, gains.sessionId), messages("common.change"), Some(messages("gains.policy-summary.list.hidden.text.1"))))
                     ))
                 } else {

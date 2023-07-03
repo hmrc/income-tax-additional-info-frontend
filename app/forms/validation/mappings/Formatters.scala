@@ -82,7 +82,7 @@ trait Formatters {
           .map(_.replaceAll("""\s""", "")), key)
       }
 
-      override def unbind(key: String, value: Option[Int]): Map[String, String] = baseFormatter.unbind(key, value.getOrElse("").toString)
+      override def unbind(key: String, value: Option[Int]): Map[String, String] = baseFormatter.unbind(key, value.getOrElse(new String()).toString)
 
       private def validYear(input: Either[Seq[FormError], String], key: String): Either[Seq[FormError], Option[Int]] = {
 
