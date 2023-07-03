@@ -16,7 +16,6 @@
 
 package controllers.gains
 
-import models.gains.prior.IncomeSourceObject
 import play.api.http.HeaderNames
 import play.api.http.Status.{BAD_REQUEST, OK, SEE_OTHER}
 import play.api.libs.ws.WSResponse
@@ -61,8 +60,9 @@ class GainsGatewayControllerISpec extends IntegrationTest {
 
     "render gains gateway when prior data is empty" in {
       lazy val result: WSResponse = {
+        clearSession()
         authoriseAgentOrIndividual(isAgent = false)
-        userDataStub(IncomeSourceObject(Some(gainsPriorDataModel)), nino, taxYear)
+        emptyUserDataStub()
         urlGet(url(taxYear), headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)))
       }
 
@@ -74,7 +74,7 @@ class GainsGatewayControllerISpec extends IntegrationTest {
         clearSession()
         populateSessionData()
         authoriseAgentOrIndividual(isAgent = false)
-        userDataStub(IncomeSourceObject(Some(gainsPriorDataModel)), nino, taxYear)
+        userDataStub(gainsPriorDataModel, nino, taxYear)
         urlGet(url(taxYear), headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)))
       }
 
@@ -97,6 +97,41 @@ class GainsGatewayControllerISpec extends IntegrationTest {
       lazy val result: WSResponse = {
         clearSession()
         populateSessionData()
+        authoriseAgentOrIndividual(isAgent = false)
+        emptyUserDataStub()
+        urlGet(url(taxYear), headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)))
+      }
+
+      result.status shouldBe SEE_OTHER
+    }
+
+    "redirect to summary with only prior" in {
+      lazy val result: WSResponse = {
+        clearSession()
+        authoriseAgentOrIndividual(isAgent = false)
+        userDataStub(gainsPriorDataModel, nino, taxYear)
+        urlGet(url(taxYear), headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)))
+      }
+
+      result.status shouldBe SEE_OTHER
+    }
+
+
+    "redirect to summary with only session data" in {
+      lazy val result: WSResponse = {
+        clearSession()
+        authoriseAgentOrIndividual(isAgent = false)
+        populateWithSessionDataModel(Seq(completePolicyCyaModel))
+        urlGet(url(taxYear), headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)))
+      }
+
+      result.status shouldBe SEE_OTHER
+    }
+
+    "redirect to summary with only session data with false gateway" in {
+      lazy val result: WSResponse = {
+        clearSession()
+        populateSessionDataWithFalseGateway()
         authoriseAgentOrIndividual(isAgent = false)
         emptyUserDataStub()
         urlGet(url(taxYear), headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)))
@@ -146,6 +181,18 @@ class GainsGatewayControllerISpec extends IntegrationTest {
     }
 
     "redirect to policy summary page if user chooses 'No' with no cya or prior data" in {
+      lazy val result: WSResponse = {
+        clearSession()
+        authoriseAgentOrIndividual(isAgent = false)
+        emptyUserDataStub()
+        urlPost(s"${url(taxYear)}/$sessionId", headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)), body = Map("value" -> "false"))
+      }
+
+      result.status shouldBe SEE_OTHER
+      result.headers("Location").head shouldBe s"/update-and-submit-income-tax-return/additional-information/$taxYear/gains/policy-summary/$sessionId"
+    }
+
+    "create session and redirect with no cya or prior" in {
       lazy val result: WSResponse = {
         clearSession()
         authoriseAgentOrIndividual(isAgent = false)

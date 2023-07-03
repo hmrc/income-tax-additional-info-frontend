@@ -17,17 +17,18 @@
 package controllers.gains
 
 import actions.AuthorisedAction
+import com.google.inject.{Inject, Singleton}
 import config.{AppConfig, ErrorHandler}
 import forms.YesNoForm
+import models.AllGainsSessionModel
 import models.gains.PolicyCyaModel
+import models.requests.AuthorisationRequest
 import play.api.data.Form
 import play.api.i18n.I18nSupport
 import play.api.mvc._
 import services.GainsSessionService
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 import views.html.pages.gains.GainsGatewayPageView
-import com.google.inject.{Inject, Singleton}
-import models.AllGainsSessionModel
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -47,26 +48,24 @@ class GainsGatewayController @Inject()(authorisedAction: AuthorisedAction,
     gainsSessionService.getAndHandle(taxYear)(Future.successful(errorHandler.internalServerError())) {
       (cya, prior) =>
         (cya, prior) match {
-          case (Some(cya), Some(prior)) =>
+          case (Some(cya), Some(prior)) => if (!cya.gateway) {
+            Future.successful(Redirect(controllers.gains.routes.PolicySummaryController.show(taxYear, request.user.sessionId)))
+          } else {
             val filteredPrior = prior.toPolicyCya.filter(el => cya.allGains.contains(el))
             gainsSessionService.updateSessionData(
-              AllGainsSessionModel(cya.allGains ++ filteredPrior, gateway = true), taxYear)(errorHandler.internalServerError()
+              AllGainsSessionModel(cya.allGains ++ filteredPrior, cya.gateway), taxYear)(errorHandler.internalServerError()
             ) {
               Redirect(controllers.gains.routes.GainsSummaryController.show(taxYear))
             }
-          case (_, Some(prior)) => if (prior.toPolicyCya.nonEmpty) {
+          }
+          case (_, Some(prior)) => if (prior.submittedOn.nonEmpty) {
             gainsSessionService.createSessionData(AllGainsSessionModel(prior.toPolicyCya, gateway = true), taxYear)(errorHandler.internalServerError()) {
               Redirect(controllers.gains.routes.GainsSummaryController.show(taxYear))
             }
           } else {
             Future.successful(Ok(view(taxYear, form(request.user.isAgent))))
           }
-          case (Some(cya), _) => if (!cya.gateway) {
-              Future.successful(Redirect(controllers.gains.routes.PolicySummaryController.show(taxYear, request.user.sessionId)))
-          } else {
-            Future.successful(Redirect(controllers.gains.routes.GainsSummaryController.show(taxYear)))
-          }
-          case (_, _) => Future.successful(Ok(view(taxYear, form(request.user.isAgent))))
+          case (_, _) => Future.successful(Ok(view(taxYear, form(request.user.isAgent).fill(false))))
         }
     }.flatten
   }
@@ -75,51 +74,7 @@ class GainsGatewayController @Inject()(authorisedAction: AuthorisedAction,
     form(request.user.isAgent).bindFromRequest().fold(formWithErrors => {
       Future.successful(BadRequest(view(taxYear, formWithErrors)))
     }, {
-      yesNoValue =>
-        if (yesNoValue) {
-          gainsSessionService.getAndHandle(taxYear)(Future.successful(errorHandler.internalServerError())) {
-            (cya, prior) =>
-              (cya, prior) match {
-                case (None, None) => gainsSessionService.createSessionData(
-                  AllGainsSessionModel(
-                    cya.map(_.allGains).getOrElse(Seq[PolicyCyaModel]()) ++ prior.map(_.toPolicyCya).getOrElse(Seq[PolicyCyaModel]()), yesNoValue
-                  ), taxYear
-                )(errorHandler.internalServerError()) {
-                  Redirect(controllers.gains.routes.PolicyTypeController.show(taxYear, sessionId))
-                }
-                case (_, _) =>
-                  gainsSessionService.updateSessionData(
-                    AllGainsSessionModel(
-                      cya.map(_.allGains).getOrElse(Seq[PolicyCyaModel]()) ++ prior.map(_.toPolicyCya).getOrElse(Seq[PolicyCyaModel]()), yesNoValue
-                    ), taxYear
-                  )(errorHandler.internalServerError()) {
-                    Redirect(controllers.gains.routes.PolicyTypeController.show(taxYear, sessionId))
-                  }
-              }
-          }.flatten
-        }
-        else {
-          gainsSessionService.getAndHandle(taxYear)(Future.successful(errorHandler.internalServerError())) {
-            (cya, prior) =>
-              (cya, prior) match {
-                case (None, None) => gainsSessionService.createSessionData(
-                  AllGainsSessionModel(
-                    cya.map(_.allGains).getOrElse(Seq[PolicyCyaModel]()) ++ prior.map(_.toPolicyCya).getOrElse(Seq[PolicyCyaModel]()), gateway = false
-                  ), taxYear
-                )(errorHandler.internalServerError()) {
-                  Redirect(controllers.gains.routes.PolicySummaryController.show(taxYear, sessionId))
-                }
-                case (_, _) =>
-                  gainsSessionService.updateSessionData(
-                    AllGainsSessionModel(
-                      cya.map(_.allGains).getOrElse(Seq[PolicyCyaModel]()) ++ prior.map(_.toPolicyCya).getOrElse(Seq[PolicyCyaModel]()), gateway = false
-                    ), taxYear
-                  )(errorHandler.internalServerError()) {
-                    Redirect(controllers.gains.routes.PolicySummaryController.show(taxYear, sessionId))
-                  }
-              }
-          }.flatten
-        }
+      yesNoValue => handleSession(yesNoValue, taxYear, sessionId)
     }
     )
   }
@@ -128,8 +83,39 @@ class GainsGatewayController @Inject()(authorisedAction: AuthorisedAction,
     gainsSessionService.getAndHandle(taxYear)(Future.successful(errorHandler.internalServerError())) {
       (cya, prior) =>
         (cya, prior) match {
-          case (_, _) => Future.successful(Ok(view(taxYear, form(request.user.isAgent))))
+          case (_, _) => Future.successful(Ok(view(taxYear, form(request.user.isAgent).fill(cya.forall(_.gateway)))))
         }
     }.flatten
+  }
+
+  private def handleSession(yesNoValue: Boolean, taxYear: Int, sessionId: String)(implicit authorisationRequest: AuthorisationRequest[_]): Future[Result] = {
+    gainsSessionService.getAndHandle(taxYear)(Future.successful(errorHandler.internalServerError())) {
+      (cya, prior) =>
+        (cya, prior) match {
+          case (None, Some(prior)) => gainsSessionService.createSessionData(
+            AllGainsSessionModel(
+              cya.map(_.allGains).getOrElse(Seq[PolicyCyaModel]()) ++ prior.toPolicyCya, yesNoValue
+            ), taxYear
+          )(errorHandler.internalServerError()) {
+            handleRedirect(yesNoValue, taxYear, sessionId)
+          }
+          case (_, _) =>
+            gainsSessionService.updateSessionData(
+              AllGainsSessionModel(
+                cya.map(_.allGains).getOrElse(Seq[PolicyCyaModel]()) ++ prior.map(_.toPolicyCya).getOrElse(Seq[PolicyCyaModel]()), yesNoValue
+              ), taxYear
+            )(errorHandler.internalServerError()) {
+              handleRedirect(yesNoValue, taxYear, sessionId)
+            }
+        }
+    }.flatten
+  }
+
+  private def handleRedirect(yesNoValue: Boolean, taxYear: Int, sessionId: String): Result = {
+    if (yesNoValue) {
+      Redirect(controllers.gains.routes.PolicyTypeController.show(taxYear, sessionId))
+    } else {
+      Redirect(controllers.gains.routes.PolicySummaryController.show(taxYear, sessionId))
+    }
   }
 }

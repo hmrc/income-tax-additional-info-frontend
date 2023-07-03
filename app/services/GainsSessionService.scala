@@ -107,7 +107,7 @@ class GainsSessionService @Inject()(
       priorDataResponse match {
         case Right(prior) => optionalCya match {
           case Left(_) => onFail
-          case Right(cyaData) => block(cyaData.flatMap(_.gains), prior.gains)
+          case Right(cyaData) => block(cyaData.flatMap(_.gains), Option(prior))
         }
         case Left(_) => onFail
       }

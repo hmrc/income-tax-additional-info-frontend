@@ -17,7 +17,6 @@
 package controllers.gains
 
 import forms.AmountForm
-import models.gains.prior.IncomeSourceObject
 import play.api.http.HeaderNames
 import play.api.http.Status.{BAD_REQUEST, OK, SEE_OTHER}
 import play.api.libs.ws.WSResponse
@@ -87,7 +86,7 @@ class GainsAmountControllerISpec extends IntegrationTest {
       populateSessionData()
       lazy val result: WSResponse = {
         authoriseAgentOrIndividual(isAgent = false)
-        userDataStub(IncomeSourceObject(Some(gainsPriorDataModel)), nino, taxYear)
+        userDataStub(gainsPriorDataModel, nino, taxYear)
         urlPost(url(taxYear), headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)), body = Map(AmountForm.amount -> "100"))
       }
 
@@ -127,7 +126,7 @@ class GainsAmountControllerISpec extends IntegrationTest {
       populateWithSessionDataModel(Seq(completePolicyCyaModel))
       lazy val result: WSResponse = {
         authoriseAgentOrIndividual(isAgent = false)
-        userDataStub(IncomeSourceObject(Some(gainsPriorDataModel)), nino, taxYear)
+        userDataStub(gainsPriorDataModel, nino, taxYear)
         urlPost(url(taxYear), headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)), body = Map(AmountForm.amount -> "100"))
       }
 

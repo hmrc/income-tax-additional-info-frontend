@@ -17,7 +17,6 @@
 package controllers.gains
 
 import forms.RadioButtonAmountForm
-import models.gains.prior.IncomeSourceObject
 import play.api.http.HeaderNames
 import play.api.http.Status.{BAD_REQUEST, OK, SEE_OTHER}
 import play.api.libs.ws.WSResponse
@@ -96,7 +95,7 @@ populateSessionData()
     "redirect to policy summary page if successful" in {
       lazy val result: WSResponse = {
         authoriseAgentOrIndividual(isAgent = false)
-        userDataStub(IncomeSourceObject(Some(gainsPriorDataModel)), nino, taxYear)
+        userDataStub(gainsPriorDataModel, nino, taxYear)
         urlPost(url(taxYear), headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)), body = Map(RadioButtonAmountForm.yesNo -> "true", RadioButtonAmountForm.amount -> "100"))
       }
 
@@ -126,7 +125,7 @@ populateSessionData()
       populateWithSessionDataModel(Seq(completePolicyCyaModel))
       lazy val result: WSResponse = {
         authoriseAgentOrIndividual(isAgent = false)
-        userDataStub(IncomeSourceObject(Some(gainsPriorDataModel)), nino, taxYear)
+        userDataStub(gainsPriorDataModel, nino, taxYear)
         urlPost(url(taxYear), headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)), body = Map(RadioButtonAmountForm.yesNo -> "true", RadioButtonAmountForm.amount -> "100"))
       }
 

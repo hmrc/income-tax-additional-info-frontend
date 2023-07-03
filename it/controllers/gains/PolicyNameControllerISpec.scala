@@ -17,8 +17,8 @@
 package controllers.gains
 
 import forms.gains.InputFieldForm
-import models.gains.prior.{GainsPriorDataModel, IncomeSourceObject}
 import models.gains.LifeInsuranceModel
+import models.gains.prior.GainsPriorDataModel
 import play.api.http.HeaderNames
 import play.api.http.Status.{BAD_REQUEST, OK, SEE_OTHER}
 import play.api.libs.ws.WSResponse
@@ -38,7 +38,7 @@ class PolicyNameControllerISpec extends IntegrationTest {
     "render the customer reference page" in {
       lazy val result: WSResponse = {
         authoriseAgentOrIndividual(isAgent = false)
-        userDataStub(IncomeSourceObject(Some(GainsPriorDataModel("", Some(Seq(LifeInsuranceModel(customerReference = Some("abc123"), gainAmount = BigDecimal(123.45))))))), nino, taxYear)
+        userDataStub(GainsPriorDataModel("", Some(Seq(LifeInsuranceModel(customerReference = Some("abc123"), gainAmount = BigDecimal(123.45))))), nino, taxYear)
         urlGet(url(taxYear), headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)))
       }
 
@@ -91,7 +91,7 @@ class PolicyNameControllerISpec extends IntegrationTest {
       populateSessionData()
       lazy val result: WSResponse = {
         authoriseAgentOrIndividual(isAgent = false)
-        userDataStub(IncomeSourceObject(Some(gainsPriorDataModel)), nino, taxYear)
+        userDataStub(gainsPriorDataModel, nino, taxYear)
         urlPost(url(taxYear), headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)), body = Map(InputFieldForm.value -> "mixedAlphaNumOnly1"))
       }
 
@@ -104,7 +104,7 @@ class PolicyNameControllerISpec extends IntegrationTest {
       populateWithSessionDataModel(Seq(completePolicyCyaModel))
       lazy val result: WSResponse = {
         authoriseAgentOrIndividual(isAgent = false)
-        userDataStub(IncomeSourceObject(Some(gainsPriorDataModel)), nino, taxYear)
+        userDataStub(gainsPriorDataModel, nino, taxYear)
         urlPost(url(taxYear), headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)), body = Map(InputFieldForm.value -> "mixedAlphaNumOnly1"))
       }
 

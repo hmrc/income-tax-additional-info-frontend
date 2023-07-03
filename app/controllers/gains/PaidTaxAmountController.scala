@@ -54,7 +54,7 @@ class PaidTaxAmountController @Inject()(authorisedAction: AuthorisedAction,
             cyaData.gains.fold(Ok(view(taxYear, form(request.user.isAgent), sessionId))) {
               data =>
                 data.allGains.filter(_.sessionId == sessionId) match {
-                  case value => if (value.head.taxPaidAmount.getOrElse(0) != 0) {
+                  case value => if (value.head.taxPaidAmount.getOrElse(BigDecimal(0)) != 0) {
                     Ok(view(taxYear, form(request.user.isAgent).fill(value.head.taxPaidAmount.getOrElse(BigDecimal(0))), sessionId))
                   } else {
                     Ok(view(taxYear, form(request.user.isAgent), sessionId))
@@ -79,6 +79,7 @@ class PaidTaxAmountController @Inject()(authorisedAction: AuthorisedAction,
               gainsSessionService.updateSessionData(AllGainsSessionModel(updated, cya.gateway), taxYear)(errorHandler.internalServerError()) {
                   Redirect(controllers.gains.routes.PolicySummaryController.show(taxYear, sessionId))
               }
+            case (_, _) => Future.successful(Redirect(appConfig.incomeTaxSubmissionOverviewUrl(taxYear)))
           }
         }.flatten
     })

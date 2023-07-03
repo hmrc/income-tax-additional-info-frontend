@@ -16,7 +16,6 @@
 
 package controllers.gains
 
-import models.gains.prior.IncomeSourceObject
 import play.api.http.HeaderNames
 import play.api.http.Status.{OK, SEE_OTHER}
 import play.api.libs.ws.WSResponse
@@ -65,7 +64,7 @@ class PoliciesRemoveControllerISpec extends IntegrationTest {
       lazy val result: WSResponse = {
         populateSessionData()
         authoriseAgentOrIndividual(isAgent = false)
-        userDataStub(IncomeSourceObject(Some(gainsPriorDataModel)), nino, taxYear)
+        userDataStub(gainsPriorDataModel, nino, taxYear)
         urlPost(url(taxYear), headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)), body = "")
       }
 
@@ -78,7 +77,7 @@ class PoliciesRemoveControllerISpec extends IntegrationTest {
         clearSession()
         populateWithSessionDataModel(Seq(completePolicyCyaModel.copy(sessionId = "session"), completePolicyCyaModel.copy(sessionId = "anotherSession")))
         authoriseAgentOrIndividual(isAgent = false)
-        userDataStub(IncomeSourceObject(Some(gainsPriorDataModel)), nino, taxYear)
+        userDataStub(gainsPriorDataModel, nino, taxYear)
         urlPost(url(taxYear), headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)), body = "")
       }
 

@@ -16,7 +16,6 @@
 
 package controllers.gains
 
-import models.gains.prior.IncomeSourceObject
 import play.api.http.HeaderNames
 import play.api.http.Status.{BAD_REQUEST, OK, SEE_OTHER}
 import play.api.libs.ws.WSResponse
@@ -88,7 +87,7 @@ class PolicyTypeControllerISpec extends IntegrationTest {
       populateSessionData()
       lazy val result: WSResponse = {
         authoriseAgentOrIndividual(isAgent = false)
-        userDataStub(IncomeSourceObject(Some(gainsPriorDataModel)), nino, taxYear)
+        userDataStub(gainsPriorDataModel, nino, taxYear)
         urlPost(url(taxYear), headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)), body = Map("policy-type" -> "lifeInsurance"))
       }
 
@@ -99,7 +98,7 @@ class PolicyTypeControllerISpec extends IntegrationTest {
     "redirect to policy name if successful in new journey" in {
       lazy val result: WSResponse = {
         authoriseAgentOrIndividual(isAgent = false)
-        userDataStub(IncomeSourceObject(Some(gainsPriorDataModel)), nino, taxYear)
+        userDataStub(gainsPriorDataModel, nino, taxYear)
         urlPost(url(taxYear) + "new-session", headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)), body = Map("policy-type" -> "lifeInsurance"))
       }
 
@@ -121,7 +120,7 @@ class PolicyTypeControllerISpec extends IntegrationTest {
       populateWithSessionDataModel(Seq(completePolicyCyaModel))
       lazy val result: WSResponse = {
         authoriseAgentOrIndividual(isAgent = false)
-        userDataStub(IncomeSourceObject(Some(gainsPriorDataModel)), nino, taxYear)
+        userDataStub(gainsPriorDataModel, nino, taxYear)
         urlPost(url(taxYear), headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)), body = Map("policy-type" -> "lifeInsurance"))
       }
 
