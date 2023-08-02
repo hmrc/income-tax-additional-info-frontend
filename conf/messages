@@ -212,13 +212,14 @@ gains.policy-summary.question.title = Policy summary
 gains.policy-summary.list.tax-paid-on-gain = Previous gain
 gains.policy-summary.list.yearsSince = Years since last gain
 
-gains.policy-summary.list.hidden.text.1 = type of policy
-gains.policy-summary.list.hidden.text.2 = policy number
-gains.policy-summary.list.hidden.text.3 = amount of gain made
-gains.policy-summary.list.hidden.text.5 = number of years policy held
-gains.policy-summary.list.hidden.text.6 = tax paid status
-gains.policy-summary.list.hidden.text.7 = deficiency relief status
-gains.policy-summary.list.hidden.text.8 = amount of relief available
+gains.policy-summary.list.hidden.text.1 = Change type of policy
+gains.policy-summary.list.hidden.text.2 = Change policy number
+gains.policy-summary.list.hidden.text.3 = Change amount of gain made
+gains.policy-summary.list.hidden.text.4 = Change years since last gain
+gains.policy-summary.list.hidden.text.5 = Change number of years policy held
+gains.policy-summary.list.hidden.text.6 = Change tax paid status
+gains.policy-summary.list.hidden.text.7 = Change deficiency relief status
+gains.policy-summary.list.hidden.text.8 = Change amount of relief available
 
 gains.policy-summary.empty.title.individual = Check your gains from life insurance policies and contracts
 gains.policy-summary.empty.title.agent = Check your client''s gains from life insurance policies and contracts

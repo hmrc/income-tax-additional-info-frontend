@@ -212,13 +212,14 @@ gains.policy-summary.question.title = Crynodeb o’r polisi
 gains.policy-summary.list.tax-paid-on-gain = Enillion blaenorol
 gains.policy-summary.list.yearsSince = Blynyddoedd ers ennill diwethaf
 
-gains.policy-summary.list.hidden.text.1 = math o bolisi
-gains.policy-summary.list.hidden.text.2 = rhif y polisi
-gains.policy-summary.list.hidden.text.3 = swm yr enillion a wnaed
-gains.policy-summary.list.hidden.text.5 = nifer y blynyddoedd a ddaliwyd y polisi
-gains.policy-summary.list.hidden.text.6 = statws y dreth a dalwyd
-gains.policy-summary.list.hidden.text.7 = statws y rhyddhad am ddiffyg
-gains.policy-summary.list.hidden.text.8 = swm y rhyddhad sydd ar gael
+gains.policy-summary.list.hidden.text.1 = Newid math o bolisi
+gains.policy-summary.list.hidden.text.2 = Newid rhif y polisi
+gains.policy-summary.list.hidden.text.3 = Newid swm yr enillion a wnaed
+gains.policy-summary.list.hidden.text.4 = Newid blynyddoedd ers ennill diwethaf
+gains.policy-summary.list.hidden.text.5 = Newid nifer y blynyddoedd a ddaliwyd y polisi
+gains.policy-summary.list.hidden.text.6 = Newid statws y dreth a dalwyd
+gains.policy-summary.list.hidden.text.7 = Newid statws y rhyddhad am ddiffyg
+gains.policy-summary.list.hidden.text.8 = Newid swm y rhyddhad sydd ar gael
 
 gains.policy-summary.empty.title.individual = Gwirio’ch enillion o bolisïau yswiriant bywyd a chontractau
 gains.policy-summary.empty.title.agent = Gwirio enillion eich cleient o bolisïau yswiriant bywyd a chontractau
