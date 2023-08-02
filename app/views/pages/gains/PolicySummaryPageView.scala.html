@@ -101,12 +101,12 @@
                         }
 
                     ),
-                    actions = Seq((controllers.gains.routes.PolicyEventController.show(taxYear, gains.sessionId), messages("common.change"), Some(messages("common.gains.policy-event"))))
+                    actions = Seq((controllers.gains.routes.PolicyEventController.show(taxYear, gains.sessionId), messages("common.change"), Some(messages("common.change") + " " + messages("common.gains.policy-event"))))
                 )),
                 Some(summaryListRow(
                     HtmlContent(messages("gains.policy-summary.list.tax-paid-on-gain")),
                     HtmlContent({if(gains.previousGain.getOrElse(false)) messages("common.yes") else messages("common.no")}),
-                    actions = Seq((controllers.gains.routes.GainsStatusController.show(taxYear, gains.sessionId), messages("common.change"), Some(messages("common.gains.policy-event"))))
+                    actions = Seq((controllers.gains.routes.GainsStatusController.show(taxYear, gains.sessionId), messages("common.change"), Some(messages("common.change") + " " + messages("gains.policy-summary.list.tax-paid-on-gain"))))
                 )),
                 {
                 if (gains.previousGain.getOrElse(false)) {
@@ -126,7 +126,7 @@
                     Some(summaryListRow(
                         HtmlContent(messages("common.gains.taxPaidAmount")),
                         HtmlContent(s"£${gains.taxPaidAmount.getOrElse(BigDecimal(0)).toString}"),
-                        actions = Seq((controllers.gains.routes.PaidTaxAmountController.show(taxYear, gains.sessionId), messages("common.change"), Some(messages("gains.policy-summary.list.hidden.text.1"))))
+                        actions = Seq((controllers.gains.routes.PaidTaxAmountController.show(taxYear, gains.sessionId), messages("common.change"), Some(messages("common.change") + " " + messages("common.gains.taxPaidAmount"))))
                     ))
                 } else {
                     Some(summaryListRow(
