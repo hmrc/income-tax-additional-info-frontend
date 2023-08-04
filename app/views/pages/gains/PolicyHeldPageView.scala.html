@@ -58,16 +58,14 @@
 
     @p(Html(messages(s"gains.policy-held.question.paragraph.${if(request.user.isAgent) "agent" else "individual"}")), "govuk-body govuk-!-margin-bottom-4", Some("para3"))
 
-    @p(Html(messages(s"gains.policy-held.question.title.${if(request.user.isAgent) "agent" else "individual"}")), "govuk-heading-m govuk-!-margin-bottom-2", Some("subTitle"))
-
     @formWithCsrf(action = controllers.gains.routes.PolicyHeldController.submit(taxYear, session)) {
         @inputText(
             form = form,
             id = "year",
             name = "year",
             currency = false,
-            label = "gains.policy-held.question.label",
-            labelHidden = true,
+            label = messages(s"gains.policy-held.question.title.${if(request.user.isAgent) "agent" else "individual"}"),
+            labelClasses = Some("govuk-label--m"),
             classes = Some("govuk-input--width-2")
         )
 

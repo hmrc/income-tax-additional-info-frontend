@@ -36,7 +36,7 @@ class PolicyHeldPageViewSpec extends ViewUnitTest {
     val paragraph = "#para1"
     val paragraph2 = "#para2"
     val paragraph3 = "#para3"
-    val subTitle = "#subTitle"
+    val subTitle = "#main-content > div > div > form > div > label"
     val continueButton = "#continue"
     val getHelpLink = "#help"
     val yearErrorHref = "#year"
