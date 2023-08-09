@@ -76,12 +76,12 @@ gains.policy-name.question.paragraph.2.individual = Your policy number can inclu
 gains.policy-name.label.individual = What''s your policy number?
 gains.policy-name.question.hint = For example, ''P-89879-123'' or ''LA/2881/07''.
 gains.policy-name.question.error-message.1.individual = Enter your policy number
-gains.policy-name.question.error-message.2.individual = Enter your policy number in the correct format. For example, ''P-89879-123'' or ''LA/2881/07''.
+gains.policy-name.question.error-message.2.individual = Enter your policy number in the correct format.
 gains.policy-name.question.paragraph.1.agent = Your client''s insurer or ISA manager should have given them a policy number, also known as a ''customer reference'', for their policy or contract.
 gains.policy-name.question.paragraph.2.agent = Your client''s policy number can include special characters (/) or (-), numbers and letters.
 gains.policy-name.label.agent = What''s your client''s policy number?
 gains.policy-name.question.error-message.1.agent = Enter your client''s policy number
-gains.policy-name.question.error-message.2.agent = Enter your client''s policy number in the correct format. For example, ''P-89879-123'' or ''LA/2881/07''.
+gains.policy-name.question.error-message.2.agent = Enter your client''s policy number in the correct format.
 
 gains.gateway.question.title = Gains from life insurance policies and contracts
 gains.gateway.question.radio.heading.individual = Did you make a gain on a UK policy or contract?
@@ -135,8 +135,8 @@ gains.gain-amount.question.title = Chargeable event gain
 gains.gain-amount.question.paragraph.1.individual = Enter the amount shown on the chargeable event certificate provided by your insurer or ISA manager.
 gains.gain-amount.question.paragraph.2.individual = If you are a joint owner of the policy or annuity, enter your share of the gain.
 gains.gain-amount.question.label.individual = How much gain did you make?
-gains.gain-amount.question.error.empty_field.individual = Enter the gain you made. For example, £193.54
-gains.gain-amount.question.incorrect-format-error.individual = Enter the gain you made in the correct format. For example, £193.54
+gains.gain-amount.question.error.empty_field.individual = Enter the gain you made.
+gains.gain-amount.question.incorrect-format-error.individual = Enter the gain you made in the correct format.
 gains.gain-amount.question.amount-exceeds-max-error.individual = The amount of your gain must be less than £100,000,000,000
 
 gains.gain-amount.question.summary-text = When you need to make calculations
@@ -147,37 +147,37 @@ gains.gain-amount.question.bullet.2.individual = you were a non-UK resident whil
 gains.gain-amount.question.link.text.1 = Find out more about calculating your gain (opens in new tab)
 gains.gain-amount.question.link.text.2 = Find out more about reducing chargeable event gains (opens in new tab)
 
-gains.gain-amount.question.error.empty_field.agent = Enter the gain your client made. For example, £193.54
+gains.gain-amount.question.error.empty_field.agent = Enter the gain your client made.
 gains.gain-amount.question.details-text.1.agent = Sometimes you may need to calculate your client''s gain or reduce it.
 gains.gain-amount.question.bullet.1.agent = your client''s policy qualifies for restricted relief
 gains.gain-amount.question.bullet.2.agent = your client was a non-UK resident while they were a beneficial owner of the policy
 gains.gain-amount.question.paragraph.1.agent = Enter the amount shown on the chargeable event certificate provided by your client’s insurer or ISA manager.
 gains.gain-amount.question.paragraph.2.agent = If your client is a joint owner of the policy or annuity, enter their share of the gain.
 gains.gain-amount.question.label.agent = How much gain did your client make?
-gains.gain-amount.question.incorrect-format-error.agent = Enter the gain your client made in the correct format. For example, £193.54
+gains.gain-amount.question.incorrect-format-error.agent = Enter the gain your client made in the correct format.
 gains.gain-amount.question.amount-exceeds-max-error.agent = The amount of your client''s gain must be less than £100,000,000,000
 
 gains.policy-held.heading = Policy held
 gains.policy-held.question.title.individual = How many years have you held this policy?
 gains.policy-held.question.paragraph.individual = If you''ve held the policy for less than a year, enter 0.
-gains.policy-held.question.error-empty.individual = Enter the number of years you have held this policy. If less than a year, enter 0
+gains.policy-held.question.error-empty.individual = Enter the number of years you have held this policy.
 gains.policy-held.question.error-incorrect.format.individual = Enter the number of years you''ve held this policy in the correct format. For example, 12
 
 gains.policy-held.question.title.agent = How many years has your client held this policy?
 gains.policy-held.question.paragraph.agent = If your client has held the policy for less than a year, enter 0.
-gains.policy-held.question.error-empty.agent = Enter the number of years your client has held this policy. If less than a year, enter 0
+gains.policy-held.question.error-empty.agent = Enter the number of years your client has held this policy.
 gains.policy-held.question.error-incorrect.format.agent = Enter the number of years your client has held this policy in the correct format. For example, 12
 
 gains.policy-held-previous.question.title.individual = Years since your last gain
 gains.policy-held-previous.heading.individual = How many years since your last gain?
 gains.policy-held-previous.question.paragraph.3.individual = If your last gain was less than a year ago, enter 0.
-gains.policy-held-previous.question.error-empty.individual = Enter the number of years since your last gain. If less than a year ago enter 0
+gains.policy-held-previous.question.error-empty.individual = Enter the number of years since your last gain.
 gains.policy-held-previous.question.error-incorrect.format = Enter the number of years in the correct format, for example 12
 
 gains.policy-held-previous.question.title.agent = Years since your client''s last gain
 gains.policy-held-previous.heading.agent = How many years since their last gain?
 gains.policy-held-previous.question.paragraph.3.agent = If their last gain was less than a year ago, enter 0.
-gains.policy-held-previous.question.error-empty.agent = Enter the number of years since your client''s last gain. If less than a year ago enter 0
+gains.policy-held-previous.question.error-empty.agent = Enter the number of years since your client''s last gain.
 
 gains.deficiency-relief-status.question.radio.heading.individual = Are you entitled to deficiency relief?
 gains.deficiency-relief-status.question.radio.heading.agent = Is your client entitled to Deficiency relief?

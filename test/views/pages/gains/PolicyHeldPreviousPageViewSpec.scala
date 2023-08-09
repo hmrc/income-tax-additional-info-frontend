@@ -83,7 +83,7 @@ class PolicyHeldPreviousPageViewSpec extends ViewUnitTest {
     override val expectedParagraph1: String = "If you were a UK resident while you were the beneficial owner of the policy, enter the 'number of years' from the chargeable event certificate you received from your insurer."
     override val expectedParagraph2: String = "If you lived outside the UK while you were the beneficial owner of the policy, refer to how to reduce your tax amount (opens in new tab)"
     override val expectedParagraph3: String = "If your last gain was less than a year ago, enter 0."
-    override val expectedEmptyErrorText: String = "Enter the number of years since your last gain. If less than a year ago enter 0"
+    override val expectedEmptyErrorText: String = "Enter the number of years since your last gain."
   }
 
   object ExpectedIndividualCY extends SpecificExpectedResults {
@@ -92,7 +92,7 @@ class PolicyHeldPreviousPageViewSpec extends ViewUnitTest {
     override val expectedParagraph1: String = "Os oeddech yn breswylydd yn y DU tra oeddech yn berchennog llesiannol y polisi, nodwch ‘nifer y blynyddoedd’ sydd ar y dystysgrif digwyddiad trethadwy a gawsoch gan eich yswiriwr."
     override val expectedParagraph2: String = "Os oeddech yn byw y tu allan i’r DU tra oeddech yn berchennog llesiannol y polisi, dysgwch sut i ostwng swm eich treth (yn agor tab newydd)"
     override val expectedParagraph3: String = "Os oedd eich ennill diwethaf llai na blwyddyn yn ôl, nodwch 0."
-    override val expectedEmptyErrorText: String = "Nodwch nifer y blynyddoedd ers eich ennill diwethaf. Os yw’n llai na blwyddyn yn ôl, nodwch 0"
+    override val expectedEmptyErrorText: String = "Nodwch nifer y blynyddoedd ers eich ennill diwethaf."
 
   }
 
@@ -102,7 +102,7 @@ class PolicyHeldPreviousPageViewSpec extends ViewUnitTest {
     override val expectedParagraph1: String = "If your client was a UK resident while they were the beneficial owner of the policy, enter the 'number of years' from the chargeable event certificate they received from their insurer."
     override val expectedParagraph2: String = "If your client lived outside the UK while they were the beneficial owner of the policy, refer to how to reduce their tax amount (opens in new tab)"
     override val expectedParagraph3: String = "If their last gain was less than a year ago, enter 0."
-    override val expectedEmptyErrorText: String = "Enter the number of years since your client's last gain. If less than a year ago enter 0"
+    override val expectedEmptyErrorText: String = "Enter the number of years since your client's last gain."
 
   }
 
@@ -112,7 +112,7 @@ class PolicyHeldPreviousPageViewSpec extends ViewUnitTest {
     override val expectedParagraph1: String = "Os oedd eich cleient yn breswylydd yn y DU tra oedd yn berchennog llesiannol y polisi, nodwch ‘nifer y blynyddoedd’ sydd ar y dystysgrif digwyddiad trethadwy a gafodd gan ei yswiriwr."
     override val expectedParagraph2: String = "Os oedd eich cleient yn byw y tu allan i’r DU tra oedd yn berchennog llesiannol y polisi, dysgwch sut i ostwng swm ei dreth (yn agor tab newydd)"
     override val expectedParagraph3: String = "Os oedd ei ennill diwethaf llai na blwyddyn yn ôl, nodwch 0."
-    override val expectedEmptyErrorText: String = "Nodwch nifer y blynyddoedd ers enillion diwethaf eich cleient. Os llai na blwyddyn yn ôl, nodwch 0"
+    override val expectedEmptyErrorText: String = "Nodwch nifer y blynyddoedd ers enillion diwethaf eich cleient."
   }
 
   override protected val userScenarios: Seq[UserScenario[CommonExpectedResults, SpecificExpectedResults]] = Seq(

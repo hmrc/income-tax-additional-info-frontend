@@ -103,8 +103,8 @@ class GainsAmountPageViewSpec extends ViewUnitTest {
     override val expectedDetailsText1: String = "Sometimes you may need to calculate your gain or reduce it."
     override val expectedBullet1: String = "your policy qualifies for restricted relief"
     override val expectedBullet2: String = "you were a non-UK resident while you were a beneficial owner of the policy"
-    override val expectedNoEntryError: String = "Enter the gain you made. For example, £193.54"
-    override val expectedIncorrectFormatError = "Enter the gain you made in the correct format. For example, £193.54"
+    override val expectedNoEntryError: String = "Enter the gain you made."
+    override val expectedIncorrectFormatError = "Enter the gain you made in the correct format."
     override val expectedAmountExceedsMaxError = "The amount of your gain must be less than £100,000,000,000"
     override val expectedLabel: String = "How much gain did you make?"
   }
@@ -115,8 +115,8 @@ class GainsAmountPageViewSpec extends ViewUnitTest {
     override val expectedDetailsText1: String = "O bryd i’w gilydd, mae’n bosibl y bydd angen i chi gyfrifo’ch enillion neu eu gostwng."
     override val expectedBullet1: String = "Mae’ch polisi yn gymwys ar gyfer rhyddhad cyfyngedig"
     override val expectedBullet2: String = "nid oeddech yn breswylydd yn y DU tra oeddech chi’n berchennog llesiannol y polisi"
-    override val expectedNoEntryError: String = "Newid swm yr enillion a wnaethoch. Er enghraifft, £193.54"
-    override val expectedIncorrectFormatError = "Nodwch yr enillion a wnaethoch yn y fformat cywir. Er enghraifft, £193.54"
+    override val expectedNoEntryError: String = "Newid swm yr enillion a wnaethoch."
+    override val expectedIncorrectFormatError = "Nodwch yr enillion a wnaethoch yn y fformat cywir."
     override val expectedAmountExceedsMaxError = "Mae’n rhaid i swm eich enillion fod yn llai na £100,000,000,000"
     override val expectedLabel: String = "Faint oedd eich enillion?"
   }
@@ -127,8 +127,8 @@ class GainsAmountPageViewSpec extends ViewUnitTest {
     override val expectedDetailsText1: String = "Sometimes you may need to calculate your client's gain or reduce it."
     override val expectedBullet1: String = "your client's policy qualifies for restricted relief"
     override val expectedBullet2: String = "your client was a non-UK resident while they were a beneficial owner of the policy"
-    override val expectedNoEntryError: String = "Enter the gain your client made. For example, £193.54"
-    override val expectedIncorrectFormatError = "Enter the gain your client made in the correct format. For example, £193.54"
+    override val expectedNoEntryError: String = "Enter the gain your client made."
+    override val expectedIncorrectFormatError = "Enter the gain your client made in the correct format."
     override val expectedAmountExceedsMaxError = "The amount of your client's gain must be less than £100,000,000,000"
     override val expectedLabel: String = "How much gain did your client make?"
   }
@@ -139,8 +139,8 @@ class GainsAmountPageViewSpec extends ViewUnitTest {
     override val expectedDetailsText1: String = "O bryd i’w gilydd, mae’n bosibl y bydd angen i chi gyfrifo enillion eich cleient neu eu gostwng."
     override val expectedBullet1: String = "mae polisi eich cleient yn gymwys ar gyfer rhyddhad cyfyngedig"
     override val expectedBullet2: String = "nid oedd eich cleient yn breswylydd yn y DU tra oedden nhw’n berchennog llesiannol y polisi"
-    override val expectedNoEntryError: String = "Nodwch swm yr enillion a wnaeth eich cleient. Er enghraifft, £193.54"
-    override val expectedIncorrectFormatError = "Nodwch yr enillion a wnaeth eich cleient yn y fformat cywir. Er enghraifft, £193.54"
+    override val expectedNoEntryError: String = "Nodwch swm yr enillion a wnaeth eich cleient."
+    override val expectedIncorrectFormatError = "Nodwch yr enillion a wnaeth eich cleient yn y fformat cywir."
     override val expectedAmountExceedsMaxError = "Mae’n rhaid i swm enillion eich cleient fod yn llai na £100,000,000,000"
     override val expectedLabel: String = "Faint oedd enillion eich cleient?"
   }
