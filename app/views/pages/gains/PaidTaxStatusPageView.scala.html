@@ -48,9 +48,9 @@
 
     @inputRadio(
         form = form,
-        heading = "",
+        heading = headingForUse,
         hint = Some(Html(messages(s"gains.paid-tax-status.question.hint.${if(request.user.isAgent) "agent" else "individual"}"))),
-        classes = ("govuk-fieldset__legend--m"),
+        classes = "govuk-fieldset__legend--m govuk-visually-hidden govuk-!-display-block",
         inline = true
     )
 
