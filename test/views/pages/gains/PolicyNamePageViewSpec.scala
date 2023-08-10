@@ -79,9 +79,9 @@ class PolicyNamePageViewSpec extends ViewUnitTest {
     override val expectedParagraph2: String = "Your policy number can include special characters (/) or (-), numbers and letters."
     override val expectedLabel: String = "What's your policy number?"
     override val expectedErrorText: String = "Enter your policy number"
-    override val expectedErrorText1: String = "Enter your policy number in the correct format. For example, 'P-89879-123' or 'LA/2881/07'."
+    override val expectedErrorText1: String = "Enter your policy number in the correct format."
   }
-
+  
   object ExpectedIndividualCY extends SpecificExpectedResults {
     override val expectedErrorTitle: String = "Gwall: Rhif y polisi"
     override val expectedHeading: String = "Rhif y polisi"
@@ -89,7 +89,7 @@ class PolicyNamePageViewSpec extends ViewUnitTest {
     override val expectedParagraph2: String = "Gall rhif eich polisi gynnwys y cymeriadau arbennig (/) neu (-), rhifau a llythrennau."
     override val expectedLabel: String = "Beth yw rhif eich polisi?"
     override val expectedErrorText: String = "Nodwch rif eich polisi"
-    override val expectedErrorText1: String = "Nodwch rif eich polisi yn y fformat cywir. Er enghraifft, `P-89879-123` neu `LA/2881/07`."
+    override val expectedErrorText1: String = "Nodwch rif eich polisi yn y fformat cywir."
   }
 
   object ExpectedAgentEN extends SpecificExpectedResults {
@@ -99,7 +99,7 @@ class PolicyNamePageViewSpec extends ViewUnitTest {
     override val expectedParagraph2: String = "Your client's policy number can include special characters (/) or (-), numbers and letters."
     override val expectedLabel: String = "What's your client's policy number?"
     override val expectedErrorText: String = "Enter your client's policy number"
-    override val expectedErrorText1: String = "Enter your client's policy number in the correct format. For example, 'P-89879-123' or 'LA/2881/07'."
+    override val expectedErrorText1: String = "Enter your client's policy number in the correct format."
   }
 
   object ExpectedAgentCY extends SpecificExpectedResults {
@@ -109,7 +109,7 @@ class PolicyNamePageViewSpec extends ViewUnitTest {
     override val expectedParagraph2: String = "Gall rhif polisi eich cleient gynnwys y cymeriadau arbennig (/) neu (-), rhifau a llythrennau."
     override val expectedLabel: String = "Beth yw rhif polisi eich cleient?"
     override val expectedErrorText: String = "Nodwch rif polisi eich cleient"
-    override val expectedErrorText1: String = "Nodwch rif polisi eich cleient yn y fformat cywir. Er enghraifft, `P-89879-123` neu `LA/2881/07`."
+    override val expectedErrorText1: String = "Nodwch rif polisi eich cleient yn y fformat cywir."
   }
 
   override protected val userScenarios: Seq[UserScenario[CommonExpectedResults, SpecificExpectedResults]] = Seq(

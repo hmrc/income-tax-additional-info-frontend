@@ -86,7 +86,7 @@ class PolicyHeldPageViewSpec extends ViewUnitTest {
     override val expectedParagraph2: String = "If you lived outside the UK while you were the beneficial owner of the policy, refer to how to reduce your tax amount (opens in new tab)"
     override val expectedParagraph3: String = "If you've held the policy for less than a year, enter 0."
     override val expectedSubTitle: String = "How many years have you held this policy?"
-    override val expectedEmptyErrorText: String = "Enter the number of years you have held this policy. If less than a year, enter 0"
+    override val expectedEmptyErrorText: String = "Enter the number of years you have held this policy."
     override val expectedIncorrectFormatErrorText: String = "Enter the number of years you've held this policy in the correct format. For example, 12"
     override val expectedYearsExceedErrorText: String = "The number of years must be less than 100"
   }
@@ -97,7 +97,7 @@ class PolicyHeldPageViewSpec extends ViewUnitTest {
     override val expectedParagraph2: String = "Os oeddech yn byw y tu allan i’r DU tra oeddech yn berchennog llesiannol y polisi, dysgwch sut i ostwng swm eich treth (yn agor tab newydd)"
     override val expectedParagraph3: String = "Os ydych wedi dal y polisi ers llai na blwyddyn, nodwch 0."
     override val expectedSubTitle: String = "Ers sawl blwyddyn rydych wedi dal y polisi hwn?"
-    override val expectedEmptyErrorText: String = "Nodwch nifer y blynyddoedd rydych wedi dal y polisi hwn. Os yw’n llai na blwyddyn, nodwch 0"
+    override val expectedEmptyErrorText: String = "Nodwch nifer y blynyddoedd rydych wedi dal y polisi hwn."
     override val expectedIncorrectFormatErrorText: String = "Nodwch nifer y blynyddoedd rydych wedi dal y polisi hwn yn y fformat cywir. Er enghraifft, 12"
     override val expectedYearsExceedErrorText: String = "Mae’n rhaid i nifer y blynyddoedd fod yn llai na 100"
   }
@@ -108,7 +108,7 @@ class PolicyHeldPageViewSpec extends ViewUnitTest {
     override val expectedParagraph2: String = "If your client lived outside the UK while they were the beneficial owner of the policy, refer to how to reduce their tax amount (opens in new tab)"
     override val expectedParagraph3: String = "If your client has held the policy for less than a year, enter 0."
     override val expectedSubTitle: String = "How many years has your client held this policy?"
-    override val expectedEmptyErrorText: String = "Enter the number of years your client has held this policy. If less than a year, enter 0"
+    override val expectedEmptyErrorText: String = "Enter the number of years your client has held this policy."
     override val expectedIncorrectFormatErrorText: String = "Enter the number of years your client has held this policy in the correct format. For example, 12"
     override val expectedYearsExceedErrorText: String = "The number of years must be less than 100"
   }
@@ -119,7 +119,7 @@ class PolicyHeldPageViewSpec extends ViewUnitTest {
     override val expectedParagraph2: String = "Os oedd eich cleient yn byw y tu allan i’r DU tra oedd yn berchennog llesiannol y polisi, dysgwch sut i ostwng swm ei dreth (yn agor tab newydd)"
     override val expectedParagraph3: String = "Os yw’ch cleient wedi dal y polisi am lai na blwyddyn, nodwch 0."
     override val expectedSubTitle: String = "Ers sawl blwyddyn y mae’ch cleient wedi dal y polisi hwn?"
-    override val expectedEmptyErrorText: String = "Nodwch nifer y blynyddoedd y mae’ch cleient wedi dal y polisi hwn. Os yw’n llai na blwyddyn, nodwch 0"
+    override val expectedEmptyErrorText: String = "Nodwch nifer y blynyddoedd y mae’ch cleient wedi dal y polisi hwn."
     override val expectedIncorrectFormatErrorText: String = "Nodwch nifer y blynyddoedd y mae’ch cleient wedi dal y polisi hwn yn y fformat cywir. Er enghraifft, 12"
     override val expectedYearsExceedErrorText: String = "Mae’n rhaid i nifer y blynyddoedd fod yn llai na 100"
   }
