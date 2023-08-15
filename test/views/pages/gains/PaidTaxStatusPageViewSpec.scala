@@ -158,7 +158,7 @@ class PaidTaxStatusPageViewSpec extends ViewUnitTest {
         linkCheck(userScenario.commonExpectedResults.expectedHelpLinkText, Selectors.getHelpLink, appConfig.contactUrl(userScenario.isAgent))
 
         errorSummaryCheck(userScenario.specificExpectedResults.get.expectedErrorText1, Selectors.causedErrorHref)
-        errorAboveElementCheck(userScenario.specificExpectedResults.get.expectedErrorText1)
+        errorAboveElementCheck(userScenario.specificExpectedResults.get.expectedErrorText1, userScenario.isWelsh)
       }
     }
   }

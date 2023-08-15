@@ -249,7 +249,7 @@ class PolicyTypePageViewSpec extends ViewUnitTest {
         linkCheck(userScenario.commonExpectedResults.expectedHelpLinkText, Selectors.getHelpLink, appConfig.contactUrl(userScenario.isAgent))
 
         errorSummaryCheck(userScenario.specificExpectedResults.get.expectedErrorText, Selectors.errorHref)
-        errorAboveElementCheck(userScenario.specificExpectedResults.get.expectedErrorText)
+        errorAboveElementCheck(userScenario.specificExpectedResults.get.expectedErrorText, userScenario.isWelsh)
       }
     }
   }

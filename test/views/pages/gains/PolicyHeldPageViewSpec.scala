@@ -180,7 +180,7 @@ class PolicyHeldPageViewSpec extends ViewUnitTest {
         linkCheck(userScenario.commonExpectedResults.expectedHelpLinkText, Selectors.getHelpLink, appConfig.contactUrl(userScenario.isAgent))
 
         errorSummaryCheck(userScenario.specificExpectedResults.get.expectedEmptyErrorText, Selectors.yearErrorHref)
-        errorAboveElementCheck(userScenario.specificExpectedResults.get.expectedEmptyErrorText)
+        errorAboveElementCheck(userScenario.specificExpectedResults.get.expectedEmptyErrorText, userScenario.isWelsh)
       }
 
       "render policy held page with errors if submitted form exceeds max years" which {
@@ -205,7 +205,7 @@ class PolicyHeldPageViewSpec extends ViewUnitTest {
         linkCheck(userScenario.commonExpectedResults.expectedHelpLinkText, Selectors.getHelpLink, appConfig.contactUrl(userScenario.isAgent))
 
         errorSummaryCheck(userScenario.specificExpectedResults.get.expectedYearsExceedErrorText, Selectors.yearErrorHref)
-        errorAboveElementCheck(userScenario.specificExpectedResults.get.expectedYearsExceedErrorText)
+        errorAboveElementCheck(userScenario.specificExpectedResults.get.expectedYearsExceedErrorText, userScenario.isWelsh)
       }
 
       "render policy held page with errors if submitted form has invalid input" which {
@@ -230,7 +230,7 @@ class PolicyHeldPageViewSpec extends ViewUnitTest {
         linkCheck(userScenario.commonExpectedResults.expectedHelpLinkText, Selectors.getHelpLink, appConfig.contactUrl(userScenario.isAgent))
 
         errorSummaryCheck(userScenario.specificExpectedResults.get.expectedIncorrectFormatErrorText, Selectors.yearErrorHref)
-        errorAboveElementCheck(userScenario.specificExpectedResults.get.expectedIncorrectFormatErrorText)
+        errorAboveElementCheck(userScenario.specificExpectedResults.get.expectedIncorrectFormatErrorText, userScenario.isWelsh)
       }
     }
   }

@@ -188,7 +188,7 @@ class GainsGatewayPageViewSpec extends ViewUnitTest {
         buttonCheck(userScenario.commonExpectedResults.expectedButtonText, Selectors.continueButton)
         linkCheck(userScenario.commonExpectedResults.expectedHelpLinkText, Selectors.getHelpLink, appConfig.contactUrl(userScenario.isAgent))
         errorSummaryCheck(userScenario.specificExpectedResults.get.expectedErrorText, Selectors.errorLink)
-        errorAboveElementCheck(userScenario.specificExpectedResults.get.expectedErrorText)
+        errorAboveElementCheck(userScenario.specificExpectedResults.get.expectedErrorText, userScenario.isWelsh)
       }
     }
   }

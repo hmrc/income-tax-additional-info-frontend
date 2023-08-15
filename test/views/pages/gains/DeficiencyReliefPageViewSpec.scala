@@ -216,7 +216,7 @@ class DeficiencyReliefPageViewSpec extends ViewUnitTest {
         linkCheck(userScenario.commonExpectedResults.expectedHelpLinkText, Selectors.getHelpLink, appConfig.contactUrl(userScenario.isAgent))
 
         errorSummaryCheck(userScenario.specificExpectedResults.get.expectedErrorText, Selectors.causedErrorHref)
-        errorAboveElementCheck(userScenario.specificExpectedResults.get.expectedErrorText)
+        errorAboveElementCheck(userScenario.specificExpectedResults.get.expectedErrorText, userScenario.isWelsh)
       }
     }
   }
@@ -240,7 +240,7 @@ class DeficiencyReliefPageViewSpec extends ViewUnitTest {
         welshToggleCheck(userScenario.isWelsh)
 
         errorSummaryCheck(userScenario.commonExpectedResults.expectedErrorText1, Selectors.causedErrorInputHref)
-        errorAboveElementCheck(userScenario.commonExpectedResults.expectedErrorText1)
+        errorAboveElementCheck(userScenario.commonExpectedResults.expectedErrorText1, userScenario.isWelsh)
       }
     }
   }
@@ -264,7 +264,7 @@ class DeficiencyReliefPageViewSpec extends ViewUnitTest {
         welshToggleCheck(userScenario.isWelsh)
 
         errorSummaryCheck(userScenario.commonExpectedResults.expectedErrorText2, Selectors.causedErrorInputHref)
-        errorAboveElementCheck(userScenario.commonExpectedResults.expectedErrorText2)
+        errorAboveElementCheck(userScenario.commonExpectedResults.expectedErrorText2, userScenario.isWelsh)
       }
     }
   }
@@ -288,7 +288,7 @@ class DeficiencyReliefPageViewSpec extends ViewUnitTest {
         welshToggleCheck(userScenario.isWelsh)
 
         errorSummaryCheck(userScenario.commonExpectedResults.expectedErrorText3, Selectors.causedErrorInputHref)
-        errorAboveElementCheck(userScenario.commonExpectedResults.expectedErrorText3)
+        errorAboveElementCheck(userScenario.commonExpectedResults.expectedErrorText3, userScenario.isWelsh)
       }
     }
   }

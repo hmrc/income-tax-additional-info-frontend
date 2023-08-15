@@ -91,7 +91,7 @@
                 isPageHeading = false
             ))
         )),
-        errorMessage = if (form.errors.nonEmpty) Some(ErrorMessage(content = Text(messages(form.errors.map(_.message).head)))) else None,
+        errorMessage = if (form.errors.nonEmpty) Some(ErrorMessage(content = Text(messages(form.errors.map(_.message).head)), visuallyHiddenText = Some(messages("govukErrorMessage.visuallyHiddenText")))) else None,
         name = "policy-event",
         items = Seq(
             RadioItem(

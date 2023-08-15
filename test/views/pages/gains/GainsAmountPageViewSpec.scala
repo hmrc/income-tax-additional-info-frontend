@@ -216,7 +216,7 @@ class GainsAmountPageViewSpec extends ViewUnitTest {
         linkCheck(userScenario.commonExpectedResults.expectedHelpLinkText, Selectors.getHelpLink, appConfig.contactUrl(userScenario.isAgent))
 
         errorSummaryCheck(userScenario.specificExpectedResults.get.expectedNoEntryError, Selectors.gainsAmountErrorHref)
-        errorAboveElementCheck(userScenario.specificExpectedResults.get.expectedNoEntryError)
+        errorAboveElementCheck(userScenario.specificExpectedResults.get.expectedNoEntryError, userScenario.isWelsh)
       }
     }
   }
@@ -237,7 +237,7 @@ class GainsAmountPageViewSpec extends ViewUnitTest {
         welshToggleCheck(userScenario.isWelsh)
 
         errorSummaryCheck(userScenario.specificExpectedResults.get.expectedIncorrectFormatError, Selectors.gainsAmountErrorHref)
-        errorAboveElementCheck(userScenario.specificExpectedResults.get.expectedIncorrectFormatError)
+        errorAboveElementCheck(userScenario.specificExpectedResults.get.expectedIncorrectFormatError, userScenario.isWelsh)
       }
     }
   }
@@ -258,7 +258,7 @@ class GainsAmountPageViewSpec extends ViewUnitTest {
         welshToggleCheck(userScenario.isWelsh)
 
         errorSummaryCheck(userScenario.specificExpectedResults.get.expectedAmountExceedsMaxError, Selectors.gainsAmountErrorHref)
-        errorAboveElementCheck(userScenario.specificExpectedResults.get.expectedAmountExceedsMaxError)
+        errorAboveElementCheck(userScenario.specificExpectedResults.get.expectedAmountExceedsMaxError, userScenario.isWelsh)
       }
     }
   }
