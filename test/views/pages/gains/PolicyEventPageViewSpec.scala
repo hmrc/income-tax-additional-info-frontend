@@ -216,7 +216,7 @@ class PolicyEventPageViewSpec extends ViewUnitTest {
         linkCheck(userScenario.commonExpectedResults.expectedHelpLinkText, Selectors.getHelpLink, appConfig.contactUrl(userScenario.isAgent))
 
         errorSummaryCheck(userScenario.commonExpectedResults.expectedErrorText, Selectors.errorHref)
-        errorAboveElementCheck(userScenario.commonExpectedResults.expectedErrorText)
+        errorAboveElementCheck(userScenario.commonExpectedResults.expectedErrorText, userScenario.isWelsh)
       }
     }
   }
@@ -241,7 +241,7 @@ class PolicyEventPageViewSpec extends ViewUnitTest {
         titleCheck(userScenario.commonExpectedResults.expectedErrorTitle, userScenario.isWelsh)
 
         errorSummaryCheck(userScenario.commonExpectedResults.expectedErrorText1, Selectors.errorHrefWrongFormat)
-        errorAboveElementCheck(userScenario.commonExpectedResults.expectedErrorText1, Option("other-text-input"))
+        errorAboveElementCheck(userScenario.commonExpectedResults.expectedErrorText1, userScenario.isWelsh, Option("other-text-input"))
       }
     }
   }
@@ -266,7 +266,7 @@ class PolicyEventPageViewSpec extends ViewUnitTest {
         titleCheck(userScenario.commonExpectedResults.expectedErrorTitle, userScenario.isWelsh)
 
         errorSummaryCheck(userScenario.commonExpectedResults.expectedWrongFormatErrorText, Selectors.errorHrefWrongFormat)
-        errorAboveElementCheck(userScenario.commonExpectedResults.expectedWrongFormatErrorText,Option("other-text-input"))
+        errorAboveElementCheck(userScenario.commonExpectedResults.expectedWrongFormatErrorText, userScenario.isWelsh, Option("other-text-input"))
       }
     }
   }

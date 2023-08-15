@@ -159,7 +159,7 @@ class PaidTaxAmountPageViewSpec extends ViewUnitTest {
         titleCheck(userScenario.specificExpectedResults.get.expectedErrorTitle, userScenario.isWelsh)
 
         errorSummaryCheck(userScenario.specificExpectedResults.get.expectedNoEntryError, Selectors.gainsAmountErrorHref)
-        errorAboveElementCheck(userScenario.specificExpectedResults.get.expectedNoEntryError)
+        errorAboveElementCheck(userScenario.specificExpectedResults.get.expectedNoEntryError, userScenario.isWelsh)
       }
     }
   }
@@ -186,7 +186,7 @@ class PaidTaxAmountPageViewSpec extends ViewUnitTest {
         titleCheck(userScenario.specificExpectedResults.get.expectedErrorTitle, userScenario.isWelsh)
 
         errorSummaryCheck(userScenario.specificExpectedResults.get.expectedIncorrectFormatError, Selectors.gainsAmountErrorHref)
-        errorAboveElementCheck(userScenario.specificExpectedResults.get.expectedIncorrectFormatError)
+        errorAboveElementCheck(userScenario.specificExpectedResults.get.expectedIncorrectFormatError, userScenario.isWelsh)
       }
     }
   }
@@ -213,7 +213,7 @@ class PaidTaxAmountPageViewSpec extends ViewUnitTest {
         titleCheck(userScenario.specificExpectedResults.get.expectedErrorTitle, userScenario.isWelsh)
 
         errorSummaryCheck(userScenario.commonExpectedResults.expectedAmountExceedsMaxError, Selectors.gainsAmountErrorHref)
-        errorAboveElementCheck(userScenario.commonExpectedResults.expectedAmountExceedsMaxError)
+        errorAboveElementCheck(userScenario.commonExpectedResults.expectedAmountExceedsMaxError, userScenario.isWelsh)
       }
 
     }

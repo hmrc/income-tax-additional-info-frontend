@@ -222,11 +222,15 @@ trait ViewHelper {
     }
   }
 
-  def errorAboveElementCheck(text: String, id: Option[String] = None)(implicit document: Document): Unit = {
+  def errorAboveElementCheck(text: String, isWelsh: Boolean, id: Option[String] = None)(implicit document: Document): Unit = {
     s"has a $text error above the element" which {
       s"has the text '$text'" in {
         val selector = if (id.isDefined) s"#${id.get}-error" else ".govuk-error-message"
-        document.select(selector).text() shouldBe s"Error: $text"
+        if (isWelsh) {
+          document.select(selector).text() shouldBe s"Gwall: $text"
+        } else {
+          document.select(selector).text() shouldBe s"Error: $text"
+        }
       }
     }
   }

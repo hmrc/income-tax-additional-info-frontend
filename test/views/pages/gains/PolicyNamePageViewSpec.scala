@@ -165,7 +165,7 @@ class PolicyNamePageViewSpec extends ViewUnitTest {
         linkCheck(userScenario.commonExpectedResults.expectedHelpLinkText, Selectors.getHelpLink, appConfig.contactUrl(userScenario.isAgent))
 
         errorSummaryCheck(userScenario.specificExpectedResults.get.expectedErrorText, Selectors.customerReferenceErrorHref)
-        errorAboveElementCheck(userScenario.specificExpectedResults.get.expectedErrorText)
+        errorAboveElementCheck(userScenario.specificExpectedResults.get.expectedErrorText, userScenario.isWelsh)
       }
     }
   }
@@ -184,7 +184,7 @@ class PolicyNamePageViewSpec extends ViewUnitTest {
         welshToggleCheck(userScenario.isWelsh)
 
         errorSummaryCheck(userScenario.specificExpectedResults.get.expectedErrorText1, Selectors.customerReferenceErrorHref)
-        errorAboveElementCheck(userScenario.specificExpectedResults.get.expectedErrorText1)
+        errorAboveElementCheck(userScenario.specificExpectedResults.get.expectedErrorText1, userScenario.isWelsh)
       }
     }
   }
