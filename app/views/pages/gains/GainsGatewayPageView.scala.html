@@ -67,7 +67,7 @@
         </a>
     </p>
 
-    @formWithCsrf(action = controllers.gains.routes.GainsGatewayController.submit(taxYear, request.user.sessionId)) {
+    @formWithCsrf(action = controllers.gains.routes.GainsGatewayController.submit(taxYear)) {
 
         @inputRadio(
             form = form,

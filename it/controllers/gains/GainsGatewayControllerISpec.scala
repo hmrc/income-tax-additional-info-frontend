@@ -149,7 +149,7 @@ class GainsGatewayControllerISpec extends IntegrationTest {
         populateSessionData()
         authoriseAgentOrIndividual(isAgent = false)
         emptyUserDataStub()
-        urlPost(s"${url(taxYear)}/$sessionId", headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)), body = Map("value" -> "true"))
+        urlPost(url(taxYear), headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)), body = Map("value" -> "true"))
       }
 
       result.status shouldBe SEE_OTHER
@@ -161,7 +161,7 @@ class GainsGatewayControllerISpec extends IntegrationTest {
         clearSession()
         authoriseAgentOrIndividual(isAgent = false)
         emptyUserDataStub()
-        urlPost(s"${url(taxYear)}/$sessionId", headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)), body = Map("value" -> "true"))
+        urlPost(url(taxYear), headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)), body = Map("value" -> "true"))
       }
 
       result.status shouldBe SEE_OTHER
@@ -173,7 +173,7 @@ class GainsGatewayControllerISpec extends IntegrationTest {
       lazy val result: WSResponse = {
         authoriseAgentOrIndividual(isAgent = false)
         emptyUserDataStub()
-        urlPost(s"${url(taxYear)}/$sessionId", headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)), body = Map("value" -> "false"))
+        urlPost(url(taxYear), headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)), body = Map("value" -> "false"))
       }
 
       result.status shouldBe SEE_OTHER
@@ -185,7 +185,7 @@ class GainsGatewayControllerISpec extends IntegrationTest {
         clearSession()
         authoriseAgentOrIndividual(isAgent = false)
         emptyUserDataStub()
-        urlPost(s"${url(taxYear)}/$sessionId", headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)), body = Map("value" -> "false"))
+        urlPost(url(taxYear), headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)), body = Map("value" -> "false"))
       }
 
       result.status shouldBe SEE_OTHER
@@ -197,7 +197,7 @@ class GainsGatewayControllerISpec extends IntegrationTest {
         clearSession()
         authoriseAgentOrIndividual(isAgent = false)
         emptyUserDataStub()
-        urlPost(s"${url(taxYear)}/$sessionId", headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)), body = Map("value" -> "false"))
+        urlPost(url(taxYear), headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)), body = Map("value" -> "false"))
       }
 
       result.status shouldBe SEE_OTHER
@@ -207,7 +207,7 @@ class GainsGatewayControllerISpec extends IntegrationTest {
     "show page with error text if form is empty" in {
       lazy val result: WSResponse = {
         authoriseAgentOrIndividual(isAgent = false)
-        urlPost(s"${url(taxYear)}/$sessionId", headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)), body = Map[String, String]())
+        urlPost(url(taxYear), headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)), body = Map[String, String]())
       }
 
       result.status shouldBe BAD_REQUEST

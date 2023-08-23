@@ -32,7 +32,7 @@ POST        /:taxYear/gains/policy-name/:sessionId                     controlle
 GET         /:taxYear/gains/gains-gateway-change                       controllers.gains.GainsGatewayController.change(taxYear: Int)
 
 GET         /:taxYear/gains/gains-gateway                              controllers.gains.GainsGatewayController.show(taxYear: Int)
-POST        /:taxYear/gains/gains-gateway/:sessionId                   controllers.gains.GainsGatewayController.submit(taxYear: Int, sessionId: String)
+POST        /:taxYear/gains/gains-gateway                              controllers.gains.GainsGatewayController.submit(taxYear: Int)
 
 GET         /:taxYear/gains/deficiency-relief-status/:sessionId        controllers.gains.GainsDeficiencyReliefController.show(taxYear: Int, sessionId: String)
 POST        /:taxYear/gains/deficiency-relief-status/:sessionId        controllers.gains.GainsDeficiencyReliefController.submit(taxYear: Int, sessionId: String)
