@@ -70,11 +70,11 @@ class GainsGatewayController @Inject()(authorisedAction: AuthorisedAction,
     }.flatten
   }
 
-  def submit(taxYear: Int, sessionId: String): Action[AnyContent] = authorisedAction.async { implicit request =>
+  def submit(taxYear: Int): Action[AnyContent] = authorisedAction.async { implicit request =>
     form(request.user.isAgent).bindFromRequest().fold(formWithErrors => {
       Future.successful(BadRequest(view(taxYear, formWithErrors)))
     }, {
-      yesNoValue => handleSession(yesNoValue, taxYear, sessionId)
+      yesNoValue => handleSession(yesNoValue, taxYear, request.user.sessionId)
     }
     )
   }
