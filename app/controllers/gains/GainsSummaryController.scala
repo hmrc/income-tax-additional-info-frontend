@@ -18,15 +18,19 @@ package controllers.gains
 
 import actions.AuthorisedAction
 import config.{AppConfig, ErrorHandler}
+import models.AllGainsSessionModel
 import models.gains.PolicyCyaModel
+import models.gains.prior.GainsPriorDataModel
+import models.requests.AuthorisationRequest
 import play.api.i18n.I18nSupport
-import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
+import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
 import services.GainsSessionService
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 import views.html.pages.gains.GainsSummaryPageView
 
 import javax.inject.Inject
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.duration.Duration
+import scala.concurrent.{Await, ExecutionContext, Future}
 
 class GainsSummaryController @Inject()(authorisedAction: AuthorisedAction,
                                        view: GainsSummaryPageView,
@@ -36,13 +40,9 @@ class GainsSummaryController @Inject()(authorisedAction: AuthorisedAction,
   extends FrontendController(mcc) with I18nSupport {
 
   def show(taxYear: Int): Action[AnyContent] = authorisedAction.async { implicit request =>
-    gainsSessionService.getSessionData(taxYear).flatMap {
-      case Left(_) => Future.successful(errorHandler.internalServerError())
-      case Right(cya) =>
-        Future.successful(cya.fold(Ok(view(taxYear, Seq[PolicyCyaModel]()))) {
-          data => data.gains.map(value => Ok(view(taxYear, value.allGains))).get
-        })
+    gainsSessionService.getPriorData(taxYear).map {
+      case Left(_) => errorHandler.internalServerError()
+      case Right(prior) => Ok(view(taxYear, prior.toPolicyCya))
     }
   }
-
 }

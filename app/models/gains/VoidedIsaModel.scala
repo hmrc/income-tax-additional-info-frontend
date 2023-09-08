@@ -27,18 +27,21 @@ case class VoidedIsaModel(
                            taxPaidAmount: Option[BigDecimal] = None,
                            yearsHeld: Option[Int] = None,
                            yearsHeldSinceLastGain: Option[Int] = None
-                         ){
+                         ) {
   def toPolicyCya: PolicyCyaModel = {
     PolicyCyaModel(
       sessionId = UUID.randomUUID().toString,
       policyType = "Voided ISA",
       policyNumber = this.customerReference,
       amountOfGain = Some(this.gainAmount),
-      policyEvent = Some(""),
+      policyEvent = Some(this.event.getOrElse("")),
       previousGain = Some(this.yearsHeld.isDefined),
       yearsPolicyHeld = this.yearsHeld,
       yearsPolicyHeldPrevious = this.yearsHeldSinceLastGain,
-      treatedAsTaxPaid = Some(false)
+      treatedAsTaxPaid = Some(false),
+      taxPaidAmount = Some(0),
+      entitledToDeficiencyRelief = Some(false),
+      deficiencyReliefAmount = Some(0)
     )
   }
 }
