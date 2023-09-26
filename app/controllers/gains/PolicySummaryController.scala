@@ -114,7 +114,7 @@ class PolicySummaryController @Inject()(authorisedAction: AuthorisedAction,
 
   private def auditSubmission(details: CreateOrAmendGainsAuditDetail)
                              (implicit hc: HeaderCarrier): Future[AuditResult] = {
-    val event = AuditModel("CreateOrAmendInterestSavingsUpdate", "createOrAmendInterestSavingsUpdate", details)
+    val event = AuditModel("CreateOrAmendGainsUpdate", "createOrAmendGainsUpdate", details)
     auditService.auditModel(event)
   }
 
