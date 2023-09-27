@@ -15,13 +15,13 @@
  */
 
 import play.core.PlayVersion.current
-import sbt.*
+import sbt._
 
 object AppDependencies {
 
   private val hmrcMongoPlayVersion = "1.3.0"
-  private val bootstrapPlay28Version = "7.21.0"
-  private val hmrcPlayFrontend = "7.19.0-play-28"
+  private val bootstrapPlay28Version = "7.22.0"
+  private val hmrcPlayFrontend = "7.20.0-play-28"
 
   val compile: Seq[ModuleID] = Seq(
     "uk.gov.hmrc"                   %% "bootstrap-frontend-play-28" % bootstrapPlay28Version,
