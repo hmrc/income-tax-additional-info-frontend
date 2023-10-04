@@ -60,7 +60,8 @@ class GainsSummaryControllerISpec extends IntegrationTest {
 
       result.status shouldBe OK
     }
-    "redirect tto overview page when there is no prior or cya data" in {
+
+    "redirect to overview page when there is no prior or cya data" in {
       lazy val result: WSResponse = {
         clearSession()
         stubGetWithHeadersCheck(
