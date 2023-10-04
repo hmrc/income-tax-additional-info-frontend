@@ -180,6 +180,10 @@ trait IntegrationTest extends AnyWordSpec
   def populateSessionData(): Boolean =
     await(gainsSessionService.createSessionData(AllGainsSessionModel(Seq(PolicyCyaModel(sessionId, "")), gateway = true), taxYear)(false)(true)(AuthorisationRequestBuilder.anAuthorisationRequest, ec))
 
+  def populateEmptySessionData(): Boolean =
+    await(gainsSessionService.createSessionData(AllGainsSessionModel(Seq[PolicyCyaModel]().empty, gateway = true), taxYear)(false)(true)(AuthorisationRequestBuilder.anAuthorisationRequest, ec))
+
+
   def populateSessionDataWithFalseGateway(): Boolean =
     await(gainsSessionService.createSessionData(AllGainsSessionModel(Seq(), gateway = false), taxYear)(false)(true)(AuthorisationRequestBuilder.anAuthorisationRequest, ec))
 

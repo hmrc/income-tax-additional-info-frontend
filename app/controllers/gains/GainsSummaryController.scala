@@ -20,17 +20,14 @@ import actions.AuthorisedAction
 import config.{AppConfig, ErrorHandler}
 import models.AllGainsSessionModel
 import models.gains.PolicyCyaModel
-import models.gains.prior.GainsPriorDataModel
-import models.requests.AuthorisationRequest
 import play.api.i18n.I18nSupport
-import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
+import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import services.GainsSessionService
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 import views.html.pages.gains.GainsSummaryPageView
 
 import javax.inject.Inject
-import scala.concurrent.duration.Duration
-import scala.concurrent.{Await, ExecutionContext, Future}
+import scala.concurrent.{ExecutionContext, Future}
 
 class GainsSummaryController @Inject()(authorisedAction: AuthorisedAction,
                                        view: GainsSummaryPageView,
@@ -40,9 +37,24 @@ class GainsSummaryController @Inject()(authorisedAction: AuthorisedAction,
   extends FrontendController(mcc) with I18nSupport {
 
   def show(taxYear: Int): Action[AnyContent] = authorisedAction.async { implicit request =>
-    gainsSessionService.getPriorData(taxYear).map {
-      case Left(_) => errorHandler.internalServerError()
-      case Right(prior) => Ok(view(taxYear, prior.toPolicyCya))
-    }
+
+    gainsSessionService.getAndHandle(taxYear)(Future.successful(errorHandler.internalServerError())) {
+      (cya, prior) =>
+        (cya, prior) match {
+          case (Some(cya), Some(prior)) if cya.allGains.nonEmpty =>
+            val allGainsPolicies: Seq[PolicyCyaModel] = (cya.allGains ++ prior.toPolicyCya).distinctBy(_.policyNumber)
+            gainsSessionService.updateSessionData(AllGainsSessionModel(allGainsPolicies, cya.gateway), taxYear)(
+              errorHandler.internalServerError())(
+              Ok(view(taxYear, allGainsPolicies))
+            )
+          case (Some(AllGainsSessionModel(cyaSeq, _)), Some(prior)) if cyaSeq.isEmpty =>
+            gainsSessionService.updateSessionData(AllGainsSessionModel(prior.toPolicyCya, gateway = true), taxYear)(
+              errorHandler.internalServerError())(
+              Ok(view(taxYear, prior.toPolicyCya))
+            )
+          case _ =>
+            Future.successful(Redirect(appConfig.incomeTaxSubmissionOverviewUrl(taxYear)))
+        }
+    }.flatten
   }
 }
