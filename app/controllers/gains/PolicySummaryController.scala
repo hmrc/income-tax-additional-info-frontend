@@ -105,8 +105,8 @@ class PolicySummaryController @Inject()(authorisedAction: AuthorisedAction,
   private def nrsSubmission(body: Option[GainsSubmissionModel], prior: Option[GainsPriorDataModel],
                             nino: String, mtditid: String, affinityGroup: String, taxYear: Int)
                            (implicit request: Request[_]): Unit = {
-    val model = CreateOrAmendGainsAuditDetail(body.map(_.clearModel), prior.flatMap(result => if (result.submittedOn.nonEmpty) prior else None),
-      prior.isDefined, nino, mtditid, affinityGroup.toLowerCase, taxYear)
+    val model = CreateOrAmendGainsAuditDetail(body, prior.flatMap(result => if (result.submittedOn.nonEmpty) prior else None),
+      !prior.exists(_.submittedOn.isEmpty), nino, mtditid, affinityGroup.toLowerCase, taxYear)
     auditSubmission(model)
     if (appConfig.nrsEnabled) {
       nrsService.submit(nino, new DecodedGainsSubmissionPayload(body, prior), mtditid)

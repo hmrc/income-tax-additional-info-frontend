@@ -16,16 +16,17 @@
 
 package models
 
-import models.gains.{
-  CapitalRedemptionModel, EncryptedPolicyCyaModel, ForeignModel, GainsSubmissionModel, LifeAnnuityModel, LifeInsuranceModel, PolicyCyaModel, VoidedIsaModel
-}
+import models.gains.{CapitalRedemptionModel, EncryptedPolicyCyaModel, ForeignModel, GainsSubmissionModel, LifeAnnuityModel, LifeInsuranceModel, PolicyCyaModel, VoidedIsaModel}
+import org.checkerframework.checker.units.qual.A
 import play.api.libs.json.{Json, OFormat}
 import uk.gov.hmrc.crypto.EncryptedValue
 
 case class AllGainsSessionModel(allGains: Seq[PolicyCyaModel], gateway: Boolean) {
   def toSubmissionModel: GainsSubmissionModel = {
 
-    val life: Seq[LifeInsuranceModel] = allGains.filter(elem => elem.policyType == "Life Insurance").map(cya =>
+    def convertEmptyToOption[A](items: Seq[A]): Option[Seq[A]] = if (items.isEmpty) None else Some(items)
+
+    val life: Option[Seq[LifeInsuranceModel]] = convertEmptyToOption(allGains.filter(elem => elem.policyType == "Life Insurance").map(cya =>
       LifeInsuranceModel(
         customerReference = cya.policyNumber,
         event = cya.policyEvent,
@@ -34,8 +35,8 @@ case class AllGainsSessionModel(allGains: Seq[PolicyCyaModel], gateway: Boolean)
         yearsHeld = cya.yearsPolicyHeld,
         yearsHeldSinceLastGain = cya.yearsPolicyHeldPrevious,
         deficiencyRelief = cya.deficiencyReliefAmount)
-    )
-    val capital: Seq[CapitalRedemptionModel] = allGains.filter(elem => elem.policyType == "Capital Redemption").map(cya =>
+    ))
+    val capital: Option[Seq[CapitalRedemptionModel]] = convertEmptyToOption(allGains.filter(elem => elem.policyType == "Capital Redemption").map(cya =>
       CapitalRedemptionModel(
         customerReference = cya.policyNumber,
         event = cya.policyEvent,
@@ -44,8 +45,8 @@ case class AllGainsSessionModel(allGains: Seq[PolicyCyaModel], gateway: Boolean)
         yearsHeld = cya.yearsPolicyHeld,
         yearsHeldSinceLastGain = cya.yearsPolicyHeldPrevious,
         deficiencyRelief = cya.deficiencyReliefAmount)
-    )
-    val lifeAnnuity: Seq[LifeAnnuityModel] = allGains.filter(elem => elem.policyType == "Life Annuity").map(cya =>
+    ))
+    val lifeAnnuity: Option[Seq[LifeAnnuityModel]] = convertEmptyToOption(allGains.filter(elem => elem.policyType == "Life Annuity").map(cya =>
       LifeAnnuityModel(
         customerReference = cya.policyNumber,
         event = cya.policyEvent,
@@ -54,18 +55,18 @@ case class AllGainsSessionModel(allGains: Seq[PolicyCyaModel], gateway: Boolean)
         yearsHeld = cya.yearsPolicyHeld,
         yearsHeldSinceLastGain = cya.yearsPolicyHeldPrevious,
         deficiencyRelief = cya.deficiencyReliefAmount)
-    )
-    val foreign: Seq[ForeignModel] = allGains.filter(elem => elem.policyType == "Foreign Policy").map(cya =>
+    ))
+    val foreign: Option[Seq[ForeignModel]] = convertEmptyToOption(allGains.filter(elem => elem.policyType == "Foreign Policy").map(cya =>
       ForeignModel(customerReference = cya.policyNumber, gainAmount = cya.amountOfGain.get, taxPaidAmount = cya.taxPaidAmount, yearsHeld = cya.yearsPolicyHeld)
-    )
-    val voided: Seq[VoidedIsaModel] = allGains.filter(elem => elem.policyType == "Voided ISA").map(cya =>
+    ))
+    val voided: Option[Seq[VoidedIsaModel]] = convertEmptyToOption(allGains.filter(elem => elem.policyType == "Voided ISA").map(cya =>
       VoidedIsaModel(
         customerReference = cya.policyNumber, gainAmount = cya.amountOfGain.get, taxPaidAmount = cya.taxPaidAmount, yearsHeld = cya.yearsPolicyHeld
-      )
+      ))
     )
 
     GainsSubmissionModel(
-      lifeInsurance = Some(life), capitalRedemption = Some(capital), lifeAnnuity = Some(lifeAnnuity), voidedIsa = Some(voided), foreign = Some(foreign)
+      lifeInsurance = life, capitalRedemption = capital, lifeAnnuity = lifeAnnuity, voidedIsa = voided, foreign = foreign
     )
   }
 }
