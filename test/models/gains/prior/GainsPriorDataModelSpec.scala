@@ -78,7 +78,8 @@ class GainsPriorDataModelSpec extends UnitTest {
             PolicyCyaModel(result.head.sessionId, "Life Insurance", None, Some(123.11), Some(""), Some(false), None, None, Some(false), None, Some(false), None),
             PolicyCyaModel(result(1).sessionId, "Capital Redemption", None, Some(123.11), Some(""), Some(false), None, Some(0), Some(false), None, Some(false), None),
             PolicyCyaModel(result(2).sessionId, "Life Annuity", Some(""), Some(123.11), Some(""), Some(false), None, Some(0), Some(false), None, Some(false), None),
-            PolicyCyaModel(result(3).sessionId, "Foreign Policy", None, Some(123.11), Some(""), Some(false), None, Some(0), Some(false), None, Some(false), Some(0))          )
+            PolicyCyaModel(result(3).sessionId, "Foreign Policy", None, Some(123.11), Some(""), Some(false), None, Some(0), Some(false), None, Some(false), Some(0)),
+            PolicyCyaModel(result(4).sessionId, "Voided ISA", None, Some(123.11), Some(""), Some(false), None, None, Some(false), None, None, None))
       }
     }
   }

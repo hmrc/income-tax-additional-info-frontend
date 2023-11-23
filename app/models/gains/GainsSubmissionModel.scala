@@ -24,7 +24,17 @@ case class GainsSubmissionModel(
                                  lifeAnnuity: Option[Seq[LifeAnnuityModel]] = None,
                                  voidedIsa: Option[Seq[VoidedIsaModel]] = None,
                                  foreign: Option[Seq[ForeignModel]] = None
-                               )
+                               ){
+  def clearModel: GainsSubmissionModel = {
+    GainsSubmissionModel(
+      lifeInsurance = if (lifeInsurance.exists(_.isEmpty)) None else lifeInsurance,
+      capitalRedemption = if (capitalRedemption.exists(_.isEmpty)) None else capitalRedemption,
+      lifeAnnuity = if (lifeAnnuity.exists(_.isEmpty)) None else lifeAnnuity,
+      voidedIsa = if (voidedIsa.exists(_.isEmpty)) None else voidedIsa,
+      foreign = if (foreign.exists(_.isEmpty)) None else foreign
+    )
+  }
+}
 
 object GainsSubmissionModel {
   implicit val format: OFormat[GainsSubmissionModel] = Json.format[GainsSubmissionModel]

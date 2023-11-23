@@ -38,10 +38,22 @@ case class GainsPriorDataModel(
       capitalRedemption <- capitalRedemption.map(_.map(_.toPolicyCya))
       lifeAnnuity <- lifeAnnuity.map(_.map(_.toPolicyCya))
       foreign <- foreign.map(_.map(_.toPolicyCya))
-      allPolicies <- Some(lifeInsurance ++ capitalRedemption ++ lifeAnnuity ++ foreign)
+      voided <- voidedIsa.map(_.map(_.toPolicyCya))
+      allPolicies <- Some(lifeInsurance ++ capitalRedemption ++ lifeAnnuity ++ foreign ++ voided)
     } yield {
       allPolicies
     }).getOrElse(Seq[PolicyCyaModel]())
+  }
+
+  def clearModel: GainsPriorDataModel = {
+    GainsPriorDataModel(
+      submittedOn = submittedOn,
+      lifeInsurance = if (lifeInsurance.exists(_.isEmpty)) None else lifeInsurance,
+      capitalRedemption = if (capitalRedemption.exists(_.isEmpty)) None else capitalRedemption,
+      lifeAnnuity = if (lifeAnnuity.exists(_.isEmpty)) None else lifeAnnuity,
+      voidedIsa = if (voidedIsa.exists(_.isEmpty)) None else voidedIsa,
+      foreign = if (foreign.exists(_.isEmpty)) None else foreign
+    )
   }
 }
 
