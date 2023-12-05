@@ -95,7 +95,6 @@ class CreateOrAmendGainsAuditDetailSpec extends UnitTest {
     "passed an audit detail model with success tax calculation field" should {
       "produce valid json" in {
         val json = Json.obj(
-          "body" -> Json.obj(
             "lifeInsurance" -> Json.arr(
               Json.obj(
                 "customerReference" -> "RefNo13254687",
@@ -146,8 +145,7 @@ class CreateOrAmendGainsAuditDetailSpec extends UnitTest {
                 "taxPaidAmount" -> 123.45,
                 "yearsHeld" -> 3
               )
-            )
-          ),
+            ),
           "prior" -> Json.obj(
             "submittedOn" -> "2020-01-04T05:01:01Z",
             "lifeInsurance" -> Json.arr(
@@ -209,7 +207,7 @@ class CreateOrAmendGainsAuditDetailSpec extends UnitTest {
           "taxYear" -> 2020
         )
 
-        val model = CreateOrAmendGainsAuditDetail(Some(body), Some(prior), isUpdate=true, nino, mtditid, userType, taxYear)
+        val model = CreateOrAmendGainsAuditDetail.createFromCyaData(Some(body), Some(prior), isUpdate=true, nino, mtditid, userType, taxYear)
         Json.toJson(model) shouldBe json
       }
     }
