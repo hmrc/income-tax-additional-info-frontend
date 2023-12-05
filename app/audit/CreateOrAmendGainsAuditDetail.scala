@@ -16,11 +16,15 @@
 
 package audit
 
-import models.gains.GainsSubmissionModel
+import models.gains.{CapitalRedemptionModel, ForeignModel, GainsSubmissionModel, LifeAnnuityModel, LifeInsuranceModel, VoidedIsaModel}
 import models.gains.prior.GainsPriorDataModel
 import play.api.libs.json.{Json, OWrites}
 
-case class CreateOrAmendGainsAuditDetail(body: Option[GainsSubmissionModel],
+case class CreateOrAmendGainsAuditDetail(lifeInsurance: Option[Seq[LifeInsuranceModel]] = None,
+                                         capitalRedemption: Option[Seq[CapitalRedemptionModel]] = None,
+                                         lifeAnnuity: Option[Seq[LifeAnnuityModel]] = None,
+                                         voidedIsa: Option[Seq[VoidedIsaModel]] = None,
+                                         foreign: Option[Seq[ForeignModel]] = None,
                                          prior: Option[GainsPriorDataModel],
                                          isUpdate: Boolean,
                                          nino: String,
@@ -29,5 +33,22 @@ case class CreateOrAmendGainsAuditDetail(body: Option[GainsSubmissionModel],
                                          taxYear: Int)
 
 object CreateOrAmendGainsAuditDetail {
+
+  def createFromCyaData(cyaData: Option[GainsSubmissionModel],
+                        prior: Option[GainsPriorDataModel],
+                        isUpdate: Boolean,
+                        nino: String,
+                        mtditid: String,
+                        userType: String,
+                        taxYear: Int): CreateOrAmendGainsAuditDetail = {
+    CreateOrAmendGainsAuditDetail(
+      cyaData.flatMap(_.lifeInsurance),
+      cyaData.flatMap(_.capitalRedemption),
+      cyaData.flatMap(_.lifeAnnuity),
+      cyaData.flatMap(_.voidedIsa),
+      cyaData.flatMap(_.foreign),
+      prior, isUpdate, nino, mtditid, userType, taxYear
+    )
+  }
   implicit def writes: OWrites[CreateOrAmendGainsAuditDetail] = Json.writes[CreateOrAmendGainsAuditDetail]
 }
