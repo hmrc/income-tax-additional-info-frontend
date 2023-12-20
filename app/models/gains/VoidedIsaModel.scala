@@ -18,6 +18,8 @@ package models.gains
 
 import play.api.libs.json.{Json, OFormat}
 
+import java.util.UUID
+
 case class VoidedIsaModel(
                            customerReference: Option[String] = None,
                            event: Option[String] = None,
@@ -25,7 +27,21 @@ case class VoidedIsaModel(
                            taxPaidAmount: Option[BigDecimal] = None,
                            yearsHeld: Option[Int] = None,
                            yearsHeldSinceLastGain: Option[Int] = None
-                         )
+                         ){
+  def toPolicyCya: PolicyCyaModel = {
+    PolicyCyaModel(
+      sessionId = UUID.randomUUID().toString,
+      policyType = "Voided ISA",
+      policyNumber = this.customerReference,
+      amountOfGain = Some(this.gainAmount),
+      policyEvent = Some(""),
+      previousGain = Some(this.yearsHeld.isDefined),
+      yearsPolicyHeld = this.yearsHeld,
+      yearsPolicyHeldPrevious = this.yearsHeldSinceLastGain,
+      treatedAsTaxPaid = Some(false)
+    )
+  }
+}
 
 object VoidedIsaModel {
   implicit val formats: OFormat[VoidedIsaModel] = Json.format[VoidedIsaModel]
