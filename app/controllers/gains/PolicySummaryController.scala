@@ -69,9 +69,9 @@ class PolicySummaryController @Inject()(authorisedAction: AuthorisedAction,
             Await.result(
               gainsSessionService.createSessionData(
                 AllGainsSessionModel(Seq(PolicyCyaModel(sessionId, "")),
-                  cya.getOrElse(AllGainsSessionModel(Seq(PolicyCyaModel(sessionId, "")), gateway = true)).gateway),
+                  cya.getOrElse(AllGainsSessionModel(Seq(PolicyCyaModel(sessionId, "")), gateway = Some(true))).gateway),
                   taxYear)(errorHandler.internalServerError()) {
-                Ok(view(taxYear, cya.getOrElse(AllGainsSessionModel(Seq(PolicyCyaModel(sessionId, "")), gateway = true)).allGains, sessionId))
+                Ok(view(taxYear, cya.getOrElse(AllGainsSessionModel(Seq(PolicyCyaModel(sessionId, "")), gateway = Some(true))).allGains, sessionId))
               }, Duration.Inf
             )
         }
@@ -79,27 +79,30 @@ class PolicySummaryController @Inject()(authorisedAction: AuthorisedAction,
   }
 
   def submit(taxYear: Int): Action[AnyContent] = authorisedAction.async { implicit request =>
-    gainsSessionService.getAndHandle(taxYear)(errorHandler.internalServerError()) {
+    gainsSessionService.getAndHandle(taxYear)(Future.successful(errorHandler.internalServerError())) {
       implicit val user: User = request.user
       (cya, prior) =>
         (cya, prior) match {
-          case (Some(cya), _) => if (!cya.gateway) {
-            Await.result(excludeJourneyService.excludeJourney("gains", taxYear, request.user.nino).flatMap {
-              case Right(_) =>
-                gainsSubmissionService.submitGains(Some(GainsSubmissionModel()), request.user.nino, request.user.mtditid, taxYear)
-                nrsSubmission(Some(GainsSubmissionModel()), prior, user.nino, user.mtditid, user.affinityGroup, taxYear)
-                Future(Redirect(appConfig.incomeTaxSubmissionOverviewUrl(taxYear)))
-              case Left(_) =>
-                Future(errorHandler.internalServerError())
-            }, Duration.Inf)
-          } else {
-            gainsSubmissionService.submitGains(Some(cya.toSubmissionModel), request.user.nino, request.user.mtditid, taxYear)
-            nrsSubmission(Some(cya.toSubmissionModel), prior, user.nino, user.mtditid, user.affinityGroup, taxYear)
-            Redirect(controllers.gains.routes.GainsSummaryController.show(taxYear))
+          case (Some(cya), _) => {
+            cya.gateway match {
+              case Some(false) =>
+                excludeJourneyService.excludeJourney("gains", taxYear, request.user.nino).flatMap {
+                  case Right(_) =>
+                    gainsSubmissionService.submitGains(Some(GainsSubmissionModel()), request.user.nino, request.user.mtditid, taxYear)
+                    nrsSubmission(Some(GainsSubmissionModel()), prior, user.nino, user.mtditid, user.affinityGroup, taxYear)
+                    Future.successful(Redirect(appConfig.incomeTaxSubmissionOverviewUrl(taxYear)))
+                  case Left(_) =>
+                    Future.successful(errorHandler.internalServerError())
+                }
+              case _ =>
+                gainsSubmissionService.submitGains(Some(cya.toSubmissionModel), request.user.nino, request.user.mtditid, taxYear)
+                nrsSubmission(Some(cya.toSubmissionModel), prior, user.nino, user.mtditid, user.affinityGroup, taxYear)
+                Future.successful(Redirect(controllers.gains.routes.GainsSummaryController.show(taxYear)))
+            }
           }
-          case (_, _) => errorHandler.internalServerError()
+          case (_, _) => Future.successful(errorHandler.internalServerError())
         }
-    }
+    }.flatten
   }
 
   private def nrsSubmission(body: Option[GainsSubmissionModel], prior: Option[GainsPriorDataModel],

@@ -46,7 +46,7 @@
             summaryListRow(
                 HtmlContent(messages("gains.summary.key")),
                 HtmlContent(messages("common.no")),
-                actions = Seq((controllers.gains.routes.GainsGatewayController.change(taxYear), messages("common.change"), Some(messages("gains.policy-summary.list.hidden.text.1"))))
+                actions = Seq((controllers.gains.routes.GainsGatewayController.show(taxYear), messages("common.change"), Some(messages("gains.policy-summary.list.hidden.text.1"))))
             )
         )))
         }

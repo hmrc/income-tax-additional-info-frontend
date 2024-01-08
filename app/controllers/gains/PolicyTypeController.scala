@@ -87,7 +87,7 @@ class PolicyTypeController @Inject()(authorisedAction: AuthorisedAction,
                 }
               }
             case _ => Future.successful(
-              Redirect(controllers.gains.routes.PolicySummaryController.show(taxYear, cya.getOrElse(AllGainsSessionModel(Seq.empty, gateway = true)).allGains.last.sessionId))
+              Redirect(controllers.gains.routes.PolicySummaryController.show(taxYear, cya.getOrElse(AllGainsSessionModel(Seq.empty, gateway = Some(true))).allGains.last.sessionId))
             )
           }
         }.flatten

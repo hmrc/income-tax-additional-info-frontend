@@ -48,7 +48,7 @@ class GainsSummaryController @Inject()(authorisedAction: AuthorisedAction,
               Ok(view(taxYear, allGainsPolicies))
             )
           case (Some(AllGainsSessionModel(cyaSeq, _)), Some(prior)) if cyaSeq.isEmpty =>
-            gainsSessionService.updateSessionData(AllGainsSessionModel(prior.toPolicyCya, gateway = true), taxYear)(
+            gainsSessionService.updateSessionData(AllGainsSessionModel(prior.toPolicyCya, gateway = Some(true)), taxYear)(
               errorHandler.internalServerError())(
               Ok(view(taxYear, prior.toPolicyCya))
             )

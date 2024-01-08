@@ -48,7 +48,7 @@ class PoliciesRemoveController @Inject()(authorisedAction: AuthorisedAction,
         cyaData =>
           Future.successful(
             Ok(view(taxYear, sessionId, cyaData.gains.getOrElse(
-              AllGainsSessionModel(Seq(emptyPolicyCyaModel), gateway = true)).allGains.find(_.sessionId == sessionId).getOrElse(emptyPolicyCyaModel)))
+              AllGainsSessionModel(Seq(emptyPolicyCyaModel), gateway = Some(true))).allGains.find(_.sessionId == sessionId).getOrElse(emptyPolicyCyaModel)))
           ).value.get.get
       })
     }

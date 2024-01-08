@@ -16,12 +16,11 @@
 
 package models
 
-import models.gains.{CapitalRedemptionModel, EncryptedPolicyCyaModel, ForeignModel, GainsSubmissionModel, LifeAnnuityModel, LifeInsuranceModel, PolicyCyaModel, VoidedIsaModel}
-import org.checkerframework.checker.units.qual.A
+import models.gains._
 import play.api.libs.json.{Json, OFormat}
 import uk.gov.hmrc.crypto.EncryptedValue
 
-case class AllGainsSessionModel(allGains: Seq[PolicyCyaModel], gateway: Boolean) {
+case class AllGainsSessionModel(allGains: Seq[PolicyCyaModel], gateway: Option[Boolean] = None) {
   def toSubmissionModel: GainsSubmissionModel = {
 
     def convertEmptyToOption[A](items: Seq[A]): Option[Seq[A]] = if (items.isEmpty) None else Some(items)
@@ -78,7 +77,7 @@ object AllGainsSessionModel {
 
 }
 
-case class EncryptedAllGainsSessionModel(allGains: Seq[EncryptedPolicyCyaModel], gateway: Boolean)
+case class EncryptedAllGainsSessionModel(allGains: Seq[EncryptedPolicyCyaModel], gateway: Option[Boolean])
 
 object EncryptedAllGainsSessionModel {
 
