@@ -47,10 +47,11 @@ class GainsSummaryController @Inject()(authorisedAction: AuthorisedAction,
               errorHandler.internalServerError())(
               Ok(view(taxYear, allGainsPolicies))
             )
-          case (Some(AllGainsSessionModel(cyaSeq, _)), Some(prior)) if cyaSeq.isEmpty =>
-            gainsSessionService.updateSessionData(AllGainsSessionModel(prior.toPolicyCya, gateway = Some(true)), taxYear)(
+          case (_, Some(prior)) =>
+            val priorData = prior.toPolicyCya
+            gainsSessionService.createSessionData(AllGainsSessionModel(priorData, gateway = Some(true)), taxYear)(
               errorHandler.internalServerError())(
-              Ok(view(taxYear, prior.toPolicyCya))
+              Ok(view(taxYear, priorData))
             )
           case _ =>
             Future.successful(Redirect(appConfig.incomeTaxSubmissionOverviewUrl(taxYear)))

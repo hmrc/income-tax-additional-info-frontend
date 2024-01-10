@@ -47,18 +47,22 @@ class GainsGatewayController @Inject()(authorisedAction: AuthorisedAction,
     gainsSessionService.getSessionData(taxYear).flatMap {
       case Left(_) => Future.successful(errorHandler.internalServerError())
       case Right(cya) =>
-        Future.successful(cya.fold(Redirect(appConfig.incomeTaxSubmissionOverviewUrl(taxYear))) {
-        cyaData =>
-          cyaData.gains.fold(Ok(view(taxYear, form(request.user.isAgent)))) {
-            data =>
-              data.gateway match {
-                case Some(value) =>
-                  Ok(view(taxYear, form(request.user.isAgent).fill(value)))
-                case _ =>
-                  Ok(view(taxYear, form(request.user.isAgent)))
-              }
-          }
-      })
+        cya match {
+          case Some(cya) =>
+            cya.gains.fold(Future.successful(Ok(view(taxYear, form(request.user.isAgent))))) {
+              data =>
+                data.gateway match {
+                  case Some(value) =>
+                    Future.successful(Ok(view(taxYear, form(request.user.isAgent).fill(value))))
+                  case _ =>
+                    Future.successful(Ok(view(taxYear, form(request.user.isAgent))))
+                }
+            }
+          case None =>
+            gainsSessionService.createSessionData(AllGainsSessionModel(Seq.empty), taxYear)(errorHandler.internalServerError()) {
+              Redirect(controllers.gains.routes.GainsGatewayController.show(taxYear))
+            }
+        }
 
     }
   }

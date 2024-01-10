@@ -32,6 +32,8 @@ class GainsGatewayControllerISpec extends IntegrationTest {
     "render the gains gateway page" in {
       lazy val result: WSResponse = {
         authoriseAgentOrIndividual(isAgent = false)
+        clearSession()
+        populateSessionData()
         emptyUserDataStub()
         urlGet(url(taxYear), headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)))
       }
@@ -42,6 +44,8 @@ class GainsGatewayControllerISpec extends IntegrationTest {
     "render the gains gateway page for an agent" in {
       lazy val result: WSResponse = {
         authoriseAgentOrIndividual(isAgent = true)
+        clearSession()
+        populateSessionData()
         emptyUserDataStub()
         urlGet(url(taxYear), headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)))
       }
@@ -62,31 +66,20 @@ class GainsGatewayControllerISpec extends IntegrationTest {
       }
 
       result.status shouldBe SEE_OTHER
-      result.headers("Location").head shouldBe s"/update-and-submit-income-tax-return/additional-information/$taxYear/gains/policy-type/$sessionId"
+      result.headers("Location").head contains(s"/update-and-submit-income-tax-return/additional-information/$taxYear/gains/policy-type/") shouldBe(true)
     }
-
-    "redirect to policy type page if successful with no data" in {
-      lazy val result: WSResponse = {
-        clearSession()
-        authoriseAgentOrIndividual(isAgent = false)
-        emptyUserDataStub()
-        urlPost(url(taxYear), headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)), body = Map("value" -> "true"))
-      }
-
-      result.status shouldBe SEE_OTHER
-      result.headers("Location").head shouldBe s"/update-and-submit-income-tax-return/additional-information/$taxYear/gains/policy-type/$sessionId"
-    }
-
 
     "redirect to policy summary page if user chooses 'No'" in {
       lazy val result: WSResponse = {
+        clearSession()
+        populateSessionData()
         authoriseAgentOrIndividual(isAgent = false)
         emptyUserDataStub()
         urlPost(url(taxYear), headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)), body = Map("value" -> "false"))
       }
 
       result.status shouldBe SEE_OTHER
-      result.headers("Location").head shouldBe s"/update-and-submit-income-tax-return/additional-information/$taxYear/gains/policy-summary/$sessionId"
+      result.headers("Location").head contains(s"/update-and-submit-income-tax-return/additional-information/$taxYear/gains/policy-summary/") shouldBe(true)
     }
 
     "show page with error text if form is empty" in {

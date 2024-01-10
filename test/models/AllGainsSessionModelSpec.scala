@@ -39,17 +39,17 @@ class AllGainsSessionModelSpec extends UnitTest {
       "sessionId", "Foreign Policy", Some("123"), Some(0), Some(""), Some(true), Some(0), Some(0), Some(true), Some(123.11), Some(true), Some(123.11)
     ))
 
-  val modelMax: AllGainsSessionModel = AllGainsSessionModel(cyaModels, gateway = true)
+  val modelMax: AllGainsSessionModel = AllGainsSessionModel(cyaModels, gateway = Some(true))
 
-  val modelMin: AllGainsSessionModel = AllGainsSessionModel(Seq[PolicyCyaModel](), gateway = true)
+  val modelMin: AllGainsSessionModel = AllGainsSessionModel(Seq[PolicyCyaModel](), gateway = Some(true))
 
-  val submissionModel: GainsSubmissionModel = AllGainsSessionModel(cyaModels, gateway = true).toSubmissionModel
+  val submissionModel: GainsSubmissionModel = AllGainsSessionModel(cyaModels, gateway = Some(true)).toSubmissionModel
 
   val jsonMax: JsObject = Json.obj(
     "allGains" -> modelMax.allGains, "gateway" -> true
   )
 
-  val jsonMin: JsObject = Json.obj("allGains" -> Seq[PolicyCyaModel](), "gateway" -> true)
+  val jsonMin: JsObject = Json.obj("allGains" -> Seq[PolicyCyaModel](), "gateway" -> Some(true))
 
   "AllGainsSessionModel" should {
 

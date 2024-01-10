@@ -31,8 +31,7 @@ import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 import views.html.pages.gains.PolicySummaryPageView
 
 import javax.inject.{Inject, Singleton}
-import scala.concurrent.duration.Duration
-import scala.concurrent.{Await, ExecutionContext, Future}
+import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class PolicySummaryController @Inject()(authorisedAction: AuthorisedAction,
@@ -47,35 +46,29 @@ class PolicySummaryController @Inject()(authorisedAction: AuthorisedAction,
   extends FrontendController(mcc) with I18nSupport {
 
   def show(taxYear: Int, sessionId: String): Action[AnyContent] = authorisedAction.async { implicit request =>
-    gainsSessionService.getAndHandle(taxYear)(errorHandler.internalServerError()) {
+    gainsSessionService.getAndHandle(taxYear)(Future.successful(errorHandler.internalServerError())) {
       (cya, prior) =>
         (cya, prior) match {
           case (Some(cya), Some(prior)) =>
             val filteredPrior = prior.toPolicyCya.filter(el => cya.allGains.contains(el))
-            Await.result(
               gainsSessionService.updateSessionData(
                 AllGainsSessionModel(cya.allGains ++ filteredPrior, cya.gateway), taxYear)(errorHandler.internalServerError()) {
                 Ok(view(taxYear, cya.allGains ++ filteredPrior, sessionId))
-              }, Duration.Inf
-            )
+              }
           case (Some(cya), _) =>
-            Await.result(
               gainsSessionService.updateSessionData(
                 AllGainsSessionModel(cya.allGains, cya.gateway), taxYear)(errorHandler.internalServerError()) {
                 Ok(view(taxYear, cya.allGains, sessionId))
-              }, Duration.Inf
-            )
+              }
           case (_, _) =>
-            Await.result(
               gainsSessionService.createSessionData(
                 AllGainsSessionModel(Seq(PolicyCyaModel(sessionId, "")),
                   cya.getOrElse(AllGainsSessionModel(Seq(PolicyCyaModel(sessionId, "")), gateway = Some(true))).gateway),
                   taxYear)(errorHandler.internalServerError()) {
                 Ok(view(taxYear, cya.getOrElse(AllGainsSessionModel(Seq(PolicyCyaModel(sessionId, "")), gateway = Some(true))).allGains, sessionId))
-              }, Duration.Inf
-            )
+              }
         }
-    }
+    }.flatten
   }
 
   def submit(taxYear: Int): Action[AnyContent] = authorisedAction.async { implicit request =>
@@ -89,15 +82,21 @@ class PolicySummaryController @Inject()(authorisedAction: AuthorisedAction,
                 excludeJourneyService.excludeJourney("gains", taxYear, request.user.nino).flatMap {
                   case Right(_) =>
                     gainsSubmissionService.submitGains(Some(GainsSubmissionModel()), request.user.nino, request.user.mtditid, taxYear)
-                    nrsSubmission(Some(GainsSubmissionModel()), prior, user.nino, user.mtditid, user.affinityGroup, taxYear)
-                    Future.successful(Redirect(appConfig.incomeTaxSubmissionOverviewUrl(taxYear)))
+                    nrsSubmission(Some(GainsSubmissionModel()), prior, user.nino, user.mtditid)
+                    auditSubmission(Some(GainsSubmissionModel()), prior, user.nino, user.mtditid, user.affinityGroup, taxYear)
+                    gainsSessionService.deleteSessionData(cya, taxYear)(errorHandler.internalServerError())(
+                      Redirect(appConfig.incomeTaxSubmissionOverviewUrl(taxYear))
+                    )
                   case Left(_) =>
                     Future.successful(errorHandler.internalServerError())
                 }
               case _ =>
                 gainsSubmissionService.submitGains(Some(cya.toSubmissionModel), request.user.nino, request.user.mtditid, taxYear)
-                nrsSubmission(Some(cya.toSubmissionModel), prior, user.nino, user.mtditid, user.affinityGroup, taxYear)
-                Future.successful(Redirect(controllers.gains.routes.GainsSummaryController.show(taxYear)))
+                nrsSubmission(Some(cya.toSubmissionModel), prior, user.nino, user.mtditid)
+                auditSubmission(Some(cya.toSubmissionModel), prior, user.nino, user.mtditid, user.affinityGroup, taxYear)
+                gainsSessionService.deleteSessionData(cya, taxYear)(errorHandler.internalServerError())(
+                  Redirect(controllers.gains.routes.GainsSummaryController.show(taxYear))
+                )
             }
           }
           case (_, _) => Future.successful(errorHandler.internalServerError())
@@ -106,18 +105,20 @@ class PolicySummaryController @Inject()(authorisedAction: AuthorisedAction,
   }
 
   private def nrsSubmission(body: Option[GainsSubmissionModel], prior: Option[GainsPriorDataModel],
-                            nino: String, mtditid: String, affinityGroup: String, taxYear: Int)
+                            nino: String, mtditid: String)
                            (implicit request: Request[_]): Unit = {
-    val model = CreateOrAmendGainsAuditDetail.createFromCyaData(body, prior.flatMap(result => if (result.submittedOn.nonEmpty) prior else None),
-      !prior.exists(_.submittedOn.isEmpty), nino, mtditid, affinityGroup.toLowerCase, taxYear)
-    auditSubmission(model)
+
     if (appConfig.nrsEnabled) {
       nrsService.submit(nino, new DecodedGainsSubmissionPayload(body, prior), mtditid)
     }
   }
 
-  private def auditSubmission(details: CreateOrAmendGainsAuditDetail)
+  private def auditSubmission(body: Option[GainsSubmissionModel], prior: Option[GainsPriorDataModel],
+                              nino: String, mtditid: String, affinityGroup: String, taxYear: Int)
                              (implicit hc: HeaderCarrier): Future[AuditResult] = {
+   val details: CreateOrAmendGainsAuditDetail = CreateOrAmendGainsAuditDetail.createFromCyaData(body,
+      prior.flatMap(result => if (result.submittedOn.nonEmpty) prior else None),
+      !prior.exists(_.submittedOn.isEmpty), nino, mtditid, affinityGroup.toLowerCase, taxYear)
     val event = AuditModel("CreateOrAmendGainsUpdate", "createOrAmendGainsUpdate", details)
     auditService.auditModel(event)
   }
