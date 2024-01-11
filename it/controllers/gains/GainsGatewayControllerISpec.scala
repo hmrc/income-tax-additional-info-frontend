@@ -53,6 +53,29 @@ class GainsGatewayControllerISpec extends IntegrationTest {
       result.status shouldBe OK
     }
 
+    "render the gains gateway page when there is no cya data" in {
+      lazy val result: WSResponse = {
+        authoriseAgentOrIndividual(isAgent = false)
+        clearSession()
+        emptyUserDataStub()
+        urlGet(url(taxYear), headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)))
+      }
+
+      result.status shouldBe OK
+    }
+
+    "render the gains gateway page when gateway value is none" in {
+      lazy val result: WSResponse = {
+        authoriseAgentOrIndividual(isAgent = false)
+        clearSession()
+        populateSessionDataWithEmptyGateway()
+        emptyUserDataStub()
+        urlGet(url(taxYear), headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)))
+      }
+
+      result.status shouldBe OK
+    }
+
   }
 
   ".submit" should {
@@ -80,6 +103,16 @@ class GainsGatewayControllerISpec extends IntegrationTest {
 
       result.status shouldBe SEE_OTHER
       result.headers("Location").head contains(s"/update-and-submit-income-tax-return/additional-information/$taxYear/gains/policy-summary/") shouldBe(true)
+    }
+
+    "show page with error text when session is empty" in {
+      lazy val result: WSResponse = {
+        clearSession()
+        authoriseAgentOrIndividual(isAgent = false)
+        urlPost(url(taxYear), headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)), body = Map[String, String]())
+      }
+
+      result.status shouldBe BAD_REQUEST
     }
 
     "show page with error text if form is empty" in {

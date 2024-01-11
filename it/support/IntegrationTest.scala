@@ -29,7 +29,7 @@ import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
 import org.scalatestplus.play.guice.GuiceOneServerPerSuite
 import play.api.http.HeaderNames
-import play.api.http.Status.OK
+import play.api.http.Status._
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.libs.json.Json
 import play.api.libs.ws.{BodyWritable, WSClient, WSResponse}
@@ -171,8 +171,8 @@ trait IntegrationTest extends AnyWordSpec
     sessionId, "Life Insurance", Some("123"), Some(0), Some(""), Some(true), Some(0), Some(0), Some(true), Some(123.11), Some(true), Some(123.11)
   )
 
-  val gainsPriorDataModel: GainsPriorDataModel =
-    GainsPriorDataModel("submittedOn", lifeInsurance = Some(Seq(LifeInsuranceModel(Some("abc123"), Some("event"), BigDecimal(123.45), Some(true), Some(5), Some(10)))))
+  val gainsPriorDataModel: Option[GainsPriorDataModel] =
+    Some(GainsPriorDataModel("submittedOn", lifeInsurance = Some(Seq(LifeInsuranceModel(Some("abc123"), Some("event"), BigDecimal(123.45), Some(true), Some(5), Some(10)))), None, None, None, None))
   val gainsUserDataRepository: GainsUserDataRepository = app.injector.instanceOf[GainsUserDataRepository]
   val getGainsDataConnector: GetGainsConnector = app.injector.instanceOf[GetGainsConnector]
   val gainsSessionService: GainsSessionService = new GainsSessionService(gainsUserDataRepository, getGainsDataConnector)
@@ -180,9 +180,11 @@ trait IntegrationTest extends AnyWordSpec
   def populateSessionData(): Boolean =
     await(gainsSessionService.createSessionData(AllGainsSessionModel(Seq(PolicyCyaModel(sessionId, "")), gateway = Some(true)), taxYear)(false)(true)(AuthorisationRequestBuilder.anAuthorisationRequest, ec))
 
-  def populateEmptySessionData(): Boolean =
+  def populateOnlyGatewayData(): Boolean =
     await(gainsSessionService.createSessionData(AllGainsSessionModel(Seq[PolicyCyaModel]().empty, gateway = Some(true)), taxYear)(false)(true)(AuthorisationRequestBuilder.anAuthorisationRequest, ec))
 
+  def populateSessionDataWithEmptyGateway(): Boolean =
+    await(gainsSessionService.createSessionData(AllGainsSessionModel(Seq(), gateway = None), taxYear)(false)(true)(AuthorisationRequestBuilder.anAuthorisationRequest, ec))
 
   def populateSessionDataWithFalseGateway(): Boolean =
     await(gainsSessionService.createSessionData(AllGainsSessionModel(Seq(), gateway = Some(false)), taxYear)(false)(true)(AuthorisationRequestBuilder.anAuthorisationRequest, ec))
@@ -192,13 +194,16 @@ trait IntegrationTest extends AnyWordSpec
 
   def clearSession(): Boolean = await(gainsUserDataRepository.clear(taxYear))
 
-  def userDataStub(userData: GainsPriorDataModel, nino: String, taxYear: Int): StubMapping = {
+  def userDataStub(userData: Option[GainsPriorDataModel], nino: String, taxYear: Int): StubMapping = {
     stubGetWithHeadersCheck(
       s"/income-tax-additional-information/income-tax/insurance-policies/income/$nino/$taxYear", OK,
       Json.toJson(userData).toString(), "X-Session-ID" -> sessionId, "mtditid" -> mtditid)
   }
 
   def emptyUserDataStub(nino: String = nino, taxYear: Int = taxYear): StubMapping = {
-    userDataStub(GainsPriorDataModel(""), nino, taxYear)
+    stubGetWithHeadersCheck(
+      s"/income-tax-additional-information/income-tax/insurance-policies/income/$nino/$taxYear", NOT_FOUND,
+      "", "X-Session-ID" -> sessionId, "mtditid" -> mtditid)
   }
+
 }

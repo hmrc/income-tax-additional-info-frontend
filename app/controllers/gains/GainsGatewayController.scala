@@ -60,7 +60,7 @@ class GainsGatewayController @Inject()(authorisedAction: AuthorisedAction,
             }
           case None =>
             gainsSessionService.createSessionData(AllGainsSessionModel(Seq.empty), taxYear)(errorHandler.internalServerError()) {
-              Redirect(controllers.gains.routes.GainsGatewayController.show(taxYear))
+              Ok(view(taxYear, form(request.user.isAgent)))
             }
         }
 

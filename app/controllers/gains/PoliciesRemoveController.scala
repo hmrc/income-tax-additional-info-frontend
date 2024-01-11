@@ -22,6 +22,7 @@ import config.{AppConfig, ErrorHandler}
 import models.AllGainsSessionModel
 import models.gains.prior.GainsPriorDataModel
 import models.gains.{GainsSubmissionModel, PolicyCyaModel}
+import models.requests.AuthorisationRequest
 import play.api.i18n.I18nSupport
 import play.api.mvc._
 import services.{DeleteGainsService, GainsSessionService, GainsSubmissionService}
@@ -64,33 +65,31 @@ class PoliciesRemoveController @Inject()(authorisedAction: AuthorisedAction,
       (cya, prior) match {
         case (Some(cya), _) =>
           val newData = AllGainsSessionModel(cya.allGains.filterNot(_.sessionId == sessionId), cya.gateway)
-          gainsSessionService.updateSessionData(newData, taxYear)(errorHandler.internalServerError()) {
-            if (newData.allGains.isEmpty) {
-              deleteGainsService.deleteGainsData(request.user.nino, taxYear, request.user.mtditid).flatMap {
-                case Left(value) => Future.successful(errorHandler.internalServerError())
-                case Right(value) =>
-                  auditSubmission(None, prior, request.user.nino, request.user.mtditid, request.user.affinityGroup, taxYear)
-                  gainsSessionService.deleteSessionData(cya, taxYear)(Future.successful(errorHandler.internalServerError()))(
-                    Future.successful(Redirect(controllers.gains.routes.GainsSummaryController.show(taxYear)))
-                  )
-              }
-            } else {
-              gainsSubmissionService.submitGains(Some(newData.toSubmissionModel), request.user.nino, request.user.mtditid, taxYear).flatMap {
-                case Left(value) => Future.successful(Future.successful(errorHandler.internalServerError()))
-                case Right(value) =>
-                  auditSubmission(Some(newData.toSubmissionModel), prior, request.user.nino, request.user.mtditid, request.user.affinityGroup, taxYear)
-                  gainsSessionService.deleteSessionData(cya, taxYear)(Future.successful(errorHandler.internalServerError()))(
-                    Future.successful(Redirect(controllers.gains.routes.GainsSummaryController.show(taxYear)))
-                  )
-              }
+          if (newData.allGains.isEmpty) {
+            deleteGainsService.deleteGainsData(request.user.nino, taxYear, request.user.mtditid).flatMap {
+              case Left(_) => Future.successful(errorHandler.internalServerError())
+              case Right(_) => auditAndDeleteSessionData(taxYear, prior, cya)
+            }
+          } else {
+            gainsSubmissionService.submitGains(Some(newData.toSubmissionModel), request.user.nino, request.user.mtditid, taxYear).flatMap {
+              case Left(_) => Future.successful(errorHandler.internalServerError())
+              case Right(_) => auditAndDeleteSessionData(taxYear, prior, cya)
             }
           }
+
         case _ => Future.successful(Redirect(controllers.gains.routes.GainsSummaryController.show(taxYear)))
       }
     }.flatten
   }
 
-
+  private def auditAndDeleteSessionData(taxYear: Int, prior: Option[GainsPriorDataModel],
+                                        cya: AllGainsSessionModel)
+                                       (implicit hc: HeaderCarrier, request: AuthorisationRequest[AnyContent]) = {
+    auditSubmission(None, prior, request.user.nino, request.user.mtditid, request.user.affinityGroup, taxYear)
+    gainsSessionService.deleteSessionData(cya, taxYear)(errorHandler.internalServerError()) {
+      Redirect(controllers.gains.routes.GainsSummaryController.show(taxYear))
+    }
+  }
   private def auditSubmission(body: Option[GainsSubmissionModel], prior: Option[GainsPriorDataModel],
                               nino: String, mtditid: String, affinityGroup: String, taxYear: Int)
                              (implicit hc: HeaderCarrier): Future[AuditResult] = {

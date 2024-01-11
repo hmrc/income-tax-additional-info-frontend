@@ -27,7 +27,7 @@ class GainsSummaryControllerISpec extends IntegrationTest {
   }
 
   ".show" should {
-    "render the summary page" in {
+    "render the summary page individual" in {
       lazy val result: WSResponse = {
         clearSession()
         populateSessionData()
@@ -43,18 +43,18 @@ class GainsSummaryControllerISpec extends IntegrationTest {
       lazy val result: WSResponse = {
         clearSession()
         populateSessionData()
-        authoriseAgentOrIndividual(isAgent = false)
+        authoriseAgentOrIndividual(isAgent = true)
         urlGet(url(taxYear), headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)))
       }
 
       result.status shouldBe OK
     }
 
-    "render the empty summary page when no gains are found" in {
+    "render the summary page when no gains are found" in {
       lazy val result: WSResponse = {
         clearSession()
-        populateEmptySessionData()
         authoriseAgentOrIndividual(isAgent = false)
+        userDataStub(gainsPriorDataModel, nino, taxYear)
         urlGet(url(taxYear), headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)))
       }
 
@@ -64,10 +64,8 @@ class GainsSummaryControllerISpec extends IntegrationTest {
     "redirect to overview page when there is no prior or cya data" in {
       lazy val result: WSResponse = {
         clearSession()
-        stubGetWithHeadersCheck(
-          s"/income-tax-additional-information/income-tax/insurance-policies/income/$nino/$taxYear", NOT_FOUND,
-          "", "X-Session-ID" -> sessionId, "mtditid" -> mtditid)
         authoriseAgentOrIndividual(isAgent = false)
+        emptyUserDataStub()
         urlGet(url(taxYear), headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)))
       }
 

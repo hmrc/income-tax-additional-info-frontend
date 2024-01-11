@@ -21,6 +21,7 @@ import audit.{AuditModel, AuditService, CreateOrAmendGainsAuditDetail}
 import config.{AppConfig, ErrorHandler}
 import models.gains.prior.GainsPriorDataModel
 import models.gains.{DecodedGainsSubmissionPayload, GainsSubmissionModel, PolicyCyaModel}
+import models.requests.AuthorisationRequest
 import models.{AllGainsSessionModel, User}
 import play.api.i18n.I18nSupport
 import play.api.mvc._
@@ -80,28 +81,27 @@ class PolicySummaryController @Inject()(authorisedAction: AuthorisedAction,
             cya.gateway match {
               case Some(false) =>
                 excludeJourneyService.excludeJourney("gains", taxYear, request.user.nino).flatMap {
-                  case Right(_) =>
-                    gainsSubmissionService.submitGains(Some(GainsSubmissionModel()), request.user.nino, request.user.mtditid, taxYear)
-                    nrsSubmission(Some(GainsSubmissionModel()), prior, user.nino, user.mtditid)
-                    auditSubmission(Some(GainsSubmissionModel()), prior, user.nino, user.mtditid, user.affinityGroup, taxYear)
-                    gainsSessionService.deleteSessionData(cya, taxYear)(errorHandler.internalServerError())(
-                      Redirect(appConfig.incomeTaxSubmissionOverviewUrl(taxYear))
-                    )
-                  case Left(_) =>
-                    Future.successful(errorHandler.internalServerError())
+                  case Right(_) => submitGainsAndAudit(Some(GainsSubmissionModel()), taxYear, user, prior, cya,
+                    Redirect(appConfig.incomeTaxSubmissionOverviewUrl(taxYear)))
+                  case Left(_) => Future.successful(errorHandler.internalServerError())
                 }
               case _ =>
-                gainsSubmissionService.submitGains(Some(cya.toSubmissionModel), request.user.nino, request.user.mtditid, taxYear)
-                nrsSubmission(Some(cya.toSubmissionModel), prior, user.nino, user.mtditid)
-                auditSubmission(Some(cya.toSubmissionModel), prior, user.nino, user.mtditid, user.affinityGroup, taxYear)
-                gainsSessionService.deleteSessionData(cya, taxYear)(errorHandler.internalServerError())(
-                  Redirect(controllers.gains.routes.GainsSummaryController.show(taxYear))
-                )
+                submitGainsAndAudit(Some(GainsSubmissionModel()), taxYear, user, prior, cya,
+                  Redirect(controllers.gains.routes.GainsSummaryController.show(taxYear)))
             }
           }
           case (_, _) => Future.successful(errorHandler.internalServerError())
         }
     }.flatten
+  }
+
+  private def submitGainsAndAudit(body: Option[GainsSubmissionModel], taxYear: Int, user: User,
+                                  prior: Option[GainsPriorDataModel], cya: AllGainsSessionModel, successResult: Result)
+                                 (implicit hc: HeaderCarrier, request: AuthorisationRequest[AnyContent])= {
+    gainsSubmissionService.submitGains(body, request.user.nino, request.user.mtditid, taxYear)
+    nrsSubmission(body, prior, user.nino, user.mtditid)
+    auditSubmission(body, prior, user.nino, user.mtditid, user.affinityGroup, taxYear)
+    gainsSessionService.deleteSessionData(cya, taxYear)(errorHandler.internalServerError())(successResult)
   }
 
   private def nrsSubmission(body: Option[GainsSubmissionModel], prior: Option[GainsPriorDataModel],

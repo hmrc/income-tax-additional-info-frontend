@@ -18,7 +18,6 @@ package connectors
 
 import connectors.errors.{ApiError, SingleErrorBody}
 import connectors.httpParsers.GetGainsHttpParser.GetGainsResponse
-import models.gains.prior.GainsPriorDataModel
 import play.api.http.Status._
 import play.api.libs.json.Json
 import play.api.test.Helpers.OK
@@ -43,7 +42,7 @@ class GetGainsConnectorISpec extends IntegrationTest with ConnectorIntegrationTe
           "{}", "X-Session-ID" -> sessionId, "mtditid" -> mtditid)
 
         val result: GetGainsResponse = Await.result(connector.getUserData(taxYear), Duration.Inf)
-        result shouldBe Right(GainsPriorDataModel(""))
+        result shouldBe Right(None)
       }
 
       "request returns a 200" in {

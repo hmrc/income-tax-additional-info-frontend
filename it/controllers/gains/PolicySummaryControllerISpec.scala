@@ -16,7 +16,6 @@
 
 package controllers.gains
 
-import models.gains.LifeInsuranceModel
 import play.api.http.HeaderNames
 import play.api.http.Status.{NO_CONTENT, OK, SEE_OTHER}
 import play.api.libs.ws.WSResponse
@@ -72,7 +71,7 @@ class PolicySummaryControllerISpec extends IntegrationTest {
       lazy val result: WSResponse = {
         clearSession()
         authoriseAgentOrIndividual(isAgent = true)
-        userDataStub(gainsPriorDataModel.copy(lifeInsurance = Some(Seq(LifeInsuranceModel(gainAmount = BigDecimal(123.45))))), nino, taxYear)
+        userDataStub(gainsPriorDataModel, nino, taxYear)
         urlGet(url(taxYear), headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)))
       }
 
@@ -84,7 +83,7 @@ class PolicySummaryControllerISpec extends IntegrationTest {
         clearSession()
         populateSessionData()
         authoriseAgentOrIndividual(isAgent = true)
-        userDataStub(gainsPriorDataModel.copy(lifeInsurance = Some(Seq(LifeInsuranceModel(gainAmount = BigDecimal(123.45))))), nino, taxYear)
+        userDataStub(gainsPriorDataModel, nino, taxYear)
         urlGet(url(taxYear), headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)))
       }
 
