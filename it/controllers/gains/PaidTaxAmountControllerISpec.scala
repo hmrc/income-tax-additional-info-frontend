@@ -119,6 +119,16 @@ class PaidTaxAmountControllerISpec extends IntegrationTest {
 
       result.status shouldBe BAD_REQUEST
     }
+
+    "Redirect to overview page when no cya" in {
+      lazy val result: WSResponse = {
+        clearSession()
+        authoriseAgentOrIndividual(isAgent = false)
+        urlPost(url(taxYear), headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)), body = Map(AmountForm.amount -> "100"))
+      }
+
+      result.status shouldBe SEE_OTHER
+    }
   }
 
 }
