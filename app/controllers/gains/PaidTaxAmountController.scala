@@ -79,7 +79,7 @@ class PaidTaxAmountController @Inject()(authorisedAction: AuthorisedAction,
               gainsSessionService.updateSessionData(AllGainsSessionModel(updated, cya.gateway), taxYear)(errorHandler.internalServerError()) {
                   Redirect(controllers.gains.routes.PolicySummaryController.show(taxYear, sessionId))
               }
-            case (_, _) => Future.successful(Redirect(appConfig.incomeTaxSubmissionOverviewUrl(taxYear)))
+            case (_, _) => Future.successful(Redirect(controllers.gains.routes.PolicySummaryController.show(taxYear, sessionId)))
           }
         }.flatten
     })

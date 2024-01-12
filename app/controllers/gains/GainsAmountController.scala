@@ -83,7 +83,7 @@ class GainsAmountController @Inject()(authorisedAction: AuthorisedAction,
                   Redirect(controllers.gains.routes.PolicyEventController.show(taxYear, sessionId))
                 }
               }
-            case (_, _) => Future.successful(Redirect(appConfig.incomeTaxSubmissionOverviewUrl(taxYear)))
+            case (_, _) => Future.successful(Redirect(controllers.gains.routes.PolicySummaryController.show(taxYear, sessionId)))
           }
         }.flatten
     })

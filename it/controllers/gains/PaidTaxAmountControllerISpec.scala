@@ -120,7 +120,7 @@ class PaidTaxAmountControllerISpec extends IntegrationTest {
       result.status shouldBe BAD_REQUEST
     }
 
-    "Redirect to overview page when no cya" in {
+    "Redirect to policy summary page when no session data exists" in {
       lazy val result: WSResponse = {
         clearSession()
         authoriseAgentOrIndividual(isAgent = false)
