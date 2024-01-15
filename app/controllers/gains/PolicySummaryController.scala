@@ -20,9 +20,10 @@ import actions.AuthorisedAction
 import audit.{AuditModel, AuditService, CreateOrAmendGainsAuditDetail}
 import config.{AppConfig, ErrorHandler}
 import models.gains.prior.GainsPriorDataModel
-import models.gains.{DecodedGainsSubmissionPayload, GainsSubmissionModel, PolicyCyaModel}
+import models.gains.{DecodedGainsSubmissionPayload, GainsSubmissionModel}
 import models.requests.AuthorisationRequest
 import models.{AllGainsSessionModel, User}
+import play.api.Logging
 import play.api.i18n.I18nSupport
 import play.api.mvc._
 import services.{ExcludeJourneyService, GainsSessionService, GainsSubmissionService, NrsService}
@@ -44,7 +45,7 @@ class PolicySummaryController @Inject()(authorisedAction: AuthorisedAction,
                                         auditService: AuditService,
                                         nrsService: NrsService)
                                        (implicit appConfig: AppConfig, mcc: MessagesControllerComponents, ec: ExecutionContext)
-  extends FrontendController(mcc) with I18nSupport {
+  extends FrontendController(mcc) with Logging with I18nSupport {
 
   def show(taxYear: Int, sessionId: String): Action[AnyContent] = authorisedAction.async { implicit request =>
     gainsSessionService.getAndHandle(taxYear)(Future.successful(errorHandler.internalServerError())) {
@@ -62,12 +63,8 @@ class PolicySummaryController @Inject()(authorisedAction: AuthorisedAction,
                 Ok(view(taxYear, cya.allGains, sessionId))
               }
           case (_, _) =>
-              gainsSessionService.createSessionData(
-                AllGainsSessionModel(Seq(PolicyCyaModel(sessionId, "")),
-                  cya.getOrElse(AllGainsSessionModel(Seq(PolicyCyaModel(sessionId, "")), gateway = Some(true))).gateway),
-                  taxYear)(errorHandler.internalServerError()) {
-                Ok(view(taxYear, cya.getOrElse(AllGainsSessionModel(Seq(PolicyCyaModel(sessionId, "")), gateway = Some(true))).allGains, sessionId))
-              }
+            logger.info("[PolicySummaryController][show] No CYA data in session. Redirecting to the overview page.")
+            Future.successful(Redirect(appConfig.incomeTaxSubmissionOverviewUrl(taxYear)))
         }
     }.flatten
   }

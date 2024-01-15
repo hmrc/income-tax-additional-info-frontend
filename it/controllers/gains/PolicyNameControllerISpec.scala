@@ -16,7 +16,7 @@
 
 package controllers.gains
 
-import forms.gains.{InputFieldForm, InputYearForm}
+import forms.gains.InputFieldForm
 import models.gains.LifeInsuranceModel
 import models.gains.prior.GainsPriorDataModel
 import play.api.http.HeaderNames

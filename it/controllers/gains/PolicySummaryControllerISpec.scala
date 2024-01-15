@@ -67,17 +67,6 @@ class PolicySummaryControllerISpec extends IntegrationTest {
       result.body.contains("Gain on a UK policy or contract")
     }
 
-    "render the page with prior data" in {
-      lazy val result: WSResponse = {
-        clearSession()
-        authoriseAgentOrIndividual(isAgent = true)
-        userDataStub(gainsPriorDataModel, nino, taxYear)
-        urlGet(url(taxYear), headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)))
-      }
-
-      result.status shouldBe OK
-    }
-
     "render the page with prior and cya data" in {
       lazy val result: WSResponse = {
         clearSession()
@@ -88,6 +77,17 @@ class PolicySummaryControllerISpec extends IntegrationTest {
       }
 
       result.status shouldBe OK
+    }
+
+    "render the overview page when no prior data and session data" in {
+      lazy val result: WSResponse = {
+        clearSession()
+        authoriseAgentOrIndividual(isAgent = true)
+        emptyUserDataStub()
+        urlGet(url(taxYear), headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)))
+      }
+
+      result.status shouldBe SEE_OTHER
     }
   }
 
