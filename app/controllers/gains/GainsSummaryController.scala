@@ -54,7 +54,7 @@ class GainsSummaryController @Inject()(authorisedAction: AuthorisedAction,
               Ok(view(taxYear, priorData))
             )
           case _ =>
-            Future.successful(Redirect(appConfig.incomeTaxSubmissionOverviewUrl(taxYear)))
+            Future.successful(Ok(view(taxYear, Seq[PolicyCyaModel]())))
         }
     }.flatten
   }

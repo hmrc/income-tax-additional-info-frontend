@@ -61,7 +61,7 @@ class GainsSummaryControllerISpec extends IntegrationTest {
       result.status shouldBe OK
     }
 
-    "redirect to overview page when there is no prior or cya data" in {
+    "render summary page when there is no prior or cya data" in {
       lazy val result: WSResponse = {
         clearSession()
         authoriseAgentOrIndividual(isAgent = false)
@@ -69,7 +69,7 @@ class GainsSummaryControllerISpec extends IntegrationTest {
         urlGet(url(taxYear), headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)))
       }
 
-      result.status shouldBe SEE_OTHER
+      result.status shouldBe OK
     }
 
   }
