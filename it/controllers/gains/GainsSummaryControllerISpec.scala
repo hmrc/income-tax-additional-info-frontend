@@ -44,6 +44,18 @@ class GainsSummaryControllerISpec extends IntegrationTest {
         clearSession()
         populateSessionData()
         authoriseAgentOrIndividual(isAgent = true)
+        userDataStub(gainsPriorDataModel, nino, taxYear)
+        urlGet(url(taxYear), headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)))
+      }
+
+      result.status shouldBe OK
+    }
+
+    "render the summary page when session data exists and no prior data" in {
+      lazy val result: WSResponse = {
+        clearSession()
+        populateSessionData()
+        authoriseAgentOrIndividual(isAgent = false)
         urlGet(url(taxYear), headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)))
       }
 
