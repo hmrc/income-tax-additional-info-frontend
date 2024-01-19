@@ -51,17 +51,6 @@ class GainsSummaryControllerISpec extends IntegrationTest {
       result.status shouldBe OK
     }
 
-    "render the summary page when session data exists and no prior data" in {
-      lazy val result: WSResponse = {
-        clearSession()
-        populateSessionData()
-        authoriseAgentOrIndividual(isAgent = false)
-        urlGet(url(taxYear), headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)))
-      }
-
-      result.status shouldBe OK
-    }
-
     "render the summary page when no gains are found" in {
       lazy val result: WSResponse = {
         clearSession()

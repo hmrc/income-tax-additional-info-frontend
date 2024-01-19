@@ -98,8 +98,7 @@ class PolicySummaryController @Inject()(authorisedAction: AuthorisedAction,
     gainsSubmissionService.submitGains(body, request.user.nino, request.user.mtditid, taxYear)
     nrsSubmission(body, prior, user.nino, user.mtditid)
     auditSubmission(body, prior, user.nino, user.mtditid, user.affinityGroup, taxYear)
-    Future.successful(successResult)
-    /*gainsSessionService.deleteSessionData(cya, taxYear)(errorHandler.internalServerError())(successResult)*/
+    gainsSessionService.deleteSessionData(cya, taxYear)(errorHandler.internalServerError())(successResult)
   }
 
   private def nrsSubmission(body: Option[GainsSubmissionModel], prior: Option[GainsPriorDataModel],

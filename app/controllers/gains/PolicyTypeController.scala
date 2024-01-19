@@ -46,20 +46,26 @@ class PolicyTypeController @Inject()(authorisedAction: AuthorisedAction,
     gainsSessionService.getSessionData(taxYear).flatMap {
       case Left(_) => Future.successful(errorHandler.internalServerError())
       case Right(cya) =>
-        Future.successful(cya.fold(Redirect(appConfig.incomeTaxSubmissionOverviewUrl(taxYear))) {
-          cyaData =>
-            cyaData.gains.fold(Ok(view(taxYear, form(request.user.isAgent), sessionId))) {
-              data =>
-                data.allGains.filter(_.sessionId == sessionId) match {
-                  case value => if (value.nonEmpty) {
-                    Ok(view(taxYear, form(request.user.isAgent).fill(value.head.policyType), sessionId))
-                  }
-                  else {
-                    Ok(view(taxYear, form(request.user.isAgent), sessionId))
-                  }
+        cya match {
+          case Some(cyaData) =>
+                cyaData.gains.fold(Future.successful(Ok(view(taxYear, form(request.user.isAgent), sessionId)))) {
+                  data =>
+                    data.allGains.filter(_.sessionId == sessionId) match {
+                      case value => if (value.nonEmpty) {
+                        Future.successful(Ok(view(taxYear, form(request.user.isAgent).fill(value.head.policyType), sessionId)))
+                      }
+                      else {
+                        Future.successful(Ok(view(taxYear, form(request.user.isAgent), sessionId)))
+                      }
+                    }
                 }
+          case None =>
+            gainsSessionService.createSessionData(AllGainsSessionModel(Seq.empty), taxYear)(errorHandler.internalServerError()) {
+              Ok(view(taxYear, form(request.user.isAgent), sessionId))
             }
-        })
+
+        }
+
     }
   }
 

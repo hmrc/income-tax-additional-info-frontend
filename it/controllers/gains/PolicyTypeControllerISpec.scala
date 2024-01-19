@@ -70,14 +70,14 @@ class PolicyTypeControllerISpec extends IntegrationTest {
       result.body.contains("Life Insurance")
     }
 
-    "redirect to income tax submission overview page if no session data is found" in {
+    "render the policy type page if no session data is found" in {
       clearSession()
       lazy val result: WSResponse = {
         authoriseAgentOrIndividual(isAgent = false)
         urlGet(url(taxYear), headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)))
       }
 
-      result.status shouldBe SEE_OTHER
+      result.status shouldBe OK
     }
   }
 

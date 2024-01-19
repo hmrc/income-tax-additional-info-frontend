@@ -86,10 +86,9 @@ class PoliciesRemoveController @Inject()(authorisedAction: AuthorisedAction,
                                         cya: AllGainsSessionModel)
                                        (implicit hc: HeaderCarrier, request: AuthorisationRequest[AnyContent]) = {
     auditSubmission(None, prior, request.user.nino, request.user.mtditid, request.user.affinityGroup, taxYear)
-    Future.successful(Redirect(controllers.gains.routes.GainsSummaryController.show(taxYear)))
-    /*gainsSessionService.deleteSessionData(cya, taxYear)(errorHandler.internalServerError()) {
+    gainsSessionService.deleteSessionData(cya, taxYear)(errorHandler.internalServerError()) {
       Redirect(controllers.gains.routes.GainsSummaryController.show(taxYear))
-    }*/
+    }
   }
   private def auditSubmission(body: Option[GainsSubmissionModel], prior: Option[GainsPriorDataModel],
                               nino: String, mtditid: String, affinityGroup: String, taxYear: Int)
