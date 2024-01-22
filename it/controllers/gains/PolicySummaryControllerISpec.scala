@@ -89,6 +89,18 @@ class PolicySummaryControllerISpec extends IntegrationTest {
 
       result.status shouldBe SEE_OTHER
     }
+
+    "render the overview page when user clicks back and session id not matches" in {
+      lazy val result: WSResponse = {
+        clearSession()
+        populateSessionDataWithRandomSession()
+        authoriseAgentOrIndividual(isAgent = true)
+        userDataStub(gainsPriorDataModel, nino, taxYear)
+        urlGet(url(taxYear), headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)))
+      }
+
+      result.status shouldBe SEE_OTHER
+    }
   }
 
   ".submit" should {

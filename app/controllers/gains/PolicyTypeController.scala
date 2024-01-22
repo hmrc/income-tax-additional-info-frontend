@@ -60,7 +60,7 @@ class PolicyTypeController @Inject()(authorisedAction: AuthorisedAction,
                     }
                 }
           case None =>
-            gainsSessionService.createSessionData(AllGainsSessionModel(Seq.empty), taxYear)(errorHandler.internalServerError()) {
+            gainsSessionService.createSessionData(AllGainsSessionModel(Seq.empty, Some(true)), taxYear)(errorHandler.internalServerError()) {
               Ok(view(taxYear, form(request.user.isAgent), sessionId))
             }
 

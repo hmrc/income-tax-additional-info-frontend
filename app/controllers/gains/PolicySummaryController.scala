@@ -53,11 +53,16 @@ class PolicySummaryController @Inject()(authorisedAction: AuthorisedAction,
         (cya, prior) match {
           case (Some(cya), Some(prior)) =>
             val filteredPrior = prior.toPolicyCya.filter(el => cya.allGains.contains(el))
+            if(cya.allGains.map(_.sessionId).contains(sessionId))
+            {
               gainsSessionService.updateSessionData(
                 AllGainsSessionModel(cya.allGains ++ filteredPrior, cya.gateway), taxYear)(errorHandler.internalServerError()) {
                 Ok(view(taxYear, cya.allGains ++ filteredPrior, sessionId))
               }
-          case (Some(cya), _) =>
+            } else {
+              Future.successful(Redirect(appConfig.incomeTaxSubmissionOverviewUrl(taxYear)))
+            }
+          case (Some(cya), None) =>
               gainsSessionService.updateSessionData(
                 AllGainsSessionModel(cya.allGains, cya.gateway), taxYear)(errorHandler.internalServerError()) {
                 Ok(view(taxYear, cya.allGains, sessionId))

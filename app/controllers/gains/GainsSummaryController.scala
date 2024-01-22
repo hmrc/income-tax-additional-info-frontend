@@ -45,7 +45,7 @@ class GainsSummaryController @Inject()(authorisedAction: AuthorisedAction,
             val allGainsPolicies: Seq[PolicyCyaModel] = (cya.allGains ++ prior.toPolicyCya).distinctBy(_.policyNumber)
             gainsSessionService.updateSessionData(AllGainsSessionModel(allGainsPolicies, cya.gateway), taxYear)(
               errorHandler.internalServerError())(Ok(view(taxYear, allGainsPolicies)))
-          case (_, Some(prior)) =>
+          case (None, Some(prior)) =>
             val priorData = prior.toPolicyCya
             gainsSessionService.createSessionData(AllGainsSessionModel(priorData, gateway = Some(true)), taxYear)(
               errorHandler.internalServerError())(
