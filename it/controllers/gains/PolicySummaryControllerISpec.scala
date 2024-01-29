@@ -16,7 +16,6 @@
 
 package controllers.gains
 
-import models.gains.LifeInsuranceModel
 import play.api.http.HeaderNames
 import play.api.http.Status.{NO_CONTENT, OK, SEE_OTHER}
 import play.api.libs.ws.WSResponse
@@ -68,27 +67,39 @@ class PolicySummaryControllerISpec extends IntegrationTest {
       result.body.contains("Gain on a UK policy or contract")
     }
 
-    "render the page with prior data" in {
+    "render the page with prior and cya data" in {
       lazy val result: WSResponse = {
         clearSession()
+        populateSessionData()
         authoriseAgentOrIndividual(isAgent = true)
-        userDataStub(gainsPriorDataModel.copy(lifeInsurance = Some(Seq(LifeInsuranceModel(gainAmount = BigDecimal(123.45))))), nino, taxYear)
+        userDataStub(gainsPriorDataModel, nino, taxYear)
         urlGet(url(taxYear), headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)))
       }
 
       result.status shouldBe OK
     }
 
-    "render the page with prior and cya data" in {
+    "render the overview page when no prior data and session data" in {
       lazy val result: WSResponse = {
         clearSession()
-        populateSessionData()
         authoriseAgentOrIndividual(isAgent = true)
-        userDataStub(gainsPriorDataModel.copy(lifeInsurance = Some(Seq(LifeInsuranceModel(gainAmount = BigDecimal(123.45))))), nino, taxYear)
+        emptyUserDataStub()
         urlGet(url(taxYear), headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)))
       }
 
-      result.status shouldBe OK
+      result.status shouldBe SEE_OTHER
+    }
+
+    "render the overview page when user clicks back and session id not matches" in {
+      lazy val result: WSResponse = {
+        clearSession()
+        populateSessionDataWithRandomSession()
+        authoriseAgentOrIndividual(isAgent = true)
+        userDataStub(gainsPriorDataModel, nino, taxYear)
+        urlGet(url(taxYear), headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)))
+      }
+
+      result.status shouldBe SEE_OTHER
     }
   }
 

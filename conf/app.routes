@@ -29,8 +29,6 @@ GET        /error/you-need-agent-services-account           controllers.errors.Y
 GET         /:taxYear/gains/policy-name/:sessionId                     controllers.gains.PolicyNameController.show(taxYear: Int, sessionId: String)
 POST        /:taxYear/gains/policy-name/:sessionId                     controllers.gains.PolicyNameController.submit(taxYear: Int, sessionId: String)
 
-GET         /:taxYear/gains/gains-gateway-change                       controllers.gains.GainsGatewayController.change(taxYear: Int)
-
 GET         /:taxYear/gains/gains-gateway                              controllers.gains.GainsGatewayController.show(taxYear: Int)
 POST        /:taxYear/gains/gains-gateway                              controllers.gains.GainsGatewayController.submit(taxYear: Int)
 

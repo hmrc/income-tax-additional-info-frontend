@@ -20,8 +20,10 @@ import actions.AuthorisedAction
 import audit.{AuditModel, AuditService, CreateOrAmendGainsAuditDetail}
 import config.{AppConfig, ErrorHandler}
 import models.gains.prior.GainsPriorDataModel
-import models.gains.{DecodedGainsSubmissionPayload, GainsSubmissionModel, PolicyCyaModel}
+import models.gains.{DecodedGainsSubmissionPayload, GainsSubmissionModel}
+import models.requests.AuthorisationRequest
 import models.{AllGainsSessionModel, User}
+import play.api.Logging
 import play.api.i18n.I18nSupport
 import play.api.mvc._
 import services.{ExcludeJourneyService, GainsSessionService, GainsSubmissionService, NrsService}
@@ -31,8 +33,7 @@ import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 import views.html.pages.gains.PolicySummaryPageView
 
 import javax.inject.{Inject, Singleton}
-import scala.concurrent.duration.Duration
-import scala.concurrent.{Await, ExecutionContext, Future}
+import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class PolicySummaryController @Inject()(authorisedAction: AuthorisedAction,
@@ -44,77 +45,82 @@ class PolicySummaryController @Inject()(authorisedAction: AuthorisedAction,
                                         auditService: AuditService,
                                         nrsService: NrsService)
                                        (implicit appConfig: AppConfig, mcc: MessagesControllerComponents, ec: ExecutionContext)
-  extends FrontendController(mcc) with I18nSupport {
+  extends FrontendController(mcc) with Logging with I18nSupport {
 
   def show(taxYear: Int, sessionId: String): Action[AnyContent] = authorisedAction.async { implicit request =>
-    gainsSessionService.getAndHandle(taxYear)(errorHandler.internalServerError()) {
+    gainsSessionService.getAndHandle(taxYear)(Future.successful(errorHandler.internalServerError())) {
       (cya, prior) =>
         (cya, prior) match {
           case (Some(cya), Some(prior)) =>
             val filteredPrior = prior.toPolicyCya.filter(el => cya.allGains.contains(el))
-            Await.result(
+            if(cya.allGains.map(_.sessionId).contains(sessionId))
+            {
               gainsSessionService.updateSessionData(
                 AllGainsSessionModel(cya.allGains ++ filteredPrior, cya.gateway), taxYear)(errorHandler.internalServerError()) {
                 Ok(view(taxYear, cya.allGains ++ filteredPrior, sessionId))
-              }, Duration.Inf
-            )
-          case (Some(cya), _) =>
-            Await.result(
+              }
+            } else {
+              Future.successful(Redirect(appConfig.incomeTaxSubmissionOverviewUrl(taxYear)))
+            }
+          case (Some(cya), None) =>
               gainsSessionService.updateSessionData(
                 AllGainsSessionModel(cya.allGains, cya.gateway), taxYear)(errorHandler.internalServerError()) {
                 Ok(view(taxYear, cya.allGains, sessionId))
-              }, Duration.Inf
-            )
+              }
           case (_, _) =>
-            Await.result(
-              gainsSessionService.createSessionData(
-                AllGainsSessionModel(Seq(PolicyCyaModel(sessionId, "")),
-                  cya.getOrElse(AllGainsSessionModel(Seq(PolicyCyaModel(sessionId, "")), gateway = true)).gateway),
-                  taxYear)(errorHandler.internalServerError()) {
-                Ok(view(taxYear, cya.getOrElse(AllGainsSessionModel(Seq(PolicyCyaModel(sessionId, "")), gateway = true)).allGains, sessionId))
-              }, Duration.Inf
-            )
+            logger.info("[PolicySummaryController][show] No CYA data in session. Redirecting to the overview page.")
+            Future.successful(Redirect(appConfig.incomeTaxSubmissionOverviewUrl(taxYear)))
         }
-    }
+    }.flatten
   }
 
   def submit(taxYear: Int): Action[AnyContent] = authorisedAction.async { implicit request =>
-    gainsSessionService.getAndHandle(taxYear)(errorHandler.internalServerError()) {
+    gainsSessionService.getAndHandle(taxYear)(Future.successful(errorHandler.internalServerError())) {
       implicit val user: User = request.user
       (cya, prior) =>
         (cya, prior) match {
-          case (Some(cya), _) => if (!cya.gateway) {
-            Await.result(excludeJourneyService.excludeJourney("gains", taxYear, request.user.nino).flatMap {
-              case Right(_) =>
-                gainsSubmissionService.submitGains(Some(GainsSubmissionModel()), request.user.nino, request.user.mtditid, taxYear)
-                nrsSubmission(Some(GainsSubmissionModel()), prior, user.nino, user.mtditid, user.affinityGroup, taxYear)
-                Future(Redirect(appConfig.incomeTaxSubmissionOverviewUrl(taxYear)))
-              case Left(_) =>
-                Future(errorHandler.internalServerError())
-            }, Duration.Inf)
-          } else {
-            gainsSubmissionService.submitGains(Some(cya.toSubmissionModel), request.user.nino, request.user.mtditid, taxYear)
-            nrsSubmission(Some(cya.toSubmissionModel), prior, user.nino, user.mtditid, user.affinityGroup, taxYear)
-            Redirect(controllers.gains.routes.GainsSummaryController.show(taxYear))
+          case (Some(cya), _) => {
+            cya.gateway match {
+              case Some(false) =>
+                excludeJourneyService.excludeJourney("gains", taxYear, request.user.nino).flatMap {
+                  case Right(_) => submitGainsAndAudit(Some(GainsSubmissionModel()), taxYear, user, prior, cya,
+                    Redirect(appConfig.incomeTaxSubmissionOverviewUrl(taxYear)))
+                  case Left(_) => Future.successful(errorHandler.internalServerError())
+                }
+              case _ =>
+                submitGainsAndAudit(Some(GainsSubmissionModel()), taxYear, user, prior, cya,
+                  Redirect(controllers.gains.routes.GainsSummaryController.show(taxYear)))
+            }
           }
-          case (_, _) => errorHandler.internalServerError()
+          case (_, _) => Future.successful(errorHandler.internalServerError())
         }
-    }
+    }.flatten
+  }
+
+  private def submitGainsAndAudit(body: Option[GainsSubmissionModel], taxYear: Int, user: User,
+                                  prior: Option[GainsPriorDataModel], cya: AllGainsSessionModel, successResult: Result)
+                                 (implicit hc: HeaderCarrier, request: AuthorisationRequest[AnyContent])= {
+    gainsSubmissionService.submitGains(body, request.user.nino, request.user.mtditid, taxYear)
+    nrsSubmission(body, prior, user.nino, user.mtditid)
+    auditSubmission(body, prior, user.nino, user.mtditid, user.affinityGroup, taxYear)
+    gainsSessionService.deleteSessionData(cya, taxYear)(errorHandler.internalServerError())(successResult)
   }
 
   private def nrsSubmission(body: Option[GainsSubmissionModel], prior: Option[GainsPriorDataModel],
-                            nino: String, mtditid: String, affinityGroup: String, taxYear: Int)
+                            nino: String, mtditid: String)
                            (implicit request: Request[_]): Unit = {
-    val model = CreateOrAmendGainsAuditDetail.createFromCyaData(body, prior.flatMap(result => if (result.submittedOn.nonEmpty) prior else None),
-      !prior.exists(_.submittedOn.isEmpty), nino, mtditid, affinityGroup.toLowerCase, taxYear)
-    auditSubmission(model)
+
     if (appConfig.nrsEnabled) {
       nrsService.submit(nino, new DecodedGainsSubmissionPayload(body, prior), mtditid)
     }
   }
 
-  private def auditSubmission(details: CreateOrAmendGainsAuditDetail)
+  private def auditSubmission(body: Option[GainsSubmissionModel], prior: Option[GainsPriorDataModel],
+                              nino: String, mtditid: String, affinityGroup: String, taxYear: Int)
                              (implicit hc: HeaderCarrier): Future[AuditResult] = {
+   val details: CreateOrAmendGainsAuditDetail = CreateOrAmendGainsAuditDetail.createFromCyaData(body,
+      prior.flatMap(result => if (result.submittedOn.nonEmpty) prior else None),
+      !prior.exists(_.submittedOn.isEmpty), nino, mtditid, affinityGroup.toLowerCase, taxYear)
     val event = AuditModel("CreateOrAmendGainsUpdate", "createOrAmendGainsUpdate", details)
     auditService.auditModel(event)
   }

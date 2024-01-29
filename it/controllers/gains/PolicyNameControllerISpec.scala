@@ -38,7 +38,7 @@ class PolicyNameControllerISpec extends IntegrationTest {
     "render the customer reference page" in {
       lazy val result: WSResponse = {
         authoriseAgentOrIndividual(isAgent = false)
-        userDataStub(GainsPriorDataModel("", Some(Seq(LifeInsuranceModel(customerReference = Some("abc123"), gainAmount = BigDecimal(123.45))))), nino, taxYear)
+        userDataStub(Some(GainsPriorDataModel("", Some(Seq(LifeInsuranceModel(customerReference = Some("abc123"), gainAmount = BigDecimal(123.45)))))), nino, taxYear)
         urlGet(url(taxYear), headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)))
       }
 
@@ -139,6 +139,16 @@ class PolicyNameControllerISpec extends IntegrationTest {
       }
 
       result.status shouldBe 500
+    }
+
+    "Redirect to policy summary page when no session data exists" in {
+      lazy val result: WSResponse = {
+        clearSession()
+        authoriseAgentOrIndividual(isAgent = false)
+        urlPost(url(taxYear), headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)), body = Map(InputFieldForm.value -> "mixedAlphaNumOnly1"))
+      }
+
+      result.status shouldBe SEE_OTHER
     }
   }
 }

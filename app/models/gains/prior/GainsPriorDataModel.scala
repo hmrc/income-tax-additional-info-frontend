@@ -37,9 +37,9 @@ case class GainsPriorDataModel(
       lifeInsurance <- lifeInsurance.map(_.map(_.toPolicyCya))
       capitalRedemption <- capitalRedemption.map(_.map(_.toPolicyCya))
       lifeAnnuity <- lifeAnnuity.map(_.map(_.toPolicyCya))
+      voidedIsa <- voidedIsa.map(_.map(_.toPolicyCya))
       foreign <- foreign.map(_.map(_.toPolicyCya))
-      voided <- voidedIsa.map(_.map(_.toPolicyCya))
-      allPolicies <- Some(lifeInsurance ++ capitalRedemption ++ lifeAnnuity ++ foreign ++ voided)
+      allPolicies <- Some(lifeInsurance ++ capitalRedemption ++ lifeAnnuity ++ voidedIsa ++ foreign)
     } yield {
       allPolicies
     }).getOrElse(Seq[PolicyCyaModel]())

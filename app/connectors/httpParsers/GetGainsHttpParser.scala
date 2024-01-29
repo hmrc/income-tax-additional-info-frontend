@@ -25,7 +25,7 @@ import utils.PagerDutyHelper.PagerDutyKeys._
 import utils.PagerDutyHelper.pagerDutyLog
 
 object GetGainsHttpParser extends Parser {
-  type GetGainsResponse = Either[ApiError, GainsPriorDataModel]
+  type GetGainsResponse = Either[ApiError, Option[GainsPriorDataModel]]
 
   override val parserName: String = "GetGainsHttpParser"
   override val service: String = "income-tax-additional-information"
@@ -37,9 +37,9 @@ object GetGainsHttpParser extends Parser {
       response.status match {
         case OK => response.json.validate[GainsPriorDataModel].fold[GetGainsResponse](
           _ => badSuccessJsonResponse,
-          parsedModel => Right(parsedModel)
+          parsedModel => Right(Some(parsedModel))
         )
-        case NOT_FOUND => Right(GainsPriorDataModel(""))
+        case NOT_FOUND => Right(None)
         case INTERNAL_SERVER_ERROR =>
           pagerDutyLog(INTERNAL_SERVER_ERROR_FROM_IF, response.body)
           handleError(response, response.status)

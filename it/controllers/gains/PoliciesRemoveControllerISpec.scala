@@ -16,8 +16,9 @@
 
 package controllers.gains
 
+import com.github.tomakehurst.wiremock.http.HttpHeader
 import play.api.http.HeaderNames
-import play.api.http.Status.{OK, SEE_OTHER}
+import play.api.http.Status.{NO_CONTENT, OK, SEE_OTHER}
 import play.api.libs.ws.WSResponse
 import support.IntegrationTest
 
@@ -25,6 +26,11 @@ class PoliciesRemoveControllerISpec extends IntegrationTest {
 
   clearSession()
   populateSessionData()
+
+  val headersSentToIF = Seq(
+    new HttpHeader("X-Session-ID", sessionId),
+    new HttpHeader("mtditid", mtditid)
+  )
 
   private def url(taxYear: Int): String = {
     s"/update-and-submit-income-tax-return/additional-information/$taxYear/gains/policies-remove-confirmation/$sessionId"
@@ -62,9 +68,12 @@ class PoliciesRemoveControllerISpec extends IntegrationTest {
   ".submit" should {
     "redirect to gains summary page if successful" in {
       lazy val result: WSResponse = {
-        populateSessionData()
+        clearSession()
+        populateWithSessionDataModel(Seq(completePolicyCyaModel.copy(sessionId = sessionId), completePolicyCyaModel.copy(sessionId = "anotherSession")))
         authoriseAgentOrIndividual(isAgent = false)
         userDataStub(gainsPriorDataModel, nino, taxYear)
+        stubPut(
+          s"/income-tax-additional-information/income-tax/insurance-policies/income/$nino/$taxYear", NO_CONTENT,"", headersSentToIF)
         urlPost(url(taxYear), headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)), body = "")
       }
 
@@ -72,12 +81,12 @@ class PoliciesRemoveControllerISpec extends IntegrationTest {
       result.headers("Location").head shouldBe s"/update-and-submit-income-tax-return/additional-information/$taxYear/gains/summary"
     }
 
-    "redirect to gains summary page and update submission that data was removed" in {
+    "redirect to gains summary page when cya is empty" in {
       lazy val result: WSResponse = {
         clearSession()
-        populateWithSessionDataModel(Seq(completePolicyCyaModel.copy(sessionId = "session"), completePolicyCyaModel.copy(sessionId = "anotherSession")))
+        populateOnlyGatewayData()
         authoriseAgentOrIndividual(isAgent = false)
-        userDataStub(gainsPriorDataModel, nino, taxYear)
+        stubDeleteWithoutResponseBody(s"/income-tax-additional-information/income-tax/insurance-policies/income/$nino/$taxYear", NO_CONTENT, headersSentToIF)
         urlPost(url(taxYear), headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)), body = "")
       }
 
@@ -85,7 +94,7 @@ class PoliciesRemoveControllerISpec extends IntegrationTest {
       result.headers("Location").head shouldBe s"/update-and-submit-income-tax-return/additional-information/$taxYear/gains/summary"
     }
 
-    "redirect to gains summary page in case of no cya data" in {
+    "redirect to gains summary page in case of no cya data and no prior data" in {
       lazy val result: WSResponse = {
         clearSession()
         authoriseAgentOrIndividual(isAgent = false)

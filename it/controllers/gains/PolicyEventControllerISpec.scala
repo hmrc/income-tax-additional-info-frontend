@@ -16,6 +16,7 @@
 
 package controllers.gains
 
+import forms.RadioButtonAmountForm
 import play.api.http.HeaderNames
 import play.api.http.Status.{BAD_REQUEST, OK, SEE_OTHER}
 import play.api.libs.ws.WSResponse
@@ -180,12 +181,11 @@ class PolicyEventControllerISpec extends IntegrationTest {
       result.headers("Location").head shouldBe s"/update-and-submit-income-tax-return/additional-information/$taxYear/gains/policy-summary/$sessionId"
     }
 
-
-    "redirect to income tax submission overview page if no session data is found" in {
-      clearSession()
+    "Redirect to policy summary page when no session data exists" in {
       lazy val result: WSResponse = {
+        clearSession()
         authoriseAgentOrIndividual(isAgent = false)
-        urlGet(url(taxYear), headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)))
+        urlPost(url(taxYear), headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)), body = Map("policy-event" -> "Full or part surrender"))
       }
 
       result.status shouldBe SEE_OTHER

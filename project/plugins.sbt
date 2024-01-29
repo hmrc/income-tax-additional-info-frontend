@@ -23,10 +23,10 @@ ThisBuild / libraryDependencySchemes ++= Seq(
   "org.scala-lang.modules" %% "scala-xml" % VersionScheme.Always
 )
 
-addSbtPlugin("uk.gov.hmrc"          % "sbt-auto-build"         % "3.17.0")
+addSbtPlugin("uk.gov.hmrc"          % "sbt-auto-build"         % "3.18.0")
 addSbtPlugin("uk.gov.hmrc"          % "sbt-distributables"     % "2.4.0")
 addSbtPlugin("com.typesafe.play"    % "sbt-plugin"             % "2.8.21")
-addSbtPlugin("org.scoverage"        % "sbt-scoverage"          % "2.0.6")
+addSbtPlugin("org.scoverage"        % "sbt-scoverage"          % "2.0.9")
 addSbtPlugin("com.typesafe.sbt"     % "sbt-gzip"               % "1.0.2")
 addSbtPlugin("io.github.irundaia"   % "sbt-sassify"            % "1.5.2")
 addSbtPlugin("org.scalastyle"       %% "scalastyle-sbt-plugin" % "1.0.0")

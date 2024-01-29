@@ -16,26 +16,23 @@
 
 package controllers.gains
 
-import models.AllGainsSessionModel
-import models.gains.PolicyCyaModel
 import play.api.http.HeaderNames
-import play.api.http.Status.OK
+import play.api.http.Status._
 import play.api.libs.ws.WSResponse
 import support.IntegrationTest
-import support.builders.requests.AuthorisationRequestBuilder
 
 class GainsSummaryControllerISpec extends IntegrationTest {
-
-  clearSession()
-  populateSessionData()
   private def url(taxYear: Int): String = {
     s"/update-and-submit-income-tax-return/additional-information/$taxYear/gains/summary"
   }
 
   ".show" should {
-    "render the summary page" in {
+    "render the summary page individual" in {
       lazy val result: WSResponse = {
+        clearSession()
+        populateSessionData()
         authoriseAgentOrIndividual(isAgent = false)
+        userDataStub(gainsPriorDataModel, nino, taxYear)
         urlGet(url(taxYear), headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)))
       }
 
@@ -44,31 +41,37 @@ class GainsSummaryControllerISpec extends IntegrationTest {
 
     "render the summary page for an agent" in {
       lazy val result: WSResponse = {
-        authoriseAgentOrIndividual(isAgent = false)
+        clearSession()
+        populateSessionData()
+        authoriseAgentOrIndividual(isAgent = true)
+        userDataStub(gainsPriorDataModel, nino, taxYear)
         urlGet(url(taxYear), headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)))
       }
 
       result.status shouldBe OK
     }
 
-    "render the empty summary page when no gains are found" in {
-      gainsSessionService.updateSessionData(AllGainsSessionModel(Seq[PolicyCyaModel](), gateway = true), taxYear)(false)(true)(AuthorisationRequestBuilder.anAuthorisationRequest, ec)
+    "render the summary page when no gains are found" in {
       lazy val result: WSResponse = {
+        clearSession()
         authoriseAgentOrIndividual(isAgent = false)
+        userDataStub(gainsPriorDataModel, nino, taxYear)
         urlGet(url(taxYear), headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)))
       }
 
       result.status shouldBe OK
     }
 
-    "render the page with an empty model if no session user data is found" in {
-      clearSession()
+    "render summary page when there is no prior or cya data" in {
       lazy val result: WSResponse = {
+        clearSession()
         authoriseAgentOrIndividual(isAgent = false)
+        emptyUserDataStub()
         urlGet(url(taxYear), headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)))
       }
 
       result.status shouldBe OK
     }
+
   }
 }

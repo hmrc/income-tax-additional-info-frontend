@@ -17,12 +17,17 @@
 package controllers.gains
 
 import actions.AuthorisedAction
+import audit.{AuditModel, AuditService, CreateOrAmendGainsAuditDetail}
 import config.{AppConfig, ErrorHandler}
 import models.AllGainsSessionModel
-import models.gains.PolicyCyaModel
+import models.gains.prior.GainsPriorDataModel
+import models.gains.{GainsSubmissionModel, PolicyCyaModel}
+import models.requests.AuthorisationRequest
 import play.api.i18n.I18nSupport
 import play.api.mvc._
 import services.{DeleteGainsService, GainsSessionService, GainsSubmissionService}
+import uk.gov.hmrc.http.HeaderCarrier
+import uk.gov.hmrc.play.audit.http.connector.AuditResult
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 import views.html.pages.gains.PoliciesRemovePageView
 
@@ -35,6 +40,7 @@ class PoliciesRemoveController @Inject()(authorisedAction: AuthorisedAction,
                                          gainsSessionService: GainsSessionService,
                                          gainsSubmissionService: GainsSubmissionService,
                                          deleteGainsService: DeleteGainsService,
+                                         auditService: AuditService,
                                          errorHandler: ErrorHandler)
                                         (implicit appConfig: AppConfig, mcc: MessagesControllerComponents, ec: ExecutionContext)
   extends FrontendController(mcc) with I18nSupport {
@@ -48,7 +54,7 @@ class PoliciesRemoveController @Inject()(authorisedAction: AuthorisedAction,
         cyaData =>
           Future.successful(
             Ok(view(taxYear, sessionId, cyaData.gains.getOrElse(
-              AllGainsSessionModel(Seq(emptyPolicyCyaModel), gateway = true)).allGains.find(_.sessionId == sessionId).getOrElse(emptyPolicyCyaModel)))
+              AllGainsSessionModel(Seq(emptyPolicyCyaModel), gateway = Some(true))).allGains.find(_.sessionId == sessionId).getOrElse(emptyPolicyCyaModel)))
           ).value.get.get
       })
     }
@@ -59,18 +65,39 @@ class PoliciesRemoveController @Inject()(authorisedAction: AuthorisedAction,
       (cya, prior) match {
         case (Some(cya), _) =>
           val newData = AllGainsSessionModel(cya.allGains.filterNot(_.sessionId == sessionId), cya.gateway)
-          gainsSessionService.updateSessionData(newData, taxYear)(errorHandler.internalServerError()) {
-            if (newData.allGains.isEmpty) {
-              deleteGainsService.deleteGainsData(request.user.nino, taxYear, request.user.mtditid)
-              Redirect(controllers.gains.routes.GainsSummaryController.show(taxYear))
-            } else {
-              gainsSubmissionService.submitGains(Some(newData.toSubmissionModel), request.user.nino, request.user.mtditid, taxYear)
-              Redirect(controllers.gains.routes.GainsSummaryController.show(taxYear))
+          if (newData.allGains.isEmpty) {
+            deleteGainsService.deleteGainsData(request.user.nino, taxYear, request.user.mtditid).flatMap {
+              case Left(_) => Future.successful(errorHandler.internalServerError())
+              case Right(_) => auditAndDeleteSessionData(taxYear, prior, cya)
+            }
+          } else {
+            gainsSubmissionService.submitGains(Some(newData.toSubmissionModel), request.user.nino, request.user.mtditid, taxYear).flatMap {
+              case Left(_) => Future.successful(errorHandler.internalServerError())
+              case Right(_) => auditAndDeleteSessionData(taxYear, prior, cya)
             }
           }
+
         case _ => Future.successful(Redirect(controllers.gains.routes.GainsSummaryController.show(taxYear)))
       }
     }.flatten
+  }
+
+  private def auditAndDeleteSessionData(taxYear: Int, prior: Option[GainsPriorDataModel],
+                                        cya: AllGainsSessionModel)
+                                       (implicit hc: HeaderCarrier, request: AuthorisationRequest[AnyContent]) = {
+    auditSubmission(None, prior, request.user.nino, request.user.mtditid, request.user.affinityGroup, taxYear)
+    gainsSessionService.deleteSessionData(cya, taxYear)(errorHandler.internalServerError()) {
+      Redirect(controllers.gains.routes.GainsSummaryController.show(taxYear))
+    }
+  }
+  private def auditSubmission(body: Option[GainsSubmissionModel], prior: Option[GainsPriorDataModel],
+                              nino: String, mtditid: String, affinityGroup: String, taxYear: Int)
+                             (implicit hc: HeaderCarrier): Future[AuditResult] = {
+    val details: CreateOrAmendGainsAuditDetail = CreateOrAmendGainsAuditDetail.createFromCyaData(body,
+      prior.flatMap(result => if (result.submittedOn.nonEmpty) prior else None),
+      !prior.exists(_.submittedOn.isEmpty), nino, mtditid, affinityGroup.toLowerCase, taxYear)
+    val event = AuditModel("CreateOrAmendGainsUpdate", "createOrAmendGainsUpdate", details)
+    auditService.auditModel(event)
   }
 
 }

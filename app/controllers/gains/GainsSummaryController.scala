@@ -18,6 +18,7 @@ package controllers.gains
 
 import actions.AuthorisedAction
 import config.{AppConfig, ErrorHandler}
+import models.AllGainsSessionModel
 import models.gains.PolicyCyaModel
 import play.api.i18n.I18nSupport
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
@@ -36,13 +37,23 @@ class GainsSummaryController @Inject()(authorisedAction: AuthorisedAction,
   extends FrontendController(mcc) with I18nSupport {
 
   def show(taxYear: Int): Action[AnyContent] = authorisedAction.async { implicit request =>
-    gainsSessionService.getSessionData(taxYear).flatMap {
-      case Left(_) => Future.successful(errorHandler.internalServerError())
-      case Right(cya) =>
-        Future.successful(cya.fold(Ok(view(taxYear, Seq[PolicyCyaModel]()))) {
-          data => data.gains.map(value => Ok(view(taxYear, value.allGains))).get
-        })
-    }
-  }
 
+    gainsSessionService.getAndHandle(taxYear)(Future.successful(errorHandler.internalServerError())) {
+      (cya, prior) =>
+        (cya, prior) match {
+          case (Some(cya), Some(prior)) if cya.allGains.nonEmpty =>
+            val allGainsPolicies: Seq[PolicyCyaModel] = (cya.allGains ++ prior.toPolicyCya).distinctBy(_.policyNumber)
+            gainsSessionService.updateSessionData(AllGainsSessionModel(allGainsPolicies, cya.gateway), taxYear)(
+              errorHandler.internalServerError())(Ok(view(taxYear, allGainsPolicies)))
+          case (None, Some(prior)) =>
+            val priorData = prior.toPolicyCya
+            gainsSessionService.createSessionData(AllGainsSessionModel(priorData, gateway = Some(true)), taxYear)(
+              errorHandler.internalServerError())(
+              Ok(view(taxYear, priorData))
+            )
+          case _ =>
+            Future.successful(Ok(view(taxYear, Seq[PolicyCyaModel]())))
+        }
+    }.flatten
+  }
 }

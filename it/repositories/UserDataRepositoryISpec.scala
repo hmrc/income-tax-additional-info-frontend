@@ -44,7 +44,7 @@ class UserDataRepositoryISpec extends IntegrationTest with FutureAwaits with Def
     mtditid,
     nino,
     taxYear,
-    Some(AllGainsSessionModel(Seq(completePolicyCyaModel), gateway = true))
+    Some(AllGainsSessionModel(Seq(completePolicyCyaModel), gateway = Some(true)))
   )
 
   implicit val request: FakeRequest[AnyContent] = FakeRequest()
@@ -74,13 +74,13 @@ class UserDataRepositoryISpec extends IntegrationTest with FutureAwaits with Def
 
       val initialData: GainsUserDataModel = GainsUserDataModel(
         testUser.sessionId, testUser.mtditid, testUser.nino, taxYear,
-        Some(AllGainsSessionModel(Seq(completePolicyCyaModel), gateway = true))
+        Some(AllGainsSessionModel(Seq(completePolicyCyaModel), gateway = Some(true)))
       )
 
       val newGainsCyaModel: PolicyCyaModel = completePolicyCyaModel.copy(amountOfGain = Some(321.11), taxPaidAmount = Some(321.11))
 
       val newUserData: GainsUserDataModel = initialData.copy(
-        gains = Some(AllGainsSessionModel(Seq(newGainsCyaModel), gateway = true))
+        gains = Some(AllGainsSessionModel(Seq(newGainsCyaModel), gateway = Some(true)))
       )
 
       await(gainsRepo.create(initialData))
@@ -126,7 +126,7 @@ class UserDataRepositoryISpec extends IntegrationTest with FutureAwaits with Def
         case Left(value) => None
       })
 
-      dataAfter.get.gains mustBe Some(AllGainsSessionModel(List(newGainsCyaModel), gateway = true))
+      dataAfter.get.gains mustBe Some(AllGainsSessionModel(List(newGainsCyaModel), gateway = Some(true)))
     }
 
     "return a EncryptionDecryptionError" in {
