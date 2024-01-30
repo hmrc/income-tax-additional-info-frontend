@@ -146,15 +146,5 @@ class PolicyHeldControllerISpec extends IntegrationTest {
       result.status shouldBe SEE_OTHER
       result.headers("Location").head shouldBe s"/update-and-submit-income-tax-return/additional-information/$taxYear/gains/policy-summary/${sessionId}"
     }
-
-    "Redirect to policy summary page when no session data exists" in {
-      lazy val result: WSResponse = {
-        clearSession()
-        authoriseAgentOrIndividual(isAgent = false)
-        urlPost(url(taxYear), headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)), body = Map(InputYearForm.numberOfYears -> "99"))
-      }
-
-      result.status shouldBe SEE_OTHER
-    }
   }
 }

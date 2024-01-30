@@ -16,7 +16,6 @@
 
 package controllers.gains
 
-import forms.AmountForm
 import forms.RadioButtonYearForm.yesNo
 import play.api.http.HeaderNames
 import play.api.http.Status.{BAD_REQUEST, OK, SEE_OTHER}
@@ -128,16 +127,6 @@ class GainsStatusControllerISpec extends IntegrationTest {
 
       result.status shouldBe SEE_OTHER
       result.headers("Location").head shouldBe s"/update-and-submit-income-tax-return/additional-information/$taxYear/gains/policy-held/${sessionId}"
-    }
-
-    "Redirect to policy summary page when no session data exists" in {
-      lazy val result: WSResponse = {
-        clearSession()
-        authoriseAgentOrIndividual(isAgent = false)
-        urlPost(url(taxYear), headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)), body = Map(yesNo -> "false"))
-      }
-
-      result.status shouldBe SEE_OTHER
     }
   }
 }

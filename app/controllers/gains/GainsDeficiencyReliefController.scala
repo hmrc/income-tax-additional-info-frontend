@@ -74,18 +74,17 @@ class GainsDeficiencyReliefController @Inject()(authorisedAction: AuthorisedActi
       Future.successful(BadRequest(view(taxYear, formWithErrors, sessionId)))
     }, {
       value =>
-        gainsSessionService.getAndHandle(taxYear)(Future.successful(errorHandler.internalServerError())) { (cya, prior) =>
-          (cya, prior) match {
-            case (Some(cya), _) =>
-              val index = cya.allGains.indexOf(cya.allGains.filter(_.sessionId == sessionId).head)
-              val newData = cya.allGains(index).copy(entitledToDeficiencyRelief = Some(value._1), deficiencyReliefAmount = value._2)
-              val updated = cya.allGains.updated(index, newData)
-              gainsSessionService.updateSessionData(AllGainsSessionModel(updated, cya.gateway), taxYear)(errorHandler.internalServerError()) {
-                  Redirect(controllers.gains.routes.PolicySummaryController.show(taxYear, sessionId))
-              }
-            case _ => Future.successful(Redirect(controllers.gains.routes.PolicySummaryController.show(taxYear, sessionId)))
-          }
-        }.flatten
+        gainsSessionService.getSessionData(taxYear).flatMap {
+          case Left(_) => Future.successful(errorHandler.internalServerError())
+          case Right(sessionData) =>
+            val cya = sessionData.flatMap(_.gains).getOrElse(AllGainsSessionModel(Seq.empty))
+            val index = cya.allGains.indexOf(cya.allGains.filter(_.sessionId.contains(sessionId)).head)
+            val newData = cya.allGains(index).copy(entitledToDeficiencyRelief = Some(value._1), deficiencyReliefAmount = value._2)
+            val updated = cya.allGains.updated(index, newData)
+            gainsSessionService.updateSessionData(AllGainsSessionModel(updated, cya.gateway), taxYear)(errorHandler.internalServerError()) {
+              Redirect(controllers.gains.routes.PolicySummaryController.show(taxYear, sessionId))
+            }
+        }
     })
   }
 }

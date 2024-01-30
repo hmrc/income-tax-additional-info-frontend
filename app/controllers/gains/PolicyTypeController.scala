@@ -74,29 +74,26 @@ class PolicyTypeController @Inject()(authorisedAction: AuthorisedAction,
       Future.successful(BadRequest(view(taxYear, formWithErrors, sessionId)))
     }, {
       policy =>
-        gainsSessionService.getAndHandle(taxYear)(Future.successful(errorHandler.internalServerError())) { (cya, prior) =>
-          (cya, prior) match {
-            case (Some(cya), _) =>
-              val newData =
-                if (!cya.allGains.map(_.sessionId).contains(sessionId)) {
-                  cya.allGains ++ Seq(PolicyCyaModel(sessionId = sessionId, policyType = policy))
-                } else {
-                  val gains = cya.allGains
-                  val newG = cya.allGains.filter(_.sessionId == sessionId).head.copy(policyType = policy)
-                  gains.updated(gains.indexOf(gains.find(_.sessionId == sessionId).get), newG)
-                }
-              gainsSessionService.updateSessionData(AllGainsSessionModel(newData, cya.gateway), taxYear)(errorHandler.internalServerError()) {
-                if (newData.filter(_.sessionId == sessionId).head.isFinished) {
-                  Redirect(controllers.gains.routes.PolicySummaryController.show(taxYear, sessionId))
-                } else {
-                  Redirect(controllers.gains.routes.PolicyNameController.show(taxYear, sessionId))
-                }
+        gainsSessionService.getSessionData(taxYear).flatMap {
+          case Left(_) => Future.successful(errorHandler.internalServerError())
+          case Right(sessionData) =>
+            val cya = sessionData.flatMap(_.gains).getOrElse(AllGainsSessionModel(Seq.empty))
+            val newData =
+              if (!cya.allGains.map(_.sessionId).contains(sessionId)) {
+                cya.allGains ++ Seq(PolicyCyaModel(sessionId = sessionId, policyType = policy))
+              } else {
+                val gains = cya.allGains
+                val newG = cya.allGains.filter(_.sessionId == sessionId).head.copy(policyType = policy)
+                gains.updated(gains.indexOf(gains.find(_.sessionId == sessionId).get), newG)
               }
-            case _ => Future.successful(
-              Redirect(controllers.gains.routes.PolicySummaryController.show(taxYear, cya.getOrElse(AllGainsSessionModel(Seq.empty, gateway = Some(true))).allGains.last.sessionId))
-            )
-          }
-        }.flatten
+            gainsSessionService.updateSessionData(AllGainsSessionModel(newData, cya.gateway), taxYear)(errorHandler.internalServerError()) {
+              if (newData.filter(_.sessionId == sessionId).head.isFinished) {
+                Redirect(controllers.gains.routes.PolicySummaryController.show(taxYear, sessionId))
+              } else {
+                Redirect(controllers.gains.routes.PolicyNameController.show(taxYear, sessionId))
+              }
+            }
+        }
     })
   }
 }

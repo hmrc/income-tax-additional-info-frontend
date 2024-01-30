@@ -75,22 +75,21 @@ class PolicyEventController @Inject()(authorisedAction: AuthorisedAction,
       Future.successful(BadRequest(view(taxYear, formWithErrors, sessionId)))
     }, {
       policyEvent =>
-        gainsSessionService.getAndHandle(taxYear)(Future.successful(errorHandler.internalServerError())) { (cya, prior) =>
-          (cya, prior) match {
-            case (Some(cya), _) =>
-              val index = cya.allGains.indexOf(cya.allGains.find(_.sessionId == sessionId).get)
-              val newData = cya.allGains(index).copy(policyEvent = if (policyEvent._1 != "Other") Some(policyEvent._1) else Some(policyEvent._2))
-              val updated = cya.allGains.updated(index, newData)
-              gainsSessionService.updateSessionData(AllGainsSessionModel(updated, cya.gateway), taxYear)(errorHandler.internalServerError()) {
-                if (newData.isFinished) {
-                  Redirect(controllers.gains.routes.PolicySummaryController.show(taxYear, sessionId))
-                } else {
-                  Redirect(controllers.gains.routes.GainsStatusController.show(taxYear, sessionId))
-                }
+        gainsSessionService.getSessionData(taxYear).flatMap {
+          case Left(_) => Future.successful(errorHandler.internalServerError())
+          case Right(sessionData) =>
+            val cya = sessionData.flatMap(_.gains).getOrElse(AllGainsSessionModel(Seq.empty))
+            val index = cya.allGains.indexOf(cya.allGains.find(_.sessionId == sessionId).get)
+            val newData = cya.allGains(index).copy(policyEvent = if (policyEvent._1 != "Other") Some(policyEvent._1) else Some(policyEvent._2))
+            val updated = cya.allGains.updated(index, newData)
+            gainsSessionService.updateSessionData(AllGainsSessionModel(updated, cya.gateway), taxYear)(errorHandler.internalServerError()) {
+              if (newData.isFinished) {
+                Redirect(controllers.gains.routes.PolicySummaryController.show(taxYear, sessionId))
+              } else {
+                Redirect(controllers.gains.routes.GainsStatusController.show(taxYear, sessionId))
               }
-            case _ => Future.successful(Redirect(controllers.gains.routes.PolicySummaryController.show(taxYear, sessionId)))
-          }
-        }.flatten
+            }
+        }
     })
   }
 }

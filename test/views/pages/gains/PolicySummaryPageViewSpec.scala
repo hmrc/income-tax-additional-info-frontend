@@ -40,7 +40,6 @@ class PolicySummaryPageViewSpec extends ViewUnitTest {
   private val paidTaxStatusPageUrl: String = s"/update-and-submit-income-tax-return/additional-information/$taxYear/gains/paid-tax-status/$sessionId"
   private val deficiencyReliefStatusUrl: String = s"/update-and-submit-income-tax-return/additional-information/$taxYear/gains/deficiency-relief-status/$sessionId"
   private val amountReliefAvailableUrl: String = s"/update-and-submit-income-tax-return/additional-information/$taxYear/gains/deficiency-relief-status/$sessionId"
-  private val taxPaidOnGainUrl: String = s"/update-and-submit-income-tax-return/additional-information/$taxYear/gains/paid-tax-status/$sessionId"
 
   object Selectors {
     def summaryListItem(i: Int): String = s"#main-content > div > div > dl > div:nth-child($i) > dt"
