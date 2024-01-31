@@ -58,14 +58,14 @@ case class AllGainsSessionModel(allGains: Seq[PolicyCyaModel], gateway: Option[B
     val foreign: Option[Seq[ForeignModel]] = convertEmptyToOption(allGains.filter(elem => elem.policyType == "Foreign Policy").map(cya =>
       ForeignModel(customerReference = cya.policyNumber, gainAmount = cya.amountOfGain.get, taxPaidAmount = cya.taxPaidAmount, yearsHeld = cya.yearsPolicyHeld)
     ))
-    val voided: Option[Seq[VoidedIsaModel]] = convertEmptyToOption(allGains.filter(elem => elem.policyType == "Voided ISA").map(cya =>
+    val voidedIsa: Option[Seq[VoidedIsaModel]] = convertEmptyToOption(allGains.filter(elem => elem.policyType == "Voided ISA").map(cya =>
       VoidedIsaModel(
         customerReference = cya.policyNumber, gainAmount = cya.amountOfGain.get, taxPaidAmount = cya.taxPaidAmount, yearsHeld = cya.yearsPolicyHeld
       ))
     )
 
     GainsSubmissionModel(
-      lifeInsurance = life, capitalRedemption = capital, lifeAnnuity = lifeAnnuity, voidedIsa = voided, foreign = foreign
+      lifeInsurance = life, capitalRedemption = capital, lifeAnnuity = lifeAnnuity, voidedIsa = voidedIsa, foreign = foreign
     )
   }
 }

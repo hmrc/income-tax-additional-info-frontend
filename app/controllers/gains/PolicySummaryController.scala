@@ -88,7 +88,7 @@ class PolicySummaryController @Inject()(authorisedAction: AuthorisedAction,
                   case Left(_) => Future.successful(errorHandler.internalServerError())
                 }
               case _ =>
-                submitGainsAndAudit(Some(GainsSubmissionModel()), taxYear, user, prior, cya,
+                submitGainsAndAudit(Some(cya.toSubmissionModel), taxYear, user, prior, cya,
                   Redirect(controllers.gains.routes.GainsSummaryController.show(taxYear)))
             }
           }
@@ -99,11 +99,19 @@ class PolicySummaryController @Inject()(authorisedAction: AuthorisedAction,
 
   private def submitGainsAndAudit(body: Option[GainsSubmissionModel], taxYear: Int, user: User,
                                   prior: Option[GainsPriorDataModel], cya: AllGainsSessionModel, successResult: Result)
-                                 (implicit hc: HeaderCarrier, request: AuthorisationRequest[AnyContent])= {
-    gainsSubmissionService.submitGains(body, request.user.nino, request.user.mtditid, taxYear)
-    nrsSubmission(body, prior, user.nino, user.mtditid)
-    auditSubmission(body, prior, user.nino, user.mtditid, user.affinityGroup, taxYear)
-    gainsSessionService.deleteSessionData(cya, taxYear)(errorHandler.internalServerError())(successResult)
+                                 (implicit hc: HeaderCarrier, request: AuthorisationRequest[AnyContent]):Future[Result]= {
+    gainsSubmissionService.submitGains(body, request.user.nino, request.user.mtditid, taxYear).flatMap {
+      case Left(error) => {
+        logger.info("[PolicySummaryController][submit] Error while submitting gains data. Redirecting to 500 error page. " +
+          "Error status: " + error.status)
+        Future.successful(errorHandler.internalServerError())
+      }
+      case Right(_) => {
+        nrsSubmission(body, prior, user.nino, user.mtditid)
+        auditSubmission(body, prior, user.nino, user.mtditid, user.affinityGroup, taxYear)
+        gainsSessionService.deleteSessionData(cya, taxYear)(errorHandler.internalServerError())(successResult)
+      }
+    }
   }
 
   private def nrsSubmission(body: Option[GainsSubmissionModel], prior: Option[GainsPriorDataModel],

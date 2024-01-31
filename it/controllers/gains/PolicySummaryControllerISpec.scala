@@ -30,6 +30,7 @@ class PolicySummaryControllerISpec extends IntegrationTest {
     s"/update-and-submit-income-tax-return/additional-information/$taxYear/gains/policy-summary/$sessionId"
   }
   private val postUrl: String = s"/update-and-submit-income-tax-return/additional-information/$taxYear/gains/policy-summary"
+  private val putUrl: String =  s"/income-tax-additional-information/income-tax/insurance-policies/income/$nino/$taxYear"
   private val submissionUrl: String = s"/income-tax-submission-service/income-tax/nino/AA123456A/sources/exclude-journey/$taxYear"
   private val nrsUrl: String = s"/income-tax-nrs-proxy/$nino/itsa-personal-income-submission"
 
@@ -110,6 +111,7 @@ class PolicySummaryControllerISpec extends IntegrationTest {
         populateWithSessionDataModel(Seq(completePolicyCyaModel))
         authoriseAgentOrIndividual(isAgent = false)
         userDataStub(gainsPriorDataModel, nino, taxYear)
+        stubPut(putUrl, NO_CONTENT, "{}")
         urlPost(postUrl, headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)), body = "")
       }
 
