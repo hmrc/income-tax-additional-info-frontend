@@ -60,7 +60,8 @@ case class AllGainsSessionModel(allGains: Seq[PolicyCyaModel], gateway: Option[B
     ))
     val voidedIsa: Option[Seq[VoidedIsaModel]] = convertEmptyToOption(allGains.filter(elem => elem.policyType == "Voided ISA").map(cya =>
       VoidedIsaModel(
-        customerReference = cya.policyNumber, gainAmount = cya.amountOfGain.get, taxPaidAmount = cya.taxPaidAmount, yearsHeld = cya.yearsPolicyHeld
+        customerReference = cya.policyNumber, event = cya.policyEvent, gainAmount = cya.amountOfGain.get, taxPaidAmount = cya.taxPaidAmount,
+        yearsHeld = cya.yearsPolicyHeld, yearsHeldSinceLastGain = cya.yearsPolicyHeldPrevious
       ))
     )
 
