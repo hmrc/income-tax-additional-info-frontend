@@ -157,6 +157,9 @@ class GainsSubmissionConnectorISpec extends IntegrationTest {
 
         stubPut(s"/income-tax-additional-information/income-tax/insurance-policies/income/$nino/$taxYear", SERVICE_UNAVAILABLE, responseBody.toString(), expectedHeaders)
         val result = Await.result(connector.submitGains(validGainsSubmissionModel, nino, taxYear), Duration.Inf)
+
+        /** TODO Fix me : handle Error method in parser is not returning expected error response as per spec.In this case response is
+         *  service unavailable but supposed to return internal server error response */
         result shouldBe Left(ApiError(INTERNAL_SERVER_ERROR, SingleErrorBody("SERVICE_UNAVAILABLE", "the service is currently unavailable")))
       }
 
