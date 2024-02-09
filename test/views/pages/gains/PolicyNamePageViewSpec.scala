@@ -180,7 +180,7 @@ class PolicyNamePageViewSpec extends ViewUnitTest {
         implicit val document: Document = Jsoup.parse(page(taxYear, InputFieldForm.inputFieldForm(userScenario.isAgent, inputFormat,
           s"gains.policy-name.question.error-message.1.${if (userScenario.isAgent) "agent" else "individual"}",
           s"gains.policy-name.question.error-message.2.${if (userScenario.isAgent) "agent" else "individual"}")
-          .bind(Map(InputFieldForm.value -> "aaa?")), UUID.randomUUID().toString).body)
+          .bind(Map(InputFieldForm.value -> "aaa/")), UUID.randomUUID().toString).body)
 
         welshToggleCheck(userScenario.isWelsh)
 

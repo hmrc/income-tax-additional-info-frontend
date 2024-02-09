@@ -23,9 +23,9 @@ class InputFieldFormSpec extends UnitTest{
   private def theForm(inputFormat: String) = InputFieldForm.inputFieldForm(isAgent = false, inputFormat, "nothing to see here", "wrong format")
 
   private val testInputNumber = "123"
-  private val testInputAlphabet = "test?"
+  private val testInputAlphabet = "test/"
   private val testInputAlphabetsWithSpace = "test this input"
-  private val testInputPolicyNumber = "LA/2881/07"
+  private val testInputPolicyNumber = "P-89879-123"
   private val testInputEmpty = ""
   private val testInputEmptySpace = ""
 

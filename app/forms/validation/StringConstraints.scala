@@ -40,15 +40,7 @@ object StringConstraints {
   )
 
   def validatePolicyNumber: String => Constraint[String] = msgKey => constraint[String](
-
-    x => {
-      /**
-       * TODO - FIX me : policyNumber.replace("/","-") is a temporary fix to bring policy number allowed
-       * characters inline with downstream. Waiting for decision if this needs to be fixed in backend or frontend
-       */
-      val updatedString = x.replace("/", "-")
-      if (updatedString.matches(policyNumberRegex)) Valid else Invalid(msgKey)
-    }
+    x => if (x.matches(policyNumberRegex)) Valid else Invalid(msgKey)
   )
 
   def validateAlphabetsWithSpace: String => Constraint[String] = msgKey => constraint[String](

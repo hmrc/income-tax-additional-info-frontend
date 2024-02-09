@@ -40,8 +40,6 @@ object GainsSubmissionHttpParser extends Parser{
         handleError(response, INTERNAL_SERVER_ERROR)
       case SERVICE_UNAVAILABLE =>
         pagerDutyLog(SERVICE_UNAVAILABLE_FROM_IF, logMessage(response).get)
-        /**TODO Fix me : handle Error method is not returning expected error response as per spec.In this case response is
-         service unavailable but supposed to return internal server error response */
         handleError(response, INTERNAL_SERVER_ERROR)
       case _ =>
         pagerDutyLog(UNEXPECTED_RESPONSE_FROM_IF, logMessage(response).get)
