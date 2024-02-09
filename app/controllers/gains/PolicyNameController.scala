@@ -71,11 +71,7 @@ class PolicyNameController @Inject()(authorisedAction: AuthorisedAction,
           (cya, prior) match {
             case (Some(cya), _) =>
               val index = cya.allGains.indexOf(cya.allGains.filter(_.sessionId == sessionId).head)
-              /**
-               * TODO - FIX me : policyNumber.replace("/","-") is a temporary fix to bring policy number allowed
-               * characters inline with downstream. Waiting for decision if this needs to be fixed in backend or frontend
-               */
-              val newData = cya.allGains(index).copy(policyNumber = Some(policyNumber.replace("/", "-")))
+              val newData = cya.allGains(index).copy(policyNumber = Some(policyNumber))
               val updated = cya.allGains.updated(index, newData)
               gainsSessionService.updateSessionData(AllGainsSessionModel(updated, cya.gateway), taxYear)(errorHandler.internalServerError()) {
                 if (newData.isFinished) {
