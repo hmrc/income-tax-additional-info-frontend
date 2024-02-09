@@ -31,6 +31,7 @@ import uk.gov.hmrc.auth.core.retrieve.~
 import uk.gov.hmrc.http.{HeaderCarrier, SessionKeys}
 import uk.gov.hmrc.play.http.HeaderCarrierConverter
 
+import java.util.UUID
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -48,6 +49,7 @@ class AuthorisedAction @Inject()(authService: AuthorisationService,
 
   override def invokeBlock[A](request: Request[A], block: AuthorisationRequest[A] => Future[Result]): Future[Result] = {
     implicit lazy val headerCarrier: HeaderCarrier = HeaderCarrierConverter.fromRequestAndSession(request, request.session)
+      .withExtraHeaders("X-CorrelationId"->correlationId(request.headers.get("CorrelationId")))
 
     authService.authorised().retrieve(affinityGroup) {
       case Some(AffinityGroup.Agent) => agentAuthentication(block)(request, headerCarrier)
@@ -56,6 +58,18 @@ class AuthorisedAction @Inject()(authService: AuthorisationService,
     } recover {
       case _: NoActiveSession => redirectToSignInPage()
       case _: AuthorisationException => redirectToUnauthorisedUserErrorPage()
+    }
+  }
+
+  private def correlationId(correlationIdHeader: Option[String]): String = {
+
+    if (correlationIdHeader.isDefined) {
+      logger.info("[AuthorisedAction]Valid CorrelationId header found.")
+      correlationIdHeader.get
+    } else {
+      lazy val id = UUID.randomUUID().toString
+      logger.info(s"[AuthorisedAction]No valid CorrelationId found in headers. Defaulting Correlation Id. $id")
+      id
     }
   }
 

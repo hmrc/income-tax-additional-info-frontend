@@ -36,7 +36,7 @@ object GetGainsHttpParser extends Parser {
 
       response.status match {
         case OK => response.json.validate[GainsPriorDataModel].fold[GetGainsResponse](
-          _ => badSuccessJsonResponse,
+          errors => badSuccessJsonFromAPIWithErrors(errors),
           parsedModel => Right(Some(parsedModel))
         )
         case NOT_FOUND => Right(None)

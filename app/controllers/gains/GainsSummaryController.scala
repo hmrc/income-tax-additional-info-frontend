@@ -20,12 +20,15 @@ import actions.AuthorisedAction
 import config.{AppConfig, ErrorHandler}
 import models.AllGainsSessionModel
 import models.gains.PolicyCyaModel
+import play.api.Logging
 import play.api.i18n.I18nSupport
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import services.GainsSessionService
+import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 import views.html.pages.gains.GainsSummaryPageView
 
+import java.util.UUID
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -34,7 +37,9 @@ class GainsSummaryController @Inject()(authorisedAction: AuthorisedAction,
                                        gainsSessionService: GainsSessionService,
                                        errorHandler: ErrorHandler)
                                       (implicit appConfig: AppConfig, mcc: MessagesControllerComponents, ec: ExecutionContext)
-  extends FrontendController(mcc) with I18nSupport {
+  extends FrontendController(mcc) with I18nSupport with Logging{
+
+  private def getCorrelationid(implicit hc:HeaderCarrier) = hc.extraHeaders.find(_._1 == "CorrelationId").getOrElse(UUID.randomUUID())
 
   def show(taxYear: Int): Action[AnyContent] = authorisedAction.async { implicit request =>
 

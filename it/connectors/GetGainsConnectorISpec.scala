@@ -62,7 +62,8 @@ class GetGainsConnectorISpec extends IntegrationTest with ConnectorIntegrationTe
           Json.toJson("""{"invalid": true}""").toString(), "X-Session-ID" -> sessionId, "mtditid" -> mtditid)
 
         val result: GetGainsResponse = Await.result(connector.getUserData(taxYear), Duration.Inf)
-        result shouldBe Left(ApiError(INTERNAL_SERVER_ERROR, SingleErrorBody.parsingError))
+        result shouldBe Left(ApiError(INTERNAL_SERVER_ERROR,
+          SingleErrorBody("PARSING_ERROR", "Error parsing response from API - List((,List(JsonValidationError(List(error.expected.jsobject),ArraySeq()))))")))
       }
 
       "request returns a 500" in {
