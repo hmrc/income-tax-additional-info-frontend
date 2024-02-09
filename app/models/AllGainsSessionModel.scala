@@ -56,17 +56,29 @@ case class AllGainsSessionModel(allGains: Seq[PolicyCyaModel], gateway: Option[B
         deficiencyRelief = cya.deficiencyReliefAmount)
     ))
     val foreign: Option[Seq[ForeignModel]] = convertEmptyToOption(allGains.filter(elem => elem.policyType == "Foreign Policy").map(cya =>
-      ForeignModel(customerReference = cya.policyNumber, gainAmount = cya.amountOfGain.get, taxPaidAmount = cya.taxPaidAmount, yearsHeld = cya.yearsPolicyHeld)
+      ForeignModel(
+        customerReference = cya.policyNumber,
+        gainAmount = cya.amountOfGain.get,
+        taxPaidAmount = cya.taxPaidAmount,
+        yearsHeld = cya.yearsPolicyHeld)
     ))
     val voidedIsa: Option[Seq[VoidedIsaModel]] = convertEmptyToOption(allGains.filter(elem => elem.policyType == "Voided ISA").map(cya =>
       VoidedIsaModel(
-        customerReference = cya.policyNumber, event = cya.policyEvent, gainAmount = cya.amountOfGain.get, taxPaidAmount = cya.taxPaidAmount,
-        yearsHeld = cya.yearsPolicyHeld, yearsHeldSinceLastGain = cya.yearsPolicyHeldPrevious
+        customerReference = cya.policyNumber,
+        event = cya.policyEvent,
+        gainAmount = cya.amountOfGain.get,
+        taxPaidAmount = cya.taxPaidAmount,
+        yearsHeld = cya.yearsPolicyHeld,
+        yearsHeldSinceLastGain = cya.yearsPolicyHeldPrevious
       ))
     )
 
     GainsSubmissionModel(
-      lifeInsurance = life, capitalRedemption = capital, lifeAnnuity = lifeAnnuity, voidedIsa = voidedIsa, foreign = foreign
+      lifeInsurance = life,
+      capitalRedemption = capital,
+      lifeAnnuity = lifeAnnuity,
+      voidedIsa = voidedIsa,
+      foreign = foreign
     )
   }
 }
