@@ -39,7 +39,7 @@ class GainsSummaryController @Inject()(authorisedAction: AuthorisedAction,
                                       (implicit appConfig: AppConfig, mcc: MessagesControllerComponents, ec: ExecutionContext)
   extends FrontendController(mcc) with I18nSupport with Logging{
 
-  private def getCorrelationid(implicit hc:HeaderCarrier) = hc.extraHeaders.find(_._1 == "CorrelationId").getOrElse(UUID.randomUUID())
+  private def getCorrelationid(implicit hc:HeaderCarrier) = hc.extraHeaders.find(_._1 == "X-CorrelationId").getOrElse(UUID.randomUUID())
 
   def show(taxYear: Int): Action[AnyContent] = authorisedAction.async { implicit request =>
 
