@@ -40,7 +40,7 @@ object GainsSubmissionHttpParser extends Parser{
         handleError(response, INTERNAL_SERVER_ERROR)
       case SERVICE_UNAVAILABLE =>
         pagerDutyLog(SERVICE_UNAVAILABLE_FROM_IF, logMessage(response).get)
-        handleError(response, SERVICE_UNAVAILABLE)
+        handleError(response, INTERNAL_SERVER_ERROR)
       case _ =>
         pagerDutyLog(UNEXPECTED_RESPONSE_FROM_IF, logMessage(response).get)
         handleError(response, INTERNAL_SERVER_ERROR)

@@ -17,7 +17,7 @@
 package controllers.gains
 
 import play.api.http.HeaderNames
-import play.api.http.Status.{NO_CONTENT, OK, SEE_OTHER}
+import play.api.http.Status.{INTERNAL_SERVER_ERROR, NO_CONTENT, OK, SEE_OTHER}
 import play.api.libs.ws.WSResponse
 import support.IntegrationTest
 
@@ -30,6 +30,7 @@ class PolicySummaryControllerISpec extends IntegrationTest {
     s"/update-and-submit-income-tax-return/additional-information/$taxYear/gains/policy-summary/$sessionId"
   }
   private val postUrl: String = s"/update-and-submit-income-tax-return/additional-information/$taxYear/gains/policy-summary"
+  private val putUrl: String =  s"/income-tax-additional-information/income-tax/insurance-policies/income/$nino/$taxYear"
   private val submissionUrl: String = s"/income-tax-submission-service/income-tax/nino/AA123456A/sources/exclude-journey/$taxYear"
   private val nrsUrl: String = s"/income-tax-nrs-proxy/$nino/itsa-personal-income-submission"
 
@@ -110,11 +111,25 @@ class PolicySummaryControllerISpec extends IntegrationTest {
         populateWithSessionDataModel(Seq(completePolicyCyaModel))
         authoriseAgentOrIndividual(isAgent = false)
         userDataStub(gainsPriorDataModel, nino, taxYear)
+        stubPut(putUrl, NO_CONTENT, "{}")
         urlPost(postUrl, headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)), body = "")
       }
 
       result.status shouldBe SEE_OTHER
       result.headers("Location").head shouldBe s"/update-and-submit-income-tax-return/additional-information/$taxYear/gains/summary"
+    }
+
+    "redirect to error page when there is a problem posting data" in {
+      lazy val result: WSResponse = {
+        clearSession()
+        populateWithSessionDataModel(Seq(completePolicyCyaModel))
+        authoriseAgentOrIndividual(isAgent = false)
+        userDataStub(gainsPriorDataModel, nino, taxYear)
+        stubPut(putUrl, INTERNAL_SERVER_ERROR, "{}")
+        urlPost(postUrl, headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)), body = "")
+      }
+
+      result.status shouldBe INTERNAL_SERVER_ERROR
     }
 
     "redirect to overview after submission" in {

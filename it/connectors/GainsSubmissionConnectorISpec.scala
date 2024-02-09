@@ -148,7 +148,7 @@ class GainsSubmissionConnectorISpec extends IntegrationTest {
         result shouldBe Left(ApiError(INTERNAL_SERVER_ERROR, SingleErrorBody("INTERNAL_SERVER_ERROR", "Unexpected status returned from API")))
       }
 
-      "Gains submission returns a 503" in {
+      "Gains submission returns a 500 when service is unavailable" in {
 
         val responseBody = Json.obj(
           "code" -> "SERVICE_UNAVAILABLE",
@@ -157,7 +157,7 @@ class GainsSubmissionConnectorISpec extends IntegrationTest {
 
         stubPut(s"/income-tax-additional-information/income-tax/insurance-policies/income/$nino/$taxYear", SERVICE_UNAVAILABLE, responseBody.toString(), expectedHeaders)
         val result = Await.result(connector.submitGains(validGainsSubmissionModel, nino, taxYear), Duration.Inf)
-        result shouldBe Left(ApiError(SERVICE_UNAVAILABLE, SingleErrorBody("SERVICE_UNAVAILABLE", "the service is currently unavailable")))
+        result shouldBe Left(ApiError(INTERNAL_SERVER_ERROR, SingleErrorBody("SERVICE_UNAVAILABLE", "the service is currently unavailable")))
       }
 
     }
