@@ -18,4 +18,5 @@ package utils
 
 object HMRCHeaderNames {
   val TrueUserAgent = "True-User-Agent"
+  val CORRELATION_ID = "X-Correlation-Id"
 }
