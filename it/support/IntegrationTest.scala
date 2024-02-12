@@ -67,7 +67,7 @@ trait IntegrationTest extends AnyWordSpec
   protected implicit lazy val wsClient: WSClient = app.injector.instanceOf[WSClient]
   protected implicit lazy val appConfig: AppConfig = app.injector.instanceOf[AppConfig]
   implicit lazy val user: User = User(mtditid, None, nino, affinityGroup, sessionId)
-
+  implicit val correlationId = UUID.randomUUID().toString
   protected lazy val appUrl = s"http://localhost:$port/update-and-submit-income-tax-return/additional-information"
 
   protected val config: Map[String, String] = Map(
@@ -176,7 +176,7 @@ trait IntegrationTest extends AnyWordSpec
     Some(GainsPriorDataModel("submittedOn", lifeInsurance = Some(Seq(LifeInsuranceModel(Some("abc123"), Some("event"), BigDecimal(123.45), Some(true), Some(5), Some(10)))), None, None, None, None))
   val gainsUserDataRepository: GainsUserDataRepository = app.injector.instanceOf[GainsUserDataRepository]
   val getGainsDataConnector: GetGainsConnector = app.injector.instanceOf[GetGainsConnector]
-  val gainsSessionService: GainsSessionService = new GainsSessionService(gainsUserDataRepository, getGainsDataConnector)
+  val gainsSessionService: GainsSessionService = new GainsSessionService(gainsUserDataRepository, getGainsDataConnector)(correlationId)
 
   def populateSessionData(): Boolean =
     await(gainsSessionService.createSessionData(AllGainsSessionModel(Seq(PolicyCyaModel(sessionId, "")), gateway = Some(true)), taxYear)(false)(true)(AuthorisationRequestBuilder.anAuthorisationRequest, ec, headerCarrier))
