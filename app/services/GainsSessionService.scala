@@ -23,24 +23,27 @@ import models.gains.prior.GainsPriorDataModel
 import models.mongo.{DatabaseError, GainsUserDataModel}
 import models.requests.AuthorisationRequest
 import org.joda.time.{DateTime, DateTimeZone}
-import play.api.i18n.Lang.logger
+import play.api.Logging
 import repositories.GainsUserDataRepository
 import uk.gov.hmrc.http.HeaderCarrier
 
+import java.util.UUID
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
 class GainsSessionService @Inject()(
                                      gainsUserDataRepository: GainsUserDataRepository,
                                      getGainsDataConnector: GetGainsConnector
-                                   ) {
+                                   ) extends Logging {
+
+  private def getCorrelationid(implicit hc:HeaderCarrier) = hc.extraHeaders.find(_._1 == "CorrelationId").getOrElse(UUID.randomUUID())
 
   def getPriorData(taxYear: Int)(implicit request: AuthorisationRequest[_], hc: HeaderCarrier): Future[GetGainsResponse] = {
     getGainsDataConnector.getUserData(taxYear)(request.user, hc.withExtraHeaders("mtditid" -> request.user.mtditid))
   }
 
   def createSessionData[A](cyaModel: AllGainsSessionModel, taxYear: Int)(onFail: A)(onSuccess: A)
-                          (implicit request: AuthorisationRequest[_], ec: ExecutionContext): Future[A] = {
+                          (implicit request: AuthorisationRequest[_], ec: ExecutionContext, hc: HeaderCarrier): Future[A] = {
 
     val userData = GainsUserDataModel(
       request.user.sessionId,
@@ -52,25 +55,28 @@ class GainsSessionService @Inject()(
     )
 
     gainsUserDataRepository.create(userData).map {
-      case Right(_) => onSuccess
-      case Left(_) => onFail
-
+      case Right(_) =>
+        onSuccess
+      case Left(_) =>
+        logger.error(s"[GainsSessionService][createSessionData] session create failed. correlation id: " + getCorrelationid(hc))
+        onFail
     }
   }
 
   def getSessionData(taxYear: Int)(implicit request: AuthorisationRequest[_],
-                                   ec: ExecutionContext): Future[Either[DatabaseError, Option[GainsUserDataModel]]] = {
+                                   ec: ExecutionContext, hc: HeaderCarrier): Future[Either[DatabaseError, Option[GainsUserDataModel]]] = {
 
     gainsUserDataRepository.find(taxYear).map {
       case Left(error) =>
-        logger.error("[GainsSessionService][getSessionData] Could not find user session.")
+        logger.error("[GainsSessionService][getSessionData] Could not find user session." + getCorrelationid(hc))
         Left(error)
-      case Right(userData) => Right(userData)
+      case Right(userData) =>
+        Right(userData)
     }
   }
 
   def updateSessionData[A](cyaModel: AllGainsSessionModel, taxYear: Int)(onFail: A)(onSuccess: A)
-                          (implicit request: AuthorisationRequest[_], ec: ExecutionContext): Future[A] = {
+                          (implicit request: AuthorisationRequest[_], ec: ExecutionContext, hc: HeaderCarrier): Future[A] = {
 
     val userData = GainsUserDataModel(
       request.user.sessionId,
@@ -82,18 +88,24 @@ class GainsSessionService @Inject()(
     )
 
     gainsUserDataRepository.update(userData).map {
-      case Right(_) => onSuccess
-      case Left(_) => onFail
+      case Right(_) =>
+        onSuccess
+      case Left(_) =>
+        logger.error(s"[GainsSessionService][updateSessionData] session update failure. correlation id: " + getCorrelationid(hc))
+        onFail
     }
 
   }
 
   def deleteSessionData[A](cyaModel: AllGainsSessionModel, taxYear: Int)(onFail: A)(onSuccess: A)
-                          (implicit request: AuthorisationRequest[_], ec: ExecutionContext): Future[A] = {
+                          (implicit request: AuthorisationRequest[_], ec: ExecutionContext,  hc: HeaderCarrier): Future[A] = {
 
     gainsUserDataRepository.clear(taxYear)(request.user).map {
-      case true => onSuccess
-      case _ => onFail
+      case true =>
+        onSuccess
+      case _ =>
+        logger.error(s"[GainsSessionService][deleteSessionData] session delete failure. correlation id: " + getCorrelationid(hc))
+        onFail
     }
 
   }
@@ -106,10 +118,14 @@ class GainsSessionService @Inject()(
     } yield {
       priorDataResponse match {
         case Right(prior) => optionalCya match {
-          case Left(_) => onFail
+          case Left(_) =>
+            logger.error(s"[GainsSessionService][getAndHandle] No session data. correlation id: " + getCorrelationid(hc))
+            onFail
           case Right(cyaData) => block(cyaData.flatMap(_.gains), prior)
         }
-        case Left(_) => onFail
+        case Left(_) =>
+          logger.error(s"[GainsSessionService][getAndHandle] No prior data. correlation id: " + getCorrelationid(hc))
+          onFail
       }
     }
   }
