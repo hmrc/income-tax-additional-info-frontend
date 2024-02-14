@@ -33,16 +33,12 @@ case class GainsPriorDataModel(
                                 foreign: Option[Seq[ForeignModel]] = None
                               ) {
   def toPolicyCya: Seq[PolicyCyaModel] = {
-    (for {
-      lifeInsurance <- lifeInsurance.map(_.map(_.toPolicyCya))
-      capitalRedemption <- capitalRedemption.map(_.map(_.toPolicyCya))
-      lifeAnnuity <- lifeAnnuity.map(_.map(_.toPolicyCya))
-      voidedIsa <- voidedIsa.map(_.map(_.toPolicyCya))
-      foreign <- foreign.map(_.map(_.toPolicyCya))
-      allPolicies <- Some(lifeInsurance ++ capitalRedemption ++ lifeAnnuity ++ voidedIsa ++ foreign)
-    } yield {
-      allPolicies
-    }).getOrElse(Seq[PolicyCyaModel]())
+    val lifeInsuranceConverted = lifeInsurance.map(_.map(_.toPolicyCya)).getOrElse(Seq.empty)
+    val capitalRedemptionConverted = capitalRedemption.map(_.map(_.toPolicyCya)).getOrElse(Seq.empty)
+    val lifeAnnuityConverted = lifeAnnuity.map(_.map(_.toPolicyCya)).getOrElse(Seq.empty)
+    val voidedIsaConverted = voidedIsa.map(_.map(_.toPolicyCya)).getOrElse(Seq.empty)
+    val foreignConverted = foreign.map(_.map(_.toPolicyCya)).getOrElse(Seq.empty)
+    lifeInsuranceConverted ++ capitalRedemptionConverted ++ lifeAnnuityConverted ++ voidedIsaConverted ++ foreignConverted
   }
 }
 
