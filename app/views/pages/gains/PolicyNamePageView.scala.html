@@ -59,7 +59,7 @@
             label = messages(s"gains.policy-name.label.${if(request.user.isAgent) "agent" else "individual"}"),
             labelHidden = false,
             classes = Some("govuk-input--width-10"),
-            hint = Some(messages(s"gains.policy-name.question.hint"))
+            hint = Some(messages(s"gains.policy-name.question.hint.${if(request.user.isAgent) "agent" else "individual"}"))
         )
 
         @button()
