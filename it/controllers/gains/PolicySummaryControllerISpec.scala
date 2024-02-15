@@ -32,7 +32,6 @@ class PolicySummaryControllerISpec extends IntegrationTest {
   private val postUrl: String = s"/update-and-submit-income-tax-return/additional-information/$taxYear/gains/policy-summary"
   private val putUrl: String =  s"/income-tax-additional-information/income-tax/insurance-policies/income/$nino/$taxYear"
   private val submissionUrl: String = s"/income-tax-submission-service/income-tax/nino/AA123456A/sources/exclude-journey/$taxYear"
-  private val nrsUrl: String = s"/income-tax-nrs-proxy/$nino/itsa-personal-income-submission"
 
   ".show" should {
     "render the policy summary page" in {
@@ -139,7 +138,6 @@ class PolicySummaryControllerISpec extends IntegrationTest {
         authoriseAgentOrIndividual(isAgent = false)
         emptyUserDataStub()
         stubPost(submissionUrl, NO_CONTENT, "{}")
-        stubPost(nrsUrl, OK, "{}")
         urlPost(postUrl, headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)), body = "")
       }
 
