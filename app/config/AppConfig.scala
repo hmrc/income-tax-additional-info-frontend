@@ -37,6 +37,7 @@ class AppConfig @Inject()(servicesConfig: ServicesConfig) {
   private lazy val contactFrontendUrlKey = "microservice.services.contact-frontend.url"
   private lazy val viewAndChangeUrlKey = "microservice.services.view-and-change.url"
   private lazy val signInContinueUrlKey = "microservice.services.sign-in.continueUrl"
+  private val incomeTaxSubmissionUrlKey = "microservice.services.income-tax-submission.url"
 
   private lazy val applicationUrl: String = servicesConfig.getString("microservice.url")
   private lazy val basGatewayUrl = servicesConfig.getString(basGatewayFrontendUrlKey)
@@ -62,9 +63,7 @@ class AppConfig @Inject()(servicesConfig: ServicesConfig) {
   // Mongo config
   lazy val encryptionKey: String = servicesConfig.getString("mongodb.encryption.key")
   lazy val mongoTTL: Int = Duration(servicesConfig.getString("mongodb.timeToLive")).toMinutes.toInt
-
-  val incomeTaxSubmissionUrl = "microservice.services.income-tax-submission.url"
-  lazy val incomeTaxSubmissionBEBaseUrl: String = servicesConfig.getString(incomeTaxSubmissionUrl) + "/income-tax-submission-service"
+  lazy val incomeTaxSubmissionBEBaseUrl: String = servicesConfig.getString(incomeTaxSubmissionUrlKey) + "/income-tax-submission-service"
 
   def incomeTaxSubmissionBaseUrl: String = servicesConfig.getString(incomeTaxSubmissionFrontendUrlKey) +
     servicesConfig.getString(key = "microservice.services.income-tax-submission-frontend.context")
