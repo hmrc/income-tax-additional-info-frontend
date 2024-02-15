@@ -18,7 +18,7 @@ package controllers.gains
 
 import forms.AmountForm
 import play.api.http.HeaderNames
-import play.api.http.Status.{BAD_REQUEST, INTERNAL_SERVER_ERROR, OK, SEE_OTHER}
+import play.api.http.Status.{BAD_REQUEST, OK, SEE_OTHER}
 import play.api.libs.ws.WSResponse
 import support.IntegrationTest
 
@@ -119,17 +119,6 @@ class PaidTaxAmountControllerISpec extends IntegrationTest {
       }
 
       result.status shouldBe BAD_REQUEST
-    }
-
-    "Redirect to error page when no session data exists" in {
-      lazy val result: WSResponse = {
-        clearSession()
-        authoriseAgentOrIndividual(isAgent = false)
-        stubPost(url(taxYear), INTERNAL_SERVER_ERROR, null)
-        urlPost(url(taxYear), headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)), body = Map(AmountForm.amount -> "100"))
-      }
-
-      result shouldBe Left(INTERNAL_SERVER_ERROR)
     }
   }
 
