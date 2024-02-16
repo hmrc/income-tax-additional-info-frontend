@@ -20,13 +20,13 @@ import actions.AuthorisedAction
 import audit.{AuditModel, AuditService, CreateOrAmendGainsAuditDetail}
 import config.{AppConfig, ErrorHandler}
 import models.gains.prior.GainsPriorDataModel
-import models.gains.{DecodedGainsSubmissionPayload, GainsSubmissionModel}
+import models.gains.GainsSubmissionModel
 import models.requests.AuthorisationRequest
 import models.{AllGainsSessionModel, User}
 import play.api.Logging
 import play.api.i18n.I18nSupport
 import play.api.mvc._
-import services.{ExcludeJourneyService, GainsSessionService, GainsSubmissionService, NrsService}
+import services.{ExcludeJourneyService, GainsSessionService, GainsSubmissionService}
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.audit.http.connector.AuditResult
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
@@ -42,8 +42,7 @@ class PolicySummaryController @Inject()(authorisedAction: AuthorisedAction,
                                         gainsSubmissionService: GainsSubmissionService,
                                         excludeJourneyService: ExcludeJourneyService,
                                         errorHandler: ErrorHandler,
-                                        auditService: AuditService,
-                                        nrsService: NrsService)
+                                        auditService: AuditService)
                                        (implicit appConfig: AppConfig, mcc: MessagesControllerComponents, ec: ExecutionContext)
   extends FrontendController(mcc) with Logging with I18nSupport {
 
@@ -107,19 +106,9 @@ class PolicySummaryController @Inject()(authorisedAction: AuthorisedAction,
         Future.successful(errorHandler.internalServerError())
       }
       case Right(_) => {
-        nrsSubmission(body, prior, user.nino, user.mtditid)
         auditSubmission(body, prior, user.nino, user.mtditid, user.affinityGroup, taxYear)
         gainsSessionService.deleteSessionData(cya, taxYear)(errorHandler.internalServerError())(successResult)
       }
-    }
-  }
-
-  private def nrsSubmission(body: Option[GainsSubmissionModel], prior: Option[GainsPriorDataModel],
-                            nino: String, mtditid: String)
-                           (implicit request: Request[_]): Unit = {
-
-    if (appConfig.nrsEnabled) {
-      nrsService.submit(nino, new DecodedGainsSubmissionPayload(body, prior), mtditid)
     }
   }
 

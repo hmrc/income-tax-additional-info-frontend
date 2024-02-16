@@ -38,7 +38,6 @@ class AppConfig @Inject()(servicesConfig: ServicesConfig) {
   private lazy val viewAndChangeUrlKey = "microservice.services.view-and-change.url"
   private lazy val signInContinueUrlKey = "microservice.services.sign-in.continueUrl"
   private val incomeTaxSubmissionUrlKey = "microservice.services.income-tax-submission.url"
-  private val incomeTaxNrsProxyUrlKey = "microservice.services.income-tax-nrs-proxy.url"
 
   private lazy val applicationUrl: String = servicesConfig.getString("microservice.url")
   private lazy val basGatewayUrl = servicesConfig.getString(basGatewayFrontendUrlKey)
@@ -52,7 +51,6 @@ class AppConfig @Inject()(servicesConfig: ServicesConfig) {
 
   lazy val signOutUrl: String = s"$basGatewayUrl/bas-gateway/sign-out-without-state"
   lazy val welshLanguageEnabled: Boolean = servicesConfig.getBoolean(key = "feature-switch.welshLanguageEnabled")
-  lazy val nrsEnabled: Boolean = servicesConfig.getBoolean("feature-switch.nrsEnabled")
   lazy val defaultTaxYear: Int = servicesConfig.getInt(key = "defaultTaxYear")
   lazy val languageMap: Map[String, Lang] = Map("english" -> Lang("en"), "cymraeg" -> Lang("cy"))
   lazy val timeoutDialogTimeout: Int = servicesConfig.getInt("timeoutDialogTimeout")
@@ -65,10 +63,7 @@ class AppConfig @Inject()(servicesConfig: ServicesConfig) {
   // Mongo config
   lazy val encryptionKey: String = servicesConfig.getString("mongodb.encryption.key")
   lazy val mongoTTL: Int = Duration(servicesConfig.getString("mongodb.timeToLive")).toMinutes.toInt
-
-
   lazy val incomeTaxSubmissionBEBaseUrl: String = servicesConfig.getString(incomeTaxSubmissionUrlKey) + "/income-tax-submission-service"
-  lazy val nrsProxyBaseUrl: String = servicesConfig.getString(incomeTaxNrsProxyUrlKey)
 
   def incomeTaxSubmissionBaseUrl: String = servicesConfig.getString(incomeTaxSubmissionFrontendUrlKey) +
     servicesConfig.getString(key = "microservice.services.income-tax-submission-frontend.context")
