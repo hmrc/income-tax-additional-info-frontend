@@ -96,7 +96,7 @@ class GainsSessionService @Inject()(
 
   }
 
-  def deleteSessionData[A](cyaModel: AllGainsSessionModel, taxYear: Int)(onFail: A)(onSuccess: A)
+  def deleteSessionData[A](taxYear: Int)(onFail: A)(onSuccess: A)
                           (implicit request: AuthorisationRequest[_], ec: ExecutionContext,  hc: HeaderCarrier): Future[A] = {
 
     gainsUserDataRepository.clear(taxYear)(request.user).map {

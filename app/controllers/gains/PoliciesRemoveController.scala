@@ -71,6 +71,7 @@ class PoliciesRemoveController @Inject()(authorisedAction: AuthorisedAction,
               case Right(_) => auditAndDeleteSessionData(taxYear, prior, cya)
             }
           } else {
+            //As API deletes all policies, rather deleting one policy updating with full data except that one
             gainsSubmissionService.submitGains(Some(newData.toSubmissionModel), request.user.nino, request.user.mtditid, taxYear).flatMap {
               case Left(_) => Future.successful(errorHandler.internalServerError())
               case Right(_) => auditAndDeleteSessionData(taxYear, prior, cya)
@@ -86,7 +87,7 @@ class PoliciesRemoveController @Inject()(authorisedAction: AuthorisedAction,
                                         cya: AllGainsSessionModel)
                                        (implicit hc: HeaderCarrier, request: AuthorisationRequest[AnyContent]) = {
     auditSubmission(None, prior, request.user.nino, request.user.mtditid, request.user.affinityGroup, taxYear)
-    gainsSessionService.deleteSessionData(cya, taxYear)(errorHandler.internalServerError()) {
+    gainsSessionService.deleteSessionData(taxYear)(errorHandler.internalServerError()) {
       Redirect(controllers.gains.routes.GainsSummaryController.show(taxYear))
     }
   }

@@ -51,7 +51,7 @@
         )))
         }
 
-        @formWithCsrf(action = controllers.gains.routes.PolicySummaryController.submit(taxYear)) {
+        @formWithCsrf(action = controllers.gains.routes.PolicySummaryController.submit(taxYear, session)) {
             @button(alternativeText = "common.return.to.overview", classes = Some("govuk-!-margin-top-6 govuk-button"), attributes = Map("id" -> "returnToOverviewPageBtn", "type" -> "submit"))
         }
     }
@@ -153,7 +153,7 @@
             ).flatten))
         )
         }
-        @formWithCsrf(action = controllers.gains.routes.PolicySummaryController.submit(taxYear)) {
+        @formWithCsrf(action = controllers.gains.routes.PolicySummaryController.submit(taxYear, session)) {
             @button(alternativeText = "common.saveAndContinue", classes = Some("govuk-!-margin-top-6 govuk-button"), attributes = Map("id" -> "continue", "type" -> "submit"))
         }
     }

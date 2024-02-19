@@ -73,7 +73,7 @@ class PolicySummaryController @Inject()(authorisedAction: AuthorisedAction,
     }.flatten
   }
 
-  def submit(taxYear: Int): Action[AnyContent] = authorisedAction.async { implicit request =>
+  def submit(taxYear: Int, sessionId: String): Action[AnyContent] = authorisedAction.async { implicit request =>
     gainsSessionService.getAndHandle(taxYear)(Future.successful(errorHandler.internalServerError())) {
       implicit val user: User = request.user
       (cya, prior) =>
@@ -87,11 +87,12 @@ class PolicySummaryController @Inject()(authorisedAction: AuthorisedAction,
                   case Left(_) => Future.successful(errorHandler.internalServerError())
                 }
               case _ =>
-                submitGainsAndAudit(Some(cya.toSubmissionModel), taxYear, user, prior, cya,
+                submitGainsAndAudit(Some(AllGainsSessionModel(cya.allGains.filter(_.sessionId == sessionId)).toSubmissionModel), taxYear, user, prior, cya,
                   Redirect(controllers.gains.routes.GainsSummaryController.show(taxYear)))
             }
           }
-          case (_, _) => Future.successful(errorHandler.internalServerError())
+          case (_, _) => {
+            Future.successful(errorHandler.internalServerError())}
         }
     }.flatten
   }
@@ -107,7 +108,7 @@ class PolicySummaryController @Inject()(authorisedAction: AuthorisedAction,
       }
       case Right(_) => {
         auditSubmission(body, prior, user.nino, user.mtditid, user.affinityGroup, taxYear)
-        gainsSessionService.deleteSessionData(cya, taxYear)(errorHandler.internalServerError())(successResult)
+        gainsSessionService.deleteSessionData(taxYear)(errorHandler.internalServerError())(successResult)
       }
     }
   }

@@ -53,9 +53,9 @@ class PolicyNameController @Inject()(authorisedAction: AuthorisedAction,
           cyaData =>
             cyaData.gains.fold(Ok(view(taxYear, form(request.user.isAgent), sessionId))) {
               data =>
-                data.allGains.filter(_.sessionId == sessionId).head.policyNumber match {
-                  case None => Ok(view(taxYear, form(request.user.isAgent), sessionId))
-                  case Some(value) => Ok(view(taxYear, form(request.user.isAgent).fill(value), sessionId))
+                data.allGains.find(_.sessionId == sessionId) match {
+                  case None => errorHandler.internalServerError()
+                  case Some(value) => Ok(view(taxYear, form(request.user.isAgent).fill(value.policyNumber.getOrElse("")), sessionId))
                 }
             }
         })
@@ -71,14 +71,20 @@ class PolicyNameController @Inject()(authorisedAction: AuthorisedAction,
           case Left(_) => Future.successful(errorHandler.internalServerError())
           case Right(sessionData) =>
             val cya = sessionData.flatMap(_.gains).getOrElse(AllGainsSessionModel(Seq.empty))
-            val index = cya.allGains.indexOf(cya.allGains.filter(_.sessionId == sessionId).head)
-            val newData = cya.allGains(index).copy(policyNumber = Some(policyNumber))
-            val updated = cya.allGains.updated(index, newData)
-            gainsSessionService.updateSessionData(AllGainsSessionModel(updated, cya.gateway), taxYear)(errorHandler.internalServerError()) {
-              if (newData.isFinished) {
-                Redirect(controllers.gains.routes.PolicySummaryController.show(taxYear, sessionId))
-              } else {
-                Redirect(controllers.gains.routes.GainsAmountController.show(taxYear, sessionId))
+            val currentSession = cya.allGains.find(_.sessionId == sessionId)
+            currentSession match {
+              case None => Future.successful(errorHandler.internalServerError())
+              case Some(session) => {
+                val index = cya.allGains.indexOf(session)
+                val newData = cya.allGains(index).copy(policyNumber = Some(policyNumber))
+                val updated = cya.allGains.updated(index, newData)
+                gainsSessionService.updateSessionData(AllGainsSessionModel(updated, cya.gateway), taxYear)(errorHandler.internalServerError()) {
+                  if (newData.isFinished) {
+                    Redirect(controllers.gains.routes.PolicySummaryController.show(taxYear, sessionId))
+                  } else {
+                    Redirect(controllers.gains.routes.GainsAmountController.show(taxYear, sessionId))
+                  }
+                }
               }
             }
         }
