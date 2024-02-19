@@ -47,30 +47,29 @@ class PolicySummaryController @Inject()(authorisedAction: AuthorisedAction,
   extends FrontendController(mcc) with Logging with I18nSupport {
 
   def show(taxYear: Int, sessionId: String): Action[AnyContent] = authorisedAction.async { implicit request =>
-    gainsSessionService.getAndHandle(taxYear)(Future.successful(errorHandler.internalServerError())) {
-      (cya, prior) =>
-        (cya, prior) match {
-          case (Some(cya), Some(prior)) =>
-            val filteredPrior = prior.toPolicyCya.filter(el => cya.allGains.contains(el))
-            if(cya.allGains.map(_.sessionId).contains(sessionId))
-            {
-              gainsSessionService.updateSessionData(
-                AllGainsSessionModel(cya.allGains ++ filteredPrior, cya.gateway), taxYear)(errorHandler.internalServerError()) {
-                Ok(view(taxYear, cya.allGains ++ filteredPrior, sessionId))
-              }
-            } else {
-              Future.successful(Redirect(appConfig.incomeTaxSubmissionOverviewUrl(taxYear)))
+    gainsSessionService.getSessionData(taxYear).flatMap {
+      case Left(_) => Future.successful(errorHandler.internalServerError())
+      case Right(cya) =>
+        cya.fold(Future.successful(Redirect(appConfig.incomeTaxSubmissionOverviewUrl(taxYear)))) {
+          cyaData =>
+            cyaData.gains.fold(Future.successful(Redirect(appConfig.incomeTaxSubmissionOverviewUrl(taxYear)))) {
+              data =>
+                data.allGains.find(_.sessionId == sessionId) match {
+                  case Some(policyCya) if !policyCya.isFinished =>
+                    Future.successful(handleUnfinishedRedirect(policyCya, sessionId, taxYear))
+                  case Some(_) =>
+                    gainsSessionService.updateSessionData(
+                      AllGainsSessionModel(data.allGains, data.gateway), taxYear)(Future.successful(errorHandler.internalServerError())) {
+                      Future.successful(Ok(view(taxYear, data.allGains, sessionId)))
+                    }.flatten
+                  case None => {
+                    logger.info("[PolicySummaryController][show] No CYA data in session. Redirecting to the overview page.")
+                    Future.successful(Redirect(appConfig.incomeTaxSubmissionOverviewUrl(taxYear)))
+                  }
+                }
             }
-          case (Some(cya), None) =>
-              gainsSessionService.updateSessionData(
-                AllGainsSessionModel(cya.allGains, cya.gateway), taxYear)(errorHandler.internalServerError()) {
-                Ok(view(taxYear, cya.allGains, sessionId))
-              }
-          case (_, _) =>
-            logger.info("[PolicySummaryController][show] No CYA data in session. Redirecting to the overview page.")
-            Future.successful(Redirect(appConfig.incomeTaxSubmissionOverviewUrl(taxYear)))
         }
-    }.flatten
+    }
   }
 
   def submit(taxYear: Int, sessionId: String): Action[AnyContent] = authorisedAction.async { implicit request =>
@@ -91,8 +90,7 @@ class PolicySummaryController @Inject()(authorisedAction: AuthorisedAction,
                   Redirect(controllers.gains.routes.GainsSummaryController.show(taxYear)))
             }
           }
-          case (_, _) => {
-            Future.successful(errorHandler.internalServerError())}
+          case (_, _) => Future.successful(errorHandler.internalServerError())
         }
     }.flatten
   }
@@ -121,6 +119,15 @@ class PolicySummaryController @Inject()(authorisedAction: AuthorisedAction,
       !prior.exists(_.submittedOn.isEmpty), nino, mtditid, affinityGroup.toLowerCase, taxYear)
     val event = AuditModel("CreateOrAmendGainsUpdate", "createOrAmendGainsUpdate", details)
     auditService.auditModel(event)
+  }
+
+  def handleUnfinishedRedirect(policyCya: PolicyCyaModel, sessionId: String, taxYear: Int): Result = {
+    if(policyCya.policyType== "Voided ISA")
+    {
+      //TODO:
+    } else {
+      //TODO:
+    }
   }
 
 }
