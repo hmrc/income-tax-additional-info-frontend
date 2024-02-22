@@ -94,6 +94,18 @@ class PolicySummaryControllerISpec extends IntegrationTest {
       result.status shouldBe SEE_OTHER
     }
 
+    "redirect to policy name page with incomplete cya data with previous gain and entitledToDeficiencyRelief as false" in {
+      lazy val result: WSResponse = {
+        clearSession()
+        populateWithSessionDataModel(Seq(PolicyCyaModel(sessionId, policyType = Some("Life Insurance"), previousGain = Some(false), entitledToDeficiencyRelief = Some(false))))
+        authoriseAgentOrIndividual(isAgent = true)
+        userDataStub(gainsPriorDataModel, nino, taxYear)
+        urlGet(url(taxYear), headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)))
+      }
+
+      result.status shouldBe SEE_OTHER
+    }
+
     "redirect to policy name page with incomplete cya data with policy type as Voided ISA" in {
       lazy val result: WSResponse = {
         clearSession()

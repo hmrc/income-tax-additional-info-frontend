@@ -16,6 +16,7 @@
 
 package controllers.gains
 
+import models.gains.PolicyCyaModel
 import play.api.http.HeaderNames
 import play.api.http.Status.{BAD_REQUEST, OK, SEE_OTHER}
 import play.api.libs.ws.WSResponse
@@ -90,6 +91,18 @@ class GainsGatewayControllerISpec extends IntegrationTest {
 
       result.status shouldBe SEE_OTHER
       result.headers("Location").head contains(s"/update-and-submit-income-tax-return/additional-information/$taxYear/gains/policy-type/") shouldBe(true)
+    }
+
+    "redirect to policy type page when session not has any existing data" in {
+      lazy val result: WSResponse = {
+        clearSession()
+        populateWithSessionDataModel(Seq(PolicyCyaModel(sessionId)))
+        authoriseAgentOrIndividual(isAgent = false)
+        urlPost(url(taxYear), headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)), body = Map("value" -> "true"))
+      }
+
+      result.status shouldBe SEE_OTHER
+      result.headers("Location").head contains (s"/update-and-submit-income-tax-return/additional-information/$taxYear/gains/policy-type/") shouldBe (true)
     }
 
     "redirect to policy summary page if user chooses 'No'" in {

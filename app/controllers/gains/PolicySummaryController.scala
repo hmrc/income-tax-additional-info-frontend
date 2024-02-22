@@ -148,7 +148,6 @@ class PolicySummaryController @Inject()(authorisedAction: AuthorisedAction,
       } else {
         ListMap[Call, Option[_]](
           controllers.gains.routes.GainsStatusController.show(taxYear, cyaModel.sessionId) -> cyaModel.previousGain,
-          controllers.gains.routes.PolicyHeldPreviousController.show(taxYear, cyaModel.sessionId) -> cyaModel.yearsPolicyHeldPrevious,
           controllers.gains.routes.PolicyHeldController.show(taxYear, cyaModel.sessionId) -> cyaModel.yearsPolicyHeld
         )
       }
