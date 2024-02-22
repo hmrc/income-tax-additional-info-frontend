@@ -20,7 +20,7 @@ import actions.AuthorisedAction
 import audit.{AuditModel, AuditService, CreateOrAmendGainsAuditDetail}
 import config.{AppConfig, ErrorHandler}
 import models.gains.prior.GainsPriorDataModel
-import models.gains.GainsSubmissionModel
+import models.gains.{GainsSubmissionModel, PolicyCyaModel}
 import models.requests.AuthorisationRequest
 import models.{AllGainsSessionModel, User}
 import play.api.Logging
