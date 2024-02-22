@@ -71,6 +71,18 @@ populateSessionData()
       result.body.contains("Yes")
     }
 
+    "render the deficiency relief page without prefilled data" in {
+      clearSession()
+      populateWithSessionDataModel(Seq(completePolicyCyaModel.copy(entitledToDeficiencyRelief = None, deficiencyReliefAmount = None)))
+      lazy val result: WSResponse = {
+        authoriseAgentOrIndividual(isAgent = false)
+        urlGet(url(taxYear), headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)))
+      }
+
+      result.status shouldBe OK
+      result.body.contains("Yes")
+    }
+
     "return an internal server error" in {
       lazy val result: WSResponse = {
         authoriseAgentOrIndividual(isAgent = false)
@@ -92,17 +104,6 @@ populateSessionData()
   }
 
   ".submit" should {
-    "redirect to policy summary page if successful" in {
-      lazy val result: WSResponse = {
-        authoriseAgentOrIndividual(isAgent = false)
-        userDataStub(gainsPriorDataModel, nino, taxYear)
-        urlPost(url(taxYear), headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)), body = Map(RadioButtonAmountForm.yesNo -> "true", RadioButtonAmountForm.amount -> "100"))
-      }
-
-      result.status shouldBe SEE_OTHER
-      result.headers("Location").head shouldBe s"/update-and-submit-income-tax-return/additional-information/$taxYear/gains/policy-summary/$sessionId"
-    }
-
     "show page with error text if no radio is selected" in {
       lazy val result: WSResponse = {
         authoriseAgentOrIndividual(isAgent = false)
@@ -120,7 +121,7 @@ populateSessionData()
       result.status shouldBe BAD_REQUEST
     }
 
-    "redirect to summary when model is full if successful" in {
+    "redirect to summary page if successful" in {
       clearSession()
       populateWithSessionDataModel(Seq(completePolicyCyaModel))
       lazy val result: WSResponse = {

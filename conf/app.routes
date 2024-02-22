@@ -60,7 +60,7 @@ GET         /:taxYear/gains/paid-tax-amount/:sessionId                 controlle
 POST        /:taxYear/gains/paid-tax-amount/:sessionId                 controllers.gains.PaidTaxAmountController.submit(taxYear: Int, sessionId: String)
 
 GET         /:taxYear/gains/policy-summary/:sessionId                  controllers.gains.PolicySummaryController.show(taxYear: Int, sessionId: String)
-POST        /:taxYear/gains/policy-summary                             controllers.gains.PolicySummaryController.submit(taxYear: Int)
+POST        /:taxYear/gains/policy-summary/:sessionId                  controllers.gains.PolicySummaryController.submit(taxYear: Int, sessionId: String)
 
 GET         /:taxYear/gains/summary                                    controllers.gains.GainsSummaryController.show(taxYear: Int)
 

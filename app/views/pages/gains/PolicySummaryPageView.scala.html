@@ -30,7 +30,7 @@
         govukSummaryList: GovukSummaryList
 )
 
-@(taxYear: Int, gain: Seq[PolicyCyaModel], session: String)(implicit request: AuthorisationRequest[_], messages: Messages, appConfig: AppConfig)
+@(taxYear: Int, gain: Seq[PolicyCyaModel], gateway: Boolean, session: String)(implicit request: AuthorisationRequest[_], messages: Messages, appConfig: AppConfig)
 
 @titleForUse = @{messages(s"gains.policy-summary.question.title")}
 
@@ -51,7 +51,7 @@
         )))
         }
 
-        @formWithCsrf(action = controllers.gains.routes.PolicySummaryController.submit(taxYear)) {
+        @formWithCsrf(action = controllers.gains.routes.PolicySummaryController.submit(taxYear, session)) {
             @button(alternativeText = "common.return.to.overview", classes = Some("govuk-!-margin-top-6 govuk-button"), attributes = Map("id" -> "returnToOverviewPageBtn", "type" -> "submit"))
         }
     }
@@ -69,11 +69,11 @@
                     HtmlContent(messages("common.gains.policy-type")),
                     HtmlContent(
                         gains.policyType match {
-                            case "Life Insurance" => messages("gains.policy-type.radio1")
-                            case "Life Annuity" => messages("gains.policy-type.radio2")
-                            case "Capital Redemption" => messages("gains.policy-type.radio3")
-                            case "Voided ISA" => messages("common.gains.voidedIsa")
-                            case "Foreign Policy" => messages("gains.policy-type.radio5")
+                            case Some("Life Insurance") => messages("gains.policy-type.radio1")
+                            case Some("Life Annuity") => messages("gains.policy-type.radio2")
+                            case Some("Capital Redemption") => messages("gains.policy-type.radio3")
+                            case Some("Voided ISA") => messages("common.gains.voidedIsa")
+                            case Some("Foreign Policy") => messages("gains.policy-type.radio5")
                             case _ => ""
                         }
                     ),
@@ -122,7 +122,7 @@
                     HtmlContent(gains.yearsPolicyHeld.getOrElse(0).toString),
                     actions = Seq((controllers.gains.routes.PolicyHeldController.show(taxYear, gains.sessionId), messages("common.change"), Some(messages("gains.policy-summary.list.hidden.text.5"))))
                 )),
-                if (gains.policyType == "Voided ISA") {
+                if (gains.policyType.contains("Voided ISA")) {
                     Some(summaryListRow(
                         HtmlContent(messages("common.gains.taxPaidAmount")),
                         HtmlContent(s"£${gains.taxPaidAmount.getOrElse(BigDecimal(0)).toString}"),
@@ -135,14 +135,14 @@
                         actions = Seq((controllers.gains.routes.PaidTaxStatusController.show(taxYear, gains.sessionId), messages("common.change"), Some(messages("gains.policy-summary.list.hidden.text.6"))))
                     ))
                 },
-                if (gains.policyType != "Voided ISA") {
+                if (!gains.policyType.contains("Voided ISA")) {
                     Some(summaryListRow(
                         HtmlContent(messages("common.gains.deficiency-relief-status")),
                         HtmlContent({if(gains.entitledToDeficiencyRelief.getOrElse(false)) messages("common.yes") else messages("common.no")}),
                         actions = Seq((controllers.gains.routes.GainsDeficiencyReliefController.show(taxYear, gains.sessionId), messages("common.change"), Some(messages("gains.policy-summary.list.hidden.text.7"))))
                     ))} else { None },
                     {
-                    if (gains.entitledToDeficiencyRelief.getOrElse(false) && gains.policyType != "Voided ISA") {
+                    if (gains.entitledToDeficiencyRelief.getOrElse(false) && !gains.policyType.contains("Voided ISA")) {
                         Some(summaryListRow(
                             HtmlContent(messages("common.gains.amount-of-relief-available")),
                             HtmlContent("£" + gains.deficiencyReliefAmount.getOrElse("0")),
@@ -153,13 +153,13 @@
             ).flatten))
         )
         }
-        @formWithCsrf(action = controllers.gains.routes.PolicySummaryController.submit(taxYear)) {
+        @formWithCsrf(action = controllers.gains.routes.PolicySummaryController.submit(taxYear, session)) {
             @button(alternativeText = "common.saveAndContinue", classes = Some("govuk-!-margin-top-6 govuk-button"), attributes = Map("id" -> "continue", "type" -> "submit"))
         }
     }
 }
 
-@if(gain.headOption.getOrElse(PolicyCyaModel("", "")).policyType == ""){ @withoutData } else { @withData }
+@if(!gateway){ @withoutData } else { @withData }
 
 @{
     // $COVERAGE-OFF$

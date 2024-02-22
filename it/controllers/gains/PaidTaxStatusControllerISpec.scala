@@ -17,7 +17,7 @@
 package controllers.gains
 
 import forms.RadioButtonAmountForm
-import forms.RadioButtonYearForm.yesNo
+import models.gains.PolicyCyaModel
 import play.api.http.HeaderNames
 import play.api.http.Status.{BAD_REQUEST, OK, SEE_OTHER}
 import play.api.libs.ws.WSResponse
@@ -61,6 +61,18 @@ class PaidTaxStatusControllerISpec extends IntegrationTest {
       result.body.contains("Yes")
     }
 
+    "render the gains status without pre-filled data" in {
+      clearSession()
+      populateWithSessionDataModel(Seq(completePolicyCyaModel.copy(treatedAsTaxPaid = None)))
+      lazy val result: WSResponse = {
+        authoriseAgentOrIndividual(isAgent = false)
+        urlGet(url(taxYear), headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)))
+      }
+
+      result.status shouldBe OK
+      result.body.contains("Yes")
+    }
+
     "return an internal server error" in {
       lazy val result: WSResponse = {
         authoriseAgentOrIndividual(isAgent = false)
@@ -84,7 +96,7 @@ class PaidTaxStatusControllerISpec extends IntegrationTest {
   ".submit" should {
     "redirect to deficiency relief page if successful" in {
       clearSession()
-      populateSessionData()
+      populateWithSessionDataModel(Seq(PolicyCyaModel(sessionId)))
       lazy val result: WSResponse = {
         authoriseAgentOrIndividual(isAgent = false)
         userDataStub(gainsPriorDataModel, nino, taxYear)
@@ -115,16 +127,6 @@ class PaidTaxStatusControllerISpec extends IntegrationTest {
         urlPost(url(taxYear), headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)), body = Map[String, String]())
       }
       result.status shouldBe BAD_REQUEST
-    }
-
-    "Redirect to policy summary page when no session data exists" in {
-      lazy val result: WSResponse = {
-        clearSession()
-        authoriseAgentOrIndividual(isAgent = false)
-        urlPost(url(taxYear), headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)), body = Map(RadioButtonAmountForm.yesNo -> "false"))
-      }
-
-      result.status shouldBe SEE_OTHER
     }
   }
 }

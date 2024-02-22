@@ -16,6 +16,7 @@
 
 package controllers.gains
 
+import models.gains.PolicyCyaModel
 import play.api.http.HeaderNames
 import play.api.http.Status.{INTERNAL_SERVER_ERROR, NO_CONTENT, OK, SEE_OTHER}
 import play.api.libs.ws.WSResponse
@@ -29,15 +30,16 @@ class PolicySummaryControllerISpec extends IntegrationTest {
   private def url(taxYear: Int): String = {
     s"/update-and-submit-income-tax-return/additional-information/$taxYear/gains/policy-summary/$sessionId"
   }
-  private val postUrl: String = s"/update-and-submit-income-tax-return/additional-information/$taxYear/gains/policy-summary"
+  private val postUrl: String = s"/update-and-submit-income-tax-return/additional-information/$taxYear/gains/policy-summary/$sessionId"
   private val putUrl: String =  s"/income-tax-additional-information/income-tax/insurance-policies/income/$nino/$taxYear"
   private val submissionUrl: String = s"/income-tax-submission-service/income-tax/nino/AA123456A/sources/exclude-journey/$taxYear"
 
   ".show" should {
     "render the policy summary page" in {
       lazy val result: WSResponse = {
+        clearSession()
+        populateSessionData()
         authoriseAgentOrIndividual(isAgent = false)
-        userDataStub(gainsPriorDataModel, nino, taxYear)
         urlGet(url(taxYear), headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)))
       }
 
@@ -46,8 +48,9 @@ class PolicySummaryControllerISpec extends IntegrationTest {
 
     "render the policy summary page for an agent" in {
       lazy val result: WSResponse = {
+        clearSession()
+        populateSessionData()
         authoriseAgentOrIndividual(isAgent = true)
-        userDataStub(gainsPriorDataModel, nino, taxYear)
         urlGet(url(taxYear), headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)))
       }
 
@@ -77,6 +80,42 @@ class PolicySummaryControllerISpec extends IntegrationTest {
       }
 
       result.status shouldBe OK
+    }
+
+    "redirect to policy name page with incomplete cya data with policy type as Life insurance" in {
+      lazy val result: WSResponse = {
+        clearSession()
+        populateWithSessionDataModel(Seq(PolicyCyaModel(sessionId, policyType = Some("Life Insurance"), previousGain=Some(true), entitledToDeficiencyRelief = Some(true))))
+        authoriseAgentOrIndividual(isAgent = true)
+        userDataStub(gainsPriorDataModel, nino, taxYear)
+        urlGet(url(taxYear), headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)))
+      }
+
+      result.status shouldBe SEE_OTHER
+    }
+
+    "redirect to policy name page with incomplete cya data with previous gain and entitledToDeficiencyRelief as false" in {
+      lazy val result: WSResponse = {
+        clearSession()
+        populateWithSessionDataModel(Seq(PolicyCyaModel(sessionId, policyType = Some("Life Insurance"), previousGain = Some(false), entitledToDeficiencyRelief = Some(false))))
+        authoriseAgentOrIndividual(isAgent = true)
+        userDataStub(gainsPriorDataModel, nino, taxYear)
+        urlGet(url(taxYear), headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)))
+      }
+
+      result.status shouldBe SEE_OTHER
+    }
+
+    "redirect to policy name page with incomplete cya data with policy type as Voided ISA" in {
+      lazy val result: WSResponse = {
+        clearSession()
+        populateWithSessionDataModel(Seq(PolicyCyaModel(sessionId, policyType = Some("Voided ISA"), previousGain = Some(true), entitledToDeficiencyRelief = Some(true))))
+        authoriseAgentOrIndividual(isAgent = true)
+        userDataStub(gainsPriorDataModel, nino, taxYear)
+        urlGet(url(taxYear), headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)))
+      }
+
+      result.status shouldBe SEE_OTHER
     }
 
     "render the overview page when no prior data and session data" in {

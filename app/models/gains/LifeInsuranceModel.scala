@@ -32,14 +32,14 @@ case class LifeInsuranceModel(
   def toPolicyCya: PolicyCyaModel = {
     PolicyCyaModel(
       sessionId = UUID.randomUUID().toString,
-      policyType = "Life Insurance",
+      policyType = Some("Life Insurance"),
       policyNumber = this.customerReference,
       amountOfGain = Some(this.gainAmount),
-      policyEvent = Some(""),
+      policyEvent = this.event,
       previousGain = Some(this.yearsHeld.isDefined),
       yearsPolicyHeld = this.yearsHeld,
       yearsPolicyHeldPrevious = this.yearsHeldSinceLastGain,
-      treatedAsTaxPaid = Some(false),
+      treatedAsTaxPaid = this.taxPaid,
       entitledToDeficiencyRelief = Some(this.deficiencyRelief.isDefined),
       deficiencyReliefAmount = this.deficiencyRelief
     )

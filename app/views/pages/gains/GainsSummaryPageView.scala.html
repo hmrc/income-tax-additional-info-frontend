@@ -73,11 +73,11 @@
         </dt>
         <dd class="govuk-summary-list__value">
             {elem.policyType match {
-                case "Life Insurance" => messages("gains.policy-type.radio1")
-                case "Life Annuity" => messages("gains.policy-type.radio2")
-                case "Capital Redemption" => messages("gains.policy-type.radio3")
-                case "Voided ISA" => messages("common.gains.voidedIsa")
-                case "Foreign Policy" => messages("gains.policy-type.radio5")
+                case Some("Life Insurance") => messages("gains.policy-type.radio1")
+                case Some("Life Annuity") => messages("gains.policy-type.radio2")
+                case Some("Capital Redemption") => messages("gains.policy-type.radio3")
+                case Some("Voided ISA") => messages("common.gains.voidedIsa")
+                case Some("Foreign Policy") => messages("gains.policy-type.radio5")
                 case _ => ""
             }}
         </dd>

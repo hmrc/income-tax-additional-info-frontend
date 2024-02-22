@@ -109,7 +109,7 @@ class GainsSummaryPageViewSpec extends ViewUnitTest {
         implicit val userPriorDataRequest: AuthorisationRequest[AnyContent] = getAuthRequest(userScenario.isAgent)
         implicit val messages: Messages = getMessages(userScenario.isWelsh)
 
-        implicit val document: Document = Jsoup.parse(page(taxYear, Seq[PolicyCyaModel](PolicyCyaModel(sessionId, "Life Insurance", Some("CONTRACT123XYZ")))).body)
+        implicit val document: Document = Jsoup.parse(page(taxYear, Seq[PolicyCyaModel](PolicyCyaModel(sessionId, Some("Life Insurance"), Some("CONTRACT123XYZ")))).body)
 
         welshToggleCheck(userScenario.isWelsh)
         titleCheck(userScenario.specificExpectedResults.get.expectedTitle, userScenario.isWelsh)
@@ -129,7 +129,7 @@ class GainsSummaryPageViewSpec extends ViewUnitTest {
         implicit val userPriorDataRequest: AuthorisationRequest[AnyContent] = getAuthRequest(userScenario.isAgent)
         implicit val messages: Messages = getMessages(userScenario.isWelsh)
 
-        implicit val document: Document = Jsoup.parse(page(taxYear, Seq[PolicyCyaModel](PolicyCyaModel(sessionId, "Life Annuity", Some("CONTRACT123XYZ")))).body)
+        implicit val document: Document = Jsoup.parse(page(taxYear, Seq[PolicyCyaModel](PolicyCyaModel(sessionId, Some("Life Annuity"), Some("CONTRACT123XYZ")))).body)
 
         welshToggleCheck(userScenario.isWelsh)
         titleCheck(userScenario.specificExpectedResults.get.expectedTitle, userScenario.isWelsh)
@@ -149,7 +149,7 @@ class GainsSummaryPageViewSpec extends ViewUnitTest {
         implicit val userPriorDataRequest: AuthorisationRequest[AnyContent] = getAuthRequest(userScenario.isAgent)
         implicit val messages: Messages = getMessages(userScenario.isWelsh)
 
-        implicit val document: Document = Jsoup.parse(page(taxYear, Seq[PolicyCyaModel](PolicyCyaModel(sessionId, "Capital Redemption", Some("CONTRACT123XYZ")))).body)
+        implicit val document: Document = Jsoup.parse(page(taxYear, Seq[PolicyCyaModel](PolicyCyaModel(sessionId, Some("Capital Redemption"), Some("CONTRACT123XYZ")))).body)
 
         welshToggleCheck(userScenario.isWelsh)
         titleCheck(userScenario.specificExpectedResults.get.expectedTitle, userScenario.isWelsh)
@@ -169,7 +169,7 @@ class GainsSummaryPageViewSpec extends ViewUnitTest {
         implicit val userPriorDataRequest: AuthorisationRequest[AnyContent] = getAuthRequest(userScenario.isAgent)
         implicit val messages: Messages = getMessages(userScenario.isWelsh)
 
-        implicit val document: Document = Jsoup.parse(page(taxYear, Seq[PolicyCyaModel](PolicyCyaModel(sessionId, "Voided ISA", Some("CONTRACT123XYZ")))).body)
+        implicit val document: Document = Jsoup.parse(page(taxYear, Seq[PolicyCyaModel](PolicyCyaModel(sessionId, Some("Voided ISA"), Some("CONTRACT123XYZ")))).body)
 
         welshToggleCheck(userScenario.isWelsh)
         titleCheck(userScenario.specificExpectedResults.get.expectedTitle, userScenario.isWelsh)
@@ -189,7 +189,7 @@ class GainsSummaryPageViewSpec extends ViewUnitTest {
         implicit val userPriorDataRequest: AuthorisationRequest[AnyContent] = getAuthRequest(userScenario.isAgent)
         implicit val messages: Messages = getMessages(userScenario.isWelsh)
 
-        implicit val document: Document = Jsoup.parse(page(taxYear, Seq[PolicyCyaModel](PolicyCyaModel(sessionId, "Foreign Policy", Some("CONTRACT123XYZ")))).body)
+        implicit val document: Document = Jsoup.parse(page(taxYear, Seq[PolicyCyaModel](PolicyCyaModel(sessionId, Some("Foreign Policy"), Some("CONTRACT123XYZ")))).body)
 
         welshToggleCheck(userScenario.isWelsh)
         titleCheck(userScenario.specificExpectedResults.get.expectedTitle, userScenario.isWelsh)

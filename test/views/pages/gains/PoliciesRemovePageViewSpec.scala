@@ -118,7 +118,7 @@ class PoliciesRemovePageViewSpec extends ViewUnitTest {
         implicit val userPriorDataRequest: AuthorisationRequest[AnyContent] = getAuthRequest(userScenario.isAgent)
         implicit val messages: Messages = getMessages(userScenario.isWelsh)
 
-        implicit val document: Document = Jsoup.parse(page(taxYear, sessionId, PolicyCyaModel(sessionId, "Capital Redemption", policyEvent = Some("Sale or assignment of a policy"), entitledToDeficiencyRelief = Some(true), deficiencyReliefAmount = Some(BigDecimal(123.45)), treatedAsTaxPaid = Some(true))).body)
+        implicit val document: Document = Jsoup.parse(page(taxYear, sessionId, PolicyCyaModel(sessionId, Some("Capital Redemption"), policyEvent = Some("Sale or assignment of a policy"), entitledToDeficiencyRelief = Some(true), deficiencyReliefAmount = Some(BigDecimal(123.45)), treatedAsTaxPaid = Some(true))).body)
 
         welshToggleCheck(userScenario.isWelsh)
         titleCheck(userScenario.commonExpectedResults.expectedTitle, userScenario.isWelsh)
@@ -148,7 +148,7 @@ class PoliciesRemovePageViewSpec extends ViewUnitTest {
         implicit val userPriorDataRequest: AuthorisationRequest[AnyContent] = getAuthRequest(userScenario.isAgent)
         implicit val messages: Messages = getMessages(userScenario.isWelsh)
 
-        implicit val document: Document = Jsoup.parse(page(taxYear, sessionId, PolicyCyaModel(sessionId, "Life Annuity", policyEvent = Some("Policy matured or a death"), entitledToDeficiencyRelief = Some(false), treatedAsTaxPaid = Some(false))).body)
+        implicit val document: Document = Jsoup.parse(page(taxYear, sessionId, PolicyCyaModel(sessionId, Some("Life Annuity"), policyEvent = Some("Policy matured or a death"), entitledToDeficiencyRelief = Some(false), treatedAsTaxPaid = Some(false))).body)
 
         welshToggleCheck(userScenario.isWelsh)
         titleCheck(userScenario.commonExpectedResults.expectedTitle, userScenario.isWelsh)
@@ -177,7 +177,7 @@ class PoliciesRemovePageViewSpec extends ViewUnitTest {
         implicit val userPriorDataRequest: AuthorisationRequest[AnyContent] = getAuthRequest(userScenario.isAgent)
         implicit val messages: Messages = getMessages(userScenario.isWelsh)
 
-        implicit val document: Document = Jsoup.parse(page(taxYear, sessionId, PolicyCyaModel(sessionId, "Life Insurance", policyEvent = Some("Full or part surrender"), entitledToDeficiencyRelief = Some(false), treatedAsTaxPaid = Some(false))).body)
+        implicit val document: Document = Jsoup.parse(page(taxYear, sessionId, PolicyCyaModel(sessionId, Some("Life Insurance"), policyEvent = Some("Full or part surrender"), entitledToDeficiencyRelief = Some(false), treatedAsTaxPaid = Some(false))).body)
 
         welshToggleCheck(userScenario.isWelsh)
         titleCheck(userScenario.commonExpectedResults.expectedTitle, userScenario.isWelsh)
@@ -206,7 +206,7 @@ class PoliciesRemovePageViewSpec extends ViewUnitTest {
         implicit val userPriorDataRequest: AuthorisationRequest[AnyContent] = getAuthRequest(userScenario.isAgent)
         implicit val messages: Messages = getMessages(userScenario.isWelsh)
 
-        implicit val document: Document = Jsoup.parse(page(taxYear, sessionId, PolicyCyaModel(sessionId, "Foreign Policy", policyEvent = Some("Personal Portfolio Bond"), entitledToDeficiencyRelief = Some(false), treatedAsTaxPaid = Some(false))).body)
+        implicit val document: Document = Jsoup.parse(page(taxYear, sessionId, PolicyCyaModel(sessionId, Some("Foreign Policy"), policyEvent = Some("Personal Portfolio Bond"), entitledToDeficiencyRelief = Some(false), treatedAsTaxPaid = Some(false))).body)
 
         welshToggleCheck(userScenario.isWelsh)
         titleCheck(userScenario.commonExpectedResults.expectedTitle, userScenario.isWelsh)
@@ -235,7 +235,7 @@ class PoliciesRemovePageViewSpec extends ViewUnitTest {
         implicit val userPriorDataRequest: AuthorisationRequest[AnyContent] = getAuthRequest(userScenario.isAgent)
         implicit val messages: Messages = getMessages(userScenario.isWelsh)
 
-        implicit val document: Document = Jsoup.parse(page(taxYear, sessionId, PolicyCyaModel(sessionId, "Voided ISA", policyEvent = Some("Some other event"), entitledToDeficiencyRelief = Some(false), treatedAsTaxPaid = Some(false))).body)
+        implicit val document: Document = Jsoup.parse(page(taxYear, sessionId, PolicyCyaModel(sessionId, Some("Voided ISA"), policyEvent = Some("Some other event"), entitledToDeficiencyRelief = Some(false), treatedAsTaxPaid = Some(false))).body)
 
         welshToggleCheck(userScenario.isWelsh)
         titleCheck(userScenario.commonExpectedResults.expectedTitle, userScenario.isWelsh)

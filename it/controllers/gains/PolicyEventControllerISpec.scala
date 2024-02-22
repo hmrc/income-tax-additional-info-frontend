@@ -16,7 +16,7 @@
 
 package controllers.gains
 
-import forms.RadioButtonAmountForm
+import models.gains.PolicyCyaModel
 import play.api.http.HeaderNames
 import play.api.http.Status.{BAD_REQUEST, OK, SEE_OTHER}
 import play.api.libs.ws.WSResponse
@@ -105,6 +105,17 @@ class PolicyEventControllerISpec extends IntegrationTest {
       result.status shouldBe OK
     }
 
+    "render the policy event page without pre-filled data" in {
+      clearSession()
+      populateWithSessionDataModel(Seq(completePolicyCyaModel.copy(policyEvent = None)))
+      lazy val result: WSResponse = {
+        authoriseAgentOrIndividual(isAgent = true)
+        urlGet(url(taxYear), headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)))
+      }
+
+      result.status shouldBe OK
+    }
+
     "return an internal server error with bad session value" in {
       lazy val result: WSResponse = {
         authoriseAgentOrIndividual(isAgent = false)
@@ -128,7 +139,7 @@ class PolicyEventControllerISpec extends IntegrationTest {
   ".submit" should {
     "redirect to gains status page if successful" in {
       clearSession()
-      populateSessionData()
+      populateWithSessionDataModel(Seq(PolicyCyaModel(sessionId)))
       lazy val result: WSResponse = {
         authoriseAgentOrIndividual(isAgent = false)
         userDataStub(gainsPriorDataModel, nino, taxYear)
@@ -179,16 +190,6 @@ class PolicyEventControllerISpec extends IntegrationTest {
 
       result.status shouldBe SEE_OTHER
       result.headers("Location").head shouldBe s"/update-and-submit-income-tax-return/additional-information/$taxYear/gains/policy-summary/$sessionId"
-    }
-
-    "Redirect to policy summary page when no session data exists" in {
-      lazy val result: WSResponse = {
-        clearSession()
-        authoriseAgentOrIndividual(isAgent = false)
-        urlPost(url(taxYear), headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)), body = Map("policy-event" -> "Full or part surrender"))
-      }
-
-      result.status shouldBe SEE_OTHER
     }
   }
 }

@@ -32,13 +32,13 @@ case class CapitalRedemptionModel(
   def toPolicyCya: PolicyCyaModel = {
     PolicyCyaModel(
       sessionId = UUID.randomUUID().toString,
-      policyType = "Capital Redemption",
+      policyType = Some("Capital Redemption"),
       policyNumber = this.customerReference,
       amountOfGain = Some(this.gainAmount),
-      policyEvent = Some(""),
+      policyEvent = this.event,
       previousGain = Some(this.yearsHeld.isDefined),
       yearsPolicyHeld = this.yearsHeld,
-      yearsPolicyHeldPrevious = Some(0),
+      yearsPolicyHeldPrevious = this.yearsHeldSinceLastGain,
       treatedAsTaxPaid = Some(this.taxPaid.isDefined),
       entitledToDeficiencyRelief = Some(this.deficiencyRelief.isDefined),
       deficiencyReliefAmount = this.deficiencyRelief

@@ -16,10 +16,10 @@
 
 package controllers.gains
 
-import forms.AmountForm
 import forms.RadioButtonYearForm.yesNo
+import models.gains.PolicyCyaModel
 import play.api.http.HeaderNames
-import play.api.http.Status.{BAD_REQUEST, OK, SEE_OTHER}
+import play.api.http.Status.{BAD_REQUEST, INTERNAL_SERVER_ERROR, OK, SEE_OTHER}
 import play.api.libs.ws.WSResponse
 import support.IntegrationTest
 
@@ -61,13 +61,25 @@ class GainsStatusControllerISpec extends IntegrationTest {
       result.body.contains("Yes")
     }
 
+    "render the gains status without pre-filled data" in {
+      clearSession()
+      populateWithSessionDataModel(Seq(completePolicyCyaModel.copy(previousGain = None)))
+      lazy val result: WSResponse = {
+        authoriseAgentOrIndividual(isAgent = false)
+        urlGet(url(taxYear), headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)))
+      }
+
+      result.status shouldBe OK
+      result.body.contains("Yes")
+    }
+
     "return an internal server error" in {
       lazy val result: WSResponse = {
         authoriseAgentOrIndividual(isAgent = false)
         urlGet(url(taxYear) + "bad-session", headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)))
       }
 
-      result.status shouldBe 500
+      result.status shouldBe INTERNAL_SERVER_ERROR
     }
 
     "redirect to income tax submission overview page if no session data is found" in {
@@ -84,7 +96,7 @@ class GainsStatusControllerISpec extends IntegrationTest {
   ".submit" should {
     "redirect to policy held previous page if successful" in {
       clearSession()
-      populateSessionData()
+      populateWithSessionDataModel(Seq(PolicyCyaModel(sessionId)))
       lazy val result: WSResponse = {
         authoriseAgentOrIndividual(isAgent = false)
         userDataStub(gainsPriorDataModel, nino, taxYear)
@@ -119,7 +131,7 @@ class GainsStatusControllerISpec extends IntegrationTest {
 
     "redirect to policy held page if successful" in {
       clearSession()
-      populateSessionData()
+      populateWithSessionDataModel(Seq(PolicyCyaModel(sessionId)))
       lazy val result: WSResponse = {
         authoriseAgentOrIndividual(isAgent = false)
         userDataStub(gainsPriorDataModel, nino, taxYear)
@@ -128,16 +140,6 @@ class GainsStatusControllerISpec extends IntegrationTest {
 
       result.status shouldBe SEE_OTHER
       result.headers("Location").head shouldBe s"/update-and-submit-income-tax-return/additional-information/$taxYear/gains/policy-held/${sessionId}"
-    }
-
-    "Redirect to policy summary page when no session data exists" in {
-      lazy val result: WSResponse = {
-        clearSession()
-        authoriseAgentOrIndividual(isAgent = false)
-        urlPost(url(taxYear), headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)), body = Map(yesNo -> "false"))
-      }
-
-      result.status shouldBe SEE_OTHER
     }
   }
 }

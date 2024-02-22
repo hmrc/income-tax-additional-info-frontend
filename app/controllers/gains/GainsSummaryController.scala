@@ -40,26 +40,23 @@ class GainsSummaryController @Inject()(authorisedAction: AuthorisedAction,
   extends FrontendController(mcc) with I18nSupport with Logging{
   private def getCorrelationid(implicit hc:HeaderCarrier) = hc.extraHeaders.find(_._1 == CORRELATION_ID).getOrElse("-")
   def show(taxYear: Int): Action[AnyContent] = authorisedAction.async { implicit request =>
-
-    gainsSessionService.getAndHandle(taxYear)(Future.successful(errorHandler.internalServerError())) {
-      (cya, prior) =>
-        (cya, prior) match {
-          case (Some(cya), Some(prior)) if cya.allGains.nonEmpty =>
-            logger.info("[GainsSummaryController][show] cya and prior exists. CorrelationId: " + getCorrelationid)
-            val allGainsPolicies: Seq[PolicyCyaModel] = (cya.allGains ++ prior.toPolicyCya).distinctBy(_.policyNumber)
-            gainsSessionService.updateSessionData(AllGainsSessionModel(allGainsPolicies, cya.gateway), taxYear)(
-              errorHandler.internalServerError())(Ok(view(taxYear, allGainsPolicies)))
-          case (None, Some(prior)) =>
-            logger.info("[GainsSummaryController][show] only prior exists. CorrelationId: " + getCorrelationid)
-            val priorData = prior.toPolicyCya
-            gainsSessionService.createSessionData(AllGainsSessionModel(priorData, gateway = Some(true)), taxYear)(
-              errorHandler.internalServerError())(
-              Ok(view(taxYear, priorData))
-            )
-          case _ =>
-            logger.info("[GainsSummaryController][show] No cya and prior data found. CorrelationId: " + getCorrelationid)
-            Future.successful(Ok(view(taxYear, Seq[PolicyCyaModel]())))
-        }
+  //Clear the session and load it only with prior data to avoid any incomplete session data that may exists
+    gainsSessionService.deleteSessionData(taxYear)(Future.successful(errorHandler.internalServerError())) {
+      gainsSessionService.getAndHandle(taxYear)(Future.successful(errorHandler.internalServerError())) {
+        (cya, prior) =>
+          prior match {
+            case Some(prior) =>
+              logger.info("[GainsSummaryController][show] only prior exists. CorrelationId: " + getCorrelationid)
+              val priorData = prior.toPolicyCya
+              gainsSessionService.createSessionData(AllGainsSessionModel(priorData, gateway = Some(true)), taxYear)(
+                errorHandler.internalServerError())(
+                Ok(view(taxYear, priorData))
+              )
+            case None =>
+              logger.info("[GainsSummaryController][show] No cya and prior data found. CorrelationId: " + getCorrelationid)
+              Future.successful(Ok(view(taxYear, Seq[PolicyCyaModel]())))
+          }
+      }.flatten
     }.flatten
   }
 }

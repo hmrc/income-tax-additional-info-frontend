@@ -44,6 +44,7 @@ class GainsAmountController @Inject()(authorisedAction: AuthorisedAction,
       s"gains.gain-amount.question.incorrect-format-error.${if (isAgent) "agent" else "individual"}",
       s"gains.gain-amount.question.amount-exceeds-max-error.${if (isAgent) "agent" else "individual"}"
     )
+
   def show(taxYear: Int, sessionId: String): Action[AnyContent] = authorisedAction.async { implicit request =>
     gainsSessionService.getSessionData(taxYear).flatMap {
       case Left(_) => Future.successful(errorHandler.internalServerError())
@@ -64,28 +65,26 @@ class GainsAmountController @Inject()(authorisedAction: AuthorisedAction,
     }
   }
 
-
   def submit(taxYear: Int, sessionId: String): Action[AnyContent] = authorisedAction.async { implicit request =>
     form(request.user.isAgent).bindFromRequest().fold(formWithErrors => {
       Future.successful(BadRequest(view(taxYear, formWithErrors, sessionId)))
     }, {
       amount =>
-        gainsSessionService.getAndHandle(taxYear)(Future.successful(errorHandler.internalServerError())) { (cya, prior) =>
-          (cya, prior) match {
-            case (Some(cya), _) =>
-              val index = cya.allGains.indexOf(cya.allGains.filter(_.sessionId == sessionId).head)
-              val newData = cya.allGains(index).copy(amountOfGain = Some(amount))
-              val updated = cya.allGains.updated(index, newData)
-              gainsSessionService.updateSessionData(AllGainsSessionModel(updated, cya.gateway), taxYear)(errorHandler.internalServerError()) {
-                if (newData.isFinished) {
-                  Redirect(controllers.gains.routes.PolicySummaryController.show(taxYear, sessionId))
-                } else {
-                  Redirect(controllers.gains.routes.PolicyEventController.show(taxYear, sessionId))
-                }
+        gainsSessionService.getSessionData(taxYear).flatMap {
+          case Left(_) => Future.successful(errorHandler.internalServerError())
+          case Right(sessionData) =>
+            val cya = sessionData.flatMap(_.gains).getOrElse(AllGainsSessionModel(Seq.empty))
+            val index = cya.allGains.indexOf(cya.allGains.filter(_.sessionId.contains(sessionId)).head)
+            val newData = cya.allGains(index).copy(amountOfGain = Some(amount))
+            val updated = cya.allGains.updated(index, newData)
+            gainsSessionService.updateSessionData(AllGainsSessionModel(updated, cya.gateway), taxYear)(errorHandler.internalServerError()) {
+              if (newData.isFinished) {
+                Redirect(controllers.gains.routes.PolicySummaryController.show(taxYear, sessionId))
+              } else {
+                Redirect(controllers.gains.routes.PolicyEventController.show(taxYear, sessionId))
               }
-            case (_, _) => Future.successful(Redirect(controllers.gains.routes.PolicySummaryController.show(taxYear, sessionId)))
-          }
-        }.flatten
+            }
+        }
     })
   }
 }

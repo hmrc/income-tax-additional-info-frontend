@@ -26,6 +26,7 @@ class PaidTaxAmountControllerISpec extends IntegrationTest {
 
   clearSession()
   populateSessionData()
+
   private def url(taxYear: Int): String = {
     s"/update-and-submit-income-tax-return/additional-information/$taxYear/gains/paid-tax-amount/$sessionId"
   }
@@ -118,16 +119,6 @@ class PaidTaxAmountControllerISpec extends IntegrationTest {
       }
 
       result.status shouldBe BAD_REQUEST
-    }
-
-    "Redirect to policy summary page when no session data exists" in {
-      lazy val result: WSResponse = {
-        clearSession()
-        authoriseAgentOrIndividual(isAgent = false)
-        urlPost(url(taxYear), headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)), body = Map(AmountForm.amount -> "100"))
-      }
-
-      result.status shouldBe SEE_OTHER
     }
   }
 

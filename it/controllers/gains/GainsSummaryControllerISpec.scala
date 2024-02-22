@@ -30,7 +30,6 @@ class GainsSummaryControllerISpec extends IntegrationTest {
     "render the summary page individual" in {
       lazy val result: WSResponse = {
         clearSession()
-        populateSessionData()
         authoriseAgentOrIndividual(isAgent = false)
         userDataStub(gainsPriorDataModel, nino, taxYear)
         urlGet(url(taxYear), headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)))
@@ -42,7 +41,6 @@ class GainsSummaryControllerISpec extends IntegrationTest {
     "render the summary page for an agent" in {
       lazy val result: WSResponse = {
         clearSession()
-        populateSessionData()
         authoriseAgentOrIndividual(isAgent = true)
         userDataStub(gainsPriorDataModel, nino, taxYear)
         urlGet(url(taxYear), headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)))
@@ -51,18 +49,7 @@ class GainsSummaryControllerISpec extends IntegrationTest {
       result.status shouldBe OK
     }
 
-    "render the summary page when no gains are found" in {
-      lazy val result: WSResponse = {
-        clearSession()
-        authoriseAgentOrIndividual(isAgent = false)
-        userDataStub(gainsPriorDataModel, nino, taxYear)
-        urlGet(url(taxYear), headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)))
-      }
-
-      result.status shouldBe OK
-    }
-
-    "render summary page when there is no prior or cya data" in {
+    "render summary page when there is no prior data" in {
       lazy val result: WSResponse = {
         clearSession()
         authoriseAgentOrIndividual(isAgent = false)

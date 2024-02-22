@@ -21,6 +21,7 @@ import com.google.inject.{Inject, Singleton}
 import config.{AppConfig, ErrorHandler}
 import forms.YesNoForm
 import models.AllGainsSessionModel
+import models.gains.PolicyCyaModel
 import play.api.data.Form
 import play.api.i18n.I18nSupport
 import play.api.mvc._
@@ -39,11 +40,12 @@ class GainsGatewayController @Inject()(authorisedAction: AuthorisedAction,
                                       (implicit appConfig: AppConfig,
                                        mcc: MessagesControllerComponents,
                                        ec: ExecutionContext) extends FrontendController(mcc) with I18nSupport {
-
+  val sessionId = UUID.randomUUID().toString
   def form(isAgent: Boolean): Form[Boolean] = YesNoForm.yesNoForm(
     s"gains.gateway.question.error.${if (isAgent) "agent" else "individual"}")
 
   def show(taxYear: Int): Action[AnyContent] = authorisedAction.async { implicit request =>
+
     gainsSessionService.getSessionData(taxYear).flatMap {
       case Left(_) => Future.successful(errorHandler.internalServerError())
       case Right(cya) =>
@@ -59,7 +61,7 @@ class GainsGatewayController @Inject()(authorisedAction: AuthorisedAction,
                 }
             }
           case None =>
-            gainsSessionService.createSessionData(AllGainsSessionModel(Seq.empty), taxYear)(errorHandler.internalServerError()) {
+            gainsSessionService.createSessionData(AllGainsSessionModel(Seq(PolicyCyaModel(sessionId))), taxYear)(errorHandler.internalServerError()) {
               Ok(view(taxYear, form(request.user.isAgent)))
             }
         }
@@ -78,7 +80,7 @@ class GainsGatewayController @Inject()(authorisedAction: AuthorisedAction,
           case Right(sessionData) =>
             val cya = sessionData.flatMap(_.gains).getOrElse(AllGainsSessionModel(Seq.empty)).copy(gateway = Some(yesNoValue))
             gainsSessionService.updateSessionData(cya, taxYear)(errorHandler.internalServerError()) {
-              handleRedirect(yesNoValue, taxYear, UUID.randomUUID().toString)
+              handleRedirect(yesNoValue, taxYear, sessionId)
             }
         }
     })

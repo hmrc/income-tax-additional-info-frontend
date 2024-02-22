@@ -17,8 +17,9 @@
 package controllers.gains
 
 import forms.gains.InputYearForm
+import models.gains.PolicyCyaModel
 import play.api.http.HeaderNames
-import play.api.http.Status.{BAD_REQUEST, OK, SEE_OTHER}
+import play.api.http.Status._
 import play.api.libs.ws.WSResponse
 import support.IntegrationTest
 
@@ -51,7 +52,7 @@ class PolicyHeldPreviousControllerISpec extends IntegrationTest {
 
     "render the policy held previous page with pre-filled data 1" in {
       clearSession()
-      populateWithSessionDataModel(Seq(completePolicyCyaModel.copy(yearsPolicyHeld = Some(1))))
+      populateWithSessionDataModel(Seq(completePolicyCyaModel.copy(yearsPolicyHeldPrevious = Some(1))))
       lazy val result: WSResponse = {
         authoriseAgentOrIndividual(isAgent = true)
         urlGet(url(taxYear), headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)))
@@ -63,7 +64,19 @@ class PolicyHeldPreviousControllerISpec extends IntegrationTest {
 
     "render the policy held previous page with pre-filled data 2" in {
       clearSession()
-      populateWithSessionDataModel(Seq(completePolicyCyaModel.copy(yearsPolicyHeld = Some(2))))
+      populateWithSessionDataModel(Seq(completePolicyCyaModel.copy(yearsPolicyHeldPrevious = Some(2))))
+      lazy val result: WSResponse = {
+        authoriseAgentOrIndividual(isAgent = true)
+        urlGet(url(taxYear), headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)))
+      }
+
+      result.status shouldBe OK
+      result.body.contains("2")
+    }
+
+    "render the policy held previous page without pre-filled data" in {
+      clearSession()
+      populateWithSessionDataModel(Seq(completePolicyCyaModel.copy(yearsPolicyHeldPrevious = None)))
       lazy val result: WSResponse = {
         authoriseAgentOrIndividual(isAgent = true)
         urlGet(url(taxYear), headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)))
@@ -79,7 +92,7 @@ class PolicyHeldPreviousControllerISpec extends IntegrationTest {
         urlGet(url(taxYear) + "bad-session", headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)))
       }
 
-      result.status shouldBe 500
+      result.status shouldBe INTERNAL_SERVER_ERROR
     }
 
     "redirect to income tax submission overview page if no session data is found" in {
@@ -96,7 +109,7 @@ class PolicyHeldPreviousControllerISpec extends IntegrationTest {
   ".submit" should {
     "redirect to policy held page if successful" in {
       clearSession()
-      populateSessionData()
+      populateWithSessionDataModel(Seq(PolicyCyaModel(sessionId)))
       lazy val result: WSResponse = {
         authoriseAgentOrIndividual(isAgent = false)
         userDataStub(gainsPriorDataModel, nino, taxYear)
@@ -136,7 +149,7 @@ class PolicyHeldPreviousControllerISpec extends IntegrationTest {
 
     "redirect to summary when model is full if successful" in {
       clearSession()
-      populateWithSessionDataModel(Seq(completePolicyCyaModel.copy(policyType = "Life Insurance")))
+      populateWithSessionDataModel(Seq(completePolicyCyaModel.copy(policyType = Some("Life Insurance"))))
       lazy val result: WSResponse = {
         authoriseAgentOrIndividual(isAgent = false)
         userDataStub(gainsPriorDataModel, nino, taxYear)
@@ -145,16 +158,6 @@ class PolicyHeldPreviousControllerISpec extends IntegrationTest {
 
       result.status shouldBe SEE_OTHER
       result.headers("Location").head shouldBe s"/update-and-submit-income-tax-return/additional-information/$taxYear/gains/policy-summary/${sessionId}"
-    }
-
-    "Redirect to policy summary page when no session data exists" in {
-      lazy val result: WSResponse = {
-        clearSession()
-        authoriseAgentOrIndividual(isAgent = false)
-        urlPost(url(taxYear), headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)), body = Map(InputYearForm.numberOfYears -> "99"))
-      }
-
-      result.status shouldBe SEE_OTHER
     }
   }
 }

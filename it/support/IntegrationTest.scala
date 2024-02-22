@@ -67,7 +67,7 @@ trait IntegrationTest extends AnyWordSpec
   protected implicit lazy val wsClient: WSClient = app.injector.instanceOf[WSClient]
   protected implicit lazy val appConfig: AppConfig = app.injector.instanceOf[AppConfig]
   implicit lazy val user: User = User(mtditid, None, nino, affinityGroup, sessionId)
-  implicit val correlationId = UUID.randomUUID().toString
+  implicit val correlationId: String = UUID.randomUUID().toString
   protected lazy val appUrl = s"http://localhost:$port/update-and-submit-income-tax-return/additional-information"
 
   protected val config: Map[String, String] = Map(
@@ -168,7 +168,7 @@ trait IntegrationTest extends AnyWordSpec
   ) ++ extraData)
 
   val completePolicyCyaModel: PolicyCyaModel = PolicyCyaModel(
-    sessionId, "Life Insurance", Some("123"), Some(0), Some(""), Some(true), Some(0), Some(0), Some(true), Some(123.11), Some(true), Some(123.11)
+    sessionId, Some("Life Insurance"), Some("123"), Some(0), Some(""), Some(true), Some(0), Some(0), Some(true), Some(123.11), Some(true), Some(123.11)
   )
 
   val gainsPriorDataModel: Option[GainsPriorDataModel] =
@@ -178,22 +178,25 @@ trait IntegrationTest extends AnyWordSpec
   val gainsSessionService: GainsSessionService = new GainsSessionService(gainsUserDataRepository, getGainsDataConnector)(correlationId)
 
   def populateSessionData(): Boolean =
-    await(gainsSessionService.createSessionData(AllGainsSessionModel(Seq(PolicyCyaModel(sessionId, "")), gateway = Some(true)), taxYear)(false)(true)(AuthorisationRequestBuilder.anAuthorisationRequest, ec, headerCarrier))
+    await(gainsSessionService.createSessionData(AllGainsSessionModel(Seq(PolicyCyaModel(sessionId, Some("Life Insurance"), Some("RefNo13254687"), Some(123.11),
+      Some("Full or part surrender"), Some(true), Some(99), Some(10), Some(true), None, Some(true), Some(100))),
+      gateway = Some(true)), taxYear)(false)(true)(AuthorisationRequestBuilder.anAuthorisationRequest, ec))
 
   def populateSessionDataWithRandomSession(): Boolean =
-    await(gainsSessionService.createSessionData(AllGainsSessionModel(Seq(PolicyCyaModel(UUID.randomUUID().toString, "")), gateway = Some(true)), taxYear)(false)(true)(AuthorisationRequestBuilder.anAuthorisationRequest, ec, headerCarrier))
+    await(gainsSessionService.createSessionData(AllGainsSessionModel(Seq(PolicyCyaModel(UUID.randomUUID().toString, Some(""))), gateway = Some(true)), taxYear)
+    (false)(true)(AuthorisationRequestBuilder.anAuthorisationRequest, ec))
 
   def populateOnlyGatewayData(): Boolean =
-    await(gainsSessionService.createSessionData(AllGainsSessionModel(Seq[PolicyCyaModel]().empty, gateway = Some(true)), taxYear)(false)(true)(AuthorisationRequestBuilder.anAuthorisationRequest, ec, headerCarrier))
+    await(gainsSessionService.createSessionData(AllGainsSessionModel(Seq[PolicyCyaModel]().empty, gateway = Some(true)), taxYear)(false)(true)(AuthorisationRequestBuilder.anAuthorisationRequest, ec))
 
   def populateSessionDataWithEmptyGateway(): Boolean =
-    await(gainsSessionService.createSessionData(AllGainsSessionModel(Seq(), gateway = None), taxYear)(false)(true)(AuthorisationRequestBuilder.anAuthorisationRequest, ec, headerCarrier))
+    await(gainsSessionService.createSessionData(AllGainsSessionModel(Seq(), gateway = None), taxYear)(false)(true)(AuthorisationRequestBuilder.anAuthorisationRequest, ec))
 
   def populateSessionDataWithFalseGateway(): Boolean =
-    await(gainsSessionService.createSessionData(AllGainsSessionModel(Seq(), gateway = Some(false)), taxYear)(false)(true)(AuthorisationRequestBuilder.anAuthorisationRequest, ec, headerCarrier))
+    await(gainsSessionService.createSessionData(AllGainsSessionModel(Seq(), gateway = Some(false)), taxYear)(false)(true)(AuthorisationRequestBuilder.anAuthorisationRequest, ec))
 
   def populateWithSessionDataModel(cya: Seq[PolicyCyaModel]): Boolean =
-    await(gainsSessionService.createSessionData(AllGainsSessionModel(cya, gateway = Some(true)), taxYear)(false)(true)(AuthorisationRequestBuilder.anAuthorisationRequest, ec, headerCarrier))
+    await(gainsSessionService.createSessionData(AllGainsSessionModel(cya, gateway = Some(true)), taxYear)(false)(true)(AuthorisationRequestBuilder.anAuthorisationRequest, ec))
 
   def clearSession(): Boolean = await(gainsUserDataRepository.clear(taxYear))
 
