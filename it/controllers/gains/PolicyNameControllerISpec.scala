@@ -17,7 +17,7 @@
 package controllers.gains
 
 import forms.gains.InputFieldForm
-import models.gains.LifeInsuranceModel
+import models.gains.{LifeInsuranceModel, PolicyCyaModel}
 import models.gains.prior.GainsPriorDataModel
 import play.api.http.HeaderNames
 import play.api.http.Status.{BAD_REQUEST, OK, SEE_OTHER}
@@ -88,7 +88,7 @@ class PolicyNameControllerISpec extends IntegrationTest {
   ".submit" should {
     "redirect to gains amount page if successful" in {
       clearSession()
-      populateSessionData()
+      populateWithSessionDataModel(Seq(PolicyCyaModel(sessionId)))
       lazy val result: WSResponse = {
         authoriseAgentOrIndividual(isAgent = false)
         userDataStub(gainsPriorDataModel, nino, taxYear)

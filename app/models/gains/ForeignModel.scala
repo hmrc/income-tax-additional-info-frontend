@@ -29,7 +29,7 @@ case class ForeignModel(
   def toPolicyCya: PolicyCyaModel = {
     PolicyCyaModel(
       sessionId = UUID.randomUUID().toString,
-      policyType = "Foreign Policy",
+      policyType = Some("Foreign Policy"),
       policyNumber = this.customerReference,
       policyEvent = Some(""),
       amountOfGain = Some(this.gainAmount),

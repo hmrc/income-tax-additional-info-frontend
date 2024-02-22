@@ -47,7 +47,7 @@ class PoliciesRemoveController @Inject()(authorisedAction: AuthorisedAction,
 
 
   def show(taxYear: Int, sessionId: String): Action[AnyContent] = authorisedAction.async { implicit request =>
-    val emptyPolicyCyaModel: PolicyCyaModel = PolicyCyaModel("", "")
+    val emptyPolicyCyaModel: PolicyCyaModel = PolicyCyaModel("", Some(""))
     gainsSessionService.getSessionData(taxYear).flatMap {
       case Left(_) => Future.successful(errorHandler.internalServerError())
       case Right(cya) => Future.successful(cya.fold(Redirect(appConfig.incomeTaxSubmissionOverviewUrl(taxYear))) {

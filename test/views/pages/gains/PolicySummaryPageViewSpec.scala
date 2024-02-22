@@ -148,7 +148,7 @@ class PolicySummaryPageViewSpec extends ViewUnitTest {
         implicit val document: Document = Jsoup.parse(page(taxYear,
           Seq(PolicyCyaModel(
             sessionId = sessionId,
-            policyType = "Life Insurance",
+            policyType = Some("Life Insurance"),
             policyNumber = Some("abc123"),
             amountOfGain = Some(BigDecimal(100)),
             policyEvent = Some("Policy Matured..."),
@@ -159,7 +159,7 @@ class PolicySummaryPageViewSpec extends ViewUnitTest {
             taxPaidAmount = Some(BigDecimal(123.45)),
             entitledToDeficiencyRelief = Some(true),
             deficiencyReliefAmount = Some(BigDecimal(123.45))
-          )), sessionId).body)
+          )), gateway=true, sessionId).body)
 
         welshToggleCheck(userScenario.isWelsh)
         titleCheck(userScenario.commonExpectedResults.expectedTitle, userScenario.isWelsh)
@@ -197,8 +197,8 @@ class PolicySummaryPageViewSpec extends ViewUnitTest {
         implicit val messages: Messages = getMessages(userScenario.isWelsh)
 
         implicit val document: Document = Jsoup.parse(page(taxYear, Seq(PolicyCyaModel(
-          sessionId = sessionId, policyType = "Life Annuity", policyNumber = Some("abc123"), amountOfGain = Some(BigDecimal(100)), policyEvent = Some("Full or part surrender"), previousGain = Some(false), yearsPolicyHeld = Some(5), yearsPolicyHeldPrevious = Some(6), treatedAsTaxPaid = Some(false), taxPaidAmount = Some(BigDecimal(123.45)), entitledToDeficiencyRelief = Some(false)
-        )), sessionId).body)
+          sessionId = sessionId, policyType = Some("Life Annuity"), policyNumber = Some("abc123"), amountOfGain = Some(BigDecimal(100)), policyEvent = Some("Full or part surrender"), previousGain = Some(false), yearsPolicyHeld = Some(5), yearsPolicyHeldPrevious = Some(6), treatedAsTaxPaid = Some(false), taxPaidAmount = Some(BigDecimal(123.45)), entitledToDeficiencyRelief = Some(false)
+        )), gateway=true, sessionId).body)
 
         welshToggleCheck(userScenario.isWelsh)
         titleCheck(userScenario.commonExpectedResults.expectedTitle, userScenario.isWelsh)
@@ -232,8 +232,8 @@ class PolicySummaryPageViewSpec extends ViewUnitTest {
         implicit val messages: Messages = getMessages(userScenario.isWelsh)
 
         implicit val document: Document = Jsoup.parse(page(taxYear, Seq(PolicyCyaModel(
-          sessionId = sessionId, policyType = "Capital Redemption", policyNumber = Some("abc123"), amountOfGain = Some(BigDecimal(100)), policyEvent = Some("Sale or assignment of a policy"), previousGain = Some(false), yearsPolicyHeld = Some(5), yearsPolicyHeldPrevious = Some(6), treatedAsTaxPaid = Some(true), taxPaidAmount = Some(BigDecimal(123.45)), entitledToDeficiencyRelief = Some(false)
-        )), sessionId).body)
+          sessionId = sessionId, policyType = Some("Capital Redemption"), policyNumber = Some("abc123"), amountOfGain = Some(BigDecimal(100)), policyEvent = Some("Sale or assignment of a policy"), previousGain = Some(false), yearsPolicyHeld = Some(5), yearsPolicyHeldPrevious = Some(6), treatedAsTaxPaid = Some(true), taxPaidAmount = Some(BigDecimal(123.45)), entitledToDeficiencyRelief = Some(false)
+        )), gateway=true, sessionId).body)
 
         welshToggleCheck(userScenario.isWelsh)
         titleCheck(userScenario.commonExpectedResults.expectedTitle, userScenario.isWelsh)
@@ -267,8 +267,8 @@ class PolicySummaryPageViewSpec extends ViewUnitTest {
         implicit val messages: Messages = getMessages(userScenario.isWelsh)
 
         implicit val document: Document = Jsoup.parse(page(taxYear, Seq(PolicyCyaModel(
-          sessionId = sessionId, policyType = "Foreign Policy", policyNumber = Some("abc123"), amountOfGain = Some(BigDecimal(100)), policyEvent = Some("Personal Portfolio Bond"), previousGain = Some(false), yearsPolicyHeld = Some(5), yearsPolicyHeldPrevious = Some(6), treatedAsTaxPaid = Some(true), taxPaidAmount = Some(BigDecimal(123.45)), entitledToDeficiencyRelief = Some(false)
-        )), sessionId).body)
+          sessionId = sessionId, policyType = Some("Foreign Policy"), policyNumber = Some("abc123"), amountOfGain = Some(BigDecimal(100)), policyEvent = Some("Personal Portfolio Bond"), previousGain = Some(false), yearsPolicyHeld = Some(5), yearsPolicyHeldPrevious = Some(6), treatedAsTaxPaid = Some(true), taxPaidAmount = Some(BigDecimal(123.45)), entitledToDeficiencyRelief = Some(false)
+        )), gateway=true, sessionId).body)
 
         welshToggleCheck(userScenario.isWelsh)
         titleCheck(userScenario.commonExpectedResults.expectedTitle, userScenario.isWelsh)
@@ -302,8 +302,8 @@ class PolicySummaryPageViewSpec extends ViewUnitTest {
         implicit val messages: Messages = getMessages(userScenario.isWelsh)
 
         implicit val document: Document = Jsoup.parse(page(taxYear, Seq(PolicyCyaModel(
-          sessionId = sessionId, policyType = "Voided ISA", policyNumber = Some("abc123"), amountOfGain = Some(BigDecimal(100)), policyEvent = Some("Policy matured or a death"), previousGain = Some(false), yearsPolicyHeld = Some(5), yearsPolicyHeldPrevious = Some(6), treatedAsTaxPaid = Some(true), taxPaidAmount = Some(BigDecimal(123.45)), entitledToDeficiencyRelief = Some(false)
-        )), sessionId).body)
+          sessionId = sessionId, policyType = Some("Voided ISA"), policyNumber = Some("abc123"), amountOfGain = Some(BigDecimal(100)), policyEvent = Some("Policy matured or a death"), previousGain = Some(false), yearsPolicyHeld = Some(5), yearsPolicyHeldPrevious = Some(6), treatedAsTaxPaid = Some(true), taxPaidAmount = Some(BigDecimal(123.45)), entitledToDeficiencyRelief = Some(false)
+        )), gateway=true, sessionId).body)
 
         welshToggleCheck(userScenario.isWelsh)
         titleCheck(userScenario.commonExpectedResults.expectedTitle, userScenario.isWelsh)

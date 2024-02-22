@@ -52,7 +52,7 @@ class PolicyTypeController @Inject()(authorisedAction: AuthorisedAction,
                   data =>
                     data.allGains.filter(_.sessionId == sessionId) match {
                       case value => if (value.nonEmpty) {
-                        Future.successful(Ok(view(taxYear, form(request.user.isAgent).fill(value.head.policyType), sessionId)))
+                        Future.successful(Ok(view(taxYear, form(request.user.isAgent).fill(value.head.policyType.getOrElse("")), sessionId)))
                       }
                       else {
                         Future.successful(Ok(view(taxYear, form(request.user.isAgent), sessionId)))
@@ -80,10 +80,10 @@ class PolicyTypeController @Inject()(authorisedAction: AuthorisedAction,
             val cya = sessionData.flatMap(_.gains).getOrElse(AllGainsSessionModel(Seq.empty))
             val newData =
               if (!cya.allGains.map(_.sessionId).contains(sessionId)) {
-                cya.allGains ++ Seq(PolicyCyaModel(sessionId = sessionId, policyType = policy))
+                cya.allGains ++ Seq(PolicyCyaModel(sessionId = sessionId, policyType = Some(policy)))
               } else {
                 val gains = cya.allGains
-                val newG = cya.allGains.filter(_.sessionId == sessionId).head.copy(policyType = policy)
+                val newG = cya.allGains.filter(_.sessionId == sessionId).head.copy(policyType = Some(policy))
                 gains.updated(gains.indexOf(gains.find(_.sessionId == sessionId).get), newG)
               }
             gainsSessionService.updateSessionData(AllGainsSessionModel(newData, cya.gateway), taxYear)(errorHandler.internalServerError()) {

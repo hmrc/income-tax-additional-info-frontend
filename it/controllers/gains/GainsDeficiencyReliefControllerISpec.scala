@@ -71,6 +71,18 @@ populateSessionData()
       result.body.contains("Yes")
     }
 
+    "render the deficiency relief page without prefilled data" in {
+      clearSession()
+      populateWithSessionDataModel(Seq(completePolicyCyaModel.copy(entitledToDeficiencyRelief = None, deficiencyReliefAmount = None)))
+      lazy val result: WSResponse = {
+        authoriseAgentOrIndividual(isAgent = false)
+        urlGet(url(taxYear), headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)))
+      }
+
+      result.status shouldBe OK
+      result.body.contains("Yes")
+    }
+
     "return an internal server error" in {
       lazy val result: WSResponse = {
         authoriseAgentOrIndividual(isAgent = false)

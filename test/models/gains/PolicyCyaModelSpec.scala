@@ -25,10 +25,10 @@ class PolicyCyaModelSpec extends UnitTest {
 
   val sessionId: String = UUID.randomUUID().toString
   val modelMax: PolicyCyaModel = PolicyCyaModel(
-    sessionId, "Life Insurance", Some("123"), Some(0), Some(""), Some(true), Some(0), Some(0), Some(true), Some(123.11), Some(true), Some(123.11)
+    sessionId, Some("Life Insurance"), Some("123"), Some(0), Some(""), Some(true), Some(0), Some(0), Some(true), Some(123.11), Some(true), Some(123.11)
   )
 
-  val modelMin: PolicyCyaModel = PolicyCyaModel(sessionId, "")
+  val modelMin: PolicyCyaModel = PolicyCyaModel(sessionId, Some(""))
 
   val jsonMax: JsObject = Json.obj(
     "sessionId" -> sessionId,
@@ -74,7 +74,7 @@ class PolicyCyaModelSpec extends UnitTest {
     }
 
     "return true when model is full for voided isa" in {
-      modelMax.copy(policyType = "Voided ISA").isFinished shouldBe true
+      modelMax.copy(policyType = Some("Voided ISA")).isFinished shouldBe true
     }
 
   }

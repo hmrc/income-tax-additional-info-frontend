@@ -31,7 +31,7 @@ case class VoidedIsaModel(
   def toPolicyCya: PolicyCyaModel = {
     PolicyCyaModel(
       sessionId = UUID.randomUUID().toString,
-      policyType = "Voided ISA",
+      policyType = Some("Voided ISA"),
       policyNumber = this.customerReference,
       amountOfGain = Some(this.gainAmount),
       policyEvent = Some(this.event.getOrElse("")),
@@ -39,7 +39,7 @@ case class VoidedIsaModel(
       yearsPolicyHeld = this.yearsHeld,
       yearsPolicyHeldPrevious = this.yearsHeldSinceLastGain,
       treatedAsTaxPaid = Some(false),
-      taxPaidAmount = Some(0),
+      taxPaidAmount = this.taxPaidAmount,
       entitledToDeficiencyRelief = Some(false),
       deficiencyReliefAmount = Some(0)
     )

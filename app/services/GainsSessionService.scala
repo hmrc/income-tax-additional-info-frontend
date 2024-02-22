@@ -42,7 +42,7 @@ class GainsSessionService @Inject()(
   }
 
   def createSessionData[A](cyaModel: AllGainsSessionModel, taxYear: Int)(onFail: A)(onSuccess: A)
-                          (implicit request: AuthorisationRequest[_], ec: ExecutionContext, hc: HeaderCarrier): Future[A] = {
+                          (implicit request: AuthorisationRequest[_], ec: ExecutionContext): Future[A] = {
 
     val userData = GainsUserDataModel(
       request.user.sessionId,
@@ -63,7 +63,7 @@ class GainsSessionService @Inject()(
   }
 
   def getSessionData(taxYear: Int)(implicit request: AuthorisationRequest[_],
-                                   ec: ExecutionContext, hc: HeaderCarrier): Future[Either[DatabaseError, Option[GainsUserDataModel]]] = {
+                                   ec: ExecutionContext): Future[Either[DatabaseError, Option[GainsUserDataModel]]] = {
 
     gainsUserDataRepository.find(taxYear).map {
       case Left(error) =>
@@ -75,7 +75,7 @@ class GainsSessionService @Inject()(
   }
 
   def updateSessionData[A](cyaModel: AllGainsSessionModel, taxYear: Int)(onFail: A)(onSuccess: A)
-                          (implicit request: AuthorisationRequest[_], ec: ExecutionContext, hc: HeaderCarrier): Future[A] = {
+                          (implicit request: AuthorisationRequest[_], ec: ExecutionContext): Future[A] = {
 
     val userData = GainsUserDataModel(
       request.user.sessionId,
@@ -97,7 +97,7 @@ class GainsSessionService @Inject()(
   }
 
   def deleteSessionData[A](taxYear: Int)(onFail: A)(onSuccess: A)
-                          (implicit request: AuthorisationRequest[_], ec: ExecutionContext,  hc: HeaderCarrier): Future[A] = {
+                          (implicit request: AuthorisationRequest[_], ec: ExecutionContext): Future[A] = {
 
     gainsUserDataRepository.clear(taxYear)(request.user).map {
       case true =>

@@ -33,6 +33,7 @@ import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 import views.html.pages.gains.PolicySummaryPageView
 
 import javax.inject.{Inject, Singleton}
+import scala.collection.immutable.ListMap
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
@@ -54,17 +55,24 @@ class PolicySummaryController @Inject()(authorisedAction: AuthorisedAction,
           cyaData =>
             cyaData.gains.fold(Future.successful(Redirect(appConfig.incomeTaxSubmissionOverviewUrl(taxYear)))) {
               data =>
-                data.allGains.find(_.sessionId == sessionId) match {
-                  case Some(policyCya) if !policyCya.isFinished =>
-                    Future.successful(handleUnfinishedRedirect(policyCya, sessionId, taxYear))
-                  case Some(_) =>
-                    gainsSessionService.updateSessionData(
-                      AllGainsSessionModel(data.allGains, data.gateway), taxYear)(Future.successful(errorHandler.internalServerError())) {
-                      Future.successful(Ok(view(taxYear, data.allGains, sessionId)))
-                    }.flatten
-                  case None => {
-                    logger.info("[PolicySummaryController][show] No CYA data in session. Redirecting to the overview page.")
-                    Future.successful(Redirect(appConfig.incomeTaxSubmissionOverviewUrl(taxYear)))
+                if(data.gateway.contains(true)) {
+                  data.allGains.find(_.sessionId == sessionId) match {
+                    case Some(policyCya) if !policyCya.isFinished =>
+                      Future.successful(handleUnfinishedRedirect(policyCya, taxYear))
+                    case Some(_) =>
+                      gainsSessionService.updateSessionData(
+                        AllGainsSessionModel(data.allGains, data.gateway), taxYear)(Future.successful(errorHandler.internalServerError())) {
+                        Future.successful(Ok(view(taxYear, data.allGains, true, sessionId)))
+                      }.flatten
+                    case None => {
+                      logger.info("[PolicySummaryController][show] No CYA data in session. Redirecting to the overview page.")
+                      Future.successful(Redirect(appConfig.incomeTaxSubmissionOverviewUrl(taxYear)))
+                    }
+                  }
+                } else {
+                  gainsSessionService.updateSessionData(
+                    AllGainsSessionModel(data.allGains, data.gateway), taxYear)(errorHandler.internalServerError()) {
+                    Ok(view(taxYear, data.allGains, false, sessionId))
                   }
                 }
             }
@@ -121,13 +129,52 @@ class PolicySummaryController @Inject()(authorisedAction: AuthorisedAction,
     auditService.auditModel(event)
   }
 
-  def handleUnfinishedRedirect(policyCya: PolicyCyaModel, sessionId: String, taxYear: Int): Result = {
-    if(policyCya.policyType== "Voided ISA")
-    {
-      //TODO:
-    } else {
-      //TODO:
-    }
-  }
+  def handleUnfinishedRedirect(cyaModel: PolicyCyaModel, taxYear: Int)
+                              (implicit request: AuthorisationRequest[AnyContent]): Result = {
 
+    val cyaCommon = ListMap[Call, Option[_]](
+      controllers.gains.routes.PolicyTypeController.show(taxYear, cyaModel.sessionId) -> cyaModel.policyType,
+      controllers.gains.routes.PolicyNameController.show(taxYear, cyaModel.sessionId) -> cyaModel.policyNumber,
+      controllers.gains.routes.GainsAmountController.show(taxYear, cyaModel.sessionId) -> cyaModel.amountOfGain,
+      controllers.gains.routes.PolicyEventController.show(taxYear, cyaModel.sessionId) -> cyaModel.policyEvent
+    )
+
+    val cyaPolicyHeldPrevious = {
+      if (cyaModel.previousGain.contains(true)) {
+        ListMap[Call, Option[_]](
+          controllers.gains.routes.PolicyHeldPreviousController.show(taxYear, cyaModel.sessionId) -> cyaModel.yearsPolicyHeldPrevious,
+          controllers.gains.routes.PolicyHeldController.show(taxYear, cyaModel.sessionId) -> cyaModel.yearsPolicyHeld
+        )
+      } else {
+        ListMap[Call, Option[_]](
+          controllers.gains.routes.GainsStatusController.show(taxYear, cyaModel.sessionId) -> cyaModel.previousGain,
+          controllers.gains.routes.PolicyHeldPreviousController.show(taxYear, cyaModel.sessionId) -> cyaModel.yearsPolicyHeldPrevious,
+          controllers.gains.routes.PolicyHeldController.show(taxYear, cyaModel.sessionId) -> cyaModel.yearsPolicyHeld
+        )
+      }
+    }
+
+    val deficiencyRelief = if (cyaModel.entitledToDeficiencyRelief.contains(true)) {
+      cyaModel.deficiencyReliefAmount
+    } else {
+      cyaModel.entitledToDeficiencyRelief
+    }
+
+    val cyaSpecific = {
+      if (cyaModel.policyType.contains("Voided ISA")) {
+        ListMap[Call, Option[_]](
+          controllers.gains.routes.PaidTaxAmountController.show(taxYear, cyaModel.sessionId) -> cyaModel.taxPaidAmount
+        )
+      } else {
+        ListMap[Call, Option[_]](
+          controllers.gains.routes.PaidTaxStatusController.show(taxYear, cyaModel.sessionId) -> cyaModel.treatedAsTaxPaid,
+          controllers.gains.routes.GainsDeficiencyReliefController.show(taxYear, cyaModel.sessionId) -> deficiencyRelief
+        )
+      }
+    }
+
+    val cya: ListMap[Call, Option[_]] = cyaCommon ++ cyaPolicyHeldPrevious ++ cyaSpecific
+    cya.find(x => x._2.isEmpty)
+      .fold(Ok(view(taxYear, Seq(cyaModel), true, cyaModel.sessionId)))(emptyValue => Redirect(emptyValue._1))
+  }
 }

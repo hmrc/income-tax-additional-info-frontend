@@ -71,7 +71,7 @@ class EncryptionService @Inject()(implicit val encryptionService: AesGcmAdCrypto
                                   (implicit associatedText: String): EncryptedPolicyCyaModel = {
     EncryptedPolicyCyaModel(
       gains.sessionId.encrypted,
-      gains.policyType.encrypted,
+      gains.policyType.map(_.encrypted),
       gains.policyNumber.map(_.encrypted),
       gains.amountOfGain.map(_.encrypted),
       gains.policyEvent.map(_.encrypted),
@@ -89,7 +89,7 @@ class EncryptionService @Inject()(implicit val encryptionService: AesGcmAdCrypto
                                   (implicit associatedText: String): PolicyCyaModel = {
     PolicyCyaModel(
       gains.sessionId.decrypted[String],
-      gains.policyType.decrypted[String],
+      gains.policyType.map(_.decrypted[String]),
       gains.policyNumber.map(_.decrypted[String]),
       gains.amountOfGain.map(_.decrypted[BigDecimal]),
       gains.policyEvent.map(_.decrypted[String]),

@@ -50,11 +50,11 @@
             <dd class="govuk-summary-list__value">
                 <p class="govuk-body">@{
                         {gain.policyType match {
-                            case "Life Insurance" => messages("gains.policy-type.radio1")
-                            case "Life Annuity" => messages("gains.policy-type.radio2")
-                            case "Capital Redemption" => messages("gains.policy-type.radio3")
-                            case "Voided ISA" => messages("common.gains.voidedIsa")
-                            case "Foreign Policy" => messages("gains.policy-type.radio5")
+                            case Some("Life Insurance") => messages("gains.policy-type.radio1")
+                            case Some("Life Annuity") => messages("gains.policy-type.radio2")
+                            case Some("Capital Redemption") => messages("gains.policy-type.radio3")
+                            case Some("Voided ISA") => messages("common.gains.voidedIsa")
+                            case Some("Foreign Policy") => messages("gains.policy-type.radio5")
                             case _ => ""
                         }}
                     }</p>
@@ -100,7 +100,7 @@
             <p class="govuk-body">@{gain.yearsPolicyHeld}</p>
         </dd>
     </div>
-    @{if (gain.policyType == "Voided ISA") {
+    @{if (gain.policyType.contains("Voided ISA")) {
     <div class="govuk-summary-list__row">
         <dt class="govuk-summary-list__key">
             {messages("common.gains.taxPaidAmount")}

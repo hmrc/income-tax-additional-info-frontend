@@ -81,7 +81,7 @@ class PolicyHeldController @Inject()(authorisedAction: AuthorisedAction,
             gainsSessionService.updateSessionData(AllGainsSessionModel(updated, cya.gateway), taxYear)(errorHandler.internalServerError()) {
               if (newData.isFinished) {
                 Redirect(controllers.gains.routes.PolicySummaryController.show(taxYear, sessionId))
-              } else if (newData.policyType == "Voided ISA"){
+              } else if (newData.policyType.contains("Voided ISA")){
                 Redirect(controllers.gains.routes.PaidTaxAmountController.show(taxYear, sessionId))
               } else {
                 Redirect(controllers.gains.routes.PaidTaxStatusController.show(taxYear, sessionId))

@@ -24,19 +24,19 @@ class AllGainsSessionModelSpec extends UnitTest {
 
   val cyaModels: Seq[PolicyCyaModel] = Seq(
     PolicyCyaModel(
-      "sessionId", "Life Insurance", Some("123"), Some(0), Some(""), Some(true), Some(0), Some(0), Some(true), Some(123.11), Some(true), Some(123.11)
+      "sessionId", Some("Life Insurance"), Some("123"), Some(0), Some(""), Some(true), Some(0), Some(0), Some(true), Some(123.11), Some(true), Some(123.11)
     ),
     PolicyCyaModel(
-      "sessionId", "Life Annuity", Some("123"), Some(0), Some(""), Some(true), Some(0), Some(0), Some(true), Some(123.11), Some(true), Some(123.11)
+      "sessionId", Some("Life Annuity"), Some("123"), Some(0), Some(""), Some(true), Some(0), Some(0), Some(true), Some(123.11), Some(true), Some(123.11)
     ),
     PolicyCyaModel(
-      "sessionId", "Capital Redemption", Some("123"), Some(0), Some(""), Some(true), Some(0), Some(0), Some(true), Some(123.11), Some(true), Some(123.11)
+      "sessionId", Some("Capital Redemption"), Some("123"), Some(0), Some(""), Some(true), Some(0), Some(0), Some(true), Some(123.11), Some(true), Some(123.11)
     ),
     PolicyCyaModel(
-      "sessionId", "Voided ISA", Some("123"), Some(0), Some(""), Some(true), Some(0), Some(0), Some(true), Some(123.11), Some(true), Some(123.11)
+      "sessionId", Some("Voided ISA"), Some("123"), Some(0), Some(""), Some(true), Some(0), Some(0), Some(true), Some(123.11), Some(true), Some(123.11)
     ),
     PolicyCyaModel(
-      "sessionId", "Foreign Policy", Some("123"), Some(0), Some(""), Some(true), Some(0), Some(0), Some(true), Some(123.11), Some(true), Some(123.11)
+      "sessionId", Some("Foreign Policy"), Some("123"), Some(0), Some(""), Some(true), Some(0), Some(0), Some(true), Some(123.11), Some(true), Some(123.11)
     ))
 
   val modelMax: AllGainsSessionModel = AllGainsSessionModel(cyaModels, gateway = Some(true))

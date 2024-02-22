@@ -32,10 +32,10 @@ case class LifeAnnuityModel(
   def toPolicyCya: PolicyCyaModel = {
     PolicyCyaModel(
       sessionId = UUID.randomUUID().toString,
-      policyType = "Life Annuity",
+      policyType = Some("Life Annuity"),
       policyNumber = Some(this.customerReference.getOrElse("")),
       amountOfGain = Some(this.gainAmount),
-      policyEvent = Some(""),
+      policyEvent = this.event,
       previousGain = Some(this.yearsHeld.isDefined),
       yearsPolicyHeld = this.yearsHeld,
       yearsPolicyHeldPrevious = Some(this.yearsHeldSinceLastGain.getOrElse(0)),

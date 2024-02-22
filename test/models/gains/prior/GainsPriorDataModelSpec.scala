@@ -75,11 +75,11 @@ class GainsPriorDataModelSpec extends UnitTest {
         val result = modelMax.toPolicyCya
         result shouldBe
           List(
-            PolicyCyaModel(result.head.sessionId, "Life Insurance", None, Some(123.11), Some(""), Some(false), None, None, Some(false), None, Some(false), None),
-            PolicyCyaModel(result(1).sessionId, "Capital Redemption", None, Some(123.11), Some(""), Some(false), None, Some(0), Some(false), None, Some(false), None),
-            PolicyCyaModel(result(2).sessionId, "Life Annuity", Some(""), Some(123.11), Some(""), Some(false), None, Some(0), Some(false), None, Some(false), None),
-            PolicyCyaModel(result(3).sessionId, "Voided ISA", None, Some(123.11), Some(""), Some(false),  None, None, Some(false), Some(0), Some(false), Some(0)),
-            PolicyCyaModel(result(4).sessionId, "Foreign Policy", None, Some(123.11), Some(""), Some(false), None, Some(0), Some(false), None, Some(false), Some(0))          )
+            PolicyCyaModel(result.head.sessionId, Some("Life Insurance"), None, Some(123.11), None, Some(false), None, None, None, None, Some(false), None),
+            PolicyCyaModel(result(1).sessionId, Some("Capital Redemption"), None, Some(123.11), None, Some(false), None, None, Some(false), None, Some(false), None),
+            PolicyCyaModel(result(2).sessionId, Some("Life Annuity"), Some(""), Some(123.11), None, Some(false), None, Some(0), Some(false), None, Some(false), None),
+            PolicyCyaModel(result(3).sessionId, Some("Voided ISA"), None, Some(123.11), Some(""), Some(false),  None, None, Some(false), None, Some(false), Some(0)),
+            PolicyCyaModel(result(4).sessionId, Some("Foreign Policy"), None, Some(123.11), Some(""), Some(false), None, Some(0), Some(false), None, Some(false), Some(0))          )
       }
     }
   }

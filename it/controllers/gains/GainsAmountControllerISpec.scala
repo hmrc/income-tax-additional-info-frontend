@@ -17,12 +17,13 @@
 package controllers.gains
 
 import forms.AmountForm
+import models.gains.PolicyCyaModel
 import play.api.http.HeaderNames
-import play.api.http.Status.{BAD_REQUEST, OK, SEE_OTHER}
+import play.api.http.Status.{BAD_REQUEST, INTERNAL_SERVER_ERROR, OK, SEE_OTHER}
 import play.api.libs.ws.WSResponse
 import support.IntegrationTest
 
-class GainsAmountControllerISpec extends IntegrationTest {
+  class GainsAmountControllerISpec extends IntegrationTest {
 
   clearSession()
   populateSessionData()
@@ -60,13 +61,24 @@ class GainsAmountControllerISpec extends IntegrationTest {
       result.status shouldBe OK
     }
 
-    "return an internal server error" in {
+    "render the error page when session is not matching" in {
+      clearSession()
+      populateSessionDataWithRandomSession()
+      lazy val result: WSResponse = {
+        authoriseAgentOrIndividual(isAgent = true)
+        urlGet(url(taxYear), headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)))
+      }
+
+      result.status shouldBe INTERNAL_SERVER_ERROR
+    }
+
+    "return an internal server error with invalid session " in {
       lazy val result: WSResponse = {
         authoriseAgentOrIndividual(isAgent = false)
         urlGet(url(taxYear) + "bad-session", headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)))
       }
 
-      result.status shouldBe 500
+      result.status shouldBe INTERNAL_SERVER_ERROR
     }
 
     "redirect to income tax submission overview page if no session data is found" in {
@@ -83,7 +95,7 @@ class GainsAmountControllerISpec extends IntegrationTest {
   ".submit" should {
     "redirect to policy event page if successful" in {
       clearSession()
-      populateSessionData()
+      populateWithSessionDataModel(Seq(PolicyCyaModel(sessionId)))
       lazy val result: WSResponse = {
         authoriseAgentOrIndividual(isAgent = false)
         userDataStub(gainsPriorDataModel, nino, taxYear)
@@ -132,6 +144,16 @@ class GainsAmountControllerISpec extends IntegrationTest {
 
       result.status shouldBe SEE_OTHER
       result.headers("Location").head shouldBe s"/update-and-submit-income-tax-return/additional-information/$taxYear/gains/policy-summary/$sessionId"
+    }
+
+    "redirect to server error page when session not exists" in {
+      clearSession()
+      lazy val result: WSResponse = {
+        authoriseAgentOrIndividual(isAgent = false)
+        urlPost(url(taxYear), headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)), body = Map(AmountForm.amount -> "100"))
+      }
+
+      result.status shouldBe INTERNAL_SERVER_ERROR
     }
   }
 }

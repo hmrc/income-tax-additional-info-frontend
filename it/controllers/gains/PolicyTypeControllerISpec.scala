@@ -16,6 +16,7 @@
 
 package controllers.gains
 
+import models.gains.PolicyCyaModel
 import play.api.http.HeaderNames
 import play.api.http.Status.{BAD_REQUEST, OK, SEE_OTHER}
 import play.api.libs.ws.WSResponse
@@ -60,7 +61,7 @@ class PolicyTypeControllerISpec extends IntegrationTest {
 
     "render the policy type page with pre-filled data" in {
       clearSession()
-      populateWithSessionDataModel(Seq(completePolicyCyaModel.copy(policyType = "Life Insurance")))
+      populateWithSessionDataModel(Seq(completePolicyCyaModel.copy(policyType = Some("Life Insurance"))))
       lazy val result: WSResponse = {
         authoriseAgentOrIndividual(isAgent = true)
         urlGet(url(taxYear), headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)))
@@ -84,7 +85,7 @@ class PolicyTypeControllerISpec extends IntegrationTest {
   ".submit" should {
     "redirect to policy name if successful" in {
       clearSession()
-      populateSessionData()
+      populateWithSessionDataModel(Seq(PolicyCyaModel(sessionId)))
       lazy val result: WSResponse = {
         authoriseAgentOrIndividual(isAgent = false)
         userDataStub(gainsPriorDataModel, nino, taxYear)

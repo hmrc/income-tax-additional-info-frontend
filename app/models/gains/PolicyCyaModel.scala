@@ -21,7 +21,7 @@ import uk.gov.hmrc.crypto.EncryptedValue
 
 case class PolicyCyaModel(
                            sessionId: String,
-                           policyType: String,
+                           policyType: Option[String] = None,
                            policyNumber: Option[String] = None,
                            amountOfGain: Option[BigDecimal] = None,
                            policyEvent: Option[String] = None,
@@ -34,7 +34,7 @@ case class PolicyCyaModel(
                            deficiencyReliefAmount: Option[BigDecimal] = None
                          ) {
   def isFinished: Boolean = {
-    if (policyType == "Voided ISA") {
+    if (policyType == Some("Voided ISA")) {
       policyNumber.isDefined &&
         amountOfGain.isDefined &&
         policyEvent.isDefined &&
@@ -61,7 +61,7 @@ object PolicyCyaModel {
 
 case class EncryptedPolicyCyaModel(
                                     sessionId: EncryptedValue,
-                                    policyType: EncryptedValue,
+                                    policyType: Option[EncryptedValue] = None,
                                     policyNumber: Option[EncryptedValue] = None,
                                     amountOfGain: Option[EncryptedValue] = None,
                                     policyEvent: Option[EncryptedValue] = None,
