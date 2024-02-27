@@ -55,13 +55,7 @@ case class AllGainsSessionModel(allGains: Seq[PolicyCyaModel], gateway: Option[B
         yearsHeldSinceLastGain = cya.yearsPolicyHeldPrevious,
         deficiencyRelief = cya.deficiencyReliefAmount)
     ))
-    val foreign: Option[Seq[ForeignModel]] = convertEmptyToOption(allGains.filter(elem => elem.policyType.contains("Foreign Policy")).map(cya =>
-      ForeignModel(
-        customerReference = cya.policyNumber,
-        gainAmount = cya.amountOfGain.get,
-        taxPaidAmount = cya.taxPaidAmount,
-        yearsHeld = cya.yearsPolicyHeld)
-    ))
+
     val voidedIsa: Option[Seq[VoidedIsaModel]] = convertEmptyToOption(allGains.filter(elem => elem.policyType.contains("Voided ISA")).map(cya =>
       VoidedIsaModel(
         customerReference = cya.policyNumber,
@@ -72,6 +66,16 @@ case class AllGainsSessionModel(allGains: Seq[PolicyCyaModel], gateway: Option[B
         yearsHeldSinceLastGain = cya.yearsPolicyHeldPrevious
       ))
     )
+
+    val foreign: Option[Seq[ForeignModel]] = convertEmptyToOption(allGains.filter(elem => elem.policyType.contains("Foreign Policy")).map(cya =>
+      ForeignModel(
+        customerReference = cya.policyNumber,
+        gainAmount = cya.amountOfGain.get,
+        /*As per additional information manual form requirement, taxPaidAmount field is only relevant to voided ISA and
+          doesn't require for foreign policy and hence this question is not part of foreign policy journey*/
+        taxPaidAmount = None,
+        yearsHeld = cya.yearsPolicyHeld)
+    ))
 
     GainsSubmissionModel(
       lifeInsurance = life,
