@@ -95,19 +95,7 @@ class PolicySummaryController @Inject()(authorisedAction: AuthorisedAction,
                 }
               case _ =>
                 val currentPolicyList: Seq[PolicyCyaModel] = cya.allGains.filter(_.sessionId == sessionId)
-                val currentPolicy: PolicyCyaModel = currentPolicyList.headOption.getOrElse(PolicyCyaModel(sessionId))
-                /*Prior data is filtered with current policy that is being changed to avoid duplicating the submission as
-                we need to submit the current policy along with existing prior data everytime since API will completely overwrite with current submission*/
-                val priorData: Seq[PolicyCyaModel] = {
-                  prior match {
-                    case Some(priorPolicies) => priorPolicies.toPolicyCya.filterNot(
-                      priorPolicy =>
-                        priorPolicy.policyNumber
-                          .contains(currentPolicy.policyNumber.getOrElse("")) && priorPolicy.policyType.contains(currentPolicy.policyType.getOrElse(""))
-                    )
-                    case None => Seq.empty
-                  }
-                }
+                val priorData: Seq[PolicyCyaModel] = cya.allGains.filterNot(_.sessionId == sessionId).filter(_.isFinished)
                 val submissionData: Seq[PolicyCyaModel] = currentPolicyList ++ priorData
                 submitGainsAndAudit(
                   Some(AllGainsSessionModel(submissionData).toSubmissionModel),
