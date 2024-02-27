@@ -34,7 +34,9 @@ case class ForeignModel(
       policyEvent = Some(""),
       amountOfGain = Some(this.gainAmount),
       previousGain = Some(this.yearsHeld.isDefined),
-      taxPaidAmount = this.taxPaidAmount,
+      /*taxPaidAmount field is only relevant to voided ISA and as per manual additional form requirement
+       it not required for foreign policy and hence always none*/
+      taxPaidAmount = None,
       yearsPolicyHeld = this.yearsHeld,
       yearsPolicyHeldPrevious = Some(0),
       treatedAsTaxPaid = Some(false),
