@@ -22,22 +22,17 @@ import support.UnitTest
 
 class AllGainsSessionModelSpec extends UnitTest {
 
+  val lifeInsurancePolicyModel: PolicyCyaModel = PolicyCyaModel(
+    "sessionId", Some("Life Insurance"), Some("123"), Some(0), Some(""), Some(true), Some(0), Some(0), Some(true), Some(123.11), Some(true), Some(123.11)
+  )
+
   val cyaModels: Seq[PolicyCyaModel] = Seq(
-    PolicyCyaModel(
-      "sessionId", Some("Life Insurance"), Some("123"), Some(0), Some(""), Some(true), Some(0), Some(0), Some(true), Some(123.11), Some(true), Some(123.11)
-    ),
-    PolicyCyaModel(
-      "sessionId", Some("Life Annuity"), Some("123"), Some(0), Some(""), Some(true), Some(0), Some(0), Some(true), Some(123.11), Some(true), Some(123.11)
-    ),
-    PolicyCyaModel(
-      "sessionId", Some("Capital Redemption"), Some("123"), Some(0), Some(""), Some(true), Some(0), Some(0), Some(true), Some(123.11), Some(true), Some(123.11)
-    ),
-    PolicyCyaModel(
-      "sessionId", Some("Voided ISA"), Some("123"), Some(0), Some(""), Some(true), Some(0), Some(0), Some(true), Some(123.11), Some(true), Some(123.11)
-    ),
-    PolicyCyaModel(
-      "sessionId", Some("Foreign Policy"), Some("123"), Some(0), Some(""), Some(true), Some(0), Some(0), Some(true), Some(123.11), Some(true), Some(123.11)
-    ))
+      lifeInsurancePolicyModel,
+      lifeInsurancePolicyModel.copy(policyType = Some("Life Annuity")),
+      lifeInsurancePolicyModel.copy(policyType = Some("Capital Redemption")),
+      lifeInsurancePolicyModel.copy(policyType = Some("Voided ISA")),
+      lifeInsurancePolicyModel.copy(policyType = Some("Foreign Policy"))
+    )
 
   val modelMax: AllGainsSessionModel = AllGainsSessionModel(cyaModels, gateway = Some(true))
 

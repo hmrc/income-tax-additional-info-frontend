@@ -143,12 +143,40 @@ class PolicySummaryControllerISpec extends IntegrationTest {
   }
 
   ".submit" should {
-    "redirect to the gains summary page" in {
+    "redirect to the gains summary page when it has prior data and same policy reference number" in {
+      lazy val result: WSResponse = {
+        clearSession()
+        populateWithSessionDataModel(Seq(completePolicyCyaModel.copy(policyNumber = Some("abc123"))))
+        authoriseAgentOrIndividual(isAgent = false)
+        userDataStub(gainsPriorDataModel, nino, taxYear)
+        stubPut(putUrl, NO_CONTENT, "{}")
+        urlPost(postUrl, headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)), body = "")
+      }
+
+      result.status shouldBe SEE_OTHER
+      result.headers("Location").head shouldBe s"/update-and-submit-income-tax-return/additional-information/$taxYear/gains/summary"
+    }
+
+    "redirect to the gains summary page when it has prior data with no active session" in {
+      lazy val result: WSResponse = {
+        clearSession()
+        populateWithSessionDataModel(Seq())
+        authoriseAgentOrIndividual(isAgent = false)
+        userDataStub(gainsPriorDataModel, nino, taxYear)
+        stubPut(putUrl, NO_CONTENT, "{}")
+        urlPost(postUrl, headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)), body = "")
+      }
+
+      result.status shouldBe SEE_OTHER
+      result.headers("Location").head shouldBe s"/update-and-submit-income-tax-return/additional-information/$taxYear/gains/summary"
+    }
+
+    "redirect to the gains summary page when no prior data" in {
       lazy val result: WSResponse = {
         clearSession()
         populateWithSessionDataModel(Seq(completePolicyCyaModel))
         authoriseAgentOrIndividual(isAgent = false)
-        userDataStub(gainsPriorDataModel, nino, taxYear)
+        emptyUserDataStub()
         stubPut(putUrl, NO_CONTENT, "{}")
         urlPost(postUrl, headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)), body = "")
       }

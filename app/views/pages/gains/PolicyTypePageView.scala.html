@@ -127,11 +127,10 @@
             RadioItem(
                 content = Text(messages("gains.policy-type.radio5")),
                 value = Some("foreignPolicy"),
-                checked = if (form.data.get("policy-type").getOrElse("") == "A foreign policy") true else false
+                checked = if (form.data.get("policy-type").getOrElse("") == "Foreign Policy") true else false
             )
         )
         ))
-
         @button()
     }
 

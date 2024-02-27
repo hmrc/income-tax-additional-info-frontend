@@ -16,7 +16,7 @@
 
 package models.gains.prior
 
-import models.gains.{CapitalRedemptionModel, ForeignModel, LifeAnnuityModel, LifeInsuranceModel, PolicyCyaModel, VoidedIsaModel}
+import models.gains._
 import play.api.libs.json.{JsObject, Json}
 import support.UnitTest
 
@@ -73,13 +73,16 @@ class GainsPriorDataModelSpec extends UnitTest {
     "correctly map to PolicyCyaModel" when {
       "each prior model has data" in {
         val result = modelMax.toPolicyCya
+        val lifeInsuranceModel: PolicyCyaModel = PolicyCyaModel(result.head.sessionId, Some("Life Insurance"), None, Some(123.11), None, Some(false), None, None, None, None, Some(false), None)
         result shouldBe
           List(
-            PolicyCyaModel(result.head.sessionId, Some("Life Insurance"), None, Some(123.11), None, Some(false), None, None, None, None, Some(false), None),
-            PolicyCyaModel(result(1).sessionId, Some("Capital Redemption"), None, Some(123.11), None, Some(false), None, None, Some(false), None, Some(false), None),
-            PolicyCyaModel(result(2).sessionId, Some("Life Annuity"), Some(""), Some(123.11), None, Some(false), None, Some(0), Some(false), None, Some(false), None),
-            PolicyCyaModel(result(3).sessionId, Some("Voided ISA"), None, Some(123.11), Some(""), Some(false),  None, None, Some(false), None, Some(false), Some(0)),
-            PolicyCyaModel(result(4).sessionId, Some("Foreign Policy"), None, Some(123.11), Some(""), Some(false), None, Some(0), Some(false), None, Some(false), Some(0))          )
+            lifeInsuranceModel,
+            lifeInsuranceModel.copy(sessionId = result(1).sessionId, policyType = Some("Capital Redemption"), treatedAsTaxPaid = Some(false)),
+            lifeInsuranceModel.copy(sessionId = result(2).sessionId, policyType = Some("Life Annuity"), policyNumber = Some(""), yearsPolicyHeldPrevious = Some(0), treatedAsTaxPaid = Some(false)),
+            lifeInsuranceModel.copy(sessionId = result(3).sessionId, policyType = Some("Voided ISA"), policyEvent = Some(""), treatedAsTaxPaid = Some(false), deficiencyReliefAmount = Some(0)),
+            lifeInsuranceModel.copy(sessionId = result(4).sessionId, policyType = Some("Foreign Policy"), policyEvent = Some(""), yearsPolicyHeldPrevious = Some(0),
+              treatedAsTaxPaid = Some(false), deficiencyReliefAmount = Some(0))
+          )
       }
     }
   }
