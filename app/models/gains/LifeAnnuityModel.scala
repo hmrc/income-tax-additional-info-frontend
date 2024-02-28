@@ -33,13 +33,13 @@ case class LifeAnnuityModel(
     PolicyCyaModel(
       sessionId = UUID.randomUUID().toString,
       policyType = Some("Life Annuity"),
-      policyNumber = Some(this.customerReference.getOrElse("")),
+      policyNumber = this.customerReference,
       amountOfGain = Some(this.gainAmount),
       policyEvent = this.event,
-      previousGain = Some(this.yearsHeld.isDefined),
+      previousGain = Some(this.yearsHeldSinceLastGain.isDefined),
       yearsPolicyHeld = this.yearsHeld,
-      yearsPolicyHeldPrevious = Some(this.yearsHeldSinceLastGain.getOrElse(0)),
-      treatedAsTaxPaid = Some(this.taxPaid.getOrElse(false)),
+      yearsPolicyHeldPrevious = this.yearsHeldSinceLastGain,
+      treatedAsTaxPaid = this.taxPaid,
       entitledToDeficiencyRelief = Some(this.deficiencyRelief.isDefined),
       deficiencyReliefAmount = this.deficiencyRelief
     )

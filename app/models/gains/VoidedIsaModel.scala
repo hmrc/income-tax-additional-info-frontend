@@ -34,14 +34,14 @@ case class VoidedIsaModel(
       policyType = Some("Voided ISA"),
       policyNumber = this.customerReference,
       amountOfGain = Some(this.gainAmount),
-      policyEvent = Some(this.event.getOrElse("")),
-      previousGain = Some(this.yearsHeld.isDefined),
+      policyEvent = this.event,
+      previousGain = Some(this.yearsHeldSinceLastGain.isDefined),
       yearsPolicyHeld = this.yearsHeld,
       yearsPolicyHeldPrevious = this.yearsHeldSinceLastGain,
       treatedAsTaxPaid = Some(false),
       taxPaidAmount = this.taxPaidAmount,
       entitledToDeficiencyRelief = Some(false),
-      deficiencyReliefAmount = Some(0)
+      deficiencyReliefAmount = None
     )
   }
 }

@@ -33,22 +33,35 @@ case class PolicyCyaModel(
                            entitledToDeficiencyRelief: Option[Boolean] = None,
                            deficiencyReliefAmount: Option[BigDecimal] = None
                          ) {
+
+  private def isFinishedGeneralPolicies: Boolean =
+    policyNumber.isDefined &&
+      amountOfGain.isDefined &&
+      policyEvent.isDefined &&
+      (previousGain.contains(true) && yearsPolicyHeldPrevious.isDefined | previousGain.contains(false)) &&
+      yearsPolicyHeld.isDefined &&
+      treatedAsTaxPaid.isDefined &&
+      (entitledToDeficiencyRelief.contains(true) && deficiencyReliefAmount.isDefined | entitledToDeficiencyRelief.contains(false))
+
+  private def isFinishedVoidedIsa: Boolean =
+    policyNumber.isDefined &&
+      amountOfGain.isDefined &&
+      policyEvent.isDefined &&
+      (previousGain.contains(true) && yearsPolicyHeldPrevious.isDefined | previousGain.contains(false)) &&
+      yearsPolicyHeld.isDefined &&
+      taxPaidAmount.isDefined
+
+//  private def isFinishedForeign: Boolean =
+//    policyNumber.isDefined &&
+//      amountOfGain.isDefined &&
+//      policyEvent.isDefined &&
+//      (previousGain.contains(true) && yearsPolicyHeldPrevious.isDefined | previousGain.contains(false)) &&
+//      yearsPolicyHeld.isDefined
   def isFinished: Boolean = {
-    if (policyType == Some("Voided ISA")) {
-      policyNumber.isDefined &&
-        amountOfGain.isDefined &&
-        policyEvent.isDefined &&
-        (previousGain.contains(true) && yearsPolicyHeldPrevious.isDefined | previousGain.contains(false)) &&
-        yearsPolicyHeld.isDefined &&
-        taxPaidAmount.isDefined
-    } else {
-      policyNumber.isDefined &&
-        amountOfGain.isDefined &&
-        policyEvent.isDefined &&
-        (previousGain.contains(true) && yearsPolicyHeldPrevious.isDefined | previousGain.contains(false)) &&
-        yearsPolicyHeld.isDefined &&
-        treatedAsTaxPaid.isDefined &&
-        (entitledToDeficiencyRelief.contains(true) && deficiencyReliefAmount.isDefined | entitledToDeficiencyRelief.contains(false))
+    policyType match {
+      case Some("Voided ISA") => isFinishedVoidedIsa
+      //case Some("Foreign Policy") => isFinishedForeign
+      case _ => isFinishedGeneralPolicies
     }
   }
 }
