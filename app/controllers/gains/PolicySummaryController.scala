@@ -132,7 +132,7 @@ class PolicySummaryController @Inject()(authorisedAction: AuthorisedAction,
                              (implicit hc: HeaderCarrier): Future[AuditResult] = {
    val details: CreateOrAmendGainsAuditDetail = CreateOrAmendGainsAuditDetail.createFromCyaData(body,
       prior.flatMap(result => if (result.submittedOn.nonEmpty) prior else None),
-      !prior.exists(_.submittedOn.isEmpty), nino, mtditid, affinityGroup.toLowerCase, taxYear)
+     prior.isDefined, nino, mtditid, affinityGroup.toLowerCase, taxYear)
     val event = AuditModel("CreateOrAmendGainsUpdate", "create-or-amend-gains-update", details)
     auditService.auditModel(event)
   }
