@@ -51,16 +51,9 @@ case class PolicyCyaModel(
       yearsPolicyHeld.isDefined &&
       taxPaidAmount.isDefined
 
-//  private def isFinishedForeign: Boolean =
-//    policyNumber.isDefined &&
-//      amountOfGain.isDefined &&
-//      policyEvent.isDefined &&
-//      (previousGain.contains(true) && yearsPolicyHeldPrevious.isDefined | previousGain.contains(false)) &&
-//      yearsPolicyHeld.isDefined
   def isFinished: Boolean = {
     policyType match {
       case Some("Voided ISA") => isFinishedVoidedIsa
-      //case Some("Foreign Policy") => isFinishedForeign
       case _ => isFinishedGeneralPolicies
     }
   }
