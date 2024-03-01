@@ -36,7 +36,7 @@ case class CapitalRedemptionModel(
       policyNumber = this.customerReference,
       amountOfGain = Some(this.gainAmount),
       policyEvent = this.event,
-      previousGain = Some(this.yearsHeld.isDefined),
+      previousGain = Some(this.yearsHeldSinceLastGain.isDefined),
       yearsPolicyHeld = this.yearsHeld,
       yearsPolicyHeldPrevious = this.yearsHeldSinceLastGain,
       treatedAsTaxPaid = Some(this.taxPaid.isDefined),

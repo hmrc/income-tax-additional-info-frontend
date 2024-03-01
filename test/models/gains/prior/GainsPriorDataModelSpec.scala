@@ -78,8 +78,8 @@ class GainsPriorDataModelSpec extends UnitTest {
           List(
             lifeInsuranceModel,
             lifeInsuranceModel.copy(sessionId = result(1).sessionId, policyType = Some("Capital Redemption"), treatedAsTaxPaid = Some(false)),
-            lifeInsuranceModel.copy(sessionId = result(2).sessionId, policyType = Some("Life Annuity"), policyNumber = Some(""), yearsPolicyHeldPrevious = Some(0), treatedAsTaxPaid = Some(false)),
-            lifeInsuranceModel.copy(sessionId = result(3).sessionId, policyType = Some("Voided ISA"), policyEvent = Some(""), treatedAsTaxPaid = Some(false), deficiencyReliefAmount = Some(0)),
+            lifeInsuranceModel.copy(sessionId = result(2).sessionId, policyType = Some("Life Annuity")),
+            lifeInsuranceModel.copy(sessionId = result(3).sessionId, policyType = Some("Voided ISA"), treatedAsTaxPaid = Some(false)),
             lifeInsuranceModel.copy(sessionId = result(4).sessionId, policyType = Some("Foreign Policy"), policyEvent = Some(""), yearsPolicyHeldPrevious = Some(0),
               treatedAsTaxPaid = Some(false), deficiencyReliefAmount = Some(0))
           )
