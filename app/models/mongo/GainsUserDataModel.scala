@@ -17,10 +17,10 @@
 package models.mongo
 
 import models.{AllGainsSessionModel, EncryptedAllGainsSessionModel}
-import org.joda.time.{DateTime, DateTimeZone}
+import java.time.{LocalDate, ZoneOffset}
 import play.api.libs.json.{Format, Json, OFormat}
-import uk.gov.hmrc.mongo.play.json.formats.MongoJodaFormats
-import uk.gov.hmrc.mongo.play.json.formats.MongoJodaFormats.dateTimeFormat
+import uk.gov.hmrc.mongo.play.json.formats.MongoJavatimeFormats
+import uk.gov.hmrc.mongo.play.json.formats.MongoJavatimeFormats.localDateFormat
 
 case class GainsUserDataModel(
                                sessionId: String,
@@ -28,12 +28,12 @@ case class GainsUserDataModel(
                                nino: String,
                                taxYear: Int,
                                gains: Option[AllGainsSessionModel] = None,
-                               lastUpdated: DateTime = DateTime.now(DateTimeZone.UTC)
+                               lastUpdated: LocalDate = LocalDate.now(ZoneOffset.UTC)
                              ) extends UserDataTemplate
 
-object GainsUserDataModel extends MongoJodaFormats {
+object GainsUserDataModel extends MongoJavatimeFormats {
 
-  implicit val mongoJodaDateTimeFormats: Format[DateTime] = dateTimeFormat
+  implicit val mongoJavaDateTimeFormats: Format[LocalDate] = localDateFormat
 
   implicit val format: OFormat[GainsUserDataModel] = Json.format[GainsUserDataModel]
 }
@@ -44,12 +44,12 @@ case class EncryptedGainsUserDataModel(
                                         nino: String,
                                         taxYear: Int,
                                         gains: Option[EncryptedAllGainsSessionModel] = None,
-                                        lastUpdated: DateTime = DateTime.now(DateTimeZone.UTC)
+                                        lastUpdated: LocalDate = LocalDate.now(ZoneOffset.UTC)
                                       ) extends UserDataTemplate
 
 object EncryptedGainsUserDataModel {
 
-  implicit val mongoJodaDateTimeFormats: Format[DateTime] = dateTimeFormat
+  implicit val mongoJavaDateTimeFormats: Format[LocalDate] = localDateFormat
 
   implicit val format: Format[EncryptedGainsUserDataModel] = Json.format[EncryptedGainsUserDataModel]
 }

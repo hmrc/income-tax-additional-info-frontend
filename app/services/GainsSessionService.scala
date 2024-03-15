@@ -22,7 +22,7 @@ import models.AllGainsSessionModel
 import models.gains.prior.GainsPriorDataModel
 import models.mongo.{DatabaseError, GainsUserDataModel}
 import models.requests.AuthorisationRequest
-import org.joda.time.{DateTime, DateTimeZone}
+import java.time.{LocalDate, ZoneOffset}
 import play.api.Logging
 import repositories.GainsUserDataRepository
 import uk.gov.hmrc.http.HeaderCarrier
@@ -50,7 +50,7 @@ class GainsSessionService @Inject()(
       request.user.nino,
       taxYear,
       Some(cyaModel),
-      DateTime.now(DateTimeZone.UTC)
+      LocalDate.now(ZoneOffset.UTC)
     )
 
     gainsUserDataRepository.create(userData).map {
@@ -83,7 +83,7 @@ class GainsSessionService @Inject()(
       request.user.nino,
       taxYear,
       Some(cyaModel),
-      DateTime.now(DateTimeZone.UTC)
+      LocalDate.now(ZoneOffset.UTC)
     )
 
     gainsUserDataRepository.update(userData).map {

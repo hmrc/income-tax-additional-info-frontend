@@ -16,8 +16,8 @@
 
 package filters
 
-import akka.actor.ActorSystem
-import akka.stream.Materializer
+import org.apache.pekko.actor.ActorSystem
+import org.apache.pekko.stream.Materializer
 import org.scalamock.scalatest.MockFactory
 import play.api.mvc.Results.Ok
 import play.api.mvc._
