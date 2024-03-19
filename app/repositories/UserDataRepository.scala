@@ -20,14 +20,14 @@ import com.mongodb.client.model.ReturnDocument
 import models.User
 import models.mongo._
 import models.requests.AuthorisationRequest
-import java.time.{LocalDate, ZoneOffset}
+
+import java.time.{Clock, Instant}
 import org.mongodb.scala.bson.conversions.Bson
 import org.mongodb.scala.model.Filters.{and, equal}
 import org.mongodb.scala.model.Updates.set
 import org.mongodb.scala.model.{FindOneAndReplaceOptions, FindOneAndUpdateOptions}
 import uk.gov.hmrc.mongo.play.json.Codecs.{logger, toBson}
 import uk.gov.hmrc.mongo.play.json.PlayMongoRepository
-import uk.gov.hmrc.mongo.play.json.formats.MongoJavatimeFormats
 import utils.PagerDutyHelper.PagerDutyKeys.{ENCRYPTION_DECRYPTION_ERROR, FAILED_TO_CREATE_DATA, FAILED_TO_FIND_DATA, FAILED_TO_UPDATE_DATA}
 import utils.PagerDutyHelper.pagerDutyLog
 
@@ -69,7 +69,7 @@ trait UserDataRepository[C <: UserDataTemplate] {
 
     val userData = collection.findOneAndUpdate(
       filter = filter(request.user.sessionId, request.user.mtditid, request.user.nino, taxYear),
-      update = set("lastUpdated", toBson(LocalDate.now(ZoneOffset.UTC))(MongoJavatimeFormats.localDateWrites)),
+      update = set("lastUpdated", toBson(Instant.now(Clock.systemUTC()))),
       options = FindOneAndUpdateOptions().returnDocument(ReturnDocument.AFTER)
     ).toFutureOption().map {
       case Some(data) => Right(Some(data))

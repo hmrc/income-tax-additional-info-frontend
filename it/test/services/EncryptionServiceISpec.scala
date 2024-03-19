@@ -20,7 +20,7 @@ import models.AllGainsSessionModel
 import models.mongo.{EncryptedGainsUserDataModel, GainsUserDataModel}
 import services.EncryptionService
 
-import java.time.{LocalDate, ZoneOffset}
+import java.time.{Instant, LocalDate, ZoneOffset}
 import test.support.IntegrationTest
 import utils.AesGcmAdCrypto
 
@@ -31,7 +31,7 @@ class EncryptionServiceISpec extends IntegrationTest {
 
   "encryptGainsUserData" should {
 
-    val data: GainsUserDataModel = GainsUserDataModel("sessionId", "mtditid", "AA123456A", 1999, Some(AllGainsSessionModel(Seq(completePolicyCyaModel), gateway = Some(true))), LocalDate.now(ZoneOffset.UTC))
+    val data: GainsUserDataModel = GainsUserDataModel("sessionId", "mtditid", "AA123456A", 1999, Some(AllGainsSessionModel(Seq(completePolicyCyaModel), gateway = Some(true))), Instant.now)
 
     "encrypt all the user data apart from the look up ids and timestamp" in {
       val result = service.encryptGainsUserData(data)
