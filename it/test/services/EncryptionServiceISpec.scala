@@ -20,7 +20,7 @@ import models.AllGainsSessionModel
 import models.mongo.{EncryptedGainsUserDataModel, GainsUserDataModel}
 import services.EncryptionService
 
-import java.time.{Instant, LocalDate, ZoneOffset}
+import java.time.Instant
 import test.support.IntegrationTest
 import utils.AesGcmAdCrypto
 
