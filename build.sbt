@@ -18,6 +18,9 @@ import uk.gov.hmrc.DefaultBuildSettings
 
 val appName = "income-tax-additional-info-frontend"
 
+ThisBuild / majorVersion := 0
+ThisBuild / scalaVersion := "2.13.12"
+
 lazy val coverageSettings: Seq[Setting[_]] = {
   import scoverage.ScoverageKeys
 
@@ -64,9 +67,7 @@ lazy val microservice = Project(appName, file("."))
   .disablePlugins(JUnitXmlReportPlugin)
   .settings(PlayKeys.playDefaultPort := 10005)
   .settings(
-    majorVersion := 0,
-    scalaVersion := "2.13.12",
-    libraryDependencies ++= AppDependencies.compile ++ AppDependencies.test ++ AppDependencies.itDependencies,
+    libraryDependencies ++= AppDependencies.compile ++ AppDependencies.test,
     TwirlKeys.templateImports ++= twirlImports,
     // only required for frontends
     scalacOptions += "-Wconf:cat=unused-imports&src=html/.*:s",
@@ -75,12 +76,8 @@ lazy val microservice = Project(appName, file("."))
    //scalacOptions += "-Wconf:src=routes/.*:s"
   )
   .settings(Test / fork := false)
-  .settings(
-    DefaultBuildSettings.itSettings() ++
-      Seq(unmanagedResourceDirectories.withRank(KeyRanks.Invisible) := Seq(baseDirectory.value / "it" / "resources")
-      ))
   .settings(resolvers += Resolver.jcenterRepo)
-  .settings(coverageSettings: _*)
+  .settings(coverageSettings *)
   .settings(
     // concatenate js
     Concat.groups := Seq(
@@ -101,8 +98,5 @@ lazy val it = project
   .enablePlugins(PlayScala)
   .dependsOn(microservice % "test->test") // the "test->test" allows reusing test code and test dependencies
   .settings(DefaultBuildSettings.itSettings())
-  .settings(scalaVersion := "2.13.12")
-  .settings(majorVersion := 0)
-  .settings(libraryDependencies ++= AppDependencies.test)
 
 addCommandAlias("runAllChecks", "clean;compile;scalastyle;coverage;test;it/test;coverageReport")

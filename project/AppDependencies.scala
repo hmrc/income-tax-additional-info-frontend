@@ -32,13 +32,9 @@ object AppDependencies {
 
   val test: Seq[ModuleID] = Seq(
     "uk.gov.hmrc"             %% "bootstrap-test-play-30"     % bootstrapPlay30Version  % Test,
-    "org.scalatest"           %% "scalatest"                  % "3.2.15"                % Test,
     "org.jsoup"               %  "jsoup"                      % "1.15.4"                % Test,
     "org.scalatestplus.play"  %% "scalatestplus-play"         % "5.1.0"                 % Test,
     "org.scalamock"           %% "scalamock"                  % "5.2.0"                 % Test
   )
-
-  // Only add additional dependencies here as Integration tests already inherit Test dependencies above
-  val itDependencies: Seq[ModuleID] = Seq()
 
 }
