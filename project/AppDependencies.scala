@@ -36,5 +36,6 @@ object AppDependencies {
     "org.scalatestplus.play"  %% "scalatestplus-play"         % "5.1.0"                 % Test,
     "org.scalamock"           %% "scalamock"                  % "5.2.0"                 % Test
   )
+  def apply(): Seq[ModuleID] = compile ++ test
 
 }

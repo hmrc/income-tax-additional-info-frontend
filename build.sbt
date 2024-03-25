@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import scoverage.ScoverageKeys
+
 import uk.gov.hmrc.DefaultBuildSettings
 
 val appName = "income-tax-additional-info-frontend"
@@ -21,7 +21,7 @@ val appName = "income-tax-additional-info-frontend"
 ThisBuild / majorVersion := 0
 ThisBuild / scalaVersion := "2.13.12"
 
-lazy val coverageSettings: Seq[Setting[_]] = {
+lazy val coverageSettings: Seq[Setting[?]] = {
   import scoverage.ScoverageKeys
 
   val excludedPackages = Seq(
@@ -65,19 +65,19 @@ lazy val microservice = Project(appName, file("."))
   .enablePlugins(play.sbt.PlayScala, SbtAutoBuildPlugin, SbtGitVersioning, SbtDistributablesPlugin)
   .disablePlugins(sbt.plugins.JUnitXmlReportPlugin)
   .disablePlugins(JUnitXmlReportPlugin)
-  .settings(PlayKeys.playDefaultPort := 10005)
+  .settings(PlayKeys.playDefaultPort.withRank(KeyRanks.Invisible) := 10005)
   .settings(
-    libraryDependencies ++= AppDependencies.compile ++ AppDependencies.test,
+    libraryDependencies ++= AppDependencies(),
     TwirlKeys.templateImports ++= twirlImports,
-    // only required for frontends
-    scalacOptions += "-Wconf:cat=unused-imports&src=html/.*:s",
-    // for all services
-    scalacOptions += "-Wconf:cat=unused-imports&src=routes/.*:s"
-   //scalacOptions += "-Wconf:src=routes/.*:s"
+    scalacOptions ++= Seq(
+      "-Wconf:cat=unused-imports&src=html/.*:s",
+      "-Wconf:cat=unused-imports&src=.*routes.*:s",
+      "-Wconf:cat=unused&src=.*routes.*:s"
+    )
   )
   .settings(Test / fork := false)
   .settings(resolvers += Resolver.jcenterRepo)
-  .settings(coverageSettings *)
+  .settings(coverageSettings)
   .settings(
     // concatenate js
     Concat.groups := Seq(
