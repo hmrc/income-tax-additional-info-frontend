@@ -19,25 +19,23 @@ import sbt._
 
 object AppDependencies {
 
-  private val hmrcMongoPlayVersion = "1.7.0"
-  private val bootstrapPlay28Version = "8.4.0"
+  private val hmrcMongoPlayVersion = "1.8.0"
+  private val bootstrapPlay30Version = "8.5.0"
   private val hmrcPlayFrontend = "8.5.0"
 
   val compile: Seq[ModuleID] = Seq(
-    "uk.gov.hmrc"                   %% "bootstrap-frontend-play-28" % bootstrapPlay28Version,
-    "uk.gov.hmrc.mongo"             %% "hmrc-mongo-play-28"         % hmrcMongoPlayVersion,
-    "uk.gov.hmrc"                   %% "play-frontend-hmrc-play-28" % hmrcPlayFrontend,
+    "uk.gov.hmrc"                   %% "bootstrap-frontend-play-30" % bootstrapPlay30Version,
+    "uk.gov.hmrc.mongo"             %% "hmrc-mongo-play-30"         % hmrcMongoPlayVersion,
+    "uk.gov.hmrc"                   %% "play-frontend-hmrc-play-30" % hmrcPlayFrontend,
     "com.fasterxml.jackson.module"  %% "jackson-module-scala"       % "2.14.2"
   )
 
   val test: Seq[ModuleID] = Seq(
-    "uk.gov.hmrc"             %% "bootstrap-test-play-28"     % bootstrapPlay28Version  % "test, it",
-    "org.scalatest"           %% "scalatest"                  % "3.2.15"                % Test,
+    "uk.gov.hmrc"             %% "bootstrap-test-play-30"     % bootstrapPlay30Version  % Test,
     "org.jsoup"               %  "jsoup"                      % "1.15.4"                % Test,
-    "com.typesafe.play"       %% "play-test"                  % current                 % Test,
-    "org.scalatestplus.play"  %% "scalatestplus-play"         % "5.1.0"                 % "test, it",
-    "com.github.tomakehurst"  %  "wiremock-jre8"              % "2.35.0"                % "test, it",
-    "org.scalamock"           %% "scalamock"                  % "5.2.0"                 % Test,
-    "com.vladsch.flexmark"    %  "flexmark-all"               % "0.64.8"                % "test, it"
+    "org.scalatestplus.play"  %% "scalatestplus-play"         % "5.1.0"                 % Test,
+    "org.scalamock"           %% "scalamock"                  % "5.2.0"                 % Test
   )
+  def apply(): Seq[ModuleID] = compile ++ test
+
 }

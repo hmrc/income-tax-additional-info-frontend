@@ -17,10 +17,9 @@
 package models.mongo
 
 import models.{AllGainsSessionModel, EncryptedAllGainsSessionModel}
-import org.joda.time.{DateTime, DateTimeZone}
+
+import java.time.Instant
 import play.api.libs.json.{Format, Json, OFormat}
-import uk.gov.hmrc.mongo.play.json.formats.MongoJodaFormats
-import uk.gov.hmrc.mongo.play.json.formats.MongoJodaFormats.dateTimeFormat
 
 case class GainsUserDataModel(
                                sessionId: String,
@@ -28,12 +27,10 @@ case class GainsUserDataModel(
                                nino: String,
                                taxYear: Int,
                                gains: Option[AllGainsSessionModel] = None,
-                               lastUpdated: DateTime = DateTime.now(DateTimeZone.UTC)
+                               lastUpdated: Instant = Instant.now
                              ) extends UserDataTemplate
 
-object GainsUserDataModel extends MongoJodaFormats {
-
-  implicit val mongoJodaDateTimeFormats: Format[DateTime] = dateTimeFormat
+object GainsUserDataModel {
 
   implicit val format: OFormat[GainsUserDataModel] = Json.format[GainsUserDataModel]
 }
@@ -44,12 +41,10 @@ case class EncryptedGainsUserDataModel(
                                         nino: String,
                                         taxYear: Int,
                                         gains: Option[EncryptedAllGainsSessionModel] = None,
-                                        lastUpdated: DateTime = DateTime.now(DateTimeZone.UTC)
+                                        lastUpdated: Instant = Instant.now
                                       ) extends UserDataTemplate
 
 object EncryptedGainsUserDataModel {
-
-  implicit val mongoJodaDateTimeFormats: Format[DateTime] = dateTimeFormat
 
   implicit val format: Format[EncryptedGainsUserDataModel] = Json.format[EncryptedGainsUserDataModel]
 }

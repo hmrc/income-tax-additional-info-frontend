@@ -16,7 +16,7 @@
 
 package actions
 
-import akka.actor.ActorSystem
+import org.apache.pekko.actor.ActorSystem
 import models.authorisation.Enrolment.{Agent, Individual, Nino}
 import models.authorisation.SessionValues.{CLIENT_MTDITID, CLIENT_NINO}
 import models.requests.AuthorisationRequest
