@@ -270,6 +270,10 @@ gains.policies-empty.question.paragraph1 = Mae angen i chi ychwanegu un neu fwy 
 gains.policies-empty.question.button = Ychwanegu polisi
 gains.policies-empty.question.paragraph2 = Os nad oes gennych bolisi i’w ychwanegu, gallwch fynd yn ôl i dudalen y trosolwg a dychwelyd yn nes ymlaen.
 
+gains.sectionCompletedState.title = Have you finished this section?
+gains.sectionCompletedState.hint = You’ll still be able to go back and review the information that you’ve given us.
+gains.sectionCompletedState.error.required = Select if you’ve completed this section
+
 #################       Error messages        ########################################
 common.error.self-assessment.paragraph.1.1 = Os yw’r cyfeiriad gwe yn gywir neu os ydych wedi dewis cysylltiad neu fotwm, gallwch ddefnyddio
 common.error.self-assessment.paragraph.1.2 = Hunanasesiad: ymholiadau cyffredinol

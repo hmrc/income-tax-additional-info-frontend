@@ -270,6 +270,10 @@ gains.policies-empty.question.paragraph1 = You need to add one or more life insu
 gains.policies-empty.question.button = Add a policy
 gains.policies-empty.question.paragraph2 = If you don''t have a policy to add you can return to the overview page and come back later.
 
+gains.sectionCompletedState.title = Have you finished this section?
+gains.sectionCompletedState.hint = You’ll still be able to go back and review the information that you’ve given us.
+gains.sectionCompletedState.error.required = Select if you’ve completed this section
+
 #################       Error messages        ########################################
 common.error.self-assessment.paragraph.1.1 = If the web address is correct or you selected a link or button, you can use
 common.error.self-assessment.paragraph.1.2 = Self Assessment: general enquiries
