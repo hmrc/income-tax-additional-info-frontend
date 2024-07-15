@@ -36,9 +36,9 @@
 
 @headingForUse = @{(titleForUse)}
 
-@layout(pageTitle = titleForUse) {
+@layout(pageTitle = titleForUse, hasErrors = form.hasErrors) {
 
-    @errorSummary(form.errors.distinct)
+    @errorSummary(form.errors)
 
     @heading(headingForUse, Some(messages("gains.caption", (taxYear - 1).toString, taxYear.toString)), "govuk-!-margin-bottom-3")
 
