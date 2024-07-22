@@ -95,8 +95,12 @@ class UserDataRepositoryISpec extends IntegrationTest with FutureAwaits with Def
       count mustBe 1
 
       val data: Option[GainsUserDataModel] = await(gainsRepo.find(taxYear)(AuthorisationRequest(testUser, request)).map {
-        case Right(value) => value
-        case Left(value) => None
+        case Right(value: Option[GainsUserDataModel]) =>
+          println(s"HAPPY PATH $value")
+          value
+        case Left(value) =>
+          println(s"NOT HAPPY PATH")
+          None
       })
 
       data.get.gains.get.allGains.head.amountOfGain.get shouldBe 321.11

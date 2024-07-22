@@ -16,16 +16,13 @@
 
 package test.controllers.gains
 
-import models.gains.PolicyCyaModel
+import models.AllGainsSessionModel
 import play.api.http.HeaderNames
-import play.api.http.Status.{BAD_REQUEST, OK, SEE_OTHER}
+import play.api.http.Status._
 import play.api.libs.ws.WSResponse
 import test.support.IntegrationTest
 
 class PolicyEventControllerISpec extends IntegrationTest {
-
-  clearSession()
-  populateSessionData()
 
   private def url(taxYear: Int): String = {
     s"/update-and-submit-income-tax-return/additional-information/$taxYear/gains/policy-event/$sessionId"
@@ -34,6 +31,7 @@ class PolicyEventControllerISpec extends IntegrationTest {
   ".show" should {
     "render the policy event page" in {
       lazy val result: WSResponse = {
+        getSessionDataStub()
         authoriseAgentOrIndividual(isAgent = false)
         urlGet(url(taxYear), headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)))
       }
@@ -43,6 +41,7 @@ class PolicyEventControllerISpec extends IntegrationTest {
 
     "render the policy event page for an agent" in {
       lazy val result: WSResponse = {
+        getSessionDataStub()
         authoriseAgentOrIndividual(isAgent = true)
         urlGet(url(taxYear), headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)))
       }
@@ -51,9 +50,11 @@ class PolicyEventControllerISpec extends IntegrationTest {
     }
 
     "render the policy event page with pre-filled data 1" in {
-      clearSession()
-      populateWithSessionDataModel(Seq(completePolicyCyaModel.copy(policyEvent = Some("Full or part surrender"))))
+      val updatedGainsUserDataModel =
+        gainsUserDataModel.copy(gains = Some(AllGainsSessionModel(Seq(completePolicyCyaModel.copy(policyEvent = Some("Full or part surrender"))), gateway = Some(true))))
+
       lazy val result: WSResponse = {
+        getSessionDataStub(userData = Some(updatedGainsUserDataModel))
         authoriseAgentOrIndividual(isAgent = true)
         urlGet(url(taxYear), headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)))
       }
@@ -62,9 +63,11 @@ class PolicyEventControllerISpec extends IntegrationTest {
     }
 
     "render the policy event page with pre-filled data 2" in {
-      clearSession()
-      populateWithSessionDataModel(Seq(completePolicyCyaModel.copy(policyEvent = Some("Policy matured or a death"))))
+      val updatedGainsUserDataModel =
+        gainsUserDataModel.copy(gains = Some(AllGainsSessionModel(Seq(completePolicyCyaModel.copy(policyEvent = Some("Policy matured or a death"))), gateway = Some(true))))
+
       lazy val result: WSResponse = {
+        getSessionDataStub(userData = Some(updatedGainsUserDataModel))
         authoriseAgentOrIndividual(isAgent = true)
         urlGet(url(taxYear), headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)))
       }
@@ -73,9 +76,11 @@ class PolicyEventControllerISpec extends IntegrationTest {
     }
 
     "render the policy event page with pre-filled data 3" in {
-      clearSession()
-      populateWithSessionDataModel(Seq(completePolicyCyaModel.copy(policyEvent = Some("Sale or assignment of a policy"))))
+      val updatedGainsUserDataModel =
+        gainsUserDataModel.copy(gains = Some(AllGainsSessionModel(Seq(completePolicyCyaModel.copy(policyEvent = Some("Policy matured or a death"))), gateway = Some(true))))
+
       lazy val result: WSResponse = {
+        getSessionDataStub(userData = Some(updatedGainsUserDataModel))
         authoriseAgentOrIndividual(isAgent = true)
         urlGet(url(taxYear), headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)))
       }
@@ -84,9 +89,11 @@ class PolicyEventControllerISpec extends IntegrationTest {
     }
 
     "render the policy event page with pre-filled data 4" in {
-      clearSession()
-      populateWithSessionDataModel(Seq(completePolicyCyaModel.copy(policyEvent = Some("Personal Portfolio Bond"))))
+      val updatedGainsUserDataModel =
+        gainsUserDataModel.copy(gains = Some(AllGainsSessionModel(Seq(completePolicyCyaModel.copy(policyEvent = Some("Personal Portfolio Bond"))), gateway = Some(true))))
+
       lazy val result: WSResponse = {
+        getSessionDataStub(userData = Some(updatedGainsUserDataModel))
         authoriseAgentOrIndividual(isAgent = true)
         urlGet(url(taxYear), headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)))
       }
@@ -95,9 +102,11 @@ class PolicyEventControllerISpec extends IntegrationTest {
     }
 
     "render the policy event page with pre-filled data 5" in {
-      clearSession()
-      populateWithSessionDataModel(Seq(completePolicyCyaModel.copy(policyEvent = Some("Some other"))))
+      val updatedGainsUserDataModel =
+        gainsUserDataModel.copy(gains = Some(AllGainsSessionModel(Seq(completePolicyCyaModel.copy(policyEvent = Some("Some other"))), gateway = Some(true))))
+
       lazy val result: WSResponse = {
+        getSessionDataStub(userData = Some(updatedGainsUserDataModel))
         authoriseAgentOrIndividual(isAgent = true)
         urlGet(url(taxYear), headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)))
       }
@@ -106,9 +115,11 @@ class PolicyEventControllerISpec extends IntegrationTest {
     }
 
     "render the policy event page without pre-filled data" in {
-      clearSession()
-      populateWithSessionDataModel(Seq(completePolicyCyaModel.copy(policyEvent = None)))
+      val updatedGainsUserDataModel =
+        gainsUserDataModel.copy(gains = Some(AllGainsSessionModel(Seq(completePolicyCyaModel.copy(policyEvent = None)), gateway = Some(true))))
+
       lazy val result: WSResponse = {
+        getSessionDataStub(userData = Some(updatedGainsUserDataModel))
         authoriseAgentOrIndividual(isAgent = true)
         urlGet(url(taxYear), headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)))
       }
@@ -118,16 +129,17 @@ class PolicyEventControllerISpec extends IntegrationTest {
 
     "return an internal server error with bad session value" in {
       lazy val result: WSResponse = {
+        getSessionDataStub()
         authoriseAgentOrIndividual(isAgent = false)
         urlGet(url(taxYear) + "bad-session", headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)))
       }
 
-      result.status shouldBe 500
+      result.status shouldBe INTERNAL_SERVER_ERROR
     }
 
     "redirect to income tax submission overview page if no session data is found" in {
-      clearSession()
       lazy val result: WSResponse = {
+        getSessionDataStub(status = NO_CONTENT)
         authoriseAgentOrIndividual(isAgent = false)
         urlGet(url(taxYear), headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)))
       }
@@ -137,11 +149,14 @@ class PolicyEventControllerISpec extends IntegrationTest {
   }
 
   ".submit" should {
-    "redirect to gains status page if successful" in {
-      clearSession()
-      populateWithSessionDataModel(Seq(PolicyCyaModel(sessionId)))
+    "redirect to gains status page if successful" in { // * //
+      val updatedGainsUserDataModel =
+        gainsUserDataModel.copy(gains = Some(AllGainsSessionModel(Seq(completePolicyCyaModel.copy(amountOfGain = None)), gateway = Some(true))))
+
       lazy val result: WSResponse = {
         authoriseAgentOrIndividual(isAgent = false)
+        getSessionDataStub(userData = Some(updatedGainsUserDataModel))
+        updateSession()
         userDataStub(gainsPriorDataModel, nino, taxYear)
         urlPost(url(taxYear), headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)), body = Map("policy-event" -> "Full or part surrender"))
       }
@@ -151,7 +166,12 @@ class PolicyEventControllerISpec extends IntegrationTest {
     }
 
     "redirect to gains status page if successful with other selected" in {
+      val updatedGainsUserDataModel =
+        gainsUserDataModel.copy(gains = Some(AllGainsSessionModel(Seq(completePolicyCyaModel.copy(amountOfGain = None)), gateway = Some(true))))
+
       lazy val result: WSResponse = {
+        getSessionDataStub(userData = Some(updatedGainsUserDataModel))
+        updateSession()
         authoriseAgentOrIndividual(isAgent = false)
         userDataStub(gainsPriorDataModel, nino, taxYear)
         urlPost(url(taxYear), headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)), body = Map("policy-event" -> "Other", "other-text" -> "Some other"))
@@ -163,6 +183,7 @@ class PolicyEventControllerISpec extends IntegrationTest {
 
     "show page with error text if no selection is made" in {
       lazy val result: WSResponse = {
+        getSessionDataStub()
         authoriseAgentOrIndividual(isAgent = false)
         urlPost(url(taxYear), headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)), body = Map[String, String]())
       }
@@ -180,9 +201,9 @@ class PolicyEventControllerISpec extends IntegrationTest {
     }
 
     "redirect to summary when model is full if successful" in {
-      clearSession()
-      populateWithSessionDataModel(Seq(completePolicyCyaModel))
       lazy val result: WSResponse = {
+        getSessionDataStub()
+        updateSession()
         authoriseAgentOrIndividual(isAgent = false)
         userDataStub(gainsPriorDataModel, nino, taxYear)
         urlPost(url(taxYear), headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)), body = Map("policy-event" -> "Full or part surrender"))

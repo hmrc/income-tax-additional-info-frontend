@@ -41,6 +41,9 @@ class GainsSummaryController @Inject()(authorisedAction: AuthorisedAction,
   private def getCorrelationid(implicit hc:HeaderCarrier) = hc.extraHeaders.find(_._1 == CORRELATION_ID).getOrElse("-")
   def show(taxYear: Int): Action[AnyContent] = authorisedAction.async { implicit request =>
   //Clear the session and load it only with prior data to avoid any incomplete session data that may exists
+
+    println("HITTING SHOW")
+
     gainsSessionService.deleteSessionData(taxYear)(Future.successful(errorHandler.internalServerError())) {
       gainsSessionService.getAndHandle(taxYear)(Future.successful(errorHandler.internalServerError())) {
         (cya, prior) =>
@@ -48,6 +51,7 @@ class GainsSummaryController @Inject()(authorisedAction: AuthorisedAction,
             case Some(prior) =>
               logger.info("[GainsSummaryController][show] only prior exists. CorrelationId: " + getCorrelationid)
               val priorData = prior.toPolicyCya
+              println("IN THIS BLOCK")
               gainsSessionService.createSessionData(AllGainsSessionModel(priorData, gateway = Some(true)), taxYear)(
                 errorHandler.internalServerError())(
                 Ok(view(taxYear, priorData))

@@ -17,15 +17,14 @@
 package test.controllers.gains
 
 import forms.RadioButtonAmountForm
+import models.AllGainsSessionModel
 import play.api.http.HeaderNames
-import play.api.http.Status.{BAD_REQUEST, OK, SEE_OTHER}
+import play.api.http.Status.{BAD_REQUEST, INTERNAL_SERVER_ERROR, NO_CONTENT, OK, SEE_OTHER}
 import play.api.libs.ws.WSResponse
 import test.support.IntegrationTest
 
 class GainsDeficiencyReliefControllerISpec extends IntegrationTest {
 
-clearSession()
-populateSessionData()
   private def url(taxYear: Int): String = {
     s"/update-and-submit-income-tax-return/additional-information/$taxYear/gains/deficiency-relief-status/$sessionId"
   }
@@ -33,6 +32,7 @@ populateSessionData()
   ".show" should {
     "render the paid tax status page" in {
       lazy val result: WSResponse = {
+        getSessionDataStub()
         authoriseAgentOrIndividual(isAgent = false)
         urlGet(url(taxYear), headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)))
       }
@@ -41,6 +41,7 @@ populateSessionData()
 
     "render the paid tax status page for an agent" in {
       lazy val result: WSResponse = {
+        getSessionDataStub()
         authoriseAgentOrIndividual(isAgent = true)
         urlGet(url(taxYear), headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)))
       }
@@ -48,9 +49,13 @@ populateSessionData()
     }
 
     "render the deficiency relief page with pre-filled data 1" in {
-      clearSession()
-      populateWithSessionDataModel(Seq(completePolicyCyaModel.copy(entitledToDeficiencyRelief = Some(true), deficiencyReliefAmount = Some(BigDecimal(123.45)))))
+      val updatedGainsUserDataModel =
+        gainsUserDataModel.copy(
+          gains = Some(AllGainsSessionModel(Seq(completePolicyCyaModel.copy(entitledToDeficiencyRelief = Some(true), deficiencyReliefAmount = Some(BigDecimal(123.45)))), gateway = Some(true)))
+        )
+
       lazy val result: WSResponse = {
+        getSessionDataStub(userData = Some(updatedGainsUserDataModel))
         authoriseAgentOrIndividual(isAgent = false)
         urlGet(url(taxYear), headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)))
       }
@@ -60,9 +65,16 @@ populateSessionData()
     }
 
     "render the deficiency relief page with pre-filled data 2" in {
-      clearSession()
-      populateWithSessionDataModel(Seq(completePolicyCyaModel.copy(entitledToDeficiencyRelief = Some(true), deficiencyReliefAmount = None)))
+      val updatedGainsUserDataModel =
+        gainsUserDataModel.copy(
+          gains = Some(
+            AllGainsSessionModel(
+              Seq(completePolicyCyaModel.copy(entitledToDeficiencyRelief = Some(true), deficiencyReliefAmount = None)), gateway = Some(true))
+          )
+        )
+
       lazy val result: WSResponse = {
+        getSessionDataStub(userData = Some(updatedGainsUserDataModel))
         authoriseAgentOrIndividual(isAgent = false)
         urlGet(url(taxYear), headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)))
       }
@@ -72,9 +84,16 @@ populateSessionData()
     }
 
     "render the deficiency relief page without prefilled data" in {
-      clearSession()
-      populateWithSessionDataModel(Seq(completePolicyCyaModel.copy(entitledToDeficiencyRelief = None, deficiencyReliefAmount = None)))
+      val updatedGainsUserDataModel =
+        gainsUserDataModel.copy(
+          gains = Some(
+            AllGainsSessionModel(
+              Seq(completePolicyCyaModel.copy(entitledToDeficiencyRelief = None, deficiencyReliefAmount = None)), gateway = Some(true))
+          )
+        )
+
       lazy val result: WSResponse = {
+        getSessionDataStub(userData = Some(updatedGainsUserDataModel))
         authoriseAgentOrIndividual(isAgent = false)
         urlGet(url(taxYear), headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)))
       }
@@ -85,16 +104,17 @@ populateSessionData()
 
     "return an internal server error" in {
       lazy val result: WSResponse = {
+        getSessionDataStub()
         authoriseAgentOrIndividual(isAgent = false)
         urlGet(url(taxYear) + "bad-session", headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)))
       }
 
-      result.status shouldBe 500
+      result.status shouldBe INTERNAL_SERVER_ERROR
     }
 
     "redirect to income tax submission overview page if no session data is found" in {
-      clearSession()
       lazy val result: WSResponse = {
+        getSessionDataStub(status = NO_CONTENT)
         authoriseAgentOrIndividual(isAgent = false)
         urlGet(url(taxYear), headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)))
       }
@@ -109,6 +129,7 @@ populateSessionData()
         authoriseAgentOrIndividual(isAgent = false)
         urlPost(url(taxYear), headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)), body = Map[String, String]())
       }
+
       result.status shouldBe BAD_REQUEST
     }
 
@@ -122,16 +143,16 @@ populateSessionData()
     }
 
     "redirect to summary page if successful" in {
-      clearSession()
-      populateWithSessionDataModel(Seq(completePolicyCyaModel))
       lazy val result: WSResponse = {
+        getSessionDataStub()
+        updateSession()
         authoriseAgentOrIndividual(isAgent = false)
         userDataStub(gainsPriorDataModel, nino, taxYear)
         urlPost(url(taxYear), headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)), body = Map(RadioButtonAmountForm.yesNo -> "true", RadioButtonAmountForm.amount -> "100"))
       }
 
       result.status shouldBe SEE_OTHER
-      result.headers("Location").head shouldBe s"/update-and-submit-income-tax-return/additional-information/$taxYear/gains/policy-summary/${sessionId}"
+      result.headers("Location").head shouldBe s"/update-and-submit-income-tax-return/additional-information/$taxYear/gains/policy-summary/$sessionId"
     }
   }
 }

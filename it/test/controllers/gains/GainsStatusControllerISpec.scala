@@ -17,15 +17,14 @@
 package test.controllers.gains
 
 import forms.RadioButtonYearForm.yesNo
-import models.gains.PolicyCyaModel
+import models.AllGainsSessionModel
 import play.api.http.HeaderNames
-import play.api.http.Status.{BAD_REQUEST, INTERNAL_SERVER_ERROR, OK, SEE_OTHER}
+import play.api.http.Status._
 import play.api.libs.ws.WSResponse
 import test.support.IntegrationTest
 
 class GainsStatusControllerISpec extends IntegrationTest {
 
-  populateSessionData()
   private def url(taxYear: Int): String = {
     s"/update-and-submit-income-tax-return/additional-information/$taxYear/gains/gains-status/$sessionId"
   }
@@ -33,6 +32,7 @@ class GainsStatusControllerISpec extends IntegrationTest {
   ".show" should {
     "render the gains status page for individual user" in {
       lazy val result: WSResponse = {
+        getSessionDataStub()
         authoriseAgentOrIndividual(isAgent = false)
         urlGet(url(taxYear), headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)))
       }
@@ -42,6 +42,7 @@ class GainsStatusControllerISpec extends IntegrationTest {
 
     "render the gains status page for an agent" in {
       lazy val result: WSResponse = {
+        getSessionDataStub()
         authoriseAgentOrIndividual(isAgent = true)
         urlGet(url(taxYear), headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)))
       }
@@ -50,9 +51,8 @@ class GainsStatusControllerISpec extends IntegrationTest {
     }
 
     "render the gains status with pre-filled data" in {
-      clearSession()
-      populateWithSessionDataModel(Seq(completePolicyCyaModel.copy(previousGain = Some(true))))
       lazy val result: WSResponse = {
+        getSessionDataStub()
         authoriseAgentOrIndividual(isAgent = false)
         urlGet(url(taxYear), headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)))
       }
@@ -62,9 +62,11 @@ class GainsStatusControllerISpec extends IntegrationTest {
     }
 
     "render the gains status without pre-filled data" in {
-      clearSession()
-      populateWithSessionDataModel(Seq(completePolicyCyaModel.copy(previousGain = None)))
+      val updatedGainsUserDataModel =
+        gainsUserDataModel.copy(gains = Some(AllGainsSessionModel(Seq(completePolicyCyaModel.copy(previousGain = None)), gateway = Some(true))))
+
       lazy val result: WSResponse = {
+        getSessionDataStub(userData = Some(updatedGainsUserDataModel))
         authoriseAgentOrIndividual(isAgent = false)
         urlGet(url(taxYear), headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)))
       }
@@ -75,6 +77,7 @@ class GainsStatusControllerISpec extends IntegrationTest {
 
     "return an internal server error" in {
       lazy val result: WSResponse = {
+        getSessionDataStub(status = INTERNAL_SERVER_ERROR)
         authoriseAgentOrIndividual(isAgent = false)
         urlGet(url(taxYear) + "bad-session", headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)))
       }
@@ -83,8 +86,8 @@ class GainsStatusControllerISpec extends IntegrationTest {
     }
 
     "redirect to income tax submission overview page if no session data is found" in {
-      clearSession()
       lazy val result: WSResponse = {
+        getSessionDataStub(status = NO_CONTENT)
         authoriseAgentOrIndividual(isAgent = false)
         urlGet(url(taxYear), headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)))
       }
@@ -95,9 +98,9 @@ class GainsStatusControllerISpec extends IntegrationTest {
 
   ".submit" should {
     "redirect to policy held previous page if successful" in {
-      clearSession()
-      populateWithSessionDataModel(Seq(PolicyCyaModel(sessionId)))
       lazy val result: WSResponse = {
+        getSessionDataStub()
+        updateSession()
         authoriseAgentOrIndividual(isAgent = false)
         userDataStub(gainsPriorDataModel, nino, taxYear)
         urlPost(url(taxYear), headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)), body = Map(yesNo -> "true"))
@@ -117,9 +120,12 @@ class GainsStatusControllerISpec extends IntegrationTest {
     }
 
     "redirect to summary when model is full if successful" in {
-      clearSession()
-      populateWithSessionDataModel(Seq(completePolicyCyaModel.copy(previousGain = Some(false))))
+      val updatedGainsUserDataModel =
+        gainsUserDataModel.copy(gains = Some(AllGainsSessionModel(Seq(completePolicyCyaModel.copy(previousGain = Some(false))), gateway = Some(true))))
+
       lazy val result: WSResponse = {
+        getSessionDataStub(userData = Some(updatedGainsUserDataModel))
+        updateSession()
         authoriseAgentOrIndividual(isAgent = false)
         userDataStub(gainsPriorDataModel, nino, taxYear)
         urlPost(url(taxYear), headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)), body = Map(yesNo -> "false"))
@@ -130,9 +136,12 @@ class GainsStatusControllerISpec extends IntegrationTest {
     }
 
     "redirect to policy held page if successful" in {
-      clearSession()
-      populateWithSessionDataModel(Seq(PolicyCyaModel(sessionId)))
+      val updatedGainsUserDataModel =
+        gainsUserDataModel.copy(gains = Some(AllGainsSessionModel(Seq(completePolicyCyaModel.copy(policyNumber = None)), gateway = Some(true))))
+
       lazy val result: WSResponse = {
+        getSessionDataStub(userData = Some(updatedGainsUserDataModel))
+        updateSession()
         authoriseAgentOrIndividual(isAgent = false)
         userDataStub(gainsPriorDataModel, nino, taxYear)
         urlPost(url(taxYear), headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)), body = Map(yesNo -> "false"))

@@ -156,10 +156,25 @@ trait WireMockStubs {
                                           sessionHeader: (String, String) = "X-Session-ID" -> aUser.sessionId,
                                           mtditidHeader: (String, String) = "mtditid" -> aUser.mtditid
                                          ): StubMapping = {
+    println(s"CREATEUSERSESSIONDATASTUB RESP BODY == $responseBody")
     stubFor(post(urlMatching(url))
       .withHeader(sessionHeader._1, equalTo(sessionHeader._2))
       .withHeader(mtditidHeader._1, equalTo(mtditidHeader._2))
       .willReturn(aResponse().withStatus(status).withBody(responseBody))
     )
   }
+
+  protected def updateUserSessionDataStub(url: String,
+                                          status: Int,
+                                          responseBody: String,
+                                          sessionHeader: (String, String) = "X-Session-ID" -> aUser.sessionId,
+                                          mtditidHeader: (String, String) = "mtditid" -> aUser.mtditid
+                                         ): StubMapping = {
+    stubFor(put(urlMatching(url))
+      .withHeader(sessionHeader._1, equalTo(sessionHeader._2))
+      .withHeader(mtditidHeader._1, equalTo(mtditidHeader._2))
+      .willReturn(aResponse().withStatus(status).withBody(responseBody))
+    )
+  }
+
 }

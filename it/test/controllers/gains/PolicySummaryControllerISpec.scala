@@ -16,16 +16,15 @@
 
 package test.controllers.gains
 
-import models.gains.PolicyCyaModel
+import models.AllGainsSessionModel
 import play.api.http.HeaderNames
 import play.api.http.Status.{INTERNAL_SERVER_ERROR, NO_CONTENT, OK, SEE_OTHER}
 import play.api.libs.ws.WSResponse
 import test.support.IntegrationTest
 
-class PolicySummaryControllerISpec extends IntegrationTest {
+import java.util.UUID
 
-  clearSession()
-  populateSessionData()
+class PolicySummaryControllerISpec extends IntegrationTest {
 
   private def url(taxYear: Int): String = {
     s"/update-and-submit-income-tax-return/additional-information/$taxYear/gains/policy-summary/$sessionId"
@@ -37,8 +36,8 @@ class PolicySummaryControllerISpec extends IntegrationTest {
   ".show" should {
     "render the policy summary page" in {
       lazy val result: WSResponse = {
-        clearSession()
-        populateSessionData()
+        getSessionDataStub()
+        updateSession()
         authoriseAgentOrIndividual(isAgent = false)
         urlGet(url(taxYear), headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)))
       }
@@ -48,8 +47,8 @@ class PolicySummaryControllerISpec extends IntegrationTest {
 
     "render the policy summary page for an agent" in {
       lazy val result: WSResponse = {
-        clearSession()
-        populateSessionData()
+        getSessionDataStub()
+        updateSession()
         authoriseAgentOrIndividual(isAgent = true)
         urlGet(url(taxYear), headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)))
       }
@@ -58,9 +57,12 @@ class PolicySummaryControllerISpec extends IntegrationTest {
     }
 
     "render an empty summary page" in {
+      val updatedGainsUserDataModel =
+        gainsUserDataModel.copy(gains = Some(AllGainsSessionModel(Seq(), gateway = Some(false))))
+
       lazy val result: WSResponse = {
-        clearSession()
-        populateSessionDataWithFalseGateway()
+        getSessionDataStub(userData = Some(updatedGainsUserDataModel))
+        updateSession()
         authoriseAgentOrIndividual(isAgent = true)
         emptyUserDataStub()
         urlGet(url(taxYear), headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)))
@@ -72,8 +74,8 @@ class PolicySummaryControllerISpec extends IntegrationTest {
 
     "render the page with prior and cya data" in {
       lazy val result: WSResponse = {
-        clearSession()
-        populateSessionData()
+        getSessionDataStub()
+        updateSession()
         authoriseAgentOrIndividual(isAgent = true)
         userDataStub(gainsPriorDataModel, nino, taxYear)
         urlGet(url(taxYear), headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)))
@@ -82,10 +84,27 @@ class PolicySummaryControllerISpec extends IntegrationTest {
       result.status shouldBe OK
     }
 
+    val updatedGainsUserDataModel =
+      gainsUserDataModel.copy(
+        gains = Some(
+          AllGainsSessionModel(
+            Seq(completePolicyCyaModel.copy(entitledToDeficiencyRelief = Some(true), deficiencyReliefAmount = None)), gateway = Some(true))
+        )
+      )
+
+
     "redirect to policy name page with incomplete cya data with policy type as Life insurance" in {
+      val updatedGainsUserDataModel =
+        gainsUserDataModel.copy(
+          gains = Some(
+            AllGainsSessionModel(
+              Seq(completePolicyCyaModel.copy(yearsPolicyHeld = None)), gateway = Some(true))
+          )
+        )
+
       lazy val result: WSResponse = {
-        clearSession()
-        populateWithSessionDataModel(Seq(PolicyCyaModel(sessionId, policyType = Some("Life Insurance"), previousGain=Some(true), entitledToDeficiencyRelief = Some(true))))
+        getSessionDataStub(userData = Some(updatedGainsUserDataModel))
+        updateSession()
         authoriseAgentOrIndividual(isAgent = true)
         userDataStub(gainsPriorDataModel, nino, taxYear)
         urlGet(url(taxYear), headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)))
@@ -95,9 +114,17 @@ class PolicySummaryControllerISpec extends IntegrationTest {
     }
 
     "redirect to policy name page with incomplete cya data with previous gain and entitledToDeficiencyRelief as false" in {
+      val updatedGainsUserDataModel =
+        gainsUserDataModel.copy(
+          gains = Some(
+            AllGainsSessionModel(
+              Seq(completePolicyCyaModel.copy(previousGain = Some(false), yearsPolicyHeld = None, entitledToDeficiencyRelief = Some(false))), gateway = Some(true))
+          )
+        )
+
       lazy val result: WSResponse = {
-        clearSession()
-        populateWithSessionDataModel(Seq(PolicyCyaModel(sessionId, policyType = Some("Life Insurance"), previousGain = Some(false), entitledToDeficiencyRelief = Some(false))))
+        getSessionDataStub(userData = Some(updatedGainsUserDataModel))
+        updateSession()
         authoriseAgentOrIndividual(isAgent = true)
         userDataStub(gainsPriorDataModel, nino, taxYear)
         urlGet(url(taxYear), headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)))
@@ -107,9 +134,18 @@ class PolicySummaryControllerISpec extends IntegrationTest {
     }
 
     "redirect to policy name page with incomplete cya data with policy type as Voided ISA" in {
+      val updatedGainsUserDataModel =
+        gainsUserDataModel.copy(
+          gains = Some(
+            AllGainsSessionModel(
+              Seq(completePolicyCyaModel.copy(policyType = Some("Voided ISA"), yearsPolicyHeld = None)), gateway = Some(true))
+          )
+        )
+
+
       lazy val result: WSResponse = {
-        clearSession()
-        populateWithSessionDataModel(Seq(PolicyCyaModel(sessionId, policyType = Some("Voided ISA"), previousGain = Some(true), entitledToDeficiencyRelief = Some(true))))
+        getSessionDataStub(userData = Some(updatedGainsUserDataModel))
+        updateSession()
         authoriseAgentOrIndividual(isAgent = true)
         userDataStub(gainsPriorDataModel, nino, taxYear)
         urlGet(url(taxYear), headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)))
@@ -120,7 +156,7 @@ class PolicySummaryControllerISpec extends IntegrationTest {
 
     "render the overview page when no prior data and session data" in {
       lazy val result: WSResponse = {
-        clearSession()
+        getSessionDataStub(status = NO_CONTENT)
         authoriseAgentOrIndividual(isAgent = true)
         emptyUserDataStub()
         urlGet(url(taxYear), headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)))
@@ -130,9 +166,16 @@ class PolicySummaryControllerISpec extends IntegrationTest {
     }
 
     "render the overview page when user clicks back and session id not matches" in {
+      val updatedGainsUserDataModel =
+        gainsUserDataModel.copy(
+          gains = Some(
+            AllGainsSessionModel(
+              Seq(completePolicyCyaModel.copy(sessionId = s"sessionId-${UUID.randomUUID().toString}")), gateway = Some(true)))
+        )
+
       lazy val result: WSResponse = {
-        clearSession()
-        populateSessionDataWithRandomSession()
+        getSessionDataStub(userData = Some(updatedGainsUserDataModel))
+        updateSession()
         authoriseAgentOrIndividual(isAgent = true)
         userDataStub(gainsPriorDataModel, nino, taxYear)
         urlGet(url(taxYear), headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)))
@@ -146,7 +189,7 @@ class PolicySummaryControllerISpec extends IntegrationTest {
     "redirect to the gains summary page when it has prior data and same policy reference number" in {
       lazy val result: WSResponse = {
         clearSession()
-        populateWithSessionDataModel(Seq(completePolicyCyaModel.copy(policyNumber = Some("abc123"))))
+        getSessionDataStub()
         authoriseAgentOrIndividual(isAgent = false)
         userDataStub(gainsPriorDataModel, nino, taxYear)
         stubPut(putUrl, NO_CONTENT, "{}")
@@ -160,7 +203,7 @@ class PolicySummaryControllerISpec extends IntegrationTest {
     "redirect to the gains summary page when it has prior data with no active session" in {
       lazy val result: WSResponse = {
         clearSession()
-        populateWithSessionDataModel(Seq())
+        getSessionDataStub()
         authoriseAgentOrIndividual(isAgent = false)
         userDataStub(gainsPriorDataModel, nino, taxYear)
         stubPut(putUrl, NO_CONTENT, "{}")
@@ -174,7 +217,7 @@ class PolicySummaryControllerISpec extends IntegrationTest {
     "redirect to the gains summary page when no prior data" in {
       lazy val result: WSResponse = {
         clearSession()
-        populateWithSessionDataModel(Seq(completePolicyCyaModel))
+        getSessionDataStub()
         authoriseAgentOrIndividual(isAgent = false)
         emptyUserDataStub()
         stubPut(putUrl, NO_CONTENT, "{}")
@@ -187,8 +230,7 @@ class PolicySummaryControllerISpec extends IntegrationTest {
 
     "redirect to error page when there is a problem posting data" in {
       lazy val result: WSResponse = {
-        clearSession()
-        populateWithSessionDataModel(Seq(completePolicyCyaModel))
+        getSessionDataStub()
         authoriseAgentOrIndividual(isAgent = false)
         userDataStub(gainsPriorDataModel, nino, taxYear)
         stubPut(putUrl, INTERNAL_SERVER_ERROR, "{}")
@@ -199,9 +241,14 @@ class PolicySummaryControllerISpec extends IntegrationTest {
     }
 
     "redirect to overview after submission" in {
+      val updatedGainsUserDataModel =
+        gainsUserDataModel.copy(gains = Some(AllGainsSessionModel(Seq(), gateway = Some(false))))
+
+
       lazy val result: WSResponse = {
         clearSession()
-        populateSessionDataWithFalseGateway()
+        getSessionDataStub(userData = Some(updatedGainsUserDataModel))
+        updateSession()
         authoriseAgentOrIndividual(isAgent = false)
         emptyUserDataStub()
         stubPost(submissionUrl, NO_CONTENT, "{}")
@@ -214,13 +261,13 @@ class PolicySummaryControllerISpec extends IntegrationTest {
 
     "return an internal server error" in {
       lazy val result: WSResponse = {
-        clearSession()
+        getSessionDataStub(status = INTERNAL_SERVER_ERROR)
         authoriseAgentOrIndividual(isAgent = false)
         userDataStub(gainsPriorDataModel, nino, taxYear)
         urlPost(postUrl, headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)), body = Map("journey" -> "gains"))
       }
 
-      result.status shouldBe 500
+      result.status shouldBe INTERNAL_SERVER_ERROR
     }
   }
 

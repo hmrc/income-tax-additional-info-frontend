@@ -17,18 +17,17 @@
 package test.controllers.gains
 
 import forms.gains.InputFieldForm
-import models.gains.{LifeInsuranceModel, PolicyCyaModel}
+import models.AllGainsSessionModel
+import models.gains.LifeInsuranceModel
 import models.gains.prior.GainsPriorDataModel
 import play.api.http.HeaderNames
-import play.api.http.Status.{BAD_REQUEST, OK, SEE_OTHER}
+import play.api.http.Status._
 import play.api.libs.ws.WSResponse
 import test.support.IntegrationTest
 
 
 class PolicyNameControllerISpec extends IntegrationTest {
 
-  clearSession()
-  populateSessionData()
   private def url(taxYear: Int): String = {
     s"/update-and-submit-income-tax-return/additional-information/$taxYear/gains/policy-name/$sessionId"
   }
@@ -37,6 +36,7 @@ class PolicyNameControllerISpec extends IntegrationTest {
 
     "render the customer reference page" in {
       lazy val result: WSResponse = {
+        getSessionDataStub()
         authoriseAgentOrIndividual(isAgent = false)
         userDataStub(Some(GainsPriorDataModel("", Some(Seq(LifeInsuranceModel(customerReference = Some("abc123"), gainAmount = BigDecimal(123.45)))))), nino, taxYear)
         urlGet(url(taxYear), headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)))
@@ -47,16 +47,17 @@ class PolicyNameControllerISpec extends IntegrationTest {
 
     "render the paid tax status page for an agent" in {
       lazy val result: WSResponse = {
+        getSessionDataStub()
         authoriseAgentOrIndividual(isAgent = true)
         urlGet(url(taxYear), headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)))
       }
+
       result.status shouldBe OK
     }
 
     "render the policy number page with pre-filled data" in {
-      clearSession()
-      populateWithSessionDataModel(Seq(completePolicyCyaModel.copy(policyNumber= Some("abc123"))))
       lazy val result: WSResponse = {
+        getSessionDataStub()
         authoriseAgentOrIndividual(isAgent = true)
         urlGet(url(taxYear), headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)))
       }
@@ -67,16 +68,17 @@ class PolicyNameControllerISpec extends IntegrationTest {
 
     "return an internal server error" in {
       lazy val result: WSResponse = {
+        getSessionDataStub()
         authoriseAgentOrIndividual(isAgent = false)
         urlGet(url(taxYear) + "bad-session", headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)))
       }
 
-      result.status shouldBe 500
+      result.status shouldBe INTERNAL_SERVER_ERROR
     }
 
     "redirect to income tax submission overview page if no session data is found" in {
-      clearSession()
       lazy val result: WSResponse = {
+        getSessionDataStub(status = NO_CONTENT)
         authoriseAgentOrIndividual(isAgent = false)
         urlGet(url(taxYear), headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)))
       }
@@ -87,9 +89,12 @@ class PolicyNameControllerISpec extends IntegrationTest {
 
   ".submit" should {
     "redirect to gains amount page if successful" in {
-      clearSession()
-      populateWithSessionDataModel(Seq(PolicyCyaModel(sessionId)))
+      val updatedGainsUserDataModel =
+        gainsUserDataModel.copy(gains = Some(AllGainsSessionModel(Seq(completePolicyCyaModel.copy(treatedAsTaxPaid = None)), gateway = Some(true))))
+
       lazy val result: WSResponse = {
+        getSessionDataStub(userData = Some(updatedGainsUserDataModel))
+        updateSession()
         authoriseAgentOrIndividual(isAgent = false)
         userDataStub(gainsPriorDataModel, nino, taxYear)
         urlPost(url(taxYear), headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)), body = Map(InputFieldForm.value -> "mixedAlphaNumOnly1"))
@@ -100,16 +105,16 @@ class PolicyNameControllerISpec extends IntegrationTest {
     }
 
     "redirect to summary when model is full if successful" in {
-      clearSession()
-      populateWithSessionDataModel(Seq(completePolicyCyaModel))
       lazy val result: WSResponse = {
+        getSessionDataStub()
+        updateSession()
         authoriseAgentOrIndividual(isAgent = false)
         userDataStub(gainsPriorDataModel, nino, taxYear)
         urlPost(url(taxYear), headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)), body = Map(InputFieldForm.value -> "mixedAlphaNumOnly1"))
       }
 
       result.status shouldBe SEE_OTHER
-      result.headers("Location").head shouldBe s"/update-and-submit-income-tax-return/additional-information/$taxYear/gains/policy-summary/${sessionId}"
+      result.headers("Location").head shouldBe s"/update-and-submit-income-tax-return/additional-information/$taxYear/gains/policy-summary/$sessionId"
     }
 
     "show page with error text if form is invalid" in {
@@ -134,11 +139,12 @@ class PolicyNameControllerISpec extends IntegrationTest {
 
     "return an internal server error when session is invalid" in {
       lazy val result: WSResponse = {
+        getSessionDataStub()
         authoriseAgentOrIndividual(isAgent = false)
         urlPost(url(taxYear) + "bad-session", headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)), body = Map(InputFieldForm.value -> "mixedAlphaNumOnly1"))
       }
 
-      result.status shouldBe 500
+      result.status shouldBe INTERNAL_SERVER_ERROR
     }
   }
 }

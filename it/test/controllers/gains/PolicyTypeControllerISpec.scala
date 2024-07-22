@@ -16,16 +16,14 @@
 
 package test.controllers.gains
 
-import models.gains.PolicyCyaModel
+import models.AllGainsSessionModel
 import play.api.http.HeaderNames
-import play.api.http.Status.{BAD_REQUEST, OK, SEE_OTHER}
+import play.api.http.Status._
 import play.api.libs.ws.WSResponse
 import test.support.IntegrationTest
 
 class PolicyTypeControllerISpec extends IntegrationTest {
 
-  clearSession()
-  populateSessionData()
   private def url(taxYear: Int): String = {
     s"/update-and-submit-income-tax-return/additional-information/$taxYear/gains/policy-type/$sessionId"
   }
@@ -34,6 +32,7 @@ class PolicyTypeControllerISpec extends IntegrationTest {
 
     "render the policy type page" in {
       lazy val result: WSResponse = {
+        getSessionDataStub()
         authoriseAgentOrIndividual(isAgent = false)
         urlGet(url(taxYear), headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)))
       }
@@ -43,6 +42,7 @@ class PolicyTypeControllerISpec extends IntegrationTest {
 
     "render the policy type page for an agent" in {
       lazy val result: WSResponse = {
+        getSessionDataStub()
         authoriseAgentOrIndividual(isAgent = true)
         urlGet(url(taxYear), headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)))
       }
@@ -52,6 +52,7 @@ class PolicyTypeControllerISpec extends IntegrationTest {
 
     "render the page with no data for new session" in {
       lazy val result: WSResponse = {
+        getSessionDataStub()
         authoriseAgentOrIndividual(isAgent = false)
         urlGet(url(taxYear) + "bad-session", headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)))
       }
@@ -60,9 +61,8 @@ class PolicyTypeControllerISpec extends IntegrationTest {
     }
 
     "render the policy type page with pre-filled data" in {
-      clearSession()
-      populateWithSessionDataModel(Seq(completePolicyCyaModel.copy(policyType = Some("Life Insurance"))))
       lazy val result: WSResponse = {
+        getSessionDataStub()
         authoriseAgentOrIndividual(isAgent = true)
         urlGet(url(taxYear), headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)))
       }
@@ -72,8 +72,9 @@ class PolicyTypeControllerISpec extends IntegrationTest {
     }
 
     "render the policy type page if no session data is found" in {
-      clearSession()
       lazy val result: WSResponse = {
+        getSessionDataStub(status = NO_CONTENT)
+        populateSessionData()
         authoriseAgentOrIndividual(isAgent = false)
         urlGet(url(taxYear), headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)))
       }
@@ -84,9 +85,12 @@ class PolicyTypeControllerISpec extends IntegrationTest {
 
   ".submit" should {
     "redirect to policy name if successful" in {
-      clearSession()
-      populateWithSessionDataModel(Seq(PolicyCyaModel(sessionId)))
+      val updatedGainsUserDataModel =
+        gainsUserDataModel.copy(gains = Some(AllGainsSessionModel(Seq(completePolicyCyaModel.copy(treatedAsTaxPaid = None)), gateway = Some(true))))
+
       lazy val result: WSResponse = {
+        getSessionDataStub(userData = Some(updatedGainsUserDataModel))
+        updateSession()
         authoriseAgentOrIndividual(isAgent = false)
         userDataStub(gainsPriorDataModel, nino, taxYear)
         urlPost(url(taxYear), headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)), body = Map("policy-type" -> "lifeInsurance"))
@@ -98,6 +102,8 @@ class PolicyTypeControllerISpec extends IntegrationTest {
 
     "redirect to policy name if successful in new journey" in {
       lazy val result: WSResponse = {
+        getSessionDataStub()
+        updateSession()
         authoriseAgentOrIndividual(isAgent = false)
         userDataStub(gainsPriorDataModel, nino, taxYear)
         urlPost(url(taxYear) + "new-session", headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)), body = Map("policy-type" -> "lifeInsurance"))
@@ -117,9 +123,9 @@ class PolicyTypeControllerISpec extends IntegrationTest {
     }
 
     "redirect to summary when model is full if successful" in {
-      clearSession()
-      populateWithSessionDataModel(Seq(completePolicyCyaModel))
       lazy val result: WSResponse = {
+        getSessionDataStub()
+        updateSession()
         authoriseAgentOrIndividual(isAgent = false)
         userDataStub(gainsPriorDataModel, nino, taxYear)
         urlPost(url(taxYear), headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)), body = Map("policy-type" -> "lifeInsurance"))
@@ -130,13 +136,14 @@ class PolicyTypeControllerISpec extends IntegrationTest {
     }
 
     "return an internal server error when no data is present" in {
-      clearSession()
       lazy val result: WSResponse = {
+        getSessionDataStub()
+        updateSession(status = INTERNAL_SERVER_ERROR)
         authoriseAgentOrIndividual(isAgent = false)
         urlPost(url(taxYear), headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)), body = Map("policy-type" -> "lifeInsurance"))
       }
 
-      result.status shouldBe 500
+      result.status shouldBe INTERNAL_SERVER_ERROR
     }
   }
 }
