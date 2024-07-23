@@ -25,6 +25,7 @@ object StringConstraints {
   val numericalCharacters = """[0-9.]*"""
   val monetaryRegex = """\d+|\d*\.\d{1,2}"""
   val alphabetsWithSpaceRegex = """^([a-zA-Z])+([a-zA-Z ])*$"""
+  //policy number regex pattern choosen based on downstream api expectation
   val policyNumberRegex = """^[0-9a-zA-Z{À-˿’}\- _&`():.'^]{1,90}$"""
 
   def validateChar(charRegex: String): String => Constraint[String] = msgKey => constraint[String](

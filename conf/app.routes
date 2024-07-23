@@ -66,3 +66,6 @@ GET         /:taxYear/gains/summary                                    controlle
 
 GET         /:taxYear/gains/policies-remove-confirmation/:sessionId    controllers.gains.PoliciesRemoveController.show(taxYear: Int, sessionId: String)
 POST        /:taxYear/gains/policies-remove-confirmation/:sessionId    controllers.gains.PoliciesRemoveController.submit(taxYear: Int, sessionId: String)
+
+GET         /:taxYear/gains/section-completed                          controllers.gains.SectionCompletedStateController.show(taxYear: Int)
+POST        /:taxYear/gains/section-completed                          controllers.gains.SectionCompletedStateController.submit(taxYear: Int)
