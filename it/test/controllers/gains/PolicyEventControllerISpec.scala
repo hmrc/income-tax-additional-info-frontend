@@ -17,12 +17,16 @@
 package test.controllers.gains
 
 import models.AllGainsSessionModel
+import models.gains.PolicyCyaModel
 import play.api.http.HeaderNames
 import play.api.http.Status._
 import play.api.libs.ws.WSResponse
 import test.support.IntegrationTest
 
 class PolicyEventControllerISpec extends IntegrationTest {
+
+  clearSession()
+  populateSessionData()
 
   private def url(taxYear: Int): String = {
     s"/update-and-submit-income-tax-return/additional-information/$taxYear/gains/policy-event/$sessionId"
@@ -139,7 +143,7 @@ class PolicyEventControllerISpec extends IntegrationTest {
 
     "redirect to income tax submission overview page if no session data is found" in {
       lazy val result: WSResponse = {
-        getSessionDataStub(status = NO_CONTENT)
+        if(appConfig.newGainsServiceEnabled) getSessionDataStub(status = NO_CONTENT) else clearSession()
         authoriseAgentOrIndividual(isAgent = false)
         urlGet(url(taxYear), headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)))
       }
@@ -149,7 +153,7 @@ class PolicyEventControllerISpec extends IntegrationTest {
   }
 
   ".submit" should {
-    "redirect to gains status page if successful" in { // * //
+    "redirect to gains status page if successful" in {
       val updatedGainsUserDataModel =
         gainsUserDataModel.copy(gains = Some(AllGainsSessionModel(Seq(completePolicyCyaModel.copy(amountOfGain = None)), gateway = Some(true))))
 

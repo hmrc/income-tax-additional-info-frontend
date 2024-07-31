@@ -40,7 +40,7 @@ class GainsSummaryControllerISpec extends IntegrationTest {
       result.status shouldBe OK
     }
 
-    "render the summary page for an agent" in { // * //
+    "render the summary page for an agent" in {
       lazy val result: WSResponse = {
         clearSession()
         getSessionDataStub()

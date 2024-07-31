@@ -31,7 +31,6 @@ class CreateGainsSessionConnector @Inject()(http: HttpClient, appConfig: AppConf
   def createSessionData(body: AllGainsSessionModel, taxYear: Int)
                        (implicit hc: HeaderCarrier): Future[CreateGainsSessionResponse] = {
     val createGainsSessionUrl: String = appConfig.additionalInformationServiceBaseUrl + s"/income-tax/income/insurance-policies/$taxYear/session"
-    println(s"REQUEST BODY === $body")
 
     http.POST[AllGainsSessionModel, CreateGainsSessionResponse](createGainsSessionUrl, body)
   }

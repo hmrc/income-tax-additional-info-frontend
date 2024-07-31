@@ -50,29 +50,22 @@ class PolicySummaryController @Inject()(authorisedAction: AuthorisedAction,
   def show(taxYear: Int, sessionId: String): Action[AnyContent] = authorisedAction.async { implicit request =>
     gainsSessionService.getSessionData(taxYear).flatMap {
       case Left(_) =>
-        println(s"POLICYSUMMARYCONTROLLER LEFT(_)")
         Future.successful(errorHandler.internalServerError())
       case Right(cya) =>
-        println(s"POLICYSUMMARYCONTROLLER RIGHT(CYA)")
         cya.fold(Future.successful(Redirect(appConfig.incomeTaxSubmissionOverviewUrl(taxYear)))) {
           cyaData =>
-            println(s"POLICYSUMMARYCONTROLLER INTO CYADATA")
             cyaData.gains.fold(Future.successful(Redirect(appConfig.incomeTaxSubmissionOverviewUrl(taxYear)))) {
               data: AllGainsSessionModel =>
                 if(data.gateway.contains(true)) {
-                  println(s"POLICYSUMMARYCONTROLLER GATEWAY.CONTAINS(TRUE)")
                   data.allGains.find(_.sessionId == sessionId) match {
                     case Some(policyCya) if !policyCya.isFinished =>
-                      println(s"POLICYSUMMARYCONTROLLER NOT_POLICYCYA.ISFINISHED")
                       Future.successful(handleUnfinishedRedirect(policyCya, taxYear))
                     case Some(_) =>
-                      println(s"POLICYSUMMARYCONTROLLER GAINSSESSIONSERVICE.UPDATESESSIONDATA")
                       gainsSessionService.updateSessionData(
                         AllGainsSessionModel(data.allGains, data.gateway), taxYear)(Future.successful(errorHandler.internalServerError())) {
                         Future.successful(Ok(view(taxYear, data.allGains, true, sessionId)))
                       }.flatten
                     case None => {
-                      println(s"POLICYSUMMARYCONTROLLER CASE NONE")
                       logger.info("[PolicySummaryController][show] No CYA data in session. Redirecting to the overview page.")
                       Future.successful(Redirect(appConfig.incomeTaxSubmissionOverviewUrl(taxYear)))
                     }

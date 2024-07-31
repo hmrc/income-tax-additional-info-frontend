@@ -22,7 +22,6 @@ import config.{AppConfig, ErrorHandler}
 import forms.YesNoForm
 import models.AllGainsSessionModel
 import models.gains.PolicyCyaModel
-import models.mongo.DatabaseError
 import play.api.data.Form
 import play.api.i18n.I18nSupport
 import play.api.mvc._
@@ -71,19 +70,14 @@ class GainsGatewayController @Inject()(authorisedAction: AuthorisedAction,
   }
 
   def submit(taxYear: Int): Action[AnyContent] = authorisedAction.async { implicit request =>
-    println(s"IN SUBMIT")
-    println(s"REQUEST === ${request.body}")
     form(request.user.isAgent).bindFromRequest().fold(formWithErrors => {
-      println(s"FORMWITHERRORS === ${formWithErrors.errors}")
       Future.successful(BadRequest(view(taxYear, formWithErrors)))
     }, {
       yesNoValue =>
         gainsSessionService.getSessionData(taxYear).flatMap {
-          case Left(error: DatabaseError) =>
-            println(s"DATABASEERROR === $error")
+          case Left(_) =>
             Future.successful(errorHandler.internalServerError())
           case Right(sessionData) =>
-            println(s"SESSIONDATA === $sessionData")
             val cya = sessionData.flatMap(_.gains).getOrElse(AllGainsSessionModel(Seq.empty)).copy(gateway = Some(yesNoValue))
             gainsSessionService.updateSessionData(cya, taxYear)(errorHandler.internalServerError()) {
               handleRedirect(yesNoValue, taxYear, sessionId)

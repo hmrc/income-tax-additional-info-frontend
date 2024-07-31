@@ -18,43 +18,33 @@ package services
 
 import connectors.GetGainsConnector
 import connectors.httpParsers.GetGainsHttpParser.GetGainsResponse
+import connectors.session.{CreateGainsSessionConnector, DeleteGainsSessionConnector, GetGainsSessionConnector, UpdateGainsSessionConnector}
 import models.AllGainsSessionModel
 import models.gains.prior.GainsPriorDataModel
-import models.mongo.{DatabaseError, GainsUserDataModel}
+import models.mongo.{DataNotFound, DatabaseError, GainsUserDataModel}
 import models.requests.AuthorisationRequest
-
-import java.time.Instant
 import play.api.Logging
-import repositories.GainsUserDataRepository
 import uk.gov.hmrc.http.HeaderCarrier
 
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
-class GainsSessionService @Inject()(
-                                     gainsUserDataRepository: GainsUserDataRepository,
-                                     getGainsDataConnector: GetGainsConnector
-                                   ) (implicit correlationId: String) extends Logging {
-
-
+class NewGainsSessionService @Inject()(getGainsDataConnector: GetGainsConnector,
+                                       createGainsSessionConnector: CreateGainsSessionConnector,
+                                       updateGainsSessionConnector: UpdateGainsSessionConnector,
+                                       deleteGainsSessionConnector: DeleteGainsSessionConnector,
+                                       getGainsSessionConnector: GetGainsSessionConnector
+                                   )(implicit correlationId: String) extends Logging {
 
   def getPriorData(taxYear: Int)(implicit request: AuthorisationRequest[_], hc: HeaderCarrier): Future[GetGainsResponse] = {
     getGainsDataConnector.getUserData(taxYear)(request.user, hc.withExtraHeaders("mtditid" -> request.user.mtditid))
   }
 
   def createSessionData[A](cyaModel: AllGainsSessionModel, taxYear: Int)(onFail: A)(onSuccess: A)
-                          (implicit request: AuthorisationRequest[_], ec: ExecutionContext): Future[A] = {
+                          (implicit request: AuthorisationRequest[_], ec: ExecutionContext, hc: HeaderCarrier): Future[A] = {
 
-    val userData = GainsUserDataModel(
-      request.user.sessionId,
-      request.user.mtditid,
-      request.user.nino,
-      taxYear,
-      Some(cyaModel),
-      Instant.now
-    )
-
-    gainsUserDataRepository.create(userData).map {
+    createGainsSessionConnector.createSessionData(cyaModel, taxYear)(
+      hc.withExtraHeaders("mtditid" -> request.user.mtditid).withExtraHeaders("X-CorrelationId" -> correlationId)).map {
       case Right(_) =>
         onSuccess
       case Left(_) =>
@@ -64,56 +54,49 @@ class GainsSessionService @Inject()(
   }
 
   def getSessionData(taxYear: Int)(implicit request: AuthorisationRequest[_],
-                                   ec: ExecutionContext): Future[Either[DatabaseError, Option[GainsUserDataModel]]] = {
+                                   ec: ExecutionContext, hc: HeaderCarrier): Future[Either[DatabaseError, Option[GainsUserDataModel]]] = {
 
-    gainsUserDataRepository.find(taxYear).map {
-      case Left(error) =>
-        logger.error("[GainsSessionService][getSessionData] Could not find user session. correlation id: " + correlationId)
-        Left(error)
+    getGainsSessionConnector.getSessionData(taxYear)(
+      hc.withExtraHeaders("mtditid" -> request.user.mtditid).withExtraHeaders("X-CorrelationId" -> correlationId)).map {
       case Right(userData) =>
         Right(userData)
+      case Left(_) =>
+        logger.error("[GainsSessionService][getSessionData] Could not find user session. correlation id: " + correlationId)
+        Left(DataNotFound)
     }
   }
 
   def updateSessionData[A](cyaModel: AllGainsSessionModel, taxYear: Int)(onFail: A)(onSuccess: A)
-                          (implicit request: AuthorisationRequest[_], ec: ExecutionContext): Future[A] = {
+                          (implicit request: AuthorisationRequest[_], ec: ExecutionContext, hc: HeaderCarrier): Future[A] = {
 
-    val userData = GainsUserDataModel(
-      request.user.sessionId,
-      request.user.mtditid,
-      request.user.nino,
-      taxYear,
-      Some(cyaModel),
-      Instant.now)
-
-    gainsUserDataRepository.update(userData).map {
+    updateGainsSessionConnector.updateGainsSession(cyaModel, taxYear)(
+      hc.withExtraHeaders("mtditid" -> request.user.mtditid).withExtraHeaders("X-CorrelationId" -> correlationId)).map {
       case Right(_) =>
         onSuccess
       case Left(_) =>
         logger.error(s"[GainsSessionService][updateSessionData] session update failure. correlation id: " + correlationId)
         onFail
     }
-
   }
 
   def deleteSessionData[A](taxYear: Int)(onFail: A)(onSuccess: A)
-                          (implicit request: AuthorisationRequest[_], ec: ExecutionContext): Future[A] = {
+                          (implicit request: AuthorisationRequest[_], ec: ExecutionContext, hc: HeaderCarrier): Future[A] = {
 
-    gainsUserDataRepository.clear(taxYear)(request.user).map {
-      case true =>
+    deleteGainsSessionConnector.deleteGainsData(taxYear)(
+      hc.withExtraHeaders("mtditid" -> request.user.mtditid).withExtraHeaders("X-CorrelationId" -> correlationId)).map {
+      case Right(_) =>
         onSuccess
       case _ =>
         logger.error(s"[GainsSessionService][deleteSessionData] session delete failure. correlation id: " + correlationId)
         onFail
     }
-
   }
 
   def getAndHandle[R](taxYear: Int)(onFail: R)(block: (Option[AllGainsSessionModel], Option[GainsPriorDataModel]) => R)
                      (implicit request: AuthorisationRequest[_], ec: ExecutionContext, hc: HeaderCarrier): Future[R] = {
     for {
       optionalCya <- getSessionData(taxYear)
-      priorDataResponse <- getPriorData(taxYear)
+      priorDataResponse: GetGainsResponse <- getPriorData(taxYear)
     } yield {
       priorDataResponse match {
         case Right(prior) => optionalCya match {

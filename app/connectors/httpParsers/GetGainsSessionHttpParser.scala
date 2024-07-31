@@ -33,17 +33,12 @@ object GetGainsSessionHttpParser extends Parser {
   implicit object GetGainsDataHttpReads extends HttpReads[GetGainsSessionResponse] {
 
     override def read(method: String, url: String, response: HttpResponse): GetGainsSessionResponse = {
-      println(s"GET RESPONSE BODY --- ${response.body}")
-      println(s"GET RESPONSE STATUS --- ${response.status}")
       response.status match {
         case OK => response.json.validate[GainsUserDataModel].fold[GetGainsSessionResponse](
           errors => badSuccessJsonFromAPIWithErrors(errors),
           parsedModel => Right(Some(parsedModel))
         )
-        case NO_CONTENT => {
-          println("GOT TO NOCONTENT")
-          Right(None)
-        }
+        case NO_CONTENT => Right(None)
         case NOT_FOUND => Right(None)
         case INTERNAL_SERVER_ERROR =>
           pagerDutyLog(INTERNAL_SERVER_ERROR_FROM_IF, response.body)

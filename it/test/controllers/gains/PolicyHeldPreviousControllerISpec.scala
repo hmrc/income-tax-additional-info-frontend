@@ -25,6 +25,9 @@ import test.support.IntegrationTest
 
 class PolicyHeldPreviousControllerISpec extends IntegrationTest {
 
+  clearSession()
+  populateSessionData()
+
   private def url(taxYear: Int): String = {
     s"/update-and-submit-income-tax-return/additional-information/$taxYear/gains/policy-held-previous/$sessionId"
   }

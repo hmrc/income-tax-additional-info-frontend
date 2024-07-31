@@ -32,10 +32,7 @@ object DeleteGainsSessionHttpParser extends Parser with Logging {
 
   implicit object DeleteGainsHttpReads extends HttpReads[DeleteGainsSessionResponse] {
     override def read(method: String, url: String, response: HttpResponse): DeleteGainsSessionResponse = response.status match {
-      case NO_CONTENT => {
-        println(s"RESP === ${response.json}")
-        Right(true)
-      }
+      case NO_CONTENT => Right(true)
       case INTERNAL_SERVER_ERROR =>
         pagerDutyLog(INTERNAL_SERVER_ERROR_FROM_IF, response.body)
         handleError(response, response.status)
@@ -45,12 +42,9 @@ object DeleteGainsSessionHttpParser extends Parser with Logging {
       case BAD_REQUEST | NOT_FOUND =>
         pagerDutyLog(FOURXX_RESPONSE_FROM_IF, response.body)
         handleError(response, response.status)
-      case _ => {
-        println(s"RESP 1 === ")
+      case _ =>
         pagerDutyLog(UNEXPECTED_RESPONSE_FROM_IF, response.body)
         handleError(response, response.status)
-      }
-
     }
   }
 }
