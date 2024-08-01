@@ -23,7 +23,7 @@ import models.AllGainsSessionModel
 import play.api.data.Form
 import play.api.i18n.I18nSupport
 import play.api.mvc._
-import services.GainsSessionService
+import services.{GainsSessionService, GainsSessionServiceProvider}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 import views.html.pages.gains.GainsStatusPageView
 
@@ -33,7 +33,7 @@ import scala.concurrent.{ExecutionContext, Future}
 @Singleton
 class GainsStatusController @Inject()(authorisedAction: AuthorisedAction,
                                       view: GainsStatusPageView,
-                                      gainsSessionService: GainsSessionService,
+                                      gainsSessionService: GainsSessionServiceProvider,
                                       errorHandler: ErrorHandler)
                                      (implicit appConfig: AppConfig, mcc: MessagesControllerComponents, ec: ExecutionContext)
   extends FrontendController(mcc) with I18nSupport {

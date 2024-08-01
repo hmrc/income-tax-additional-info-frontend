@@ -26,7 +26,7 @@ import models.{AllGainsSessionModel, User}
 import play.api.Logging
 import play.api.i18n.I18nSupport
 import play.api.mvc._
-import services.{ExcludeJourneyService, GainsSessionService, GainsSubmissionService}
+import services.{ExcludeJourneyService, GainsSessionService, GainsSessionServiceProvider, GainsSubmissionService}
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.audit.http.connector.AuditResult
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
@@ -39,7 +39,7 @@ import scala.concurrent.{ExecutionContext, Future}
 @Singleton
 class PolicySummaryController @Inject()(authorisedAction: AuthorisedAction,
                                         view: PolicySummaryPageView,
-                                        gainsSessionService: GainsSessionService,
+                                        gainsSessionService: GainsSessionServiceProvider,
                                         gainsSubmissionService: GainsSubmissionService,
                                         excludeJourneyService: ExcludeJourneyService,
                                         errorHandler: ErrorHandler,

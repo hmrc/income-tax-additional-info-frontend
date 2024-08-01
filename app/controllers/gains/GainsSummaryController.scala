@@ -23,7 +23,7 @@ import models.gains.PolicyCyaModel
 import play.api.Logging
 import play.api.i18n.I18nSupport
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
-import services.GainsSessionService
+import services.{GainsSessionService, GainsSessionServiceProvider}
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 import utils.HMRCHeaderNames.CORRELATION_ID
@@ -34,7 +34,7 @@ import scala.concurrent.{ExecutionContext, Future}
 
 class GainsSummaryController @Inject()(authorisedAction: AuthorisedAction,
                                        view: GainsSummaryPageView,
-                                       gainsSessionService: GainsSessionService,
+                                       gainsSessionService: GainsSessionServiceProvider,
                                        errorHandler: ErrorHandler)
                                       (implicit appConfig: AppConfig, mcc: MessagesControllerComponents, ec: ExecutionContext)
   extends FrontendController(mcc) with I18nSupport with Logging{

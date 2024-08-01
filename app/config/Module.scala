@@ -16,10 +16,38 @@
 
 package config
 
-import com.google.inject.AbstractModule
-class Module extends AbstractModule {
+import models.mongo.UserDataTemplate
+import play.api.inject.Binding
+import play.api.{Configuration, Environment}
+import repositories.{GainsUserDataRepository, UserDataRepository}
+import services._
+import uk.gov.hmrc.crypto.ApplicationCrypto
+import uk.gov.hmrc.play.bootstrap.config.DeprecatedConfigChecker
+import uk.gov.hmrc.play.bootstrap.filters.{AuditFilter, MDCFilter}
+import uk.gov.hmrc.play.bootstrap.frontend.deprecatedClasses
+import uk.gov.hmrc.play.bootstrap.frontend.filters.{DefaultFrontendAuditFilter, FiltersVerifier, FrontendMdcFilter, SessionTimeoutFilterConfig}
+import uk.gov.hmrc.play.bootstrap.frontend.filters.crypto.{ApplicationCryptoProvider, DefaultSessionCookieCryptoFilter, SessionCookieCrypto, SessionCookieCryptoFilter, SessionCookieCryptoProvider}
+import uk.gov.hmrc.play.bootstrap.frontend.filters.deviceid.{DefaultDeviceIdFilter, DeviceIdFilter}
 
-  override def configure(): Unit = {
-    bind(classOf[AppConfig]).asEagerSingleton()
+import java.time.Clock
+
+class Module extends play.api.inject.Module {
+
+  override def bindings(environment: Environment, configuration: Configuration): Seq[Binding[_]] = {
+
+    val sessionBinding: Binding[_] =
+      if (configuration.get[Boolean]("feature-switch.newGainsServiceEnabled")) {
+        bind[GainsSessionServiceProvider].to[NewGainsSessionServiceImpl].eagerly()
+      } else {
+        bind[GainsSessionServiceProvider].to[GainsSessionServiceImpl].eagerly()
+      }
+
+
+    Seq(
+      sessionBinding,
+      bind[Clock].toInstance(Clock.systemUTC()),
+      bind[AppConfig].toSelf
+    )
   }
+
 }

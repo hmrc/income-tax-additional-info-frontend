@@ -25,7 +25,7 @@ import models.gains.{GainsSubmissionModel, PolicyCyaModel}
 import models.requests.AuthorisationRequest
 import play.api.i18n.I18nSupport
 import play.api.mvc._
-import services.{DeleteGainsService, GainsSessionService, GainsSubmissionService}
+import services.{DeleteGainsService, GainsSessionService, GainsSessionServiceProvider, GainsSubmissionService}
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.audit.http.connector.AuditResult
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
@@ -37,7 +37,7 @@ import scala.concurrent.{ExecutionContext, Future}
 @Singleton
 class PoliciesRemoveController @Inject()(authorisedAction: AuthorisedAction,
                                          view: PoliciesRemovePageView,
-                                         gainsSessionService: GainsSessionService,
+                                         gainsSessionService: GainsSessionServiceProvider,
                                          gainsSubmissionService: GainsSubmissionService,
                                          deleteGainsService: DeleteGainsService,
                                          auditService: AuditService,
