@@ -31,12 +31,12 @@ import org.scalatest.BeforeAndAfterAll
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
 import org.scalatestplus.play.guice.GuiceOneServerPerSuite
-import play.api.http.HeaderNames
+import play.api.http.{HeaderNames, HttpEntity}
 import play.api.http.Status._
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.libs.json.Json
 import play.api.libs.ws.{BodyWritable, WSClient, WSResponse}
-import play.api.mvc.Result
+import play.api.mvc.{ResponseHeader, Result}
 import play.api.{Application, Environment, Mode}
 import repositories.GainsUserDataRepository
 import services.{GainsSessionServiceImpl, NewGainsSessionService}
@@ -164,6 +164,8 @@ trait IntegrationTest extends AnyWordSpec
   protected def await[T](awaitable: Awaitable[T]): T = Await.result(awaitable, Duration.Inf)
 
   protected def status(awaitable: Future[Result]): Int = await(awaitable).header.status
+
+  protected def headerStatus(awaitable: Future[Result]): ResponseHeader = await(awaitable).header
 
   protected def playSessionCookies(taxYear: Int,
                                    validTaxYears: Seq[Int] = validTaxYearList,

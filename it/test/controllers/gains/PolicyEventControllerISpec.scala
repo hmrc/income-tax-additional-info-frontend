@@ -18,7 +18,7 @@ package controllers.gains
 
 import models.AllGainsSessionModel
 import models.gains.PolicyCyaModel
-import models.mongo.{DataNotFound, GainsUserDataModel}
+import models.mongo.DataNotFound
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
 import org.scalatest.OptionValues.convertOptionToValuable
@@ -26,13 +26,13 @@ import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
 import org.scalatestplus.mockito.MockitoSugar.mock
 import play.api.http.HeaderNames
 import play.api.http.Status._
+import play.api.inject.bind
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.libs.json.Json
 import play.api.test.FakeRequest
 import play.api.test.Helpers.{GET, route, running, writeableOf_AnyContentAsEmpty, writeableOf_AnyContentAsFormUrlEncoded}
-import play.api.{Application, Environment, Mode}
-import play.api.inject.bind
-import repositories.{GainsUserDataRepository, UserDataRepository}
+import play.api.{Environment, Mode}
+import repositories.GainsUserDataRepository
 import test.support.IntegrationTest
 import uk.gov.hmrc.http.HttpVerbs.POST
 
@@ -67,7 +67,7 @@ class PolicyEventControllerISpec extends IntegrationTest {
 
       }
 
-      val applicationWithBackendMongo: Application = GuiceApplicationBuilder()
+      val applicationWithBackendMongo = GuiceApplicationBuilder()
         .in(Environment.simple(mode = Mode.Dev))
         .configure(config ++ Map("newGainsServiceEnabled" -> "true"))
         .build()
@@ -85,7 +85,6 @@ class PolicyEventControllerISpec extends IntegrationTest {
 
       }
     }
-
 
     "render the policy event page for an agent" in {
       val application = GuiceApplicationBuilder()
@@ -106,7 +105,7 @@ class PolicyEventControllerISpec extends IntegrationTest {
 
       }
 
-      val applicationWithBackendMongo: Application = GuiceApplicationBuilder()
+      val applicationWithBackendMongo = GuiceApplicationBuilder()
         .in(Environment.simple(mode = Mode.Dev))
         .configure(config ++ Map("newGainsServiceEnabled" -> "true"))
         .build()
@@ -204,7 +203,6 @@ class PolicyEventControllerISpec extends IntegrationTest {
         status(result) shouldBe OK
       }
     }
-
 
     "render the policy event page with pre-filled data 3" in {
       val application = GuiceApplicationBuilder()

@@ -16,12 +16,18 @@
 
 package test.controllers.gains
 
-import com.github.tomakehurst.wiremock.http.HttpHeader
 import models.AllGainsSessionModel
+import org.scalatest.OptionValues.convertOptionToValuable
+import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
 import play.api.http.HeaderNames
 import play.api.http.Status.{NO_CONTENT, OK, SEE_OTHER}
-import play.api.libs.ws.WSResponse
+import play.api.inject.guice.GuiceApplicationBuilder
+import play.api.libs.json.Json
+import play.api.test.FakeRequest
+import play.api.test.Helpers.{GET, route, running, writeableOf_AnyContentAsEmpty, writeableOf_AnyContentAsFormUrlEncoded}
+import play.api.{Environment, Mode}
 import test.support.IntegrationTest
+import uk.gov.hmrc.http.HttpVerbs.POST
 
 class PoliciesRemoveControllerISpec extends IntegrationTest {
 
@@ -31,37 +37,129 @@ class PoliciesRemoveControllerISpec extends IntegrationTest {
 
   ".show" should {
     "render the policies remove page" in {
-      lazy val result: WSResponse = {
-        getSessionDataStub()
+      val application = GuiceApplicationBuilder()
+        .in(Environment.simple(mode = Mode.Dev))
+        .configure(config ++ Map("newGainsServiceEnabled" -> "false"))
+        .build()
+
+      running(application) {
+        populateSessionData()
         authoriseAgentOrIndividual(isAgent = false)
-        urlGet(url(taxYear), headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)))
+
+        val request = FakeRequest(GET, url(taxYear)).withHeaders(HeaderNames.COOKIE -> playSessionCookies(taxYear))
+        val result = route(application, request).value
+
+        status(result) mustEqual OK
       }
 
-      result.status shouldBe OK
+      val applicationWithBackendMongo = GuiceApplicationBuilder()
+        .in(Environment.simple(mode = Mode.Dev))
+        .configure(config ++ Map("newGainsServiceEnabled" -> "true"))
+        .build()
+
+      running(applicationWithBackendMongo) {
+        authoriseAgentOrIndividual(isAgent = false)
+        getSessionDataStub()
+
+        val request = FakeRequest(GET, url(taxYear)).withHeaders(HeaderNames.COOKIE -> playSessionCookies(taxYear))
+        val result = route(applicationWithBackendMongo, request).value
+
+        status(result) mustEqual OK
+      }
     }
 
     "render the policies remove page for an agent" in {
-      lazy val result: WSResponse = {
-        getSessionDataStub()
+      val application = GuiceApplicationBuilder()
+        .in(Environment.simple(mode = Mode.Dev))
+        .configure(config ++ Map("newGainsServiceEnabled" -> "false"))
+        .build()
+
+      running(application) {
+        populateSessionData()
         authoriseAgentOrIndividual(isAgent = true)
-        urlGet(url(taxYear), headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)))
+
+        val request = FakeRequest(GET, url(taxYear)).withHeaders(HeaderNames.COOKIE -> playSessionCookies(taxYear))
+        val result = route(application, request).value
+
+        status(result) mustEqual OK
       }
-      result.status shouldBe OK
+
+      val applicationWithBackendMongo = GuiceApplicationBuilder()
+        .in(Environment.simple(mode = Mode.Dev))
+        .configure(config ++ Map("newGainsServiceEnabled" -> "true"))
+        .build()
+
+      running(applicationWithBackendMongo) {
+        authoriseAgentOrIndividual(isAgent = true)
+        getSessionDataStub()
+
+        val request = FakeRequest(GET, url(taxYear)).withHeaders(HeaderNames.COOKIE -> playSessionCookies(taxYear))
+        val result = route(applicationWithBackendMongo, request).value
+
+        status(result) mustEqual OK
+      }
     }
 
     "redirect to income tax submission overview page if no session data is found" in {
-      lazy val result: WSResponse = {
-        getSessionDataStub(status = NO_CONTENT)
+      val application = GuiceApplicationBuilder()
+        .in(Environment.simple(mode = Mode.Dev))
+        .configure(config ++ Map("newGainsServiceEnabled" -> "false"))
+        .build()
+
+      running(application) {
+        clearSession()
         authoriseAgentOrIndividual(isAgent = false)
-        urlGet(url(taxYear), headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)))
+
+        val request = FakeRequest(GET, url(taxYear) + "bad-session").withHeaders(HeaderNames.COOKIE -> playSessionCookies(taxYear))
+        val result = route(application, request).value
+
+        status(result) shouldBe SEE_OTHER
       }
 
-      result.status shouldBe SEE_OTHER
+      val applicationWithBackendMongo = GuiceApplicationBuilder()
+        .in(Environment.simple(mode = Mode.Dev))
+        .configure(config ++ Map("newGainsServiceEnabled" -> "true"))
+        .build()
+
+      running(applicationWithBackendMongo) {
+        authoriseAgentOrIndividual(isAgent = false)
+        getSessionDataStub(status = NO_CONTENT)
+
+        val request = FakeRequest(GET, url(taxYear) + "bad-session").withHeaders(HeaderNames.COOKIE -> playSessionCookies(taxYear))
+        val result = route(applicationWithBackendMongo, request).value
+
+        status(result) shouldBe SEE_OTHER
+      }
     }
   }
 
   ".submit" should {
     "redirect to gains summary page if successful" in {
+      val application = GuiceApplicationBuilder()
+        .in(Environment.simple(mode = Mode.Dev))
+        .configure(config ++ Map("newGainsServiceEnabled" -> "false"))
+        .build()
+
+      running(application) {
+        clearSession()
+        userDataStub(gainsPriorDataModel, nino, taxYear)
+        authoriseAgentOrIndividual(isAgent = false)
+
+        val request = FakeRequest(POST, url(taxYear))
+          .withHeaders(HeaderNames.COOKIE -> playSessionCookies(taxYear), "Csrf-Token" -> "nocheck")
+          .withFormUrlEncodedBody()
+
+        val result = route(application, request).value
+
+        status(result) shouldBe SEE_OTHER
+        headerStatus(result).headers.get("Location") shouldBe Some(s"/update-and-submit-income-tax-return/additional-information/$taxYear/gains/summary")
+      }
+
+      val applicationWithBackendMongo = GuiceApplicationBuilder()
+        .in(Environment.simple(mode = Mode.Dev))
+        .configure(config ++ Map("newGainsServiceEnabled" -> "true"))
+        .build()
+
       val updatedGainsUserDataModel =
         gainsUserDataModel.copy(
           gains = Some(
@@ -69,44 +167,106 @@ class PoliciesRemoveControllerISpec extends IntegrationTest {
           )
         )
 
-      lazy val result: WSResponse = {
-        clearSession()
-        getSessionDataStub(userData = Some(updatedGainsUserDataModel))
+      running(applicationWithBackendMongo) {
         authoriseAgentOrIndividual(isAgent = false)
+        getSessionDataStub(userData = Some(updatedGainsUserDataModel))
+        updateSession(responseBody = Json.toJson(updatedGainsUserDataModel).toString())
         userDataStub(gainsPriorDataModel, nino, taxYear)
-        stubPut(
-          s"/income-tax-additional-information/income-tax/insurance-policies/income/$nino/$taxYear", NO_CONTENT,"", headersSentToIF)
-        urlPost(url(taxYear), headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)), body = "")
-      }
 
-      result.status shouldBe SEE_OTHER
-      result.headers("Location").head shouldBe s"/update-and-submit-income-tax-return/additional-information/$taxYear/gains/summary"
+        val request = FakeRequest(POST, url(taxYear))
+          .withHeaders(HeaderNames.COOKIE -> playSessionCookies(taxYear), "Csrf-Token" -> "nocheck")
+          .withFormUrlEncodedBody()
+
+        val result = route(applicationWithBackendMongo, request).value
+
+        status(result) shouldBe SEE_OTHER
+        headerStatus(result).headers.get("Location") shouldBe Some(s"/update-and-submit-income-tax-return/additional-information/$taxYear/gains/summary")
+      }
     }
 
     "redirect to gains summary page when cya is empty" in {
-      lazy val result: WSResponse = {
+      val application = GuiceApplicationBuilder()
+        .in(Environment.simple(mode = Mode.Dev))
+        .configure(config ++ Map("newGainsServiceEnabled" -> "false"))
+        .build()
+
+      running(application) {
         clearSession()
-        getSessionDataStub(status = NO_CONTENT)
-        userDataStub(gainsPriorDataModel, nino, taxYear)
         authoriseAgentOrIndividual(isAgent = false)
-        stubDeleteWithoutResponseBody(s"/income-tax-additional-information/income-tax/insurance-policies/income/$nino/$taxYear", NO_CONTENT, headersSentToIF)
-        urlPost(url(taxYear), headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)), body = "")
+        userDataStub(gainsPriorDataModel, nino, taxYear)
+
+        val request = FakeRequest(POST, url(taxYear))
+          .withHeaders(HeaderNames.COOKIE -> playSessionCookies(taxYear), "Csrf-Token" -> "nocheck")
+          .withFormUrlEncodedBody()
+
+        val result = route(application, request).value
+
+        status(result) shouldBe SEE_OTHER
+        headerStatus(result).headers.get("Location") shouldBe Some(s"/update-and-submit-income-tax-return/additional-information/$taxYear/gains/summary")
       }
 
-      result.status shouldBe SEE_OTHER
-      result.headers("Location").head shouldBe s"/update-and-submit-income-tax-return/additional-information/$taxYear/gains/summary"
+      val applicationWithBackendMongo = GuiceApplicationBuilder()
+        .in(Environment.simple(mode = Mode.Dev))
+        .configure(config ++ Map("newGainsServiceEnabled" -> "true"))
+        .build()
+
+      running(applicationWithBackendMongo) {
+        clearSession()
+        authoriseAgentOrIndividual(isAgent = false)
+        userDataStub(gainsPriorDataModel, nino, taxYear)
+
+        val request = FakeRequest(POST, url(taxYear))
+          .withHeaders(HeaderNames.COOKIE -> playSessionCookies(taxYear), "Csrf-Token" -> "nocheck")
+          .withFormUrlEncodedBody()
+
+        val result = route(applicationWithBackendMongo, request).value
+
+        status(result) shouldBe SEE_OTHER
+        headerStatus(result).headers.get("Location") shouldBe Some(s"/update-and-submit-income-tax-return/additional-information/$taxYear/gains/summary")
+      }
     }
 
     "redirect to gains summary page in case of no cya data and no prior data" in {
-      lazy val result: WSResponse = {
-        getSessionDataStub(status = NO_CONTENT)
-        userDataStub(gainsPriorDataModel, nino, taxYear)
+      val application = GuiceApplicationBuilder()
+        .in(Environment.simple(mode = Mode.Dev))
+        .configure(config ++ Map("newGainsServiceEnabled" -> "false"))
+        .build()
+
+      running(application) {
+        clearSession()
         authoriseAgentOrIndividual(isAgent = false)
-        urlPost(url(taxYear), headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)), body = "")
+        userDataStub(gainsPriorDataModel, nino, taxYear)
+
+        val request = FakeRequest(POST, url(taxYear))
+          .withHeaders(HeaderNames.COOKIE -> playSessionCookies(taxYear), "Csrf-Token" -> "nocheck")
+          .withFormUrlEncodedBody()
+
+        val result = route(application, request).value
+
+        status(result) shouldBe SEE_OTHER
+        headerStatus(result).headers.get("Location") shouldBe Some(s"/update-and-submit-income-tax-return/additional-information/$taxYear/gains/summary")
       }
 
-      result.status shouldBe SEE_OTHER
-      result.headers("Location").head shouldBe s"/update-and-submit-income-tax-return/additional-information/$taxYear/gains/summary"
+      val applicationWithBackendMongo = GuiceApplicationBuilder()
+        .in(Environment.simple(mode = Mode.Dev))
+        .configure(config ++ Map("newGainsServiceEnabled" -> "true"))
+        .build()
+
+      running(applicationWithBackendMongo) {
+        clearSession()
+        authoriseAgentOrIndividual(isAgent = false)
+        getSessionDataStub(status = NO_CONTENT)
+        userDataStub(gainsPriorDataModel, nino, taxYear)
+
+        val request = FakeRequest(POST, url(taxYear))
+          .withHeaders(HeaderNames.COOKIE -> playSessionCookies(taxYear), "Csrf-Token" -> "nocheck")
+          .withFormUrlEncodedBody()
+
+        val result = route(applicationWithBackendMongo, request).value
+
+        status(result) shouldBe SEE_OTHER
+        headerStatus(result).headers.get("Location") shouldBe Some(s"/update-and-submit-income-tax-return/additional-information/$taxYear/gains/summary")
+      }
     }
   }
 
