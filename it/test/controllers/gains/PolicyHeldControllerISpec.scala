@@ -31,7 +31,7 @@ import play.api.inject.bind
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.libs.json.Json
 import play.api.test.FakeRequest
-import play.api.test.Helpers.{GET, route, running, writeableOf_AnyContentAsEmpty, writeableOf_AnyContentAsFormUrlEncoded}
+import play.api.test.Helpers.{GET, contentAsString, defaultAwaitTimeout, route, running, writeableOf_AnyContentAsEmpty, writeableOf_AnyContentAsFormUrlEncoded}
 import play.api.{Environment, Mode}
 import repositories.GainsUserDataRepository
 import test.support.IntegrationTest
@@ -123,9 +123,11 @@ class PolicyHeldControllerISpec extends IntegrationTest {
 
         val request = FakeRequest(GET, url(taxYear)).withHeaders(HeaderNames.COOKIE -> playSessionCookies(taxYear))
         val result = route(application, request).value
+        val content = contentAsString(result)
 
         status(result) shouldBe OK
-        //        result.body.contains("1")
+        content should include("How many years has your client held this policy?")
+        content should include("value=\"1\"")
       }
 
       val applicationWithBackendMongo = GuiceApplicationBuilder()
@@ -142,11 +144,12 @@ class PolicyHeldControllerISpec extends IntegrationTest {
         getSessionDataStub(userData = Some(updatedGainsUserDataModel))
 
         val request = FakeRequest(GET, url(taxYear)).withHeaders(HeaderNames.COOKIE -> playSessionCookies(taxYear))
-
         val result = route(applicationWithBackendMongo, request).value
+        val content = contentAsString(result)
 
         status(result) shouldBe OK
-        //        result.body.contains("1")
+        content should include("How many years has your client held this policy?")
+        content should include("value=\"1\"")
       }
     }
 
@@ -158,14 +161,16 @@ class PolicyHeldControllerISpec extends IntegrationTest {
 
       running(application) {
         clearSession()
-        populateWithSessionDataModel(Seq(completePolicyCyaModel))
+        populateWithSessionDataModel(Seq(completePolicyCyaModel.copy(yearsPolicyHeld = Some(2))))
         authoriseAgentOrIndividual(isAgent = false)
 
         val request = FakeRequest(GET, url(taxYear)).withHeaders(HeaderNames.COOKIE -> playSessionCookies(taxYear))
         val result = route(application, request).value
+        val content = contentAsString(result)
 
         status(result) shouldBe OK
-        //        result.body.contains("2")
+        content should include("How many years have you held this policy?")
+        content should include("value=\"2\"")
       }
 
       val applicationWithBackendMongo = GuiceApplicationBuilder()
@@ -174,15 +179,17 @@ class PolicyHeldControllerISpec extends IntegrationTest {
         .build()
 
       running(applicationWithBackendMongo) {
-        populateWithSessionDataModel(Seq(completePolicyCyaModel.copy(yearsPolicyHeldPrevious = Some(2))))
+        populateWithSessionDataModel(Seq(completePolicyCyaModel.copy(yearsPolicyHeld = Some(2))))
         authoriseAgentOrIndividual(isAgent = false)
         getSessionDataStub()
 
         val request = FakeRequest(GET, url(taxYear)).withHeaders(HeaderNames.COOKIE -> playSessionCookies(taxYear))
         val result = route(applicationWithBackendMongo, request).value
+        val content = contentAsString(result)
 
         status(result) shouldBe OK
-        //        result.body.contains("2")
+        content should include("How many years have you held this policy?")
+        content should include("value=\"2\"")
       }
     }
 

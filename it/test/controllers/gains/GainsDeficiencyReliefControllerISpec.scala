@@ -31,7 +31,7 @@ import play.api.http.Status._
 import play.api.inject.bind
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.test.FakeRequest
-import play.api.test.Helpers.{GET, route, running, writeableOf_AnyContentAsEmpty, writeableOf_AnyContentAsFormUrlEncoded}
+import play.api.test.Helpers.{GET, contentAsString, defaultAwaitTimeout, route, running, writeableOf_AnyContentAsEmpty, writeableOf_AnyContentAsFormUrlEncoded}
 import play.api.{Environment, Mode}
 import repositories.GainsUserDataRepository
 import test.support.IntegrationTest
@@ -125,9 +125,11 @@ class GainsDeficiencyReliefControllerISpec extends IntegrationTest {
 
         val request = FakeRequest(GET, url(taxYear)).withHeaders(HeaderNames.COOKIE -> playSessionCookies(taxYear))
         val result = route(application, request).value
+        val content = contentAsString(result)
 
         status(result) shouldBe OK
-        //      result.body.contains("Yes")
+        content should include("Is your client entitled to Deficiency relief?")
+        content should include("Yes")
       }
 
       val applicationWithBackendMongo = GuiceApplicationBuilder()
@@ -147,9 +149,11 @@ class GainsDeficiencyReliefControllerISpec extends IntegrationTest {
 
         val request = FakeRequest(GET, url(taxYear)).withHeaders(HeaderNames.COOKIE -> playSessionCookies(taxYear))
         val result = route(applicationWithBackendMongo, request).value
+        val content = contentAsString(result)
 
         status(result) shouldBe OK
-        //      result.body.contains("Yes")
+        content should include("Is your client entitled to Deficiency relief?")
+        content should include("Yes")
       }
     }
 
@@ -166,9 +170,11 @@ class GainsDeficiencyReliefControllerISpec extends IntegrationTest {
 
         val request = FakeRequest(GET, url(taxYear)).withHeaders(HeaderNames.COOKIE -> playSessionCookies(taxYear))
         val result = route(application, request).value
+        val content = contentAsString(result)
 
         status(result) shouldBe OK
-        //      result.body.contains("Yes")
+        content should include("Is your client entitled to Deficiency relief?")
+        content should include("Yes")
       }
 
       val applicationWithBackendMongo = GuiceApplicationBuilder()
@@ -189,9 +195,11 @@ class GainsDeficiencyReliefControllerISpec extends IntegrationTest {
 
         val request = FakeRequest(GET, url(taxYear)).withHeaders(HeaderNames.COOKIE -> playSessionCookies(taxYear))
         val result = route(applicationWithBackendMongo, request).value
+        val content = contentAsString(result)
 
         status(result) shouldBe OK
-        //      result.body.contains("Yes")
+        content should include("Is your client entitled to Deficiency relief?")
+        content should include("Yes")
       }
     }
 
@@ -208,9 +216,11 @@ class GainsDeficiencyReliefControllerISpec extends IntegrationTest {
 
         val request = FakeRequest(GET, url(taxYear)).withHeaders(HeaderNames.COOKIE -> playSessionCookies(taxYear))
         val result = route(application, request).value
+        val content = contentAsString(result)
 
         status(result) shouldBe OK
-        //      result.body.contains("Yes")
+        content should include("Is your client entitled to Deficiency relief?")
+        content should include("Yes")
       }
 
       val applicationWithBackendMongo = GuiceApplicationBuilder()
@@ -231,9 +241,11 @@ class GainsDeficiencyReliefControllerISpec extends IntegrationTest {
 
         val request = FakeRequest(GET, url(taxYear)).withHeaders(HeaderNames.COOKIE -> playSessionCookies(taxYear))
         val result = route(applicationWithBackendMongo, request).value
+        val content = contentAsString(result)
 
         status(result) shouldBe OK
-        //      result.body.contains("Yes")
+        content should include("Is your client entitled to Deficiency relief?")
+        content should include("Yes")
       }
     }
 

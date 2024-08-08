@@ -31,7 +31,7 @@ import play.api.inject.bind
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.libs.json.Json
 import play.api.test.FakeRequest
-import play.api.test.Helpers.{GET, route, running, writeableOf_AnyContentAsEmpty, writeableOf_AnyContentAsFormUrlEncoded}
+import play.api.test.Helpers.{GET, contentAsString, defaultAwaitTimeout, route, running, writeableOf_AnyContentAsEmpty, writeableOf_AnyContentAsFormUrlEncoded}
 import play.api.{Environment, Mode}
 import repositories.GainsUserDataRepository
 import test.support.IntegrationTest
@@ -145,11 +145,12 @@ class PolicyHeldPreviousControllerISpec extends IntegrationTest {
         getSessionDataStub(userData = Some(updatedGainsUserDataModel))
 
         val request = FakeRequest(GET, url(taxYear)).withHeaders(HeaderNames.COOKIE -> playSessionCookies(taxYear))
-
         val result = route(applicationWithBackendMongo, request).value
+        val content = contentAsString(result)
 
         status(result) shouldBe OK
-//        result.body.contains("1")
+        content should include("How many years since their last gain?")
+        content should include("value=\"1\"")
       }
     }
 
@@ -166,9 +167,11 @@ class PolicyHeldPreviousControllerISpec extends IntegrationTest {
 
         val request = FakeRequest(GET, url(taxYear)).withHeaders(HeaderNames.COOKIE -> playSessionCookies(taxYear))
         val result = route(application, request).value
+        val content = contentAsString(result)
 
         status(result) shouldBe OK
-        //      result.body.contains("2")
+        content should include("How many years since their last gain?")
+        content should include("value=\"2\"")
       }
 
       val applicationWithBackendMongo = GuiceApplicationBuilder()
@@ -186,9 +189,11 @@ class PolicyHeldPreviousControllerISpec extends IntegrationTest {
 
         val request = FakeRequest(GET, url(taxYear)).withHeaders(HeaderNames.COOKIE -> playSessionCookies(taxYear))
         val result = route(applicationWithBackendMongo, request).value
+        val content = contentAsString(result)
 
         status(result) shouldBe OK
-        //      result.body.contains("2")
+        content should include("How many years since their last gain?")
+        content should include("value=\"2\"")
       }
     }
 
@@ -205,9 +210,10 @@ class PolicyHeldPreviousControllerISpec extends IntegrationTest {
 
         val request = FakeRequest(GET, url(taxYear)).withHeaders(HeaderNames.COOKIE -> playSessionCookies(taxYear))
         val result = route(application, request).value
+        val content = contentAsString(result)
 
         status(result) shouldBe OK
-        //      result.body.contains("2")
+        content should include("How many years since their last gain?")
       }
 
       val applicationWithBackendMongo = GuiceApplicationBuilder()
@@ -225,9 +231,10 @@ class PolicyHeldPreviousControllerISpec extends IntegrationTest {
 
         val request = FakeRequest(GET, url(taxYear)).withHeaders(HeaderNames.COOKIE -> playSessionCookies(taxYear))
         val result = route(applicationWithBackendMongo, request).value
+        val content = contentAsString(result)
 
         status(result) shouldBe OK
-        //      result.body.contains("2")
+        content should include("How many years since their last gain?")
       }
     }
 

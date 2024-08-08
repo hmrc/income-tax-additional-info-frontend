@@ -31,7 +31,7 @@ import org.scalatest.BeforeAndAfterAll
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
 import org.scalatestplus.play.guice.GuiceOneServerPerSuite
-import play.api.http.{HeaderNames, HttpEntity}
+import play.api.http.HeaderNames
 import play.api.http.Status._
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.libs.json.Json
@@ -41,7 +41,7 @@ import play.api.{Application, Environment, Mode}
 import repositories.GainsUserDataRepository
 import services.{GainsSessionServiceImpl, NewGainsSessionService}
 import support.builders.UserBuilder.aUser
-import support.builders.requests.AuthorisationRequestBuilder
+import support.builders.requests.AuthorisationRequestBuilder.anAuthorisationRequest
 import support.helpers.WireMockServer
 import support.providers.TaxYearProvider
 import test.support.helpers.PlaySessionCookieBaker
@@ -200,7 +200,7 @@ trait IntegrationTest extends AnyWordSpec
   def populateSessionData(): Boolean =
     await(gainsSessionService.createSessionData(AllGainsSessionModel(Seq(PolicyCyaModel(sessionId, Some("Life Insurance"), Some("RefNo13254687"), Some(123.11),
       Some("Full or part surrender"), Some(true), Some(99), Some(10), Some(true), None, Some(true), Some(100))),
-      gateway = Some(true)), taxYear)(false)(true)(AuthorisationRequestBuilder.anAuthorisationRequest, ec, headerCarrier))
+      gateway = Some(true)), taxYear)(false)(true)(anAuthorisationRequest, ec, headerCarrier))
 
 
   def populateSessionData(taxYear: Int = taxYear, status: Int = NO_CONTENT, responseBody: String = ""): StubMapping =
@@ -208,19 +208,19 @@ trait IntegrationTest extends AnyWordSpec
 
   def populateSessionDataWithRandomSession(): Boolean =
     await(gainsSessionService.createSessionData(AllGainsSessionModel(Seq(PolicyCyaModel(UUID.randomUUID().toString, Some(""))), gateway = Some(true)), taxYear)
-    (false)(true)(AuthorisationRequestBuilder.anAuthorisationRequest, ec, headerCarrier))
+    (false)(true)(anAuthorisationRequest, ec, headerCarrier))
 
   def populateOnlyGatewayData(): Boolean =
-    await(gainsSessionService.createSessionData(AllGainsSessionModel(Seq[PolicyCyaModel]().empty, gateway = Some(true)), taxYear)(false)(true)(AuthorisationRequestBuilder.anAuthorisationRequest, ec, headerCarrier))
+    await(gainsSessionService.createSessionData(AllGainsSessionModel(Seq[PolicyCyaModel]().empty, gateway = Some(true)), taxYear)(false)(true)(anAuthorisationRequest, ec, headerCarrier))
 
   def populateSessionDataWithEmptyGateway(): Boolean =
-    await(gainsSessionService.createSessionData(AllGainsSessionModel(Seq(), gateway = None), taxYear)(false)(true)(AuthorisationRequestBuilder.anAuthorisationRequest, ec, headerCarrier))
+    await(gainsSessionService.createSessionData(AllGainsSessionModel(Seq(), gateway = None), taxYear)(false)(true)(anAuthorisationRequest, ec, headerCarrier))
 
   def populateSessionDataWithFalseGateway(): Boolean =
-    await(gainsSessionService.createSessionData(AllGainsSessionModel(Seq(), gateway = Some(false)), taxYear)(false)(true)(AuthorisationRequestBuilder.anAuthorisationRequest, ec, headerCarrier))
+    await(gainsSessionService.createSessionData(AllGainsSessionModel(Seq(), gateway = Some(false)), taxYear)(false)(true)(anAuthorisationRequest, ec, headerCarrier))
 
   def populateWithSessionDataModel(cya: Seq[PolicyCyaModel]): Boolean =
-    await(gainsSessionService.createSessionData(AllGainsSessionModel(cya, gateway = Some(true)), taxYear)(false)(true)(AuthorisationRequestBuilder.anAuthorisationRequest, ec, headerCarrier))
+    await(gainsSessionService.createSessionData(AllGainsSessionModel(cya, gateway = Some(true)), taxYear)(false)(true)(anAuthorisationRequest, ec, headerCarrier))
 
   def clearSession(): Boolean = await(gainsUserDataRepository.clear(taxYear))
 

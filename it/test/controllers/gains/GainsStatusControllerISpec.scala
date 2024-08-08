@@ -32,7 +32,7 @@ import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.libs.json.Json
 import play.api.libs.ws.WSResponse
 import play.api.test.FakeRequest
-import play.api.test.Helpers.{GET, route, running, writeableOf_AnyContentAsEmpty, writeableOf_AnyContentAsFormUrlEncoded}
+import play.api.test.Helpers.{GET, contentAsString, defaultAwaitTimeout, route, running, writeableOf_AnyContentAsEmpty, writeableOf_AnyContentAsFormUrlEncoded}
 import play.api.{Environment, Mode}
 import repositories.GainsUserDataRepository
 import test.support.IntegrationTest
@@ -124,9 +124,11 @@ class GainsStatusControllerISpec extends IntegrationTest {
 
         val request = FakeRequest(GET, url(taxYear)).withHeaders(HeaderNames.COOKIE -> playSessionCookies(taxYear))
         val result = route(application, request).value
+        val content = contentAsString(result)
 
         status(result) shouldBe OK
-        // result.body.contains("Yes")
+        content should include("Have you had a gain from this policy in an earlier tax year?")
+        content should include("Yes")
       }
 
       val applicationWithBackendMongo = GuiceApplicationBuilder()
@@ -145,11 +147,12 @@ class GainsStatusControllerISpec extends IntegrationTest {
         getSessionDataStub(userData = Some(updatedGainsUserDataModel))
 
         val request = FakeRequest(GET, url(taxYear)).withHeaders(HeaderNames.COOKIE -> playSessionCookies(taxYear))
-
         val result = route(applicationWithBackendMongo, request).value
+        val content = contentAsString(result)
 
         status(result) shouldBe OK
-        // result.body.contains("Yes")
+        content should include("Have you had a gain from this policy in an earlier tax year?")
+        content should include("Yes")
       }
 
     }
@@ -167,9 +170,11 @@ class GainsStatusControllerISpec extends IntegrationTest {
 
         val request = FakeRequest(GET, url(taxYear)).withHeaders(HeaderNames.COOKIE -> playSessionCookies(taxYear))
         val result = route(application, request).value
+        val content = contentAsString(result)
 
         status(result) shouldBe OK
-        // result.body.contains("Yes")
+        content should include("Have you had a gain from this policy in an earlier tax year?")
+        content should include("Yes")
       }
 
       val applicationWithBackendMongo = GuiceApplicationBuilder()
@@ -186,11 +191,12 @@ class GainsStatusControllerISpec extends IntegrationTest {
         getSessionDataStub(userData = Some(updatedGainsUserDataModel))
 
         val request = FakeRequest(GET, url(taxYear)).withHeaders(HeaderNames.COOKIE -> playSessionCookies(taxYear))
-
         val result = route(applicationWithBackendMongo, request).value
+        val content = contentAsString(result)
 
         status(result) shouldBe OK
-        // result.body.contains("Yes")
+        content should include("Have you had a gain from this policy in an earlier tax year?")
+        content should include("Yes")
       }
     }
 

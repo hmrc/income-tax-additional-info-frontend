@@ -30,10 +30,9 @@ import play.api.http.Status._
 import play.api.inject.bind
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.libs.json.Json
-import play.api.mvc.Result
 import play.api.test.FakeRequest
-import play.api.test.Helpers.{GET, route, running, writeableOf_AnyContentAsEmpty, writeableOf_AnyContentAsFormUrlEncoded}
-import play.api.{Application, Environment, Mode}
+import play.api.test.Helpers.{GET, contentAsString, defaultAwaitTimeout, route, running, writeableOf_AnyContentAsEmpty, writeableOf_AnyContentAsFormUrlEncoded}
+import play.api.{Environment, Mode}
 import repositories.GainsUserDataRepository
 import test.support.IntegrationTest
 import uk.gov.hmrc.http.HttpVerbs.POST
@@ -124,9 +123,11 @@ class PaidTaxStatusControllerISpec extends IntegrationTest {
 
         val request = FakeRequest(GET, url(taxYear)).withHeaders(HeaderNames.COOKIE -> playSessionCookies(taxYear))
         val result = route(application, request).value
+        val content = contentAsString(result)
 
         status(result) shouldBe OK
-        // result.body.contains("Yes")
+        content should include("Was your gain treated as tax paid?")
+        content should include("Yes")
       }
 
       val applicationWithBackendMongo = GuiceApplicationBuilder()
@@ -145,11 +146,12 @@ class PaidTaxStatusControllerISpec extends IntegrationTest {
         getSessionDataStub(userData = Some(updatedGainsUserDataModel))
 
         val request = FakeRequest(GET, url(taxYear)).withHeaders(HeaderNames.COOKIE -> playSessionCookies(taxYear))
-
         val result = route(applicationWithBackendMongo, request).value
+        val content = contentAsString(result)
 
         status(result) shouldBe OK
-        // result.body.contains("Yes")
+        content should include("Was your gain treated as tax paid?")
+        content should include("Yes")
       }
     }
 
@@ -166,9 +168,11 @@ class PaidTaxStatusControllerISpec extends IntegrationTest {
 
         val request = FakeRequest(GET, url(taxYear)).withHeaders(HeaderNames.COOKIE -> playSessionCookies(taxYear))
         val result = route(application, request).value
+        val content = contentAsString(result)
 
         status(result) shouldBe OK
-        // result.body.contains("Yes")
+        content should include("Was your gain treated as tax paid?")
+        content should include("Yes")
       }
 
       val applicationWithBackendMongo = GuiceApplicationBuilder()
@@ -185,11 +189,12 @@ class PaidTaxStatusControllerISpec extends IntegrationTest {
         getSessionDataStub(userData = Some(updatedGainsUserDataModel))
 
         val request = FakeRequest(GET, url(taxYear)).withHeaders(HeaderNames.COOKIE -> playSessionCookies(taxYear))
-
         val result = route(applicationWithBackendMongo, request).value
+        val content = contentAsString(result)
 
         status(result) shouldBe OK
-        // result.body.contains("Yes")
+        content should include("Was your gain treated as tax paid?")
+        content should include("Yes")
       }
     }
 

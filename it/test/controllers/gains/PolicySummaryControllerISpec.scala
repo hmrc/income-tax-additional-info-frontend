@@ -29,7 +29,7 @@ import play.api.http.Status.{INTERNAL_SERVER_ERROR, NO_CONTENT, OK, SEE_OTHER}
 import play.api.inject.bind
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.test.FakeRequest
-import play.api.test.Helpers.{GET, route, running, writeableOf_AnyContentAsEmpty, writeableOf_AnyContentAsFormUrlEncoded}
+import play.api.test.Helpers.{GET, contentAsString, defaultAwaitTimeout, route, running, writeableOf_AnyContentAsEmpty, writeableOf_AnyContentAsFormUrlEncoded}
 import play.api.{Environment, Mode}
 import repositories.GainsUserDataRepository
 import test.support.IntegrationTest
@@ -116,13 +116,17 @@ class PolicySummaryControllerISpec extends IntegrationTest {
         .build()
 
       running(application) {
-        populateSessionData()
-        authoriseAgentOrIndividual(isAgent = false)
+        clearSession()
+        populateSessionDataWithFalseGateway()
+        authoriseAgentOrIndividual(isAgent = true)
+        emptyUserDataStub()
 
         val request = FakeRequest(GET, url(taxYear)).withHeaders(HeaderNames.COOKIE -> playSessionCookies(taxYear))
         val result = route(application, request).value
+        val content = contentAsString(result)
 
-        status(result) mustEqual OK
+        status(result) shouldBe OK
+        content should include("Gain on a UK policy or contract")
       }
 
       val applicationWithBackendMongo = GuiceApplicationBuilder()
@@ -130,20 +134,18 @@ class PolicySummaryControllerISpec extends IntegrationTest {
         .configure(config ++ Map("newGainsServiceEnabled" -> "true"))
         .build()
 
-      val updatedGainsUserDataModel =
-        gainsUserDataModel.copy(gains = Some(AllGainsSessionModel(Seq(), gateway = Some(false))))
-
       running(applicationWithBackendMongo) {
-        authoriseAgentOrIndividual(isAgent = false)
-        getSessionDataStub(userData = Some(updatedGainsUserDataModel))
-        updateSession()
+        clearSession()
+        populateSessionDataWithFalseGateway()
+        authoriseAgentOrIndividual(isAgent = true)
         emptyUserDataStub()
 
         val request = FakeRequest(GET, url(taxYear)).withHeaders(HeaderNames.COOKIE -> playSessionCookies(taxYear))
         val result = route(applicationWithBackendMongo, request).value
+        val content = contentAsString(result)
 
-        status(result) mustEqual OK
-//        result.body.contains("Gain on a UK policy or contract")
+        status(result) shouldBe OK
+        content should include("Gain on a UK policy or contract")
       }
     }
 
