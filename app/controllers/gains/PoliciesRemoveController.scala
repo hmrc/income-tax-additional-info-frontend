@@ -25,7 +25,7 @@ import models.gains.{GainsSubmissionModel, PolicyCyaModel}
 import models.requests.AuthorisationRequest
 import play.api.i18n.I18nSupport
 import play.api.mvc._
-import services.{DeleteGainsService, GainsSessionService, GainsSessionServiceProvider, GainsSubmissionService}
+import services.{DeleteGainsService, GainsSessionServiceProvider, GainsSubmissionService}
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.audit.http.connector.AuditResult
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController

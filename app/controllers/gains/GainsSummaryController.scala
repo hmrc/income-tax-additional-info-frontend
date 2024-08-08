@@ -23,7 +23,7 @@ import models.gains.PolicyCyaModel
 import play.api.Logging
 import play.api.i18n.I18nSupport
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
-import services.{GainsSessionService, GainsSessionServiceProvider}
+import services.GainsSessionServiceProvider
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 import utils.HMRCHeaderNames.CORRELATION_ID

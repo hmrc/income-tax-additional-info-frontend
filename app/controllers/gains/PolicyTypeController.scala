@@ -24,7 +24,7 @@ import models.gains.PolicyCyaModel
 import play.api.data.Form
 import play.api.i18n.I18nSupport
 import play.api.mvc._
-import services.{GainsSessionService, GainsSessionServiceProvider}
+import services.GainsSessionServiceProvider
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 import views.html.pages.gains.PolicyTypePageView
 
