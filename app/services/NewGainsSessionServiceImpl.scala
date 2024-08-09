@@ -35,6 +35,7 @@ class NewGainsSessionServiceImpl @Inject()(getGainsDataConnector: GetGainsConnec
                                            deleteGainsSessionConnector: DeleteGainsSessionConnector,
                                            getGainsSessionConnector: GetGainsSessionConnector
                                           )(implicit correlationId: String) extends GainsSessionServiceProvider with Logging {
+
   def getPriorData(taxYear: Int)(implicit request: AuthorisationRequest[_], hc: HeaderCarrier): Future[GetGainsResponse] = {
     getGainsDataConnector.getUserData(taxYear)(request.user, hc.withExtraHeaders("mtditid" -> request.user.mtditid))
   }
@@ -95,7 +96,7 @@ class NewGainsSessionServiceImpl @Inject()(getGainsDataConnector: GetGainsConnec
                      (implicit request: AuthorisationRequest[_], ec: ExecutionContext, hc: HeaderCarrier): Future[R] = {
     for {
       optionalCya <- getSessionData(taxYear)
-      priorDataResponse: GetGainsResponse <- getPriorData(taxYear)
+      priorDataResponse <- getPriorData(taxYear)
     } yield {
       priorDataResponse match {
         case Right(prior) => optionalCya match {

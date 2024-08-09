@@ -20,7 +20,6 @@ import com.github.tomakehurst.wiremock.http.HttpHeader
 import com.github.tomakehurst.wiremock.stubbing.StubMapping
 import config.AppConfig
 import connectors.GetGainsConnector
-import connectors.session.{CreateGainsSessionConnector, DeleteGainsSessionConnector, GetGainsSessionConnector, UpdateGainsSessionConnector}
 import models.authorisation.SessionValues
 import models.gains.prior.GainsPriorDataModel
 import models.gains.{LifeInsuranceModel, PolicyCyaModel}
@@ -39,7 +38,7 @@ import play.api.libs.ws.{BodyWritable, WSClient, WSResponse}
 import play.api.mvc.{ResponseHeader, Result}
 import play.api.{Application, Environment, Mode}
 import repositories.GainsUserDataRepository
-import services.{GainsSessionServiceImpl, NewGainsSessionService}
+import services.GainsSessionServiceImpl
 import support.builders.UserBuilder.aUser
 import support.builders.requests.AuthorisationRequestBuilder.anAuthorisationRequest
 import support.helpers.WireMockServer

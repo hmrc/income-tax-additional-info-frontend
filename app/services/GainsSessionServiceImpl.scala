@@ -34,6 +34,7 @@ class GainsSessionServiceImpl @Inject()(
                                          gainsUserDataRepository: GainsUserDataRepository,
                                          getGainsDataConnector: GetGainsConnector
                                        )(implicit correlationId: String) extends GainsSessionServiceProvider with Logging {
+
   def getPriorData(taxYear: Int)(implicit request: AuthorisationRequest[_], hc: HeaderCarrier): Future[GetGainsResponse] = {
     getGainsDataConnector.getUserData(taxYear)(request.user, hc.withExtraHeaders("mtditid" -> request.user.mtditid))
   }
