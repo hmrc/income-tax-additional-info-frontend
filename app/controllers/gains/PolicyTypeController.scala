@@ -24,7 +24,7 @@ import models.gains.PolicyCyaModel
 import play.api.data.Form
 import play.api.i18n.I18nSupport
 import play.api.mvc._
-import services.GainsSessionService
+import services.GainsSessionServiceProvider
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 import views.html.pages.gains.PolicyTypePageView
 
@@ -34,7 +34,7 @@ import scala.concurrent.{ExecutionContext, Future}
 @Singleton
 class PolicyTypeController @Inject()(authorisedAction: AuthorisedAction,
                                      view: PolicyTypePageView,
-                                     gainsSessionService: GainsSessionService,
+                                     gainsSessionService: GainsSessionServiceProvider,
                                      errorHandler: ErrorHandler)
                                     (implicit appConfig: AppConfig, mcc: MessagesControllerComponents, ec: ExecutionContext)
   extends FrontendController(mcc) with I18nSupport {

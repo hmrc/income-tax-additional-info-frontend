@@ -49,7 +49,7 @@ class AuthorisedAction @Inject()(authService: AuthorisationService,
 
   override def invokeBlock[A](request: Request[A], block: AuthorisationRequest[A] => Future[Result]): Future[Result] = {
     implicit lazy val headerCarrier: HeaderCarrier = HeaderCarrierConverter.fromRequestAndSession(request, request.session)
-      .withExtraHeaders("X-CorrelationId"->correlationId(request.headers.get("CorrelationId")))
+      .withExtraHeaders("X-CorrelationId" -> correlationId(request.headers.get("CorrelationId")))
 
     authService.authorised().retrieve(affinityGroup) {
       case Some(AffinityGroup.Agent) => agentAuthentication(block)(request, headerCarrier)

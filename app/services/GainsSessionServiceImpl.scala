@@ -22,28 +22,25 @@ import models.AllGainsSessionModel
 import models.gains.prior.GainsPriorDataModel
 import models.mongo.{DatabaseError, GainsUserDataModel}
 import models.requests.AuthorisationRequest
-
-import java.time.Instant
 import play.api.Logging
 import repositories.GainsUserDataRepository
 import uk.gov.hmrc.http.HeaderCarrier
 
+import java.time.Instant
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
-class GainsSessionService @Inject()(
-                                     gainsUserDataRepository: GainsUserDataRepository,
-                                     getGainsDataConnector: GetGainsConnector
-                                   ) (implicit correlationId: String) extends Logging {
-
-
+class GainsSessionServiceImpl @Inject()(
+                                         gainsUserDataRepository: GainsUserDataRepository,
+                                         getGainsDataConnector: GetGainsConnector
+                                       )(implicit correlationId: String) extends GainsSessionServiceProvider with Logging {
 
   def getPriorData(taxYear: Int)(implicit request: AuthorisationRequest[_], hc: HeaderCarrier): Future[GetGainsResponse] = {
     getGainsDataConnector.getUserData(taxYear)(request.user, hc.withExtraHeaders("mtditid" -> request.user.mtditid))
   }
 
   def createSessionData[A](cyaModel: AllGainsSessionModel, taxYear: Int)(onFail: A)(onSuccess: A)
-                          (implicit request: AuthorisationRequest[_], ec: ExecutionContext): Future[A] = {
+                          (implicit request: AuthorisationRequest[_], ec: ExecutionContext, hc: HeaderCarrier): Future[A] = {
 
     val userData = GainsUserDataModel(
       request.user.sessionId,
@@ -64,7 +61,7 @@ class GainsSessionService @Inject()(
   }
 
   def getSessionData(taxYear: Int)(implicit request: AuthorisationRequest[_],
-                                   ec: ExecutionContext): Future[Either[DatabaseError, Option[GainsUserDataModel]]] = {
+                                   ec: ExecutionContext, hc: HeaderCarrier): Future[Either[DatabaseError, Option[GainsUserDataModel]]] = {
 
     gainsUserDataRepository.find(taxYear).map {
       case Left(error) =>
@@ -76,7 +73,7 @@ class GainsSessionService @Inject()(
   }
 
   def updateSessionData[A](cyaModel: AllGainsSessionModel, taxYear: Int)(onFail: A)(onSuccess: A)
-                          (implicit request: AuthorisationRequest[_], ec: ExecutionContext): Future[A] = {
+                          (implicit request: AuthorisationRequest[_], ec: ExecutionContext, hc: HeaderCarrier): Future[A] = {
 
     val userData = GainsUserDataModel(
       request.user.sessionId,
@@ -97,7 +94,7 @@ class GainsSessionService @Inject()(
   }
 
   def deleteSessionData[A](taxYear: Int)(onFail: A)(onSuccess: A)
-                          (implicit request: AuthorisationRequest[_], ec: ExecutionContext): Future[A] = {
+                          (implicit request: AuthorisationRequest[_], ec: ExecutionContext, hc: HeaderCarrier): Future[A] = {
 
     gainsUserDataRepository.clear(taxYear)(request.user).map {
       case true =>

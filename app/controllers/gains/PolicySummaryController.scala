@@ -26,7 +26,7 @@ import models.{AllGainsSessionModel, User}
 import play.api.Logging
 import play.api.i18n.I18nSupport
 import play.api.mvc._
-import services.{ExcludeJourneyService, GainsSessionService, GainsSubmissionService}
+import services.{ExcludeJourneyService, GainsSessionServiceProvider, GainsSubmissionService}
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.audit.http.connector.AuditResult
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
@@ -39,7 +39,7 @@ import scala.concurrent.{ExecutionContext, Future}
 @Singleton
 class PolicySummaryController @Inject()(authorisedAction: AuthorisedAction,
                                         view: PolicySummaryPageView,
-                                        gainsSessionService: GainsSessionService,
+                                        gainsSessionService: GainsSessionServiceProvider,
                                         gainsSubmissionService: GainsSubmissionService,
                                         excludeJourneyService: ExcludeJourneyService,
                                         errorHandler: ErrorHandler,
@@ -49,12 +49,13 @@ class PolicySummaryController @Inject()(authorisedAction: AuthorisedAction,
 
   def show(taxYear: Int, sessionId: String): Action[AnyContent] = authorisedAction.async { implicit request =>
     gainsSessionService.getSessionData(taxYear).flatMap {
-      case Left(_) => Future.successful(errorHandler.internalServerError())
+      case Left(_) =>
+        Future.successful(errorHandler.internalServerError())
       case Right(cya) =>
         cya.fold(Future.successful(Redirect(appConfig.incomeTaxSubmissionOverviewUrl(taxYear)))) {
           cyaData =>
             cyaData.gains.fold(Future.successful(Redirect(appConfig.incomeTaxSubmissionOverviewUrl(taxYear)))) {
-              data =>
+              data: AllGainsSessionModel =>
                 if(data.gateway.contains(true)) {
                   data.allGains.find(_.sessionId == sessionId) match {
                     case Some(policyCya) if !policyCya.isFinished =>
@@ -81,7 +82,7 @@ class PolicySummaryController @Inject()(authorisedAction: AuthorisedAction,
   }
 
   def submit(taxYear: Int, sessionId: String): Action[AnyContent] = authorisedAction.async { implicit request =>
-    gainsSessionService.getAndHandle(taxYear)(Future.successful(errorHandler.internalServerError())) {
+    gainsSessionService.getAndHandle(taxYear){Future.successful(errorHandler.internalServerError())} {
       implicit val user: User = request.user
       (cya, prior) =>
         (cya, prior) match {
@@ -89,9 +90,11 @@ class PolicySummaryController @Inject()(authorisedAction: AuthorisedAction,
             cya.gateway match {
               case Some(false) =>
                 excludeJourneyService.excludeJourney("gains", taxYear, request.user.nino).flatMap {
-                  case Right(_) => submitGainsAndAudit(Some(GainsSubmissionModel()), taxYear, user, prior, cya,
+                  case Right(_) =>
+                    submitGainsAndAudit(Some(GainsSubmissionModel()), taxYear, user, prior, cya,
                     Redirect(appConfig.incomeTaxSubmissionOverviewUrl(taxYear)))
-                  case Left(_) => Future.successful(errorHandler.internalServerError())
+                  case Left(_) =>
+                    Future.successful(errorHandler.internalServerError())
                 }
               case _ =>
                 val currentPolicyList: Seq[PolicyCyaModel] = cya.allGains.filter(_.sessionId == sessionId)
@@ -106,7 +109,8 @@ class PolicySummaryController @Inject()(authorisedAction: AuthorisedAction,
                   Redirect(controllers.gains.routes.GainsSummaryController.show(taxYear)))
             }
           }
-          case (_, _) => Future.successful(errorHandler.internalServerError())
+          case (_, _) =>
+            Future.successful(errorHandler.internalServerError())
         }
     }.flatten
   }

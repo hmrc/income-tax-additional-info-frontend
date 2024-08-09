@@ -30,6 +30,8 @@ class GainsSummaryControllerISpec extends IntegrationTest {
     "render the summary page individual" in {
       lazy val result: WSResponse = {
         clearSession()
+        getSessionDataStub()
+        populateSessionData()
         authoriseAgentOrIndividual(isAgent = false)
         userDataStub(gainsPriorDataModel, nino, taxYear)
         urlGet(url(taxYear), headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)))
@@ -41,6 +43,8 @@ class GainsSummaryControllerISpec extends IntegrationTest {
     "render the summary page for an agent" in {
       lazy val result: WSResponse = {
         clearSession()
+        getSessionDataStub()
+        populateSessionData()
         authoriseAgentOrIndividual(isAgent = true)
         userDataStub(gainsPriorDataModel, nino, taxYear)
         urlGet(url(taxYear), headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)))
@@ -52,6 +56,7 @@ class GainsSummaryControllerISpec extends IntegrationTest {
     "render summary page when there is no prior data" in {
       lazy val result: WSResponse = {
         clearSession()
+        getSessionDataStub()
         authoriseAgentOrIndividual(isAgent = false)
         emptyUserDataStub()
         urlGet(url(taxYear), headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)))
