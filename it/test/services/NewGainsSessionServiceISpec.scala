@@ -16,60 +16,123 @@
 
 package services
 
-import connectors.session.CreateGainsSessionConnector
+import connectors.errors.{ApiError, SingleErrorBody}
+import connectors.session.{CreateGainsSessionConnector, DeleteGainsSessionConnector, GetGainsSessionConnector, UpdateGainsSessionConnector}
 import models.AllGainsSessionModel
+import models.mongo.DataNotFound
+import org.mockito.ArgumentMatchers.any
+import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar.mock
-import play.api.http.Status.INTERNAL_SERVER_ERROR
+import play.api.http.Status.{INTERNAL_SERVER_ERROR, NO_CONTENT}
 import support.builders.requests.AuthorisationRequestBuilder.anAuthorisationRequest
 import test.support.IntegrationTest
+
+import scala.concurrent.Future
 
 
 class NewGainsSessionServiceISpec extends IntegrationTest {
 
-  val gainsSessionServiceInvalidEncryption: NewGainsSessionService = appWithInvalidEncryptionKey.injector.instanceOf[NewGainsSessionService]
-//  val createGainsSessionConnector: CreateGainsSessionConnector = app.injector.instanceOf[CreateGainsSessionConnector]
-  private val createSessionConnector = mock[CreateGainsSessionConnector]
+  val mockCreateSessionConnector: CreateGainsSessionConnector = mock[CreateGainsSessionConnector]
+  val mockUpdateSessionConnector: UpdateGainsSessionConnector = mock[UpdateGainsSessionConnector]
+  val mockDeleteSessionConnector: DeleteGainsSessionConnector = mock[DeleteGainsSessionConnector]
+  val mockGetSessionConnector: GetGainsSessionConnector = mock[GetGainsSessionConnector]
+  val newGainsSessionService: NewGainsSessionService = new NewGainsSessionService(
+    getGainsDataConnector, mockCreateSessionConnector, mockUpdateSessionConnector, mockDeleteSessionConnector, mockGetSessionConnector)(correlationId)
 
-//  gainsSessionService.createSessionData(AllGainsSessionModel(Seq(PolicyCyaModel(sessionId, Some(""))),
-//    gateway = Some(true)), taxYear)(false)(true)(AuthorisationRequestBuilder.anAuthorisationRequest, ec, headerCarrier)
+  ".createSessionData" should {
+    "return true when session is created" in {
+      when(mockCreateSessionConnector.createSessionData(any(), any())(any())).thenReturn(Future.successful(Right(NO_CONTENT)))
 
-  "create" should {
-    "return false when failing to decrypt the model" in {
-      populateSessionData(status = INTERNAL_SERVER_ERROR, responseBody = AllGainsSessionModel(Seq(completePolicyCyaModel)).toString)
+      val result = await(newGainsSessionService.createSessionData(
+        AllGainsSessionModel(Seq(completePolicyCyaModel), gateway = Some(true)), taxYear)(false)(true)(anAuthorisationRequest, ec, headerCarrier)
+      )
 
-      val result =
-        await(gainsSessionServiceInvalidEncryption.createSessionData(
-          AllGainsSessionModel(Seq(completePolicyCyaModel), gateway = Some(true)), taxYear
-        )(false)(true)(anAuthorisationRequest, ec, headerCarrier))
-
-      result shouldBe false
+      result shouldBe true
     }
 
-    "return true when successful and false when adding a duplicate" in {
-      val initialResult =
-        await(newGainsSessionService.createSessionData(AllGainsSessionModel(Seq(completePolicyCyaModel),
-          gateway = Some(true)), taxYear)(false)(true)
-        (anAuthorisationRequest, ec, headerCarrier))
+    "return false when failing to create session" in {
+      val singleErrorBody = SingleErrorBody("PARSING_ERROR", "Encryption / Decryption exception occurred. Exception: Failed to Decrypt")
 
-      val duplicateResult =
-        await(newGainsSessionService.createSessionData(AllGainsSessionModel(Seq(completePolicyCyaModel),
-          gateway = Some(true)), taxYear)(false)(true)
-        (anAuthorisationRequest, ec, headerCarrier))
+      when(mockCreateSessionConnector.createSessionData(any(), any())(any())).thenReturn(Future.successful(Left(ApiError(INTERNAL_SERVER_ERROR, singleErrorBody))))
 
-      initialResult shouldBe true
-      duplicateResult shouldBe false
-    }
-  }
-
-  "update" should {
-    "return false when failing to decrypt the model" in {
-      val result =
-        await(
-          gainsSessionServiceInvalidEncryption.updateSessionData(AllGainsSessionModel(Seq(completePolicyCyaModel), gateway = Some(true)), taxYear)
-          (false)(true)(anAuthorisationRequest, ec, headerCarrier)
-        )
+      val result = await(newGainsSessionService.createSessionData(
+        AllGainsSessionModel(Seq(completePolicyCyaModel), gateway = Some(true)), taxYear)(false)(true)(anAuthorisationRequest, ec, headerCarrier)
+      )
 
       result shouldBe false
     }
   }
+
+  ".getSessionData" should {
+    "return a Gains User Data Model when session is retrieved" in {
+      when(mockGetSessionConnector.getSessionData(any())(any())).thenReturn(Future.successful(Right(Some(gainsUserDataModel))))
+
+      val result = await(newGainsSessionService.getSessionData(taxYear)(anAuthorisationRequest, ec, headerCarrier))
+
+      result shouldBe Right(Some(gainsUserDataModel))
+    }
+
+    "return Nothing when session is not present" in {
+      when(mockGetSessionConnector.getSessionData(any())(any())).thenReturn(Future.successful(Right(None)))
+
+      val result = await(newGainsSessionService.getSessionData(taxYear)(anAuthorisationRequest, ec, headerCarrier))
+
+      result shouldBe Right(None)
+    }
+
+    "return Error when Gains User Data can not be returned due to mongo exception" in {
+      val singleErrorBody = SingleErrorBody("PARSING_ERROR", "User data could not be found due to mongo exception")
+
+      when(mockGetSessionConnector.getSessionData(any())(any())).thenReturn(Future.successful(Left(ApiError(INTERNAL_SERVER_ERROR, singleErrorBody))))
+
+      val result = await(newGainsSessionService.getSessionData(taxYear)(anAuthorisationRequest, ec, headerCarrier))
+
+      result shouldBe Left(DataNotFound)
+    }
+  }
+
+  ".updateSessionData" should {
+    "return true when session is updated" in {
+      when(mockUpdateSessionConnector.updateGainsSession(any(), any())(any())).thenReturn(Future.successful(Right(NO_CONTENT)))
+
+      val result = await(newGainsSessionService.updateSessionData(
+        AllGainsSessionModel(Seq(completePolicyCyaModel), gateway = Some(true)), taxYear)(false)(true)(anAuthorisationRequest, ec, headerCarrier)
+      )
+
+      result shouldBe true
+    }
+
+    "return false when failing to update session" in {
+      val singleErrorBody = SingleErrorBody("PARSING_ERROR", "Encryption / Decryption exception occurred. Exception: Failed to Decrypt")
+
+      when(mockUpdateSessionConnector.updateGainsSession(any(), any())(any())).thenReturn(Future.successful(Left(ApiError(INTERNAL_SERVER_ERROR, singleErrorBody))))
+
+      val result = await(newGainsSessionService.updateSessionData(
+        AllGainsSessionModel(Seq(completePolicyCyaModel), gateway = Some(true)), taxYear)(false)(true)(anAuthorisationRequest, ec, headerCarrier)
+      )
+
+      result shouldBe false
+    }
+  }
+
+  ".deleteSessionData" should {
+    "return true when session is deleted" in {
+      when(mockDeleteSessionConnector.deleteGainsData(any())(any())).thenReturn(Future.successful(Right(true)))
+
+      val result = await(newGainsSessionService.deleteSessionData(taxYear)(false)(true)(anAuthorisationRequest, ec, headerCarrier))
+
+      result shouldBe true
+    }
+
+    "return false when failing to delete session" in {
+      val singleErrorBody = SingleErrorBody("PARSING_ERROR", "User data was not deleted due to mongo exception")
+
+      when(mockDeleteSessionConnector.deleteGainsData(any())(any())).thenReturn(Future.successful(Left(ApiError(INTERNAL_SERVER_ERROR, singleErrorBody))))
+
+      val result = await(newGainsSessionService.deleteSessionData(taxYear)(false)(true)(anAuthorisationRequest, ec, headerCarrier))
+
+      result shouldBe false
+    }
+  }
+
 }

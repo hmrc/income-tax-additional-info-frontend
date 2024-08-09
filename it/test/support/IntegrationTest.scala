@@ -190,12 +190,6 @@ trait IntegrationTest extends AnyWordSpec
   val getGainsDataConnector: GetGainsConnector = app.injector.instanceOf[GetGainsConnector]
   val gainsSessionService: GainsSessionServiceImpl = new GainsSessionServiceImpl(gainsUserDataRepository, getGainsDataConnector)(correlationId)
 
-  val createGainsSessionConnector: CreateGainsSessionConnector = app.injector.instanceOf[CreateGainsSessionConnector]
-  val updateGainsSessionConnector: UpdateGainsSessionConnector = app.injector.instanceOf[UpdateGainsSessionConnector]
-  val deleteGainsSessionConnector: DeleteGainsSessionConnector = app.injector.instanceOf[DeleteGainsSessionConnector]
-  val getGainsSessionConnector: GetGainsSessionConnector = app.injector.instanceOf[GetGainsSessionConnector]
-  val newGainsSessionService: NewGainsSessionService =
-    new NewGainsSessionService(getGainsDataConnector, createGainsSessionConnector,updateGainsSessionConnector, deleteGainsSessionConnector, getGainsSessionConnector)(correlationId)
 
   def populateSessionData(): Boolean =
     await(gainsSessionService.createSessionData(AllGainsSessionModel(Seq(PolicyCyaModel(sessionId, Some("Life Insurance"), Some("RefNo13254687"), Some(123.11),

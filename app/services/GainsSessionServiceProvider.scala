@@ -46,9 +46,3 @@ trait GainsSessionServiceProvider {
                      (implicit request: AuthorisationRequest[_], ec: ExecutionContext, hc: HeaderCarrier): Future[R]
 
 }
-
-
-
-
-
-

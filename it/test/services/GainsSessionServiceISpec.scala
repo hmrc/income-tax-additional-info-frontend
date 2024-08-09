@@ -18,14 +18,15 @@ package test.services
 
 import models.AllGainsSessionModel
 import models.gains.PolicyCyaModel
-import services.{GainsSessionService, GainsSessionServiceImpl}
-import test.support.IntegrationTest
+import services.GainsSessionServiceImpl
 import support.builders.requests.AuthorisationRequestBuilder
+import test.support.IntegrationTest
 
 
 class GainsSessionServiceISpec extends IntegrationTest {
 
   val gainsSessionServiceInvalidEncryption: GainsSessionServiceImpl = appWithInvalidEncryptionKey.injector.instanceOf[GainsSessionServiceImpl]
+
   gainsSessionService.createSessionData(AllGainsSessionModel(Seq(PolicyCyaModel(sessionId, Some(""))),
     gateway = Some(true)), taxYear)(false)(true)(AuthorisationRequestBuilder.anAuthorisationRequest, ec, headerCarrier)
 
@@ -37,7 +38,8 @@ class GainsSessionServiceISpec extends IntegrationTest {
         )(false)(true)(AuthorisationRequestBuilder.anAuthorisationRequest, ec, headerCarrier))
       result shouldBe false
     }
-    "return true when succesful and false when adding a duplicate" in {
+
+    "return true when successful and false when adding a duplicate" in {
       await(gainsUserDataRepository.collection.drop().toFuture())
       await(gainsUserDataRepository.ensureIndexes())
       val initialResult =

@@ -17,6 +17,7 @@
 package services
 
 import connectors.GetGainsConnector
+import connectors.errors.ApiError
 import connectors.httpParsers.GetGainsHttpParser.GetGainsResponse
 import connectors.session.{CreateGainsSessionConnector, DeleteGainsSessionConnector, GetGainsSessionConnector, UpdateGainsSessionConnector}
 import models.AllGainsSessionModel
