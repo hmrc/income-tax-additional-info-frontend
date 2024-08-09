@@ -30,6 +30,7 @@ import javax.inject.Inject
 import scala.annotation.unused
 import scala.concurrent.{ExecutionContext, Future}
 
+
 class SectionCompletedStateController @Inject() (authorisedAction: AuthorisedAction, view: SectionCompletedStateView)
                                                 (implicit appConfig: AppConfig,
                                                  mcc: MessagesControllerComponents,
