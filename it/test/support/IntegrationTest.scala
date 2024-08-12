@@ -19,7 +19,7 @@ package test.support
 import com.github.tomakehurst.wiremock.http.HttpHeader
 import com.github.tomakehurst.wiremock.stubbing.StubMapping
 import config.AppConfig
-import connectors.GetGainsConnector
+import connectors.{DeleteGainsConnector, GetGainsConnector}
 import models.authorisation.SessionValues
 import models.gains.prior.GainsPriorDataModel
 import models.gains.{LifeInsuranceModel, PolicyCyaModel}
@@ -38,7 +38,7 @@ import play.api.libs.ws.{BodyWritable, WSClient, WSResponse}
 import play.api.mvc.{ResponseHeader, Result}
 import play.api.{Application, Environment, Mode}
 import repositories.GainsUserDataRepository
-import services.GainsSessionServiceImpl
+import services.{DeleteGainsService, GainsSessionServiceImpl}
 import support.builders.UserBuilder.aUser
 import support.builders.requests.AuthorisationRequestBuilder.anAuthorisationRequest
 import support.helpers.WireMockServer
@@ -189,12 +189,20 @@ trait IntegrationTest extends AnyWordSpec
   val getGainsDataConnector: GetGainsConnector = app.injector.instanceOf[GetGainsConnector]
   val gainsSessionService: GainsSessionServiceImpl = new GainsSessionServiceImpl(gainsUserDataRepository, getGainsDataConnector)(correlationId)
 
+  val deleteGainsConnector: DeleteGainsConnector = app.injector.instanceOf[DeleteGainsConnector]
+  val deleteGainsService: DeleteGainsService = new DeleteGainsService(deleteGainsConnector)
+
+  def deleteGainsData(status: Int, response: String): StubMapping =
+    stubDeleteWithResponseBody(s"/income-tax-additional-information/income-tax/insurance-policies/income/$nino/$taxYear", status, response, headersSentToIF)
+
+  def deleteGainsDataNoResponseBody(): StubMapping =
+    stubDeleteWithoutResponseBody(s"/income-tax-additional-information/income-tax/insurance-policies/income/$nino/$taxYear", NO_CONTENT, headersSentToIF)
 
   def populateSessionData(): Boolean =
     await(gainsSessionService.createSessionData(AllGainsSessionModel(Seq(PolicyCyaModel(sessionId, Some("Life Insurance"), Some("RefNo13254687"), Some(123.11),
       Some("Full or part surrender"), Some(true), Some(99), Some(10), Some(true), None, Some(true), Some(100))),
-      gateway = Some(true)), taxYear)(false)(true)(anAuthorisationRequest, ec, headerCarrier))
-
+      gateway = Some(true)), taxYear)(false)(true)(anAuthorisationRequest, ec, headerCarrier)
+    )
 
   def populateSessionData(taxYear: Int = taxYear, status: Int = NO_CONTENT, responseBody: String = ""): StubMapping =
     createUserSessionDataStub(s"/income-tax-additional-information/income-tax/income/insurance-policies/$taxYear/session", status, responseBody, "X-Session-ID" -> sessionId, "mtditid" -> mtditid)
@@ -217,13 +225,24 @@ trait IntegrationTest extends AnyWordSpec
 
   def clearSession(): Boolean = await(gainsUserDataRepository.clear(taxYear))
 
+  def retrieveGains(): StubMapping =
+    stubGetWithHeadersCheck(s"/income-tax-additional-information/income-tax/insurance-policies/income/$nino/$taxYear", OK,
+      Json.toJson(gainsPriorDataModel).toString(), "X-Session-ID" -> sessionId, "mtditid" -> mtditid)
+
+  def postExcludeJourney(status: Int = NO_CONTENT): StubMapping =
+    stubPost(s"/income-tax-submission-service/income-tax/nino/AA123456A/sources/exclude-journey/$taxYear", status, "{}")
+
+  def submitGains(status: Int = NO_CONTENT, responseBody: String = ""): StubMapping =
+    stubPut(s"/income-tax-additional-information/income-tax/insurance-policies/income/$nino/$taxYear", status, responseBody, headersSentToIF)
+
   def updateSession(taxYear: Int = taxYear, status: Int = NO_CONTENT, responseBody: String = ""): StubMapping =
     updateUserSessionDataStub(s"/income-tax-additional-information/income-tax/income/insurance-policies/$taxYear/session", status, responseBody, "X-Session-ID" -> sessionId,"mtditid" -> mtditid)
 
   def getSessionDataStub(userData: Option[GainsUserDataModel] = Some(gainsUserDataModel), taxYear: Int = taxYear, status: Int = OK): StubMapping = {
     stubGetWithHeadersCheck(
       s"/income-tax-additional-information/income-tax/income/insurance-policies/$taxYear/session", status,
-      Json.toJson(userData).toString(), "X-Session-ID" -> sessionId, "mtditid" -> mtditid)
+      Json.toJson(userData).toString(), "X-Session-ID" -> sessionId, "mtditid" -> mtditid
+    )
   }
 
   def userDataStub(userData: Option[GainsPriorDataModel], nino: String, taxYear: Int): StubMapping = {

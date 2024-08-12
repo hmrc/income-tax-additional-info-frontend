@@ -46,6 +46,7 @@ class PaidTaxAmountControllerISpec extends IntegrationTest {
   }
 
   ".show" should {
+
     "render the paid tax amount page" in {
       val application = GuiceApplicationBuilder()
         .in(Environment.simple(mode = Mode.Dev))
@@ -216,9 +217,83 @@ class PaidTaxAmountControllerISpec extends IntegrationTest {
         status(result) shouldBe SEE_OTHER
       }
     }
+
+    "redirect to paid tax amount page when cya has no gains data" in {
+      val mockRepo = mock[GainsUserDataRepository]
+
+      when(mockRepo.find(any())(any())).thenReturn(Future.successful(Right(Some(gainsUserDataModel.copy(gains = None)))))
+
+      val application = GuiceApplicationBuilder()
+        .in(Environment.simple(mode = Mode.Dev))
+        .configure(config ++ Map("newGainsServiceEnabled" -> "false"))
+        .overrides(bind[GainsUserDataRepository].to(mockRepo))
+        .build()
+
+      running(application) {
+        populateSessionData()
+        authoriseAgentOrIndividual(isAgent = true)
+
+        val request = FakeRequest(GET, url(taxYear)).withHeaders(HeaderNames.COOKIE -> playSessionCookies(taxYear))
+        val result = route(application, request).value
+
+        status(result) shouldBe OK
+      }
+
+      val applicationWithBackendMongo = GuiceApplicationBuilder()
+        .in(Environment.simple(mode = Mode.Dev))
+        .configure(config ++ Map("newGainsServiceEnabled" -> "true"))
+        .overrides(bind[GainsUserDataRepository].to(mockRepo))
+        .build()
+
+      running(applicationWithBackendMongo) {
+        populateSessionData()
+        authoriseAgentOrIndividual(isAgent = true)
+
+        val request = FakeRequest(GET, url(taxYear)).withHeaders(HeaderNames.COOKIE -> playSessionCookies(taxYear))
+        val result = route(applicationWithBackendMongo, request).value
+
+        status(result) shouldBe OK
+      }
+    }
+
+    "redirect to paid tax amount page when tax paid amount is not set" in {
+      val application = GuiceApplicationBuilder()
+        .in(Environment.simple(mode = Mode.Dev))
+        .configure(config ++ Map("newGainsServiceEnabled" -> "false"))
+        .build()
+
+      running(application) {
+        clearSession()
+        authoriseAgentOrIndividual(isAgent = true)
+        populateWithSessionDataModel(Seq(completePolicyCyaModel.copy(taxPaidAmount = None)))
+
+        val request = FakeRequest(GET, url(taxYear)).withHeaders(HeaderNames.COOKIE -> playSessionCookies(taxYear))
+        val result = route(application, request).value
+
+        status(result) shouldBe OK
+      }
+
+      val applicationWithBackendMongo = GuiceApplicationBuilder()
+        .in(Environment.simple(mode = Mode.Dev))
+        .configure(config ++ Map("newGainsServiceEnabled" -> "true"))
+        .build()
+
+      running(applicationWithBackendMongo) {
+        clearSession()
+        authoriseAgentOrIndividual(isAgent = true)
+        populateWithSessionDataModel(Seq(completePolicyCyaModel.copy(taxPaidAmount = None)))
+
+        val request = FakeRequest(GET, url(taxYear)).withHeaders(HeaderNames.COOKIE -> playSessionCookies(taxYear))
+        val result = route(applicationWithBackendMongo, request).value
+
+        status(result) shouldBe OK
+      }
+    }
+
   }
 
   ".submit" should {
+
     "redirect to policy summary if successful" in {
       val application = GuiceApplicationBuilder()
         .in(Environment.simple(mode = Mode.Dev))
@@ -263,6 +338,48 @@ class PaidTaxAmountControllerISpec extends IntegrationTest {
 
         status(result) shouldBe SEE_OTHER
         headerStatus(result).headers.get("Location") shouldBe Some(s"/update-and-submit-income-tax-return/additional-information/$taxYear/gains/policy-summary/$sessionId")
+      }
+    }
+
+    "return internal server error when trying to get user data" in {
+      val mockRepo = mock[GainsUserDataRepository]
+
+      when(mockRepo.find(any())(any())).thenReturn(Future.successful(Left(DataNotFound)))
+
+      val application = GuiceApplicationBuilder()
+        .in(Environment.simple(mode = Mode.Dev))
+        .configure(config ++ Map("newGainsServiceEnabled" -> "false"))
+        .overrides(bind[GainsUserDataRepository].to(mockRepo))
+        .build()
+
+      running(application) {
+        authoriseAgentOrIndividual(isAgent = false)
+
+        val request = FakeRequest(POST, url(taxYear))
+          .withHeaders(HeaderNames.COOKIE -> playSessionCookies(taxYear), "Csrf-Token" -> "nocheck")
+          .withFormUrlEncodedBody(AmountForm.amount -> "100")
+
+        val result = route(application, request).value
+
+        status(result) shouldBe INTERNAL_SERVER_ERROR
+      }
+
+      val applicationWithBackendMongo = GuiceApplicationBuilder()
+        .in(Environment.simple(mode = Mode.Dev))
+        .configure(config ++ Map("newGainsServiceEnabled" -> "true"))
+        .overrides(bind[GainsUserDataRepository].to(mockRepo))
+        .build()
+
+      running(applicationWithBackendMongo) {
+        authoriseAgentOrIndividual(isAgent = true)
+
+        val request = FakeRequest(POST, url(taxYear))
+          .withHeaders(HeaderNames.COOKIE -> playSessionCookies(taxYear), "Csrf-Token" -> "nocheck")
+          .withFormUrlEncodedBody(AmountForm.amount -> "100")
+
+        val result = route(applicationWithBackendMongo, request).value
+
+        status(result) shouldBe INTERNAL_SERVER_ERROR
       }
     }
 
