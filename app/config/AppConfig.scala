@@ -58,7 +58,7 @@ class AppConfig @Inject()(servicesConfig: ServicesConfig) {
   lazy val signInUrl: String = s"$signInBaseUrl?continue=$signInContinueUrlRedirect&origin=$signInOrigin"
   lazy val additionalInformationServiceBaseUrl: String = s"${servicesConfig.getString(additionalInformationUrlKey)}/income-tax-additional-information"
 
-  lazy val newGainsServiceEnabled: Boolean = servicesConfig.getBoolean(key = "feature-switch.newGainsServiceEnabled")
+  lazy val backendSessionEnabled: Boolean = servicesConfig.getBoolean(key = "feature-switch.backendSessionEnabled")
 
   // Mongo config
   lazy val encryptionKey: String = servicesConfig.getString("mongodb.encryption.key")

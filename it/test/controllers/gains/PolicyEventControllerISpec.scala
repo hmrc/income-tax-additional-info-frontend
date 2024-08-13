@@ -51,7 +51,7 @@ class PolicyEventControllerISpec extends IntegrationTest {
     "render the policy event page" in {
       val application = GuiceApplicationBuilder()
         .in(Environment.simple(mode = Mode.Dev))
-        .configure(config ++ Map("newGainsServiceEnabled" -> "false"))
+        .configure(config ++ Map(backendSessionEnabled -> "false"))
         .build()
 
       running(application) {
@@ -69,7 +69,7 @@ class PolicyEventControllerISpec extends IntegrationTest {
 
       val applicationWithBackendMongo = GuiceApplicationBuilder()
         .in(Environment.simple(mode = Mode.Dev))
-        .configure(config ++ Map("newGainsServiceEnabled" -> "true"))
+        .configure(config ++ Map(backendSessionEnabled -> "true"))
         .build()
 
       running(applicationWithBackendMongo) {
@@ -89,7 +89,7 @@ class PolicyEventControllerISpec extends IntegrationTest {
     "render the policy event page for an agent" in {
       val application = GuiceApplicationBuilder()
         .in(Environment.simple(mode = Mode.Dev))
-        .configure(config ++ Map("newGainsServiceEnabled" -> "false"))
+        .configure(config ++ Map(backendSessionEnabled -> "false"))
         .build()
 
       running(application) {
@@ -107,7 +107,7 @@ class PolicyEventControllerISpec extends IntegrationTest {
 
       val applicationWithBackendMongo = GuiceApplicationBuilder()
         .in(Environment.simple(mode = Mode.Dev))
-        .configure(config ++ Map("newGainsServiceEnabled" -> "true"))
+        .configure(config ++ Map(backendSessionEnabled -> "true"))
         .build()
 
       running(applicationWithBackendMongo) {
@@ -127,7 +127,7 @@ class PolicyEventControllerISpec extends IntegrationTest {
     "render the policy event page with pre-filled data 1" in {
       val application = GuiceApplicationBuilder()
         .in(Environment.simple(mode = Mode.Dev))
-        .configure(config ++ Map("newGainsServiceEnabled" -> "false"))
+        .configure(config ++ Map(backendSessionEnabled -> "false"))
         .build()
 
       val updatedGainsUserDataModel =
@@ -147,7 +147,7 @@ class PolicyEventControllerISpec extends IntegrationTest {
 
       val applicationWithBackendMongo = GuiceApplicationBuilder()
         .in(Environment.simple(mode = Mode.Dev))
-        .configure(config ++ Map("newGainsServiceEnabled" -> "true"))
+        .configure(config ++ Map(backendSessionEnabled -> "true"))
         .build()
 
       running(applicationWithBackendMongo) {
@@ -166,7 +166,7 @@ class PolicyEventControllerISpec extends IntegrationTest {
     "render the policy event page with pre-filled data 2" in {
       val application = GuiceApplicationBuilder()
         .in(Environment.simple(mode = Mode.Dev))
-        .configure(config ++ Map("newGainsServiceEnabled" -> "false"))
+        .configure(config ++ Map(backendSessionEnabled -> "false"))
         .build()
 
       val updatedGainsUserDataModel =
@@ -187,7 +187,7 @@ class PolicyEventControllerISpec extends IntegrationTest {
 
       val applicationWithBackendMongo = GuiceApplicationBuilder()
         .in(Environment.simple(mode = Mode.Dev))
-        .configure(config ++ Map("newGainsServiceEnabled" -> "true"))
+        .configure(config ++ Map(backendSessionEnabled -> "true"))
         .build()
 
       running(applicationWithBackendMongo) {
@@ -207,7 +207,7 @@ class PolicyEventControllerISpec extends IntegrationTest {
     "render the policy event page with pre-filled data 3" in {
       val application = GuiceApplicationBuilder()
         .in(Environment.simple(mode = Mode.Dev))
-        .configure(config ++ Map("newGainsServiceEnabled" -> "false"))
+        .configure(config ++ Map(backendSessionEnabled -> "false"))
         .build()
 
       val updatedGainsUserDataModel =
@@ -228,7 +228,7 @@ class PolicyEventControllerISpec extends IntegrationTest {
 
       val applicationWithBackendMongo = GuiceApplicationBuilder()
         .in(Environment.simple(mode = Mode.Dev))
-        .configure(config ++ Map("newGainsServiceEnabled" -> "true"))
+        .configure(config ++ Map(backendSessionEnabled -> "true"))
         .build()
 
       running(applicationWithBackendMongo) {
@@ -250,7 +250,7 @@ class PolicyEventControllerISpec extends IntegrationTest {
     "render the policy event page with pre-filled data 4" in {
       val application = GuiceApplicationBuilder()
         .in(Environment.simple(mode = Mode.Dev))
-        .configure(config ++ Map("newGainsServiceEnabled" -> "false"))
+        .configure(config ++ Map(backendSessionEnabled -> "false"))
         .build()
 
       val updatedGainsUserDataModel =
@@ -270,7 +270,7 @@ class PolicyEventControllerISpec extends IntegrationTest {
 
       val applicationWithBackendMongo = GuiceApplicationBuilder()
         .in(Environment.simple(mode = Mode.Dev))
-        .configure(config ++ Map("newGainsServiceEnabled" -> "true"))
+        .configure(config ++ Map(backendSessionEnabled -> "true"))
         .build()
 
       running(applicationWithBackendMongo) {
@@ -289,7 +289,7 @@ class PolicyEventControllerISpec extends IntegrationTest {
     "render the policy event page with pre-filled data 5" in {
       val application = GuiceApplicationBuilder()
         .in(Environment.simple(mode = Mode.Dev))
-        .configure(config ++ Map("newGainsServiceEnabled" -> "false"))
+        .configure(config ++ Map(backendSessionEnabled -> "false"))
         .build()
 
       val updatedGainsUserDataModel =
@@ -309,7 +309,7 @@ class PolicyEventControllerISpec extends IntegrationTest {
 
       val applicationWithBackendMongo = GuiceApplicationBuilder()
         .in(Environment.simple(mode = Mode.Dev))
-        .configure(config ++ Map("newGainsServiceEnabled" -> "true"))
+        .configure(config ++ Map(backendSessionEnabled -> "true"))
         .build()
 
       running(applicationWithBackendMongo) {
@@ -328,7 +328,7 @@ class PolicyEventControllerISpec extends IntegrationTest {
     "render the policy event page with empty policy event value" in {
       val application = GuiceApplicationBuilder()
         .in(Environment.simple(mode = Mode.Dev))
-        .configure(config ++ Map("newGainsServiceEnabled" -> "false"))
+        .configure(config ++ Map(backendSessionEnabled -> "false"))
         .build()
 
       running(application) {
@@ -345,7 +345,7 @@ class PolicyEventControllerISpec extends IntegrationTest {
 
       val applicationWithBackendMongo = GuiceApplicationBuilder()
         .in(Environment.simple(mode = Mode.Dev))
-        .configure(config ++ Map("newGainsServiceEnabled" -> "true"))
+        .configure(config ++ Map(backendSessionEnabled -> "true"))
         .build()
 
       val a = gainsUserDataModel.gains.get.copy(allGains = Seq(completePolicyCyaModel.copy(policyType = None)))
@@ -369,7 +369,7 @@ class PolicyEventControllerISpec extends IntegrationTest {
 
       val application = GuiceApplicationBuilder()
         .in(Environment.simple(mode = Mode.Dev))
-        .configure(config ++ Map("newGainsServiceEnabled" -> "false"))
+        .configure(config ++ Map(backendSessionEnabled -> "false"))
         .overrides(bind[GainsUserDataRepository].to(mockRepo))
         .build()
 
@@ -385,7 +385,7 @@ class PolicyEventControllerISpec extends IntegrationTest {
 
       val applicationWithBackendMongo = GuiceApplicationBuilder()
         .in(Environment.simple(mode = Mode.Dev))
-        .configure(config ++ Map("newGainsServiceEnabled" -> "true"))
+        .configure(config ++ Map(backendSessionEnabled -> "true"))
         .overrides(bind[GainsUserDataRepository].to(mockRepo))
         .build()
 
@@ -405,7 +405,7 @@ class PolicyEventControllerISpec extends IntegrationTest {
 
       val application = GuiceApplicationBuilder()
         .in(Environment.simple(mode = Mode.Dev))
-        .configure(config ++ Map("newGainsServiceEnabled" -> "false"))
+        .configure(config ++ Map(backendSessionEnabled -> "false"))
         .build()
 
       running(application) {
@@ -421,7 +421,7 @@ class PolicyEventControllerISpec extends IntegrationTest {
 
       val applicationWithBackendMongo = GuiceApplicationBuilder()
         .in(Environment.simple(mode = Mode.Dev))
-        .configure(config ++ Map("newGainsServiceEnabled" -> "true"))
+        .configure(config ++ Map(backendSessionEnabled -> "true"))
         .build()
 
       running(applicationWithBackendMongo) {
@@ -445,7 +445,7 @@ class PolicyEventControllerISpec extends IntegrationTest {
 
         val application = GuiceApplicationBuilder()
           .in(Environment.simple(mode = Mode.Dev))
-          .configure(config ++ Map("newGainsServiceEnabled" -> "false"))
+          .configure(config ++ Map(backendSessionEnabled -> "false"))
           .build()
 
         running(application) {
@@ -464,7 +464,7 @@ class PolicyEventControllerISpec extends IntegrationTest {
 
         val applicationWithBackendMongo = GuiceApplicationBuilder()
           .in(Environment.simple(mode = Mode.Dev))
-          .configure(config ++ Map("newGainsServiceEnabled" -> "true"))
+          .configure(config ++ Map(backendSessionEnabled -> "true"))
           .build()
 
         running(applicationWithBackendMongo) {
@@ -490,7 +490,7 @@ class PolicyEventControllerISpec extends IntegrationTest {
 
         val application = GuiceApplicationBuilder()
           .in(Environment.simple(mode = Mode.Dev))
-          .configure(config ++ Map("newGainsServiceEnabled" -> "false"))
+          .configure(config ++ Map(backendSessionEnabled -> "false"))
           .build()
 
         running(application) {
@@ -509,7 +509,7 @@ class PolicyEventControllerISpec extends IntegrationTest {
 
         val applicationWithBackendMongo = GuiceApplicationBuilder()
           .in(Environment.simple(mode = Mode.Dev))
-          .configure(config ++ Map("newGainsServiceEnabled" -> "true"))
+          .configure(config ++ Map(backendSessionEnabled -> "true"))
           .build()
 
         running(applicationWithBackendMongo) {
@@ -531,7 +531,7 @@ class PolicyEventControllerISpec extends IntegrationTest {
       "show page with error text if no selection is made" in {
         val application = GuiceApplicationBuilder()
           .in(Environment.simple(mode = Mode.Dev))
-          .configure(config ++ Map("newGainsServiceEnabled" -> "false"))
+          .configure(config ++ Map(backendSessionEnabled -> "false"))
           .build()
 
         running(application) {
@@ -549,7 +549,7 @@ class PolicyEventControllerISpec extends IntegrationTest {
 
         val applicationWithBackendMongo = GuiceApplicationBuilder()
           .in(Environment.simple(mode = Mode.Dev))
-          .configure(config ++ Map("newGainsServiceEnabled" -> "true"))
+          .configure(config ++ Map(backendSessionEnabled -> "true"))
           .build()
 
         running(applicationWithBackendMongo) {
@@ -569,7 +569,7 @@ class PolicyEventControllerISpec extends IntegrationTest {
       "show page with error text if the wrong format is entered" in {
         val application = GuiceApplicationBuilder()
           .in(Environment.simple(mode = Mode.Dev))
-          .configure(config ++ Map("newGainsServiceEnabled" -> "false"))
+          .configure(config ++ Map(backendSessionEnabled -> "false"))
           .build()
 
         running(application) {
@@ -587,7 +587,7 @@ class PolicyEventControllerISpec extends IntegrationTest {
 
         val applicationWithBackendMongo = GuiceApplicationBuilder()
           .in(Environment.simple(mode = Mode.Dev))
-          .configure(config ++ Map("newGainsServiceEnabled" -> "true"))
+          .configure(config ++ Map(backendSessionEnabled -> "true"))
           .build()
 
         running(applicationWithBackendMongo) {
@@ -606,7 +606,7 @@ class PolicyEventControllerISpec extends IntegrationTest {
       "redirect to summary when model is full if successful" in {
         val application = GuiceApplicationBuilder()
           .in(Environment.simple(mode = Mode.Dev))
-          .configure(config ++ Map("newGainsServiceEnabled" -> "false"))
+          .configure(config ++ Map(backendSessionEnabled -> "false"))
           .build()
 
         running(application) {
@@ -626,7 +626,7 @@ class PolicyEventControllerISpec extends IntegrationTest {
 
         val applicationWithBackendMongo = GuiceApplicationBuilder()
           .in(Environment.simple(mode = Mode.Dev))
-          .configure(config ++ Map("newGainsServiceEnabled" -> "true"))
+          .configure(config ++ Map(backendSessionEnabled -> "true"))
           .build()
 
         running(applicationWithBackendMongo) {
@@ -654,7 +654,7 @@ class PolicyEventControllerISpec extends IntegrationTest {
 
       val application = GuiceApplicationBuilder()
         .in(Environment.simple(mode = Mode.Dev))
-        .configure(config ++ Map("newGainsServiceEnabled" -> "false"))
+        .configure(config ++ Map(backendSessionEnabled -> "false"))
         .overrides(bind[GainsUserDataRepository].to(mockRepo))
         .build()
 
@@ -672,7 +672,7 @@ class PolicyEventControllerISpec extends IntegrationTest {
 
       val applicationWithBackendMongo = GuiceApplicationBuilder()
         .in(Environment.simple(mode = Mode.Dev))
-        .configure(config ++ Map("newGainsServiceEnabled" -> "true"))
+        .configure(config ++ Map(backendSessionEnabled -> "true"))
         .overrides(bind[GainsUserDataRepository].to(mockRepo))
         .build()
 

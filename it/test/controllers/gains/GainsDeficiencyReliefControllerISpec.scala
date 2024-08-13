@@ -49,7 +49,7 @@ class GainsDeficiencyReliefControllerISpec extends IntegrationTest {
     "render the paid tax status page" in {
       val application = GuiceApplicationBuilder()
         .in(Environment.simple(mode = Mode.Dev))
-        .configure(config ++ Map("newGainsServiceEnabled" -> "false"))
+        .configure(config ++ Map(backendSessionEnabled -> "false"))
         .build()
 
       running(application) {
@@ -65,7 +65,7 @@ class GainsDeficiencyReliefControllerISpec extends IntegrationTest {
 
       val applicationWithBackendMongo = GuiceApplicationBuilder()
         .in(Environment.simple(mode = Mode.Dev))
-        .configure(config ++ Map("newGainsServiceEnabled" -> "true"))
+        .configure(config ++ Map(backendSessionEnabled -> "true"))
         .build()
 
       running(applicationWithBackendMongo) {
@@ -83,7 +83,7 @@ class GainsDeficiencyReliefControllerISpec extends IntegrationTest {
     "render the paid tax status page for an agent" in {
       val application = GuiceApplicationBuilder()
         .in(Environment.simple(mode = Mode.Dev))
-        .configure(config ++ Map("newGainsServiceEnabled" -> "false"))
+        .configure(config ++ Map(backendSessionEnabled -> "false"))
         .build()
 
       running(application) {
@@ -98,7 +98,7 @@ class GainsDeficiencyReliefControllerISpec extends IntegrationTest {
 
       val applicationWithBackendMongo = GuiceApplicationBuilder()
         .in(Environment.simple(mode = Mode.Dev))
-        .configure(config ++ Map("newGainsServiceEnabled" -> "true"))
+        .configure(config ++ Map(backendSessionEnabled -> "true"))
         .build()
 
       running(applicationWithBackendMongo) {
@@ -115,7 +115,7 @@ class GainsDeficiencyReliefControllerISpec extends IntegrationTest {
     "render the deficiency relief page with pre-filled data 1" in {
       val application = GuiceApplicationBuilder()
         .in(Environment.simple(mode = Mode.Dev))
-        .configure(config ++ Map("newGainsServiceEnabled" -> "false"))
+        .configure(config ++ Map(backendSessionEnabled -> "false"))
         .build()
 
       running(application) {
@@ -134,7 +134,7 @@ class GainsDeficiencyReliefControllerISpec extends IntegrationTest {
 
       val applicationWithBackendMongo = GuiceApplicationBuilder()
         .in(Environment.simple(mode = Mode.Dev))
-        .configure(config ++ Map("newGainsServiceEnabled" -> "true"))
+        .configure(config ++ Map(backendSessionEnabled -> "true"))
         .build()
 
       val updatedGainsUserDataModel =
@@ -160,7 +160,7 @@ class GainsDeficiencyReliefControllerISpec extends IntegrationTest {
     "render the deficiency relief page with pre-filled data 2" in {
       val application = GuiceApplicationBuilder()
         .in(Environment.simple(mode = Mode.Dev))
-        .configure(config ++ Map("newGainsServiceEnabled" -> "false"))
+        .configure(config ++ Map(backendSessionEnabled -> "false"))
         .build()
 
       running(application) {
@@ -179,7 +179,7 @@ class GainsDeficiencyReliefControllerISpec extends IntegrationTest {
 
       val applicationWithBackendMongo = GuiceApplicationBuilder()
         .in(Environment.simple(mode = Mode.Dev))
-        .configure(config ++ Map("newGainsServiceEnabled" -> "true"))
+        .configure(config ++ Map(backendSessionEnabled -> "true"))
         .build()
 
       val updatedGainsUserDataModel =
@@ -206,7 +206,7 @@ class GainsDeficiencyReliefControllerISpec extends IntegrationTest {
     "render the deficiency relief page without prefilled data" in {
       val application = GuiceApplicationBuilder()
         .in(Environment.simple(mode = Mode.Dev))
-        .configure(config ++ Map("newGainsServiceEnabled" -> "false"))
+        .configure(config ++ Map(backendSessionEnabled -> "false"))
         .build()
 
       running(application) {
@@ -225,7 +225,7 @@ class GainsDeficiencyReliefControllerISpec extends IntegrationTest {
 
       val applicationWithBackendMongo = GuiceApplicationBuilder()
         .in(Environment.simple(mode = Mode.Dev))
-        .configure(config ++ Map("newGainsServiceEnabled" -> "true"))
+        .configure(config ++ Map(backendSessionEnabled -> "true"))
         .build()
 
       val updatedGainsUserDataModel =
@@ -256,7 +256,7 @@ class GainsDeficiencyReliefControllerISpec extends IntegrationTest {
 
       val application = GuiceApplicationBuilder()
         .in(Environment.simple(mode = Mode.Dev))
-        .configure(config ++ Map("newGainsServiceEnabled" -> "false"))
+        .configure(config ++ Map(backendSessionEnabled -> "false"))
         .overrides(bind[GainsUserDataRepository].to(mockRepo))
         .build()
 
@@ -271,7 +271,7 @@ class GainsDeficiencyReliefControllerISpec extends IntegrationTest {
 
       val applicationWithBackendMongo = GuiceApplicationBuilder()
         .in(Environment.simple(mode = Mode.Dev))
-        .configure(config ++ Map("newGainsServiceEnabled" -> "true"))
+        .configure(config ++ Map(backendSessionEnabled -> "true"))
         .overrides(bind[GainsUserDataRepository].to(mockRepo))
         .build()
 
@@ -289,7 +289,7 @@ class GainsDeficiencyReliefControllerISpec extends IntegrationTest {
     "redirect to income tax submission overview page if no session data is found" in {
       val application = GuiceApplicationBuilder()
         .in(Environment.simple(mode = Mode.Dev))
-        .configure(config ++ Map("newGainsServiceEnabled" -> "false"))
+        .configure(config ++ Map(backendSessionEnabled -> "false"))
         .build()
 
       running(application) {
@@ -304,7 +304,7 @@ class GainsDeficiencyReliefControllerISpec extends IntegrationTest {
 
       val applicationWithBackendMongo = GuiceApplicationBuilder()
         .in(Environment.simple(mode = Mode.Dev))
-        .configure(config ++ Map("newGainsServiceEnabled" -> "true"))
+        .configure(config ++ Map(backendSessionEnabled -> "true"))
         .build()
 
       running(applicationWithBackendMongo) {
@@ -323,7 +323,7 @@ class GainsDeficiencyReliefControllerISpec extends IntegrationTest {
     "show page with error text if no radio is selected" in {
       val application = GuiceApplicationBuilder()
         .in(Environment.simple(mode = Mode.Dev))
-        .configure(config ++ Map("newGainsServiceEnabled" -> "false"))
+        .configure(config ++ Map(backendSessionEnabled -> "false"))
         .build()
 
       running(application) {
@@ -341,7 +341,7 @@ class GainsDeficiencyReliefControllerISpec extends IntegrationTest {
 
       val applicationWithBackendMongo = GuiceApplicationBuilder()
         .in(Environment.simple(mode = Mode.Dev))
-        .configure(config ++ Map("newGainsServiceEnabled" -> "true"))
+        .configure(config ++ Map(backendSessionEnabled -> "true"))
         .build()
 
       running(applicationWithBackendMongo) {
@@ -361,7 +361,7 @@ class GainsDeficiencyReliefControllerISpec extends IntegrationTest {
     "show page with error text if form is invalid" in {
       val application = GuiceApplicationBuilder()
         .in(Environment.simple(mode = Mode.Dev))
-        .configure(config ++ Map("newGainsServiceEnabled" -> "false"))
+        .configure(config ++ Map(backendSessionEnabled -> "false"))
         .build()
 
       running(application) {
@@ -379,7 +379,7 @@ class GainsDeficiencyReliefControllerISpec extends IntegrationTest {
 
       val applicationWithBackendMongo = GuiceApplicationBuilder()
         .in(Environment.simple(mode = Mode.Dev))
-        .configure(config ++ Map("newGainsServiceEnabled" -> "true"))
+        .configure(config ++ Map(backendSessionEnabled -> "true"))
         .build()
 
       running(applicationWithBackendMongo) {
@@ -399,7 +399,7 @@ class GainsDeficiencyReliefControllerISpec extends IntegrationTest {
     "redirect to summary page if successful" in {
       val application = GuiceApplicationBuilder()
         .in(Environment.simple(mode = Mode.Dev))
-        .configure(config ++ Map("newGainsServiceEnabled" -> "false"))
+        .configure(config ++ Map(backendSessionEnabled -> "false"))
         .build()
 
       running(application) {
@@ -420,7 +420,7 @@ class GainsDeficiencyReliefControllerISpec extends IntegrationTest {
 
       val applicationWithBackendMongo = GuiceApplicationBuilder()
         .in(Environment.simple(mode = Mode.Dev))
-        .configure(config ++ Map("newGainsServiceEnabled" -> "true"))
+        .configure(config ++ Map(backendSessionEnabled -> "true"))
         .build()
 
       running(applicationWithBackendMongo) {

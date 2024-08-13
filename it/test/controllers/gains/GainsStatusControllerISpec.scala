@@ -50,7 +50,7 @@ class GainsStatusControllerISpec extends IntegrationTest {
     "render the gains status page for individual user" in {
       val application = GuiceApplicationBuilder()
         .in(Environment.simple(mode = Mode.Dev))
-        .configure(config ++ Map("newGainsServiceEnabled" -> "false"))
+        .configure(config ++ Map(backendSessionEnabled -> "false"))
         .build()
 
       running(application) {
@@ -65,7 +65,7 @@ class GainsStatusControllerISpec extends IntegrationTest {
 
       val applicationWithBackendMongo = GuiceApplicationBuilder()
         .in(Environment.simple(mode = Mode.Dev))
-        .configure(config ++ Map("newGainsServiceEnabled" -> "true"))
+        .configure(config ++ Map(backendSessionEnabled -> "true"))
         .build()
 
       running(applicationWithBackendMongo) {
@@ -82,7 +82,7 @@ class GainsStatusControllerISpec extends IntegrationTest {
     "render the gains status page for an agent" in {
       val application = GuiceApplicationBuilder()
         .in(Environment.simple(mode = Mode.Dev))
-        .configure(config ++ Map("newGainsServiceEnabled" -> "false"))
+        .configure(config ++ Map(backendSessionEnabled -> "false"))
         .build()
 
       running(application) {
@@ -97,7 +97,7 @@ class GainsStatusControllerISpec extends IntegrationTest {
 
       val applicationWithBackendMongo = GuiceApplicationBuilder()
         .in(Environment.simple(mode = Mode.Dev))
-        .configure(config ++ Map("newGainsServiceEnabled" -> "true"))
+        .configure(config ++ Map(backendSessionEnabled -> "true"))
         .build()
 
       running(applicationWithBackendMongo) {
@@ -114,7 +114,7 @@ class GainsStatusControllerISpec extends IntegrationTest {
     "render the gains status with pre-filled data" in {
       val application = GuiceApplicationBuilder()
         .in(Environment.simple(mode = Mode.Dev))
-        .configure(config ++ Map("newGainsServiceEnabled" -> "false"))
+        .configure(config ++ Map(backendSessionEnabled -> "false"))
         .build()
 
       running(application) {
@@ -133,7 +133,7 @@ class GainsStatusControllerISpec extends IntegrationTest {
 
       val applicationWithBackendMongo = GuiceApplicationBuilder()
         .in(Environment.simple(mode = Mode.Dev))
-        .configure(config ++ Map("newGainsServiceEnabled" -> "true"))
+        .configure(config ++ Map(backendSessionEnabled -> "true"))
         .build()
 
       val updatedGainsUserDataModel =
@@ -160,7 +160,7 @@ class GainsStatusControllerISpec extends IntegrationTest {
     "render the gains status without pre-filled data" in {
       val application = GuiceApplicationBuilder()
         .in(Environment.simple(mode = Mode.Dev))
-        .configure(config ++ Map("newGainsServiceEnabled" -> "false"))
+        .configure(config ++ Map(backendSessionEnabled -> "false"))
         .build()
 
       running(application) {
@@ -179,7 +179,7 @@ class GainsStatusControllerISpec extends IntegrationTest {
 
       val applicationWithBackendMongo = GuiceApplicationBuilder()
         .in(Environment.simple(mode = Mode.Dev))
-        .configure(config ++ Map("newGainsServiceEnabled" -> "true"))
+        .configure(config ++ Map(backendSessionEnabled -> "true"))
         .build()
 
       val updatedGainsUserDataModel =
@@ -207,7 +207,7 @@ class GainsStatusControllerISpec extends IntegrationTest {
 
       val application = GuiceApplicationBuilder()
         .in(Environment.simple(mode = Mode.Dev))
-        .configure(config ++ Map("newGainsServiceEnabled" -> "false"))
+        .configure(config ++ Map(backendSessionEnabled -> "false"))
         .overrides(bind[GainsUserDataRepository].to(mockRepo))
         .build()
 
@@ -222,7 +222,7 @@ class GainsStatusControllerISpec extends IntegrationTest {
 
       val applicationWithBackendMongo = GuiceApplicationBuilder()
         .in(Environment.simple(mode = Mode.Dev))
-        .configure(config ++ Map("newGainsServiceEnabled" -> "true"))
+        .configure(config ++ Map(backendSessionEnabled -> "true"))
         .overrides(bind[GainsUserDataRepository].to(mockRepo))
         .build()
 
@@ -240,7 +240,7 @@ class GainsStatusControllerISpec extends IntegrationTest {
     "redirect to income tax submission overview page if no session data is found" in {
       val application = GuiceApplicationBuilder()
         .in(Environment.simple(mode = Mode.Dev))
-        .configure(config ++ Map("newGainsServiceEnabled" -> "false"))
+        .configure(config ++ Map(backendSessionEnabled -> "false"))
         .build()
 
       running(application) {
@@ -255,7 +255,7 @@ class GainsStatusControllerISpec extends IntegrationTest {
 
       val applicationWithBackendMongo = GuiceApplicationBuilder()
         .in(Environment.simple(mode = Mode.Dev))
-        .configure(config ++ Map("newGainsServiceEnabled" -> "true"))
+        .configure(config ++ Map(backendSessionEnabled -> "true"))
         .build()
 
       running(applicationWithBackendMongo) {
@@ -274,7 +274,7 @@ class GainsStatusControllerISpec extends IntegrationTest {
     "redirect to policy held previous page if successful" in {
       val application = GuiceApplicationBuilder()
         .in(Environment.simple(mode = Mode.Dev))
-        .configure(config ++ Map("newGainsServiceEnabled" -> "false"))
+        .configure(config ++ Map(backendSessionEnabled -> "false"))
         .build()
 
       running(application) {
@@ -294,7 +294,7 @@ class GainsStatusControllerISpec extends IntegrationTest {
 
       val applicationWithBackendMongo = GuiceApplicationBuilder()
         .in(Environment.simple(mode = Mode.Dev))
-        .configure(config ++ Map("newGainsServiceEnabled" -> "true"))
+        .configure(config ++ Map(backendSessionEnabled -> "true"))
         .build()
 
       val updatedGainsUserDataModel =
@@ -320,7 +320,7 @@ class GainsStatusControllerISpec extends IntegrationTest {
     "show page with error text if form is empty" in {
       val application = GuiceApplicationBuilder()
         .in(Environment.simple(mode = Mode.Dev))
-        .configure(config ++ Map("newGainsServiceEnabled" -> "false"))
+        .configure(config ++ Map(backendSessionEnabled -> "false"))
         .build()
 
       running(application) {
@@ -338,7 +338,7 @@ class GainsStatusControllerISpec extends IntegrationTest {
 
       val applicationWithBackendMongo = GuiceApplicationBuilder()
         .in(Environment.simple(mode = Mode.Dev))
-        .configure(config ++ Map("newGainsServiceEnabled" -> "true"))
+        .configure(config ++ Map(backendSessionEnabled -> "true"))
         .build()
 
       running(applicationWithBackendMongo) {
@@ -358,7 +358,7 @@ class GainsStatusControllerISpec extends IntegrationTest {
     "redirect to summary when model is full if successful" in {
       val application = GuiceApplicationBuilder()
         .in(Environment.simple(mode = Mode.Dev))
-        .configure(config ++ Map("newGainsServiceEnabled" -> "false"))
+        .configure(config ++ Map(backendSessionEnabled -> "false"))
         .build()
 
       running(application) {
@@ -379,7 +379,7 @@ class GainsStatusControllerISpec extends IntegrationTest {
 
       val applicationWithBackendMongo = GuiceApplicationBuilder()
         .in(Environment.simple(mode = Mode.Dev))
-        .configure(config ++ Map("newGainsServiceEnabled" -> "true"))
+        .configure(config ++ Map(backendSessionEnabled -> "true"))
         .build()
 
       val updatedGainsUserDataModel =
@@ -405,7 +405,7 @@ class GainsStatusControllerISpec extends IntegrationTest {
     "redirect to policy held page if successful" in {
       val application = GuiceApplicationBuilder()
         .in(Environment.simple(mode = Mode.Dev))
-        .configure(config ++ Map("newGainsServiceEnabled" -> "false"))
+        .configure(config ++ Map(backendSessionEnabled -> "false"))
         .build()
 
       running(application) {
@@ -425,7 +425,7 @@ class GainsStatusControllerISpec extends IntegrationTest {
 
       val applicationWithBackendMongo = GuiceApplicationBuilder()
         .in(Environment.simple(mode = Mode.Dev))
-        .configure(config ++ Map("newGainsServiceEnabled" -> "true"))
+        .configure(config ++ Map(backendSessionEnabled -> "true"))
         .build()
 
       val updatedGainsUserDataModel =

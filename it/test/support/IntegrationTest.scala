@@ -64,6 +64,8 @@ trait IntegrationTest extends AnyWordSpec
   val sessionId = "sessionId-eb3158c2-0aff-4ce8-8d1b-f2208ace52fe"
   val affinityGroup = "affinityGroup"
 
+  val backendSessionEnabled = "backendSessionEnabled"
+
   protected implicit val ec: ExecutionContext = ExecutionContext.Implicits.global
   protected implicit val headerCarrier: HeaderCarrier = HeaderCarrier().withExtraHeaders(headers = "mtditid" -> aUser.mtditid)
   protected implicit val actorSystem: ActorSystem = ActorSystem()

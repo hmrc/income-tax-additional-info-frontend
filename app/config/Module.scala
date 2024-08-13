@@ -27,7 +27,7 @@ class Module extends play.api.inject.Module {
   override def bindings(environment: Environment, configuration: Configuration): Seq[Binding[_]] = {
 
     val sessionBinding: Binding[_] =
-      if (configuration.get[Boolean]("feature-switch.newGainsServiceEnabled")) {
+      if (configuration.get[Boolean]("feature-switch.backendSessionEnabled")) {
         bind[GainsSessionServiceProvider].to[NewGainsSessionServiceImpl].eagerly()
       } else {
         bind[GainsSessionServiceProvider].to[GainsSessionServiceImpl].eagerly()
