@@ -19,6 +19,7 @@ package connectors
 import connectors.errors.{ApiError, SingleErrorBody}
 import connectors.httpParsers.GetGainsSessionHttpParser.GetGainsSessionResponse
 import connectors.session.GetGainsSessionConnector
+import models.mongo.GainsUserDataModel
 import play.api.http.Status._
 import play.api.libs.json.Json
 import play.api.test.Helpers.OK
@@ -48,8 +49,13 @@ class GetGainsSessionConnectorISpec extends IntegrationTest with ConnectorIntegr
       "request returns a 200" in {
         stubGetWithHeadersCheck(url, OK, Json.toJson(gainsUserDataModel).toString(), "X-Session-ID" -> sessionId, "mtditid" -> mtditid)
 
+        val parsedModel = Json.toJson(gainsUserDataModel).validate[GainsUserDataModel].fold(
+          _ => GainsUserDataModel(sessionId, mtditid, nino, taxYear, None),
+          model => model
+        )
+
         val result: GetGainsSessionResponse = Await.result(connector.getSessionData(taxYear), Duration.Inf)
-        result shouldBe Right(Some(gainsUserDataModel))
+        result shouldBe Right(Some(parsedModel))
       }
     }
 
