@@ -42,6 +42,8 @@ class AppConfigStub extends MockFactory {
 
     override lazy val useEncryption: Boolean = true
 
+    override lazy val backendSessionEnabled: Boolean = false
+
     override def incomeTaxSubmissionOverviewUrl(taxYear: Int): String = s"/$taxYear/income-tax-return-overview"
 
     override def contactUrl(isAgent: Boolean): String = "/contact-url"
@@ -69,5 +71,6 @@ class AppConfigStub extends MockFactory {
 
     override lazy val useEncryption: Boolean = false
 
+    override lazy val backendSessionEnabled: Boolean = false
   }
 }

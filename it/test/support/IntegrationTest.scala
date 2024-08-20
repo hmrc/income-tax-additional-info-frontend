@@ -16,14 +16,16 @@
 
 package test.support
 
-import org.apache.pekko.actor.ActorSystem
+import com.github.tomakehurst.wiremock.http.HttpHeader
 import com.github.tomakehurst.wiremock.stubbing.StubMapping
 import config.AppConfig
-import connectors.GetGainsConnector
+import connectors.{DeleteGainsConnector, GetGainsConnector}
 import models.authorisation.SessionValues
 import models.gains.prior.GainsPriorDataModel
 import models.gains.{LifeInsuranceModel, PolicyCyaModel}
+import models.mongo.GainsUserDataModel
 import models.{AllGainsSessionModel, User}
+import org.apache.pekko.actor.ActorSystem
 import org.scalatest.BeforeAndAfterAll
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
@@ -33,15 +35,15 @@ import play.api.http.Status._
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.libs.json.Json
 import play.api.libs.ws.{BodyWritable, WSClient, WSResponse}
-import play.api.mvc.Result
+import play.api.mvc.{ResponseHeader, Result}
 import play.api.{Application, Environment, Mode}
 import repositories.GainsUserDataRepository
-import services.GainsSessionService
+import services.{DeleteGainsService, GainsSessionServiceImpl}
 import support.builders.UserBuilder.aUser
-import support.builders.requests.AuthorisationRequestBuilder
+import support.builders.requests.AuthorisationRequestBuilder.anAuthorisationRequest
 import support.helpers.WireMockServer
-import test.support.helpers.{PlaySessionCookieBaker}
 import support.providers.TaxYearProvider
+import test.support.helpers.PlaySessionCookieBaker
 import test.support.stubs.WireMockStubs
 import uk.gov.hmrc.http.{HeaderCarrier, SessionKeys}
 
@@ -62,6 +64,8 @@ trait IntegrationTest extends AnyWordSpec
   val sessionId = "sessionId-eb3158c2-0aff-4ce8-8d1b-f2208ace52fe"
   val affinityGroup = "affinityGroup"
 
+  val backendSessionEnabled = "backendSessionEnabled"
+
   protected implicit val ec: ExecutionContext = ExecutionContext.Implicits.global
   protected implicit val headerCarrier: HeaderCarrier = HeaderCarrier().withExtraHeaders(headers = "mtditid" -> aUser.mtditid)
   protected implicit val actorSystem: ActorSystem = ActorSystem()
@@ -70,6 +74,11 @@ trait IntegrationTest extends AnyWordSpec
   implicit lazy val user: User = User(mtditid, None, nino, affinityGroup, sessionId)
   implicit val correlationId: String = UUID.randomUUID().toString
   protected lazy val appUrl = s"http://localhost:$port/update-and-submit-income-tax-return/additional-information"
+
+  val headersSentToIF: Seq[HttpHeader] = Seq(
+    new HttpHeader("X-Session-ID", sessionId),
+    new HttpHeader("mtditid", mtditid)
+  )
 
   protected val config: Map[String, String] = Map(
     "defaultTaxYear" -> taxYear.toString,
@@ -157,6 +166,8 @@ trait IntegrationTest extends AnyWordSpec
 
   protected def status(awaitable: Future[Result]): Int = await(awaitable).header.status
 
+  protected def headerStatus(awaitable: Future[Result]): ResponseHeader = await(awaitable).header
+
   protected def playSessionCookies(taxYear: Int,
                                    validTaxYears: Seq[Int] = validTaxYearList,
                                    extraData: Map[String, String] = Map.empty): String = PlaySessionCookieBaker.bakeSessionCookie(Map(
@@ -168,38 +179,73 @@ trait IntegrationTest extends AnyWordSpec
     SessionKeys.authToken -> "mock-bearer-token"
   ) ++ extraData)
 
-  val completePolicyCyaModel: PolicyCyaModel = PolicyCyaModel(
-    sessionId, Some("Life Insurance"), Some("123"), Some(0), Some(""), Some(true), Some(0), Some(0), Some(true), Some(123.11), Some(true), Some(123.11)
-  )
+  val completePolicyCyaModel: PolicyCyaModel =
+    PolicyCyaModel(sessionId, Some("Life Insurance"), Some("123"), Some(0), Some(""), Some(true), Some(0), Some(0), Some(true), Some(123.11), Some(true), Some(123.11))
+
+  val gainsUserDataModel: GainsUserDataModel =
+    GainsUserDataModel(sessionId, mtditid, nino, taxYear, Some(AllGainsSessionModel(Seq(completePolicyCyaModel), gateway = Some(true))))
 
   val gainsPriorDataModel: Option[GainsPriorDataModel] =
     Some(GainsPriorDataModel("submittedOn", lifeInsurance = Some(Seq(LifeInsuranceModel(Some("abc123"), Some("event"), BigDecimal(123.45), Some(true), Some(5), Some(10)))), None, None, None, None))
   val gainsUserDataRepository: GainsUserDataRepository = app.injector.instanceOf[GainsUserDataRepository]
   val getGainsDataConnector: GetGainsConnector = app.injector.instanceOf[GetGainsConnector]
-  val gainsSessionService: GainsSessionService = new GainsSessionService(gainsUserDataRepository, getGainsDataConnector)(correlationId)
+  val gainsSessionService: GainsSessionServiceImpl = new GainsSessionServiceImpl(gainsUserDataRepository, getGainsDataConnector)(correlationId)
+
+  val deleteGainsConnector: DeleteGainsConnector = app.injector.instanceOf[DeleteGainsConnector]
+  val deleteGainsService: DeleteGainsService = new DeleteGainsService(deleteGainsConnector)
+
+  def deleteGainsData(status: Int, response: String): StubMapping =
+    stubDeleteWithResponseBody(s"/income-tax-additional-information/income-tax/insurance-policies/income/$nino/$taxYear", status, response, headersSentToIF)
+
+  def deleteGainsDataNoResponseBody(): StubMapping =
+    stubDeleteWithoutResponseBody(s"/income-tax-additional-information/income-tax/insurance-policies/income/$nino/$taxYear", NO_CONTENT, headersSentToIF)
 
   def populateSessionData(): Boolean =
     await(gainsSessionService.createSessionData(AllGainsSessionModel(Seq(PolicyCyaModel(sessionId, Some("Life Insurance"), Some("RefNo13254687"), Some(123.11),
       Some("Full or part surrender"), Some(true), Some(99), Some(10), Some(true), None, Some(true), Some(100))),
-      gateway = Some(true)), taxYear)(false)(true)(AuthorisationRequestBuilder.anAuthorisationRequest, ec))
+      gateway = Some(true)), taxYear)(false)(true)(anAuthorisationRequest, ec, headerCarrier)
+    )
+
+  def populateSessionData(taxYear: Int = taxYear, status: Int = NO_CONTENT, responseBody: String = ""): StubMapping =
+    createUserSessionDataStub(s"/income-tax-additional-information/income-tax/income/insurance-policies/$taxYear/session", status, responseBody, "X-Session-ID" -> sessionId, "mtditid" -> mtditid)
 
   def populateSessionDataWithRandomSession(): Boolean =
     await(gainsSessionService.createSessionData(AllGainsSessionModel(Seq(PolicyCyaModel(UUID.randomUUID().toString, Some(""))), gateway = Some(true)), taxYear)
-    (false)(true)(AuthorisationRequestBuilder.anAuthorisationRequest, ec))
+    (false)(true)(anAuthorisationRequest, ec, headerCarrier))
 
   def populateOnlyGatewayData(): Boolean =
-    await(gainsSessionService.createSessionData(AllGainsSessionModel(Seq[PolicyCyaModel]().empty, gateway = Some(true)), taxYear)(false)(true)(AuthorisationRequestBuilder.anAuthorisationRequest, ec))
+    await(gainsSessionService.createSessionData(AllGainsSessionModel(Seq[PolicyCyaModel]().empty, gateway = Some(true)), taxYear)(false)(true)(anAuthorisationRequest, ec, headerCarrier))
 
   def populateSessionDataWithEmptyGateway(): Boolean =
-    await(gainsSessionService.createSessionData(AllGainsSessionModel(Seq(), gateway = None), taxYear)(false)(true)(AuthorisationRequestBuilder.anAuthorisationRequest, ec))
+    await(gainsSessionService.createSessionData(AllGainsSessionModel(Seq(), gateway = None), taxYear)(false)(true)(anAuthorisationRequest, ec, headerCarrier))
 
   def populateSessionDataWithFalseGateway(): Boolean =
-    await(gainsSessionService.createSessionData(AllGainsSessionModel(Seq(), gateway = Some(false)), taxYear)(false)(true)(AuthorisationRequestBuilder.anAuthorisationRequest, ec))
+    await(gainsSessionService.createSessionData(AllGainsSessionModel(Seq(), gateway = Some(false)), taxYear)(false)(true)(anAuthorisationRequest, ec, headerCarrier))
 
   def populateWithSessionDataModel(cya: Seq[PolicyCyaModel]): Boolean =
-    await(gainsSessionService.createSessionData(AllGainsSessionModel(cya, gateway = Some(true)), taxYear)(false)(true)(AuthorisationRequestBuilder.anAuthorisationRequest, ec))
+    await(gainsSessionService.createSessionData(AllGainsSessionModel(cya, gateway = Some(true)), taxYear)(false)(true)(anAuthorisationRequest, ec, headerCarrier))
 
   def clearSession(): Boolean = await(gainsUserDataRepository.clear(taxYear))
+
+  def retrieveGains(): StubMapping =
+    stubGetWithHeadersCheck(s"/income-tax-additional-information/income-tax/insurance-policies/income/$nino/$taxYear", OK,
+      Json.toJson(gainsPriorDataModel).toString(), "X-Session-ID" -> sessionId, "mtditid" -> mtditid)
+
+  def postExcludeJourney(status: Int = NO_CONTENT): StubMapping =
+    stubPost(s"/income-tax-submission-service/income-tax/nino/AA123456A/sources/exclude-journey/$taxYear", status, "{}")
+
+  def submitGains(status: Int = NO_CONTENT, responseBody: String = ""): StubMapping =
+    stubPut(s"/income-tax-additional-information/income-tax/insurance-policies/income/$nino/$taxYear", status, responseBody, headersSentToIF)
+
+  def updateSession(taxYear: Int = taxYear, status: Int = NO_CONTENT, responseBody: String = ""): StubMapping =
+    updateUserSessionDataStub(s"/income-tax-additional-information/income-tax/income/insurance-policies/$taxYear/session", status, responseBody, "X-Session-ID" -> sessionId,"mtditid" -> mtditid)
+
+  def getSessionDataStub(userData: Option[GainsUserDataModel] = Some(gainsUserDataModel), taxYear: Int = taxYear, status: Int = OK): StubMapping = {
+    stubGetWithHeadersCheck(
+      s"/income-tax-additional-information/income-tax/income/insurance-policies/$taxYear/session", status,
+      Json.toJson(userData).toString(), "X-Session-ID" -> sessionId, "mtditid" -> mtditid
+    )
+  }
 
   def userDataStub(userData: Option[GainsPriorDataModel], nino: String, taxYear: Int): StubMapping = {
     stubGetWithHeadersCheck(

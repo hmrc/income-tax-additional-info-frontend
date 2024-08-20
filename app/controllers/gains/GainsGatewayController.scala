@@ -25,7 +25,7 @@ import models.gains.PolicyCyaModel
 import play.api.data.Form
 import play.api.i18n.I18nSupport
 import play.api.mvc._
-import services.GainsSessionService
+import services.GainsSessionServiceProvider
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 import views.html.pages.gains.GainsGatewayPageView
 
@@ -35,7 +35,7 @@ import scala.concurrent.{ExecutionContext, Future}
 @Singleton
 class GainsGatewayController @Inject()(authorisedAction: AuthorisedAction,
                                        view: GainsGatewayPageView,
-                                       gainsSessionService: GainsSessionService,
+                                       gainsSessionService: GainsSessionServiceProvider,
                                        errorHandler: ErrorHandler)
                                       (implicit appConfig: AppConfig,
                                        mcc: MessagesControllerComponents,
@@ -70,13 +70,13 @@ class GainsGatewayController @Inject()(authorisedAction: AuthorisedAction,
   }
 
   def submit(taxYear: Int): Action[AnyContent] = authorisedAction.async { implicit request =>
-
     form(request.user.isAgent).bindFromRequest().fold(formWithErrors => {
       Future.successful(BadRequest(view(taxYear, formWithErrors)))
     }, {
       yesNoValue =>
         gainsSessionService.getSessionData(taxYear).flatMap {
-          case Left(_) => Future.successful(errorHandler.internalServerError())
+          case Left(_) =>
+            Future.successful(errorHandler.internalServerError())
           case Right(sessionData) =>
             val cya = sessionData.flatMap(_.gains).getOrElse(AllGainsSessionModel(Seq.empty)).copy(gateway = Some(yesNoValue))
             gainsSessionService.updateSessionData(cya, taxYear)(errorHandler.internalServerError()) {

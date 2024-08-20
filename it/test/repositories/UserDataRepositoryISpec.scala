@@ -96,7 +96,7 @@ class UserDataRepositoryISpec extends IntegrationTest with FutureAwaits with Def
 
       val data: Option[GainsUserDataModel] = await(gainsRepo.find(taxYear)(AuthorisationRequest(testUser, request)).map {
         case Right(value) => value
-        case Left(value) => None
+        case Left(_) => None
       })
 
       data.get.gains.get.allGains.head.amountOfGain.get shouldBe 321.11
@@ -124,7 +124,7 @@ class UserDataRepositoryISpec extends IntegrationTest with FutureAwaits with Def
       count mustBe 1
       val dataAfter: Option[GainsUserDataModel] = await(gainsRepo.find(taxYear)(AuthorisationRequest(testUser, request)).map {
         case Right(value) => value
-        case Left(value) => None
+        case Left(_) => None
       })
 
       dataAfter.get.gains mustBe Some(AllGainsSessionModel(List(newGainsCyaModel), gateway = Some(true)))

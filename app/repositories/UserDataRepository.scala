@@ -26,8 +26,10 @@ import org.mongodb.scala.bson.conversions.Bson
 import org.mongodb.scala.model.Filters.{and, equal}
 import org.mongodb.scala.model.Updates.set
 import org.mongodb.scala.model.{FindOneAndReplaceOptions, FindOneAndUpdateOptions}
+import play.api.libs.json.Format
 import uk.gov.hmrc.mongo.play.json.Codecs.{logger, toBson}
 import uk.gov.hmrc.mongo.play.json.PlayMongoRepository
+import uk.gov.hmrc.mongo.play.json.formats.MongoJavatimeFormats
 import utils.PagerDutyHelper.PagerDutyKeys.{ENCRYPTION_DECRYPTION_ERROR, FAILED_TO_CREATE_DATA, FAILED_TO_FIND_DATA, FAILED_TO_UPDATE_DATA}
 import utils.PagerDutyHelper.pagerDutyLog
 
@@ -37,6 +39,7 @@ import scala.util.Try
 trait UserDataRepository[C <: UserDataTemplate] {
   self: PlayMongoRepository[C] =>
   implicit val ec: ExecutionContext
+  implicit val instantFormat: Format[Instant] = MongoJavatimeFormats.instantFormat
 
   val repoName: String
   type UserData

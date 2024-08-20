@@ -17,13 +17,12 @@
 package controllers.gains
 
 import actions.AuthorisedAction
-import config.{AppConfig, ErrorHandler}
+import config.AppConfig
 import forms.YesNoForm
 import models.mongo.JourneyStatus.{Completed, InProgress}
 import play.api.data.Form
 import play.api.i18n.I18nSupport
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
-import services.GainsSessionService
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 import views.html.pages.gains.SectionCompletedStateView
 
@@ -31,11 +30,7 @@ import javax.inject.Inject
 import scala.annotation.unused
 import scala.concurrent.{ExecutionContext, Future}
 
-class SectionCompletedStateController @Inject() (authorisedAction: AuthorisedAction,
-                                                 gainsSessionService: GainsSessionService,
-                                                 view: SectionCompletedStateView,
-                                                 errorHandler: ErrorHandler
-                                                )
+class SectionCompletedStateController @Inject() (authorisedAction: AuthorisedAction, view: SectionCompletedStateView)
                                                 (implicit appConfig: AppConfig,
                                                  mcc: MessagesControllerComponents,
                                                  ec: ExecutionContext) extends FrontendController(mcc) with I18nSupport {

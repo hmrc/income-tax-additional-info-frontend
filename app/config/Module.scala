@@ -16,10 +16,28 @@
 
 package config
 
-import com.google.inject.AbstractModule
-class Module extends AbstractModule {
+import play.api.inject.Binding
+import play.api.{Configuration, Environment}
+import services._
 
-  override def configure(): Unit = {
-    bind(classOf[AppConfig]).asEagerSingleton()
+import java.time.Clock
+
+class Module extends play.api.inject.Module {
+
+  override def bindings(environment: Environment, configuration: Configuration): Seq[Binding[_]] = {
+
+    val sessionBinding: Binding[_] =
+      if (configuration.get[Boolean]("feature-switch.backendSessionEnabled")) {
+        bind[GainsSessionServiceProvider].to[NewGainsSessionServiceImpl].eagerly()
+      } else {
+        bind[GainsSessionServiceProvider].to[GainsSessionServiceImpl].eagerly()
+      }
+
+    Seq(
+      sessionBinding,
+      bind[Clock].toInstance(Clock.systemUTC()),
+      bind[AppConfig].toSelf
+    )
   }
+
 }
