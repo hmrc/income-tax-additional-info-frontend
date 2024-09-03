@@ -65,24 +65,28 @@
         @{
         gain.filter(_.sessionId == session).map(gains =>
             govukSummaryList(SummaryList(Seq(
-                Some(summaryListRow(
-                    HtmlContent(messages("common.gains.policy-type")),
-                    HtmlContent(
-                        gains.policyType match {
-                            case Some("Life Insurance") => messages("gains.policy-type.radio1")
-                            case Some("Life Annuity") => messages("gains.policy-type.radio2")
-                            case Some("Capital Redemption") => messages("gains.policy-type.radio3")
-                            case Some("Voided ISA") => messages("common.gains.voidedIsa")
-                            case Some("Foreign Policy") => messages("gains.policy-type.radio5")
-                            case _ => ""
-                        }
-                    ),
-                    actions = Seq((controllers.gains.routes.PolicyTypeController.show(taxYear, gains.sessionId), messages("common.change"), Some(messages("gains.policy-summary.list.hidden.text.1"))))
-                )),
+                if (appConfig.isSplitGains) {
+                    None
+                } else {
+                    Some(summaryListRow(
+                        HtmlContent(messages("common.gains.policy-type")),
+                        HtmlContent(
+                            gains.policyType match {
+                                case Some("Life Insurance") => messages("gains.policy-type.radio1")
+                                case Some("Life Annuity") => messages("gains.policy-type.radio2")
+                                case Some("Capital Redemption") => messages("gains.policy-type.radio3")
+                                case Some("Voided ISA") => messages("common.gains.voidedIsa")
+                                case Some("Foreign Policy") => messages("gains.policy-type.radio5")
+                                case _ => ""
+                            }
+                        ),
+                        actions = Seq((controllers.gains.routes.PolicyTypeController.show(taxYear, gains.sessionId), messages("common.change"), Some(messages("gains.policy-summary.list.hidden.text.1"))))
+                    ))
+                },
                 Some(summaryListRow(
                     HtmlContent(messages("common.gains.policy-number")),
                     HtmlContent(gains.policyNumber.getOrElse("")),
-                    actions = Seq((controllers.gains.routes.PolicyNameController.show(taxYear, gains.sessionId), messages("common.change"), Some(messages("gains.policy-summary.list.hidden.text.2"))))
+                    actions = Seq((controllers.gainsBase.routes.PolicyNameBaseController.show(taxYear, gains.sessionId, None), messages("common.change"), Some(messages("gains.policy-summary.list.hidden.text.2"))))
                 )),
                 Some(summaryListRow(
                     HtmlContent(messages("common.gains.amount-of-gain-made")),

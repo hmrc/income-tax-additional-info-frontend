@@ -27,7 +27,7 @@ import play.api.http.Status.{INTERNAL_SERVER_ERROR, NO_CONTENT, OK, SEE_OTHER}
 import play.api.inject.bind
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.test.FakeRequest
-import play.api.test.Helpers.{GET, route, running, writeableOf_AnyContentAsEmpty, writeableOf_AnyContentAsFormUrlEncoded}
+import play.api.test.Helpers.{GET, contentAsString, defaultAwaitTimeout, route, running, writeableOf_AnyContentAsEmpty, writeableOf_AnyContentAsFormUrlEncoded}
 import play.api.{Environment, Mode}
 import repositories.GainsUserDataRepository
 import test.support.IntegrationTest
@@ -401,4 +401,49 @@ class PoliciesRemoveControllerISpec extends IntegrationTest {
     }
   }
 
+  "PoliciesRemoveController" should {
+    val headers: Seq[(String, String)] = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear), "Csrf-Token" -> "nocheck")
+
+    "have a cancel url with policy type query param when 'split-gains' is true" in {
+      val application = new GuiceApplicationBuilder()
+        .in(Mode.Dev)
+        .configure(config ++ Seq("feature-switch.split-gains" -> true))
+        .build()
+
+      running(application) {
+        authoriseIndividual()
+        clearSession()
+        populateSessionData()
+        userDataStub(gainsPriorDataModel, nino, taxYear)
+
+        val request = FakeRequest(GET, url(taxYear)).withHeaders(headers: _*)
+
+        val result = route(application, request).value
+
+        status(result) mustEqual OK
+        contentAsString(result) contains "/gains/summary?policyType=Life+Insurance" mustBe true
+      }
+    }
+
+    "have a cancel url without a policy type query param when 'split-gains' is false" in {
+      val application = new GuiceApplicationBuilder()
+        .in(Mode.Dev)
+        .configure(config ++ Seq("feature-switch.split-gains" -> false))
+        .build()
+
+      running(application) {
+        authoriseIndividual()
+        clearSession()
+        populateSessionData()
+        userDataStub(gainsPriorDataModel, nino, taxYear)
+
+        val request = FakeRequest(GET, url(taxYear)).withHeaders(headers: _*)
+
+        val result = route(application, request).value
+
+        status(result) mustEqual OK
+        contentAsString(result) contains "/gains/summary\">" mustBe true
+      }
+    }
+  }
 }

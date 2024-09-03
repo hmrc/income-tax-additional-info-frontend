@@ -327,5 +327,4 @@ class PolicySummaryPageViewSpec extends ViewUnitTest {
       }
     }
   }
-
 }

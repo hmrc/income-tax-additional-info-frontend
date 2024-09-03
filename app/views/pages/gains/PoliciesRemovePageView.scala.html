@@ -40,6 +40,14 @@
 
 @headingForUse = @{titleForUse}
 
+@summaryUrl = @{
+    if (appConfig.isSplitGains) {
+        controllers.gainsBase.routes.GainsSummaryBaseController.show(taxYear, gain.policyType).url
+    } else {
+        controllers.gainsBase.routes.GainsSummaryBaseController.show(taxYear, None).url
+    }
+}
+
 @contentHtml = {
     <p class="govuk-body">@messages("gains.policies-remove.question.paragraph")</p>
     <dl class="govuk-summary-list">
@@ -152,7 +160,7 @@
             id="remove" type="submit">
         @messages("common.remove")
     </button>
-    <a class="govuk-link" id="cancel-remove" href="@controllers.gains.routes.GainsSummaryController.show(taxYear).url">@messages("common.dontRemove")</a>
+    <a class="govuk-link" id="cancel-remove" href="@summaryUrl">@messages("common.dontRemove")</a>
     }
 </div>
 }
