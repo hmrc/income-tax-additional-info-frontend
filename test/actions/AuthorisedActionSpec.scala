@@ -165,7 +165,7 @@ class AuthorisedActionSpec extends ControllerUnitTest
         }
 
         "returns a redirect to the correct page" in {
-          result.header.headers.getOrElse("Location", "/") shouldBe controllers.errors.routes.IndividualAuthErrorController.show.url
+          result.header.headers.getOrElse("Location", "/") shouldBe controllers.errors.routes.IndividualAuthErrorController.show().url
         }
       }
     }

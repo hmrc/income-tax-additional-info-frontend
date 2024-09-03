@@ -413,7 +413,7 @@ class PolicyNameControllerISpec extends IntegrationTest {
         userDataStub(gainsPriorDataModel, nino, taxYear)
 
         val request = FakeRequest(POST, url(taxYear) + "bad-session")
-          .withHeaders(HeaderNames.COOKIE -> playSessionCookies(taxYear))
+          .withHeaders(HeaderNames.COOKIE -> playSessionCookies(taxYear), "Csrf-Token" -> "nocheck")
           .withFormUrlEncodedBody(InputFieldForm.value -> "mixedAlphaNumOnly1")
 
         val result = route(application, request).value
@@ -433,7 +433,7 @@ class PolicyNameControllerISpec extends IntegrationTest {
         userDataStub(gainsPriorDataModel, nino, taxYear)
 
         val request = FakeRequest(POST, url(taxYear) + "bad-session")
-          .withHeaders(HeaderNames.COOKIE -> playSessionCookies(taxYear))
+          .withHeaders(HeaderNames.COOKIE -> playSessionCookies(taxYear), "Csrf-Token" -> "nocheck")
           .withFormUrlEncodedBody(InputFieldForm.value -> "mixedAlphaNumOnly1")
 
         val result = route(applicationWithBackendMongo, request).value

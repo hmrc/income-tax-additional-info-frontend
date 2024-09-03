@@ -25,7 +25,6 @@ import scala.concurrent.ExecutionContext
 
 @Singleton
 class ActionsProvider @Inject()(authAction: AuthorisedAction,
-                                errorHandler: ErrorHandler,
                                 appConfig: AppConfig)
                                (implicit ec: ExecutionContext) {
   def endOfYear(taxYear: Int): ActionBuilder[AuthorisationRequest, AnyContent] =

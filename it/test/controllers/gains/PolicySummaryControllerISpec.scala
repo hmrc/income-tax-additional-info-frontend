@@ -40,9 +40,7 @@ import scala.concurrent.Future
 
 class PolicySummaryControllerISpec extends IntegrationTest {
 
-  private def url(taxYear: Int): String = {
-    s"/update-and-submit-income-tax-return/additional-information/$taxYear/gains/policy-summary/$sessionId"
-  }
+  private def url(taxYear: Int): String = s"/update-and-submit-income-tax-return/additional-information/$taxYear/gains/policy-summary/$sessionId"
 
   private def disableSplitGains: (String, Boolean) = "feature-switch.split-gains" -> false
 
@@ -55,6 +53,7 @@ class PolicySummaryControllerISpec extends IntegrationTest {
         .build()
 
       running(application) {
+        clearSession()
         populateSessionData()
         authoriseAgentOrIndividual(isAgent = false)
 
@@ -87,6 +86,7 @@ class PolicySummaryControllerISpec extends IntegrationTest {
         .build()
 
       running(application) {
+        clearSession()
         populateSessionData()
         authoriseAgentOrIndividual(isAgent = false)
 
@@ -805,7 +805,7 @@ class PolicySummaryControllerISpec extends IntegrationTest {
         userDataStub(gainsPriorDataModel, nino, taxYear)
 
         val request = FakeRequest(POST, url(taxYear))
-          .withHeaders(HeaderNames.COOKIE -> playSessionCookies(taxYear))
+          .withHeaders(HeaderNames.COOKIE -> playSessionCookies(taxYear), "Csrf-Token" -> "nocheck")
           .withFormUrlEncodedBody("journey" -> "gains")
 
         val result = route(application, request).value
@@ -824,7 +824,7 @@ class PolicySummaryControllerISpec extends IntegrationTest {
         userDataStub(gainsPriorDataModel, nino, taxYear)
 
         val request = FakeRequest(POST, url(taxYear))
-          .withHeaders(HeaderNames.COOKIE -> playSessionCookies(taxYear))
+          .withHeaders(HeaderNames.COOKIE -> playSessionCookies(taxYear), "Csrf-Token" -> "nocheck")
           .withFormUrlEncodedBody("journey" -> "gains")
 
         val result = route(applicationWithBackendMongo, request).value

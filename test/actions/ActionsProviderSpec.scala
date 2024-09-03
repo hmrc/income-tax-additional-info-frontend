@@ -35,7 +35,6 @@ class ActionsProviderSpec extends ControllerUnitTest
 
   private val actionsProvider = new ActionsProvider(
     mockAuthorisedAction,
-    mockErrorHandler,
     appConfig
   )
 
@@ -45,7 +44,7 @@ class ActionsProviderSpec extends ControllerUnitTest
 
       val underTest = actionsProvider.endOfYear(taxYearEOY)(block = anyBlock)
 
-      await(underTest(fakeIndividualRequest)) shouldBe Redirect(UnauthorisedUserErrorController.show)
+      await(underTest(fakeIndividualRequest)) shouldBe Redirect(UnauthorisedUserErrorController.show())
     }
 
     "redirect to Income Tax Submission Overview when in year" in {
