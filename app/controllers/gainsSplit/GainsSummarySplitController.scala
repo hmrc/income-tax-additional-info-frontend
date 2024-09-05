@@ -59,7 +59,7 @@ class GainsSummarySplitController @Inject()(authorisedAction: AuthorisedAction,
               }
 
               if (priorData.isEmpty) {
-                logger.info("[GainsSummarySplitController][show] No policy type in request, redirecting to task list.")
+                logger.info("[GainsSummarySplitController][show] No policy type in request or no prior exists, redirecting to task list.")
                 Future.successful(Redirect(s"${appConfig.incomeTaxSubmissionBaseUrl}/$taxYear/tasklist"))
               } else {
                 gainsSessionService.createSessionData(AllGainsSessionModel(priorData, gateway = Some(true)), taxYear)(errorHandler.internalServerError())(

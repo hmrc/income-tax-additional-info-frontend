@@ -32,6 +32,7 @@ import uk.gov.hmrc.play.audit.http.connector.AuditResult
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 import views.html.pages.gains.PolicySummaryPageView
 
+import java.time.Instant
 import javax.inject.{Inject, Singleton}
 import scala.collection.immutable.ListMap
 import scala.concurrent.{ExecutionContext, Future}
@@ -62,18 +63,17 @@ class PolicySummaryController @Inject()(authorisedAction: AuthorisedAction,
                       Future.successful(handleUnfinishedRedirect(policyCya, taxYear))
                     case Some(_) =>
                       gainsSessionService.updateSessionData(
-                        AllGainsSessionModel(data.allGains, data.gateway), taxYear)(Future.successful(errorHandler.internalServerError())) {
-                        Future.successful(Ok(view(taxYear, data.allGains, true, sessionId)))
-                      }.flatten
-                    case None => {
+                        AllGainsSessionModel(data.allGains, data.gateway), taxYear)(errorHandler.internalServerError()) {
+                        Ok(view(taxYear, data.allGains, gateway = true, sessionId))
+                      }
+                    case None =>
                       logger.info("[PolicySummaryController][show] No CYA data in session. Redirecting to the overview page.")
                       Future.successful(Redirect(appConfig.incomeTaxSubmissionOverviewUrl(taxYear)))
-                    }
                   }
                 } else {
                   gainsSessionService.updateSessionData(
                     AllGainsSessionModel(data.allGains, data.gateway), taxYear)(errorHandler.internalServerError()) {
-                    Ok(view(taxYear, data.allGains, false, sessionId))
+                    Ok(view(taxYear, data.allGains, gateway = false, sessionId))
                   }
                 }
             }
@@ -100,8 +100,11 @@ class PolicySummaryController @Inject()(authorisedAction: AuthorisedAction,
                 }
               case _ =>
                 val currentPolicyList: Seq[PolicyCyaModel] = cya.allGains.filter(_.sessionId == sessionId)
-                val priorData: Seq[PolicyCyaModel] = cya.allGains.filterNot(_.sessionId == sessionId).filter(_.isFinished)
-                val submissionData: Seq[PolicyCyaModel] = currentPolicyList ++ priorData
+                val priorData: Seq[PolicyCyaModel] = prior.getOrElse(GainsPriorDataModel(Instant.now().toString))
+                  .toPolicyCya
+                  .filterNot(_.sessionId == sessionId)
+                  .filter(_.isFinished)
+
                 val optionalQueryParam: Option[String] = if (appConfig.isSplitGains) {
                   Some(currentPolicyList.head.policyType.getOrElse(""))
                 } else {
@@ -109,12 +112,13 @@ class PolicySummaryController @Inject()(authorisedAction: AuthorisedAction,
                 }
 
                 submitGainsAndAudit(
-                  Some(AllGainsSessionModel(submissionData).toSubmissionModel),
+                  Some(AllGainsSessionModel(currentPolicyList ++ priorData).toSubmissionModel),
                   taxYear,
                   user,
                   prior,
                   cya,
-                  Redirect(controllers.gainsBase.routes.GainsSummaryBaseController.show(taxYear, optionalQueryParam)))
+                  Redirect(controllers.gainsBase.routes.GainsSummaryBaseController.show(taxYear, optionalQueryParam))
+                )
             }
           case (_, _) =>
             Future.successful(errorHandler.internalServerError())
@@ -198,6 +202,6 @@ class PolicySummaryController @Inject()(authorisedAction: AuthorisedAction,
 
     val cya: ListMap[Call, Option[_]] = cyaCommon ++ cyaPolicyHeldPrevious ++ cyaSpecific
     cya.find(x => x._2.isEmpty)
-      .fold(Ok(view(taxYear, Seq(cyaModel), true, cyaModel.sessionId)))(emptyValue => Redirect(emptyValue._1))
+      .fold(Ok(view(taxYear, Seq(cyaModel), gateway = true, cyaModel.sessionId)))(emptyValue => Redirect(emptyValue._1))
   }
 }

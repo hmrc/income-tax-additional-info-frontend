@@ -226,7 +226,7 @@ class PolicyNameSplitControllerISpec extends IntegrationTest with ViewHelper wit
       }
     }
 
-    "return an INTERNAL_SERVER_ERROR when no sessionId matches" in {
+    "render the page with a new session when no sessionId matches" in {
       val application = GuiceApplicationBuilder()
         .in(Environment.simple(mode = Mode.Dev))
         .configure(config ++ Seq("feature-switch.split-gains" -> true))
@@ -243,11 +243,11 @@ class PolicyNameSplitControllerISpec extends IntegrationTest with ViewHelper wit
 
         val result = route(application, request).value
 
-        status(result) mustEqual INTERNAL_SERVER_ERROR
+        status(result) mustEqual OK
       }
     }
 
-    "redirect to task list if no valid parameter is passed" in {
+    "render the page with an empty model when an invalid param is passed" in {
       val application = GuiceApplicationBuilder()
         .in(Environment.simple(mode = Mode.Dev))
         .configure(config ++ Seq("feature-switch.split-gains" -> true))
@@ -264,8 +264,7 @@ class PolicyNameSplitControllerISpec extends IntegrationTest with ViewHelper wit
 
         val result = route(application, request).value
 
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result) shouldBe Some(s"http://localhost:11111/update-and-submit-income-tax-return/$taxYear/tasklist")
+        status(result) mustEqual OK
       }
     }
   }

@@ -55,35 +55,39 @@ class PolicyNameSplitController @Inject()(authorisedAction: AuthorisedAction,
 
   def show(taxYear: Int, sessionId: String, policyType: Option[String]): Action[AnyContent] = authorisedAction.async { implicit request =>
 
-    val gainsWithLifeInsurance = AllGainsSessionModel(Seq(PolicyCyaModel(sessionId, Some(LIFE_INSURANCE))), Some(true))
-    val gainsWithAnnuity = AllGainsSessionModel(Seq(PolicyCyaModel(sessionId, Some(LIFE_ANNUITY))), Some(true))
-    val gainsWithCapitalRedemption = AllGainsSessionModel(Seq(PolicyCyaModel(sessionId, Some(CAPITAL_REDEMPTION))), Some(true))
-    val gainsWithVoidedIsa = AllGainsSessionModel(Seq(PolicyCyaModel(sessionId, Some(VOIDED_ISA))), Some(true))
+    def gainWithPolicyType(policyType: String): AllGainsSessionModel = AllGainsSessionModel(Seq(PolicyCyaModel(sessionId, Some(policyType))), Some(true))
 
     policyType.getOrElse("") match {
-      case LIFE_INSURANCE => loadView(taxYear, sessionId, gainsWithLifeInsurance)
-      case LIFE_ANNUITY => loadView(taxYear, sessionId, gainsWithAnnuity)
-      case CAPITAL_REDEMPTION => loadView(taxYear, sessionId, gainsWithCapitalRedemption)
-      case VOIDED_ISA => loadView(taxYear, sessionId, gainsWithVoidedIsa)
-      case _ =>
-        logger.info("[PolicyNameSplitController][show] No policy type in request, redirecting to task list")
-        Future.successful(Redirect(s"${appConfig.incomeTaxSubmissionBaseUrl}/$taxYear/tasklist"))
+      case LIFE_INSURANCE => loadView(taxYear, sessionId, Some(gainWithPolicyType(LIFE_INSURANCE)))
+      case LIFE_ANNUITY => loadView(taxYear, sessionId, Some(gainWithPolicyType(LIFE_ANNUITY)))
+      case CAPITAL_REDEMPTION => loadView(taxYear, sessionId, Some(gainWithPolicyType(CAPITAL_REDEMPTION)))
+      case VOIDED_ISA => loadView(taxYear, sessionId, Some(gainWithPolicyType(VOIDED_ISA)))
+      case _ => loadView(taxYear, sessionId, None)
     }
   }
 
-  private def loadView(taxYear: Int, sessionId: String, gainsModel: AllGainsSessionModel)
+  private def loadView(taxYear: Int, sessionId: String, gainsModel: Option[AllGainsSessionModel])
                       (implicit request: AuthorisationRequest[AnyContent]): Future[Result] = {
     gainsSessionService.getSessionData(taxYear).flatMap {
       case Left(_) => Future.successful(errorHandler.internalServerError())
       case Right(cya) =>
-        cya.fold(createSession(taxYear, sessionId, gainsModel)) {
+        cya.fold(createSession(taxYear, sessionId, gainsModel.getOrElse(AllGainsSessionModel(Seq.empty, None)))) {
           cyaData =>
             cyaData.gains.fold(Future.successful(errorHandler.internalServerError())) {
               data =>
                 data.allGains.find(_.sessionId == sessionId) match {
                   case None =>
                     logger.info("[PolicyNameSplitController][submit] No policy exists with session id passed")
-                    Future.successful(errorHandler.internalServerError())
+                    gainsSessionService.updateSessionData(
+                      gainsModel.get.copy(allGains = Seq(
+                        PolicyCyaModel(
+                          sessionId,
+                          gainsModel.getOrElse(AllGainsSessionModel(Seq.empty, None)).allGains.headOption.getOrElse(PolicyCyaModel(sessionId)).policyType)
+                      )),
+                      taxYear
+                    )(errorHandler.internalServerError())(
+                      Ok(view(taxYear, form(request.user.isAgent), sessionId))
+                    )
                   case Some(value) => Future.successful(Ok(view(taxYear, form(request.user.isAgent).fill(value.policyNumber.getOrElse("")), sessionId)))
                 }
             }

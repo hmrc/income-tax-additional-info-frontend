@@ -16,7 +16,7 @@
 
 package actions
 
-import config.{AppConfig, ErrorHandler}
+import config.AppConfig
 import models.requests.AuthorisationRequest
 import play.api.mvc.{ActionBuilder, AnyContent}
 
