@@ -40,6 +40,22 @@
 
 @headingForUse = @{titleForUse}
 
+@addNewPolicyUrl = @{
+    if (appConfig.isSplitGains) {
+        controllers.gainsBase.routes.PolicyNameBaseController.show(taxYear, s"$randomUUID", gain.head.policyType)
+    } else {
+        controllers.gains.routes.PolicyTypeController.show(taxYear, s"$randomUUID")
+    }
+}
+
+@continueUrl = @{
+    if (appConfig.isSplitGains) {
+        s"${appConfig.incomeTaxSubmissionBaseUrl}/$taxYear/tasklist"
+    } else {
+        appConfig.incomeTaxSubmissionOverviewUrl(taxYear)
+    }
+}
+
 @emptyContent = {
     @heading(messages("common.gains.policies"), Some(messages("gains.caption", (taxYear - 1).toString, taxYear.toString)))
 
@@ -98,13 +114,13 @@
 </dl>
 
 <p class="govuk-body">
-    <a href=@controllers.gains.routes.PolicyTypeController.show(taxYear, s"session-$randomUUID") class="govuk-link">
+    <a href=@addNewPolicyUrl class="govuk-link">
         @messages("gains.policies-add.link.text")
     </a>
 </p>
 
     @button(
-        href = Some(appConfig.incomeTaxSubmissionOverviewUrl(taxYear)),
+        href = Some(continueUrl),
         alternativeText = "common.return.to.overview",
         attributes = Map("id" -> "returnToOverviewPageBtn")
     )

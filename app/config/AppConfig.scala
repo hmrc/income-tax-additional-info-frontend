@@ -59,6 +59,7 @@ class AppConfig @Inject()(servicesConfig: ServicesConfig) {
   lazy val additionalInformationServiceBaseUrl: String = s"${servicesConfig.getString(additionalInformationUrlKey)}/income-tax-additional-information"
 
   lazy val backendSessionEnabled: Boolean = servicesConfig.getBoolean(key = "feature-switch.backendSessionEnabled")
+  def isSplitGains: Boolean = servicesConfig.getBoolean("feature-switch.split-gains")
 
   // Mongo config
   lazy val encryptionKey: String = servicesConfig.getString("mongodb.encryption.key")

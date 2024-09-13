@@ -257,5 +257,4 @@ class PoliciesRemovePageViewSpec extends ViewUnitTest {
       }
     }
   }
-
 }

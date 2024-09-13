@@ -28,12 +28,11 @@ import views.html.pages.gains.SectionCompletedStateView
 
 import javax.inject.Inject
 import scala.annotation.unused
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.Future
 
 class SectionCompletedStateController @Inject() (authorisedAction: AuthorisedAction, view: SectionCompletedStateView)
                                                 (implicit appConfig: AppConfig,
-                                                 mcc: MessagesControllerComponents,
-                                                 ec: ExecutionContext) extends FrontendController(mcc) with I18nSupport {
+                                                 mcc: MessagesControllerComponents) extends FrontendController(mcc) with I18nSupport {
 
   def form: Form[Boolean] = YesNoForm.yesNoForm(
     "gains.sectionCompletedState.error.required")

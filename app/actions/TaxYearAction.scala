@@ -51,7 +51,7 @@ case class TaxYearAction(taxYear: Int,
       } else {
         val logMessage = s"[TaxYearAction][refine] Invalid tax year, redirecting to error page"
         logger.info(logMessage)
-        Left(Redirect(controllers.errors.routes.TaxYearErrorController.show))
+        Left(Redirect(controllers.errors.routes.TaxYearErrorController.show()))
       }
     }
 

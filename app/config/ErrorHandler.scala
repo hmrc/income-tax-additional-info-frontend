@@ -19,21 +19,20 @@ package config
 import play.api.http.Status._
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.Results._
-import play.api.mvc.{Request, RequestHeader, Result}
+import play.api.mvc.{Request, Result}
 import play.twirl.api.Html
-import uk.gov.hmrc.play.bootstrap.frontend.http.FrontendErrorHandler
+import uk.gov.hmrc.play.bootstrap.frontend.http.LegacyFrontendErrorHandler
 import views.html.templates.{InternalServerErrorTemplate, NotFoundTemplate, ServiceUnavailableTemplate}
 
 import javax.inject.{Inject, Singleton}
-import scala.concurrent.Future
 
-// TODO: Test me
+// TODO: Move to FrontendErrorHandler
 @Singleton
 class ErrorHandler @Inject()(internalServerErrorTemplate: InternalServerErrorTemplate,
                              serviceUnavailableTemplate: ServiceUnavailableTemplate,
                              notFoundTemplate: NotFoundTemplate,
                              override val messagesApi: MessagesApi)
-                            (implicit appConfig: AppConfig) extends FrontendErrorHandler with I18nSupport {
+                            (implicit appConfig: AppConfig) extends LegacyFrontendErrorHandler with I18nSupport {
 
   override def standardErrorTemplate(pageTitle: String, heading: String, message: String)(implicit request: Request[_]): Html =
     internalServerErrorTemplate()
@@ -45,10 +44,5 @@ class ErrorHandler @Inject()(internalServerErrorTemplate: InternalServerErrorTem
   def handleError(status: Int)(implicit request: Request[_]): Result = status match {
     case SERVICE_UNAVAILABLE => ServiceUnavailable(serviceUnavailableTemplate())
     case _ => InternalServerError(internalServerErrorTemplate())
-  }
-
-  override def onClientError(request: RequestHeader, statusCode: Int, message: String): Future[Result] = statusCode match {
-    case NOT_FOUND => Future.successful(NotFound(notFoundTemplate(request.withBody(body = ""))))
-    case _ => Future.successful(InternalServerError(internalServerErrorTemplate()(request.withBody(body = ""), request2Messages(request), appConfig)))
   }
 }

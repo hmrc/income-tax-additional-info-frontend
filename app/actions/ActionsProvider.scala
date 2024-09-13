@@ -16,7 +16,7 @@
 
 package actions
 
-import config.{AppConfig, ErrorHandler}
+import config.AppConfig
 import models.requests.AuthorisationRequest
 import play.api.mvc.{ActionBuilder, AnyContent}
 
@@ -25,7 +25,6 @@ import scala.concurrent.ExecutionContext
 
 @Singleton
 class ActionsProvider @Inject()(authAction: AuthorisedAction,
-                                errorHandler: ErrorHandler,
                                 appConfig: AppConfig)
                                (implicit ec: ExecutionContext) {
   def endOfYear(taxYear: Int): ActionBuilder[AuthorisationRequest, AnyContent] =

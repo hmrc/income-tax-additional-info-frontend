@@ -64,6 +64,5 @@ class GainsSummaryControllerISpec extends IntegrationTest {
 
       result.status shouldBe OK
     }
-
   }
 }

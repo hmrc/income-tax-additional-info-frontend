@@ -90,7 +90,7 @@ class PolicyTypeController @Inject()(authorisedAction: AuthorisedAction,
               if (newData.filter(_.sessionId == sessionId).head.isFinished) {
                 Redirect(controllers.gains.routes.PolicySummaryController.show(taxYear, sessionId))
               } else {
-                Redirect(controllers.gains.routes.PolicyNameController.show(taxYear, sessionId))
+                Redirect(controllers.gainsBase.routes.PolicyNameBaseController.show(taxYear, sessionId, None))
               }
             }
         }

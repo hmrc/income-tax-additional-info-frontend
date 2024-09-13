@@ -97,7 +97,7 @@ class AuthorisedAction @Inject()(authService: AuthorisationService,
           case (None, _) =>
             val logMessage = s"[AuthorisedAction][individualAuthentication] - User has no MTD IT enrolment. Redirecting user to sign up for MTD."
             logger.info(logMessage)
-            Future.successful(Redirect(IndividualAuthErrorController.show))
+            Future.successful(Redirect(IndividualAuthErrorController.show()))
         }
       case _ =>
         val logMessage = "[AuthorisedAction][individualAuthentication] User has confidence level below 250, routing user to IV uplift."
@@ -135,7 +135,7 @@ class AuthorisedAction @Inject()(authService: AuthorisationService,
               case None =>
                 val logMessage = "[AuthorisedAction][agentAuthentication] Agent with no HMRC-AS-AGENT enrolment. Rendering unauthorised view."
                 logger.info(logMessage)
-                Future.successful(Redirect(YouNeedAgentServicesController.show))
+                Future.successful(Redirect(YouNeedAgentServicesController.show()))
             }
           } recover {
           case _: NoActiveSession =>
@@ -145,7 +145,7 @@ class AuthorisedAction @Inject()(authService: AuthorisationService,
           case _: AuthorisationException =>
             val logMessage = s"[AuthorisedAction][agentAuthentication] - Agent does not have delegated authority for Client."
             logger.info(logMessage)
-            Redirect(AgentAuthErrorController.show)
+            Redirect(AgentAuthErrorController.show())
         }
       case (mtditid, nino) =>
         val logMessage = s"[AuthorisedAction][agentAuthentication] - Agent does not have session key values. " +
@@ -167,7 +167,7 @@ class AuthorisedAction @Inject()(authService: AuthorisationService,
   private def redirectToUnauthorisedUserErrorPage(): Result = {
     val logMessage = s"[AuthorisedAction][invokeBlock] - User failed to authenticate"
     logger.info(logMessage)
-    Redirect(UnauthorisedUserErrorController.show)
+    Redirect(UnauthorisedUserErrorController.show())
   }
 
   private def redirectToSignInPage(): Result = {
