@@ -98,7 +98,7 @@
                 legend = Some(Legend(
                 content = Text({messages(s"gains.policy-type.question.${if(request.user.isAgent) "agent" else "individual"}")}),
                 classes = "govuk-fieldset__legend--m",
-                isPageHeading = true
+                isPageHeading = false
             ))
         )),
         errorMessage = if (form.errors.nonEmpty) Some(ErrorMessage(content = Text(messages(form.errors.map(_.message).head)),visuallyHiddenText = Some(messages("govukErrorMessage.visuallyHiddenText")))) else None,

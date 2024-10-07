@@ -35,7 +35,7 @@ class PolicyTypePageViewSpec extends ViewUnitTest {
 
   object Selectors {
     val paragraph = "#main-content > div > div > p"
-    val radioHeading = "#main-content > div > div > form > div > fieldset > legend > h1"
+    val radioHeading = "#main-content > div > div > form > div > fieldset > legend"
     val radioItemOne = "#main-content > div > div > form > div > fieldset > div > div:nth-child(1) > label"
     val radioItemTwo = "#main-content > div > div > form > div > fieldset > div > div:nth-child(2) > label"
     val radioItemThree = "#main-content > div > div > form > div > fieldset > div > div:nth-child(3) > label"
