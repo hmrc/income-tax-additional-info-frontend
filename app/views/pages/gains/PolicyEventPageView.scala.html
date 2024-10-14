@@ -79,17 +79,17 @@
         )
     )
 
-    @p(Html(messages("gains.policy-event.question.sub-title")), "govuk-heading-m", None)
-
-
     @formWithCsrf(action = controllers.gains.routes.PolicyEventController.submit(taxYear, session)) {
         @govukRadios(Radios(
             fieldset = Some(Fieldset(
                 legend = Some(Legend(
-                content = Text({messages(s"gains.policy-event.question.paragraph1")}),
-                classes = "govuk-hint",
+                content = Text({messages(s"gains.policy-event.question.sub-title")}),
+                classes = "govuk-fieldset__legend govuk-fieldset__legend--m",
                 isPageHeading = false
             ))
+        )),
+        hint = Some(Hint(
+            content = HtmlContent(messages(s"gains.policy-event.question.paragraph1"))
         )),
         errorMessage = if (form.errors.nonEmpty) Some(ErrorMessage(content = Text(messages(form.errors.map(_.message).head)), visuallyHiddenText = Some(messages("govukErrorMessage.visuallyHiddenText")))) else None,
         name = "policy-event",
@@ -133,7 +133,6 @@
             )
         )
         ))
-
         @button()
     }
 

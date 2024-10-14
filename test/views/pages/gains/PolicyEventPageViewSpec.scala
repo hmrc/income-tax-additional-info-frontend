@@ -34,8 +34,8 @@ class PolicyEventPageViewSpec extends ViewUnitTest {
 
 
   object Selectors {
+    val hintText = "#main-content > div > div > form > div > fieldset > .govuk-hint"
     val legendText = "#main-content > div > div > form > div > fieldset > legend"
-    val subTitle = "#main-content > div > div > p"
 
     val radioItemOne = "#main-content > div > div > form > div > fieldset > div > div:nth-child(1) > label"
     val radioItemTwo = "#main-content > div > div > form > div > fieldset > div > div:nth-child(2) > label"
@@ -64,14 +64,14 @@ class PolicyEventPageViewSpec extends ViewUnitTest {
     val expectedTitle: String
     val expectedErrorTitle: String
     val expectedCaption: Int => String
-    val expectedLegendText: String
+    val expectedHintText: String
     val expectedRadioItemOne: String
     val expectedRadioItemTwo: String
     val expectedRadioItemThree: String
     val expectedRadioItemFour: String
     val expectedRadioItemFive: String
     val expectedButtonText: String
-    val expectedSubTitle: String
+    val expectedLegendText: String
     val expectedHelpLinkText: String
     val expectedHelpDropdownTitle: String
     val expectedHelpContentParagraph: String
@@ -93,8 +93,8 @@ class PolicyEventPageViewSpec extends ViewUnitTest {
     override val expectedCaption: Int => String = (taxYear: Int) => s"Gains from life insurance policies and contracts for 6 April ${taxYear - 1} to 5 April $taxYear"
     override val expectedButtonText: String = "Continue"
     override val expectedHelpLinkText: String = "Get help with this page"
-    override val expectedSubTitle: String = "What event caused this gain?"
-    override val expectedLegendText: String = "Select one option."
+    override val expectedLegendText: String = "What event caused this gain?"
+    override val expectedHintText: String = "Select one option."
     override val expectedHelpDropdownTitle: String = "More about gains events"
     override val expectedRadioItemOne: String = "Full or part surrender"
     override val expectedRadioItemTwo: String = "Policy matured or a death"
@@ -119,8 +119,8 @@ class PolicyEventPageViewSpec extends ViewUnitTest {
     override val expectedCaption: Int => String = (taxYear: Int) => s"Enillion o bolisïau yswiriant bywyd a chontractau ar gyfer 6 Ebrill ${taxYear - 1} i 5 Ebrill $taxYear"
     override val expectedButtonText: String = "Yn eich blaen"
     override val expectedHelpLinkText: String = "Help gyda’r dudalen hon"
-    override val expectedSubTitle: String = "Beth achosodd yr enillion hyn?"
-    override val expectedLegendText: String = "Dewiswch un opsiwn."
+    override val expectedLegendText: String = "Beth achosodd yr enillion hyn?"
+    override val expectedHintText: String = "Dewiswch un opsiwn."
     override val expectedHelpDropdownTitle: String = "Rhagor am ddigwyddiad o ennill"
     override val expectedRadioItemOne: String = "Ildio’n llawn neu’n rhannol"
     override val expectedRadioItemTwo: String = "Aeddfedodd y polisi neu bu marwolaeth"
@@ -161,8 +161,8 @@ class PolicyEventPageViewSpec extends ViewUnitTest {
         titleCheck(userScenario.commonExpectedResults.expectedTitle, userScenario.isWelsh)
         captionCheck(userScenario.commonExpectedResults.expectedCaption(taxYear))
         h1Check(userScenario.commonExpectedResults.expectedHeading)
-        textOnPageCheck(userScenario.commonExpectedResults.expectedSubTitle, Selectors.subTitle)
         textOnPageCheck(userScenario.commonExpectedResults.expectedLegendText, Selectors.legendText)
+        textOnPageCheck(userScenario.commonExpectedResults.expectedHintText, Selectors.hintText)
         textOnPageCheck(userScenario.commonExpectedResults.expectedRadioItemOne, Selectors.radioItemOne)
         textOnPageCheck(userScenario.commonExpectedResults.expectedRadioItemTwo, Selectors.radioItemTwo)
         textOnPageCheck(userScenario.commonExpectedResults.expectedRadioItemThree, Selectors.radioItemThree)
@@ -199,8 +199,8 @@ class PolicyEventPageViewSpec extends ViewUnitTest {
         titleCheck(userScenario.commonExpectedResults.expectedErrorTitle, userScenario.isWelsh)
         captionCheck(userScenario.commonExpectedResults.expectedCaption(taxYear))
         h1Check(userScenario.commonExpectedResults.expectedHeading)
-        textOnPageCheck(userScenario.commonExpectedResults.expectedSubTitle, Selectors.subTitle)
         textOnPageCheck(userScenario.commonExpectedResults.expectedLegendText, Selectors.legendText)
+        textOnPageCheck(userScenario.commonExpectedResults.expectedHintText, Selectors.hintText)
         textOnPageCheck(userScenario.commonExpectedResults.expectedRadioItemOne, Selectors.radioItemOne)
         textOnPageCheck(userScenario.commonExpectedResults.expectedRadioItemTwo, Selectors.radioItemTwo)
         textOnPageCheck(userScenario.commonExpectedResults.expectedRadioItemThree, Selectors.radioItemThree)
