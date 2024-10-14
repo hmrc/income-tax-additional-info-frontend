@@ -50,7 +50,7 @@
             id = "amount",
             name = "amount",
             currency = true,
-            label = messages(s"gains.paid-tax-amount.question.label.${if(request.user.isAgent) "agent" else "individual"}"),
+            label = messages(s"gains.paid-tax-amount.question.title.${if(request.user.isAgent) "agent" else "individual"}"),
             labelHidden = true,
             hint = Some(messages(s"common.monetary.input.hint")),
             classes = Some("govuk-input--width-5")
