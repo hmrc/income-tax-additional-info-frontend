@@ -16,6 +16,7 @@
 
 package actions
 
+import config.AppConfig
 import org.apache.pekko.actor.ActorSystem
 import models.authorisation.Enrolment.{Agent, Individual, Nino}
 import models.authorisation.SessionValues.{CLIENT_MTDITID, CLIENT_NINO}
@@ -30,6 +31,7 @@ import support.ControllerUnitTest
 import support.builders.UserBuilder.{aUser, anAgentUser}
 import support.mocks.MockAuthorisationService
 import support.providers.FakeRequestProvider
+import support.stubs.AppConfigStub
 import uk.gov.hmrc.auth.core._
 import uk.gov.hmrc.auth.core.authorise.Predicate
 import uk.gov.hmrc.auth.core.retrieve.Retrieval
@@ -63,7 +65,19 @@ class AuthorisedActionSpec extends ControllerUnitTest
     Enrolment(Agent.key, Seq(EnrolmentIdentifier(Agent.value, anAgentUser.arn.get)), "Activated")
   ))
 
+  private val secondaryAgentEnrolments = Enrolments(Set(
+    Enrolment("HMRC-MTD-IT-SUPP", Seq(EnrolmentIdentifier("MTDITID", aUser.mtditid)), "Activated"),
+    Enrolment(Agent.key, Seq(EnrolmentIdentifier(Agent.value, anAgentUser.arn.get)), "Activated")
+  ))
   private val underTest = new AuthorisedAction(authorisationService, appConfig, mcc: ControllerComponents)(executionContext)
+
+  private def configWithSupportingAgentsEnabled(): AppConfig = new AppConfigStub().featureSwitchConfigs(("emaSupportingAgentsEnabled"-> true))
+
+  private def configWithSupportingAgentsDisabled(): AppConfig = new AppConfigStub().featureSwitchConfigs(("emaSupportingAgentsEnabled"-> false))
+
+  private val underTestEnabled = new AuthorisedAction(authorisationService, configWithSupportingAgentsEnabled(), mcc: ControllerComponents)(executionContext)
+  private val underTestDisabled = new AuthorisedAction(authorisationService, configWithSupportingAgentsDisabled(), mcc: ControllerComponents)(executionContext)
+
 
   ".executionContext" should {
     "return the given execution context" in {
@@ -189,6 +203,58 @@ class AuthorisedActionSpec extends ControllerUnitTest
     }
   }
 
+  ".agentAuthenticated as secondary agent" should {
+    val block: AuthorisationRequest[AnyContent] => Future[Result] =
+      request => Future.successful(Ok(s"${request.user.mtditid} ${request.user.arn.getOrElse("No ARN")}"))
+
+    "fallback to secondary agent if primary fails" which {
+      lazy val result = {
+        mockAuthorisePredicates(underTestEnabled.primaryAgentPredicate(aUser.mtditid), Future.failed(InsufficientEnrolments("Primary failed")))
+
+        mockAuthorisePredicates(underTestEnabled.secondaryAgentPredicate(aUser.mtditid), Future.successful(secondaryAgentEnrolments))
+
+        await(underTestEnabled.agentAuthentication(block)(fakeRequestWithMtditidAndNino, headerCarrierWithSession))
+      }
+
+      "has a status of OK" in {
+        result.header.status shouldBe OK
+      }
+
+      "has the correct body for limited access" in {
+        await(result.body.consumeData.map(_.utf8String)) shouldBe s"${aUser.mtditid} 0987654321"
+      }
+
+      "not fallback to secondary agent if primary fails when supporting agents are disabled" which {
+        lazy val result = {
+
+          mockAuthorisePredicates(underTestEnabled.primaryAgentPredicate(aUser.mtditid), Future.failed(InsufficientEnrolments("Primary failed")))
+
+          mockAuthorisePredicates(underTestEnabled.secondaryAgentPredicate(aUser.mtditid), Future.failed(InsufficientEnrolments("Primary failed")))
+
+
+          await(underTestEnabled.agentAuthentication(block)(fakeRequestWithMtditidAndNino, headerCarrierWithSession))
+        }
+
+        "has a status of SEE_OTHER" in {
+          result.header.status shouldBe SEE_OTHER
+        }
+      }
+
+      "return error if both primary and secondary fails when supporting agents are enabled" which {
+        lazy val result = {
+
+          mockAuthorisePredicates(underTestDisabled.primaryAgentPredicate(aUser.mtditid), Future.failed(InsufficientEnrolments("Primary failed")))
+
+          await(underTestDisabled.agentAuthentication(block)(fakeRequestWithMtditidAndNino, headerCarrierWithSession))
+        }
+
+        "has a status of SEE_OTHER" in {
+          result.header.status shouldBe SEE_OTHER
+        }
+      }
+    }
+  }
+
   ".agentAuthenticated" should {
     val block: AuthorisationRequest[AnyContent] => Future[Result] = request => Future.successful(Ok(s"${request.user.mtditid} ${request.user.arn.get}"))
 
@@ -228,7 +294,7 @@ class AuthorisedActionSpec extends ControllerUnitTest
         lazy val result = {
           (mockAuthConnector.authorise(_: Predicate, _: Retrieval[_])(_: HeaderCarrier, _: ExecutionContext))
             .expects(*, *, *, *)
-            .returning(Future.failed(AuthException))
+            .returning(Future.failed(AuthException)).anyNumberOfTimes()
           await(underTest.agentAuthentication(block)(fakeRequestWithMtditidAndNino, headerCarrierWithSession))
         }
         result.header.status shouldBe SEE_OTHER
