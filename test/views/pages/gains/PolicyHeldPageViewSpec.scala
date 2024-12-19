@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -35,17 +35,17 @@ class PolicyHeldPageViewSpec extends ViewUnitTest {
   object Selectors {
     val paragraph = "#para1"
     val paragraph2 = "#para2"
-    val paragraph3 = "#para3"
     val subTitle = "#main-content > div > div > form > div > label"
     val continueButton = "#continue"
     val getHelpLink = "#help"
     val yearErrorHref = "#year"
+    val customerReferenceNumberHint = "#year-hint"
   }
 
   trait SpecificExpectedResults {
     val expectedParagraph: String
     val expectedParagraph2: String
-    val expectedParagraph3: String
+    val expectedHint: String
     val expectedSubTitle: String
     val expectedEmptyErrorText: String
     val expectedIncorrectFormatErrorText: String
@@ -84,7 +84,7 @@ class PolicyHeldPageViewSpec extends ViewUnitTest {
     override val expectedParagraph: String =
       "If you were a UK resident while you were the beneficial owner of the policy, enter the 'number of years' from the chargeable event certificate you received from your insurer."
     override val expectedParagraph2: String = "If you lived outside the UK while you were the beneficial owner of the policy, refer to how to reduce your tax amount (opens in new tab)"
-    override val expectedParagraph3: String = "If you've held the policy for less than a year, enter 0."
+    override val expectedHint: String = "If you've held the policy for less than a year, enter 0."
     override val expectedSubTitle: String = "How many years have you held this policy?"
     override val expectedEmptyErrorText: String = "Enter the number of years you have held this policy."
     override val expectedIncorrectFormatErrorText: String = "Enter the number of years you've held this policy in the correct format. For example, 12"
@@ -95,7 +95,7 @@ class PolicyHeldPageViewSpec extends ViewUnitTest {
     override val expectedParagraph: String =
       "Os oeddech yn breswylydd yn y DU tra oeddech yn berchennog llesiannol y polisi, nodwch ‘nifer y blynyddoedd’ sydd ar y dystysgrif digwyddiad trethadwy a gawsoch gan eich yswiriwr."
     override val expectedParagraph2: String = "Os oeddech yn byw y tu allan i’r DU tra oeddech yn berchennog llesiannol y polisi, dysgwch sut i ostwng swm eich treth (yn agor tab newydd)"
-    override val expectedParagraph3: String = "Os ydych wedi dal y polisi ers llai na blwyddyn, nodwch 0."
+    override val expectedHint: String = "Os ydych wedi dal y polisi ers llai na blwyddyn, nodwch 0."
     override val expectedSubTitle: String = "Ers sawl blwyddyn rydych wedi dal y polisi hwn?"
     override val expectedEmptyErrorText: String = "Nodwch nifer y blynyddoedd rydych wedi dal y polisi hwn."
     override val expectedIncorrectFormatErrorText: String = "Nodwch nifer y blynyddoedd rydych wedi dal y polisi hwn yn y fformat cywir. Er enghraifft, 12"
@@ -106,7 +106,7 @@ class PolicyHeldPageViewSpec extends ViewUnitTest {
     override val expectedParagraph: String =
       "If your client was a UK resident while they were the beneficial owner of the policy, enter the 'number of years' from the chargeable event certificate they received from their insurer."
     override val expectedParagraph2: String = "If your client lived outside the UK while they were the beneficial owner of the policy, refer to how to reduce their tax amount (opens in new tab)"
-    override val expectedParagraph3: String = "If your client has held the policy for less than a year, enter 0."
+    override val expectedHint: String = "If your client has held the policy for less than a year, enter 0."
     override val expectedSubTitle: String = "How many years has your client held this policy?"
     override val expectedEmptyErrorText: String = "Enter the number of years your client has held this policy."
     override val expectedIncorrectFormatErrorText: String = "Enter the number of years your client has held this policy in the correct format. For example, 12"
@@ -117,7 +117,7 @@ class PolicyHeldPageViewSpec extends ViewUnitTest {
     override val expectedParagraph: String =
       "Os oedd eich cleient yn breswylydd yn y DU tra oedd yn berchennog llesiannol y polisi, nodwch ‘nifer y blynyddoedd’ sydd ar y dystysgrif digwyddiad trethadwy a gafodd gan ei yswiriwr."
     override val expectedParagraph2: String = "Os oedd eich cleient yn byw y tu allan i’r DU tra oedd yn berchennog llesiannol y polisi, dysgwch sut i ostwng swm ei dreth (yn agor tab newydd)"
-    override val expectedParagraph3: String = "Os yw’ch cleient wedi dal y polisi am lai na blwyddyn, nodwch 0."
+    override val expectedHint: String = "Os yw’ch cleient wedi dal y polisi am lai na blwyddyn, nodwch 0."
     override val expectedSubTitle: String = "Ers sawl blwyddyn y mae’ch cleient wedi dal y polisi hwn?"
     override val expectedEmptyErrorText: String = "Nodwch nifer y blynyddoedd y mae’ch cleient wedi dal y polisi hwn."
     override val expectedIncorrectFormatErrorText: String = "Nodwch nifer y blynyddoedd y mae’ch cleient wedi dal y polisi hwn yn y fformat cywir. Er enghraifft, 12"
@@ -148,7 +148,7 @@ class PolicyHeldPageViewSpec extends ViewUnitTest {
         h1Check(userScenario.commonExpectedResults.expectedHeading)
         textOnPageCheck(userScenario.specificExpectedResults.get.expectedParagraph, Selectors.paragraph)
         textOnPageCheck(userScenario.specificExpectedResults.get.expectedParagraph2, Selectors.paragraph2)
-        textOnPageCheck(userScenario.specificExpectedResults.get.expectedParagraph3, Selectors.paragraph3)
+        hintTextCheck(userScenario.specificExpectedResults.get.expectedHint, Selectors.customerReferenceNumberHint)
         textOnPageCheck(userScenario.specificExpectedResults.get.expectedSubTitle, Selectors.subTitle)
         buttonCheck(userScenario.commonExpectedResults.expectedButtonText, Selectors.continueButton)
         linkCheck(userScenario.commonExpectedResults.expectedHelpLinkText, Selectors.getHelpLink, appConfig.contactUrl(userScenario.isAgent))
@@ -174,7 +174,7 @@ class PolicyHeldPageViewSpec extends ViewUnitTest {
         h1Check(userScenario.commonExpectedResults.expectedHeading)
         textOnPageCheck(userScenario.specificExpectedResults.get.expectedParagraph, Selectors.paragraph)
         textOnPageCheck(userScenario.specificExpectedResults.get.expectedParagraph2, Selectors.paragraph2)
-        textOnPageCheck(userScenario.specificExpectedResults.get.expectedParagraph3, Selectors.paragraph3)
+        hintTextCheck(userScenario.specificExpectedResults.get.expectedHint, Selectors.customerReferenceNumberHint)
         textOnPageCheck(userScenario.specificExpectedResults.get.expectedSubTitle, Selectors.subTitle)
         buttonCheck(userScenario.commonExpectedResults.expectedButtonText, Selectors.continueButton)
         linkCheck(userScenario.commonExpectedResults.expectedHelpLinkText, Selectors.getHelpLink, appConfig.contactUrl(userScenario.isAgent))
@@ -199,7 +199,7 @@ class PolicyHeldPageViewSpec extends ViewUnitTest {
         h1Check(userScenario.commonExpectedResults.expectedHeading)
         textOnPageCheck(userScenario.specificExpectedResults.get.expectedParagraph, Selectors.paragraph)
         textOnPageCheck(userScenario.specificExpectedResults.get.expectedParagraph2, Selectors.paragraph2)
-        textOnPageCheck(userScenario.specificExpectedResults.get.expectedParagraph3, Selectors.paragraph3)
+        hintTextCheck(userScenario.specificExpectedResults.get.expectedHint, Selectors.customerReferenceNumberHint)
         textOnPageCheck(userScenario.specificExpectedResults.get.expectedSubTitle, Selectors.subTitle)
         buttonCheck(userScenario.commonExpectedResults.expectedButtonText, Selectors.continueButton)
         linkCheck(userScenario.commonExpectedResults.expectedHelpLinkText, Selectors.getHelpLink, appConfig.contactUrl(userScenario.isAgent))
@@ -224,7 +224,7 @@ class PolicyHeldPageViewSpec extends ViewUnitTest {
         h1Check(userScenario.commonExpectedResults.expectedHeading)
         textOnPageCheck(userScenario.specificExpectedResults.get.expectedParagraph, Selectors.paragraph)
         textOnPageCheck(userScenario.specificExpectedResults.get.expectedParagraph2, Selectors.paragraph2)
-        textOnPageCheck(userScenario.specificExpectedResults.get.expectedParagraph3, Selectors.paragraph3)
+        hintTextCheck(userScenario.specificExpectedResults.get.expectedHint, Selectors.customerReferenceNumberHint)
         textOnPageCheck(userScenario.specificExpectedResults.get.expectedSubTitle, Selectors.subTitle)
         buttonCheck(userScenario.commonExpectedResults.expectedButtonText, Selectors.continueButton)
         linkCheck(userScenario.commonExpectedResults.expectedHelpLinkText, Selectors.getHelpLink, appConfig.contactUrl(userScenario.isAgent))

@@ -1,5 +1,5 @@
 @*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -56,8 +56,6 @@
         messages(s"common.gains.policy-held.paragraph.2.link-text.${if(request.user.isAgent) "agent" else "individual"}") + """</a>"""
     ), "govuk-body govuk-!-margin-bottom-4", Some("para2"))
 
-    @p(Html(messages(s"gains.policy-held.question.paragraph.${if(request.user.isAgent) "agent" else "individual"}")), "govuk-body govuk-!-margin-bottom-4", Some("para3"))
-
     @formWithCsrf(action = controllers.gains.routes.PolicyHeldController.submit(taxYear, session)) {
         @inputText(
             form = form,
@@ -66,6 +64,7 @@
             currency = false,
             label = messages(s"gains.policy-held.question.title.${if(request.user.isAgent) "agent" else "individual"}"),
             labelClasses = Some("govuk-label--m"),
+            hint = Some(messages(s"gains.policy-held.question.paragraph.${if(request.user.isAgent) "agent" else "individual"}")),
             classes = Some("govuk-input--width-2")
         )
 
