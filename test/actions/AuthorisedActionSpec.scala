@@ -22,14 +22,14 @@ import models.authorisation.Enrolment.{Agent, Individual, Nino}
 import models.authorisation.SessionValues.{CLIENT_MTDITID, CLIENT_NINO}
 import models.requests.AuthorisationRequest
 import org.scalamock.scalatest.MockFactory
-import play.api.http.Status.{OK, SEE_OTHER, UNAUTHORIZED}
-import play.api.mvc.Results.Ok
+import play.api.http.Status.{INTERNAL_SERVER_ERROR, OK, SEE_OTHER, UNAUTHORIZED}
+import play.api.mvc.Results.{InternalServerError, Ok}
 import play.api.mvc._
 import play.api.test.FakeRequest
 import play.api.test.Helpers.status
 import support.ControllerUnitTest
 import support.builders.UserBuilder.{aUser, anAgentUser}
-import support.mocks.MockAuthorisationService
+import support.mocks.{MockAuthorisationService, MockErrorHandler}
 import support.providers.FakeRequestProvider
 import support.stubs.AppConfigStub
 import uk.gov.hmrc.auth.core._
@@ -45,6 +45,7 @@ import scala.concurrent.{ExecutionContext, Future}
 class AuthorisedActionSpec extends ControllerUnitTest
   with FakeRequestProvider
   with MockAuthorisationService
+  with MockErrorHandler
   with MockFactory {
 
   private implicit val headerCarrierWithSession: HeaderCarrier = HeaderCarrier(sessionId = Some(SessionId(aUser.sessionId)))
@@ -69,14 +70,14 @@ class AuthorisedActionSpec extends ControllerUnitTest
     Enrolment("HMRC-MTD-IT-SUPP", Seq(EnrolmentIdentifier("MTDITID", aUser.mtditid)), "Activated"),
     Enrolment(Agent.key, Seq(EnrolmentIdentifier(Agent.value, anAgentUser.arn.get)), "Activated")
   ))
-  private val underTest = new AuthorisedAction(authorisationService, appConfig, mcc: ControllerComponents)(executionContext)
+  private val underTest = new AuthorisedAction(authorisationService, appConfig, mcc: ControllerComponents, mockErrorHandler)(executionContext)
 
   private def configWithSupportingAgentsEnabled(): AppConfig = new AppConfigStub().featureSwitchConfigs(("emaSupportingAgentsEnabled"-> true))
 
   private def configWithSupportingAgentsDisabled(): AppConfig = new AppConfigStub().featureSwitchConfigs(("emaSupportingAgentsEnabled"-> false))
 
-  private val underTestEnabled = new AuthorisedAction(authorisationService, configWithSupportingAgentsEnabled(), mcc: ControllerComponents)(executionContext)
-  private val underTestDisabled = new AuthorisedAction(authorisationService, configWithSupportingAgentsDisabled(), mcc: ControllerComponents)(executionContext)
+  private val underTestEnabled = new AuthorisedAction(authorisationService, configWithSupportingAgentsEnabled(), mcc: ControllerComponents, mockErrorHandler)(executionContext)
+  private val underTestDisabled = new AuthorisedAction(authorisationService, configWithSupportingAgentsDisabled(), mcc: ControllerComponents, mockErrorHandler)(executionContext)
 
 
   ".executionContext" should {
@@ -272,6 +273,29 @@ class AuthorisedActionSpec extends ControllerUnitTest
         "has the correct body" in {
           await(result.body.consumeData.map(_.utf8String)) shouldBe "1234567890 0987654321"
         }
+      }
+    }
+
+    "render ISE page" when {
+      "Agent authentication fails with a non-Auth related exception (Primary Agent)" in {
+
+        mockAuthorisePredicates(underTestEnabled.primaryAgentPredicate(aUser.mtditid), Future.failed(new Exception("bang")))
+        mockInternalServerError(InternalServerError)
+
+        val result = underTestEnabled.agentAuthentication(block)(fakeRequestWithMtditidAndNino, headerCarrierWithSession)
+
+        status(result) shouldBe INTERNAL_SERVER_ERROR
+      }
+
+      "Agent authentication fails with a non-Auth related exception (Secondary Agent)" in {
+
+        mockAuthorisePredicates(underTestEnabled.primaryAgentPredicate(aUser.mtditid), Future.failed(InsufficientEnrolments("Primary failed")))
+        mockAuthorisePredicates(underTestEnabled.secondaryAgentPredicate(aUser.mtditid), Future.failed(new Exception("bang")))
+        mockInternalServerError(InternalServerError)
+
+        val result = underTestEnabled.agentAuthentication(block)(fakeRequestWithMtditidAndNino, headerCarrierWithSession)
+
+        status(result) shouldBe INTERNAL_SERVER_ERROR
       }
     }
 
