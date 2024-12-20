@@ -22,7 +22,7 @@ import models.authorisation.Enrolment.{Agent, Individual, Nino}
 import models.authorisation.SessionValues.{CLIENT_MTDITID, CLIENT_NINO}
 import models.requests.AuthorisationRequest
 import org.scalamock.scalatest.MockFactory
-import play.api.http.Status.{OK, SEE_OTHER}
+import play.api.http.Status.{OK, SEE_OTHER, UNAUTHORIZED}
 import play.api.mvc.Results.Ok
 import play.api.mvc._
 import play.api.test.FakeRequest
@@ -229,7 +229,7 @@ class AuthorisedActionSpec extends ControllerUnitTest
 
           mockAuthorisePredicates(underTestEnabled.primaryAgentPredicate(aUser.mtditid), Future.failed(InsufficientEnrolments("Primary failed")))
 
-          mockAuthorisePredicates(underTestEnabled.secondaryAgentPredicate(aUser.mtditid), Future.failed(InsufficientEnrolments("Primary failed")))
+          mockAuthorisePredicates(underTestEnabled.secondaryAgentPredicate(aUser.mtditid), Future.failed(InsufficientEnrolments("Secondary failed")))
 
 
           await(underTestEnabled.agentAuthentication(block)(fakeRequestWithMtditidAndNino, headerCarrierWithSession))

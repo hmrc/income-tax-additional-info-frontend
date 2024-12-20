@@ -65,11 +65,11 @@ class AuthorisedAction @Inject()(authService: AuthorisationService,
   private def correlationId(correlationIdHeader: Option[String]): String = {
 
     if (correlationIdHeader.isDefined) {
-      logger.info("[AuthorisedAction]Valid CorrelationId header found.")
+      logger.warn("[AuthorisedAction]Valid CorrelationId header found.")
       correlationIdHeader.get
     } else {
       lazy val id = UUID.randomUUID().toString
-      logger.info(s"[AuthorisedAction]No valid CorrelationId found in headers. Defaulting Correlation Id. $id")
+      logger.warn(s"[AuthorisedAction]No valid CorrelationId found in headers. Defaulting Correlation Id. $id")
       id
     }
   }
@@ -150,15 +150,21 @@ class AuthorisedAction @Inject()(authService: AuthorisationService,
           .retrieve(allEnrolments) { enrolments =>
             populateAgent(block, request, hc, mtdItId, nino, enrolments)
           }.recoverWith {
-          case _: AuthorisationException =>
-            logAndRedirect(
-              "[AuthorisedAction][agentAuthentication] - Agent does not have secondary delegated authority for Client.",
-              AgentAuthErrorController.show)
-        }
+            case _: AuthorisationException =>
+              logger.warn(s"[AuthorisedAction][agentAuthentication] - Agent does not have secondary delegated authority for Client.")
+              Future(Unauthorized)
+            case e =>
+              logger.info(s"[AuthorisedAction][agentAuthentication] - Unexpected exception of type '${e.getClass.getSimpleName}' was caught.")
+              Future(InternalServerError)
+          }
       }else{
+        case _: AuthorisationException =>
         logAndRedirect(
           "[AuthorisedAction][agentAuthentication] - Agent does not have secondary delegated authority for Client.",
           AgentAuthErrorController.show)
+        case e =>
+          logger.info(s"[AuthorisedAction][agentAuthentication] - Unexpected exception of type '${e.getClass.getSimpleName}' was caught.")
+          Future(InternalServerError)
       }
   }
 
@@ -186,11 +192,11 @@ class AuthorisedAction @Inject()(authService: AuthorisationService,
   }.flatten
 
   private def logAndRedirect(logMessage: String, redirectUrl: => Call): Future[Result] = {
-    logger.info(logMessage)
+    logger.warn(logMessage)
     Future.successful(Redirect(redirectUrl))
   }
   private def logAndRedirectFromUrl(logMessage: String, redirectUrl: String): Future[Result] = {
-    logger.info(logMessage)
+    logger.warn(logMessage)
     Future.successful(Redirect(redirectUrl))
   }
 
@@ -209,13 +215,13 @@ class AuthorisedAction @Inject()(authService: AuthorisationService,
 
   private def redirectToUnauthorisedUserErrorPage(): Result = {
     val logMessage = s"[AuthorisedAction][invokeBlock] - User failed to authenticate"
-    logger.info(logMessage)
+    logger.warn(logMessage)
     Redirect(UnauthorisedUserErrorController.show)
   }
 
   private def redirectToSignInPage(): Result = {
     val logMessage = s"[AuthorisedAction][invokeBlock] - No active session. Redirecting to ${appConfig.signInUrl}"
-    logger.info(logMessage)
+    logger.warn(logMessage)
     Redirect(appConfig.signInUrl)
   }
 
