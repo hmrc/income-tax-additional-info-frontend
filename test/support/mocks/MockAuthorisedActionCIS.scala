@@ -34,7 +34,7 @@ import uk.gov.hmrc.http.HeaderCarrier
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.{ExecutionContext, Future}
 
-trait MockAuthorisedActionCIS extends AppConfigStubProvider
+trait MockAuthorisedActionCIS extends AppConfigStubProvider with MockErrorHandler
   with MockFactory {
 
   private val mockAuthConnector = mock[AuthConnector]
@@ -43,7 +43,8 @@ trait MockAuthorisedActionCIS extends AppConfigStubProvider
   protected val mockAuthorisedAction: AuthorisedAction = new AuthorisedAction(
     mockAuthService,
     appConfigStub,
-    stubMessagesControllerComponents()
+    stubMessagesControllerComponents(),
+    mockErrorHandler
   )
 
   protected def mockAuthAsAgent(): CallHandler4[Predicate, Retrieval[_], HeaderCarrier, ExecutionContext, Future[Any]] = {

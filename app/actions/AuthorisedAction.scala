@@ -16,7 +16,7 @@
 
 package actions
 
-import config.AppConfig
+import config.{AppConfig, ErrorHandler}
 import controllers.errors.routes.{AgentAuthErrorController, IndividualAuthErrorController, UnauthorisedUserErrorController, YouNeedAgentServicesController}
 import models.authorisation.Enrolment.{Agent, Individual, Nino}
 import models.authorisation.SessionValues
@@ -38,7 +38,8 @@ import scala.concurrent.{ExecutionContext, Future}
 
 class AuthorisedAction @Inject()(authService: AuthorisationService,
                                  appConfig: AppConfig,
-                                 cc: ControllerComponents)
+                                 cc: ControllerComponents,
+                                 errorHandler: ErrorHandler)
                                 (implicit ec: ExecutionContext)
   extends ActionBuilder[AuthorisationRequest, AnyContent] with Logging {
 
@@ -59,6 +60,8 @@ class AuthorisedAction @Inject()(authService: AuthorisationService,
     } recover {
       case _: NoActiveSession => redirectToSignInPage()
       case _: AuthorisationException => redirectToUnauthorisedUserErrorPage()
+      case e => logger.error(s"[AuthorisedAction][agentAuthentication] - Unexpected exception of type '${e.getClass.getSimpleName}' was caught.")
+        errorHandler.internalServerError()(request)
     }
   }
 
@@ -69,7 +72,7 @@ class AuthorisedAction @Inject()(authService: AuthorisationService,
       correlationIdHeader.get
     } else {
       lazy val id = UUID.randomUUID().toString
-      logger.info(s"[AuthorisedAction]No valid CorrelationId found in headers. Defaulting Correlation Id. $id")
+      logger.warn(s"[AuthorisedAction]No valid CorrelationId found in headers. Defaulting Correlation Id. $id")
       id
     }
   }
@@ -127,13 +130,13 @@ class AuthorisedAction @Inject()(authService: AuthorisationService,
           .retrieve(allEnrolments) { enrolments =>
             populateAgent(block, request, hc, mtdItId, nino, enrolments)
           }.recoverWith {
-          agentRecovery(block, request, mtdItId, nino)
-        }
+            agentRecovery(block, request, mtdItId, nino)
+          }
 
       case (mtditid, nino) =>
         logAndRedirectFromUrl(
           s"[AuthorisedAction][agentAuthentication] - Agent does not have session key values. " +
-          s"Redirecting to view & change. MTDITID missing:${mtditid.isEmpty}, NINO missing:${nino.isEmpty}",
+            s"Redirecting to view & change. MTDITID missing:${mtditid.isEmpty}, NINO missing:${nino.isEmpty}",
           appConfig.viewAndChangeEnterUtrUrl)
     }
   }
@@ -144,22 +147,28 @@ class AuthorisedAction @Inject()(authService: AuthorisationService,
       logAndRedirectFromUrl(
         s"[AuthorisedAction][agentAuthentication] - No active session. Redirecting to ${appConfig.signInUrl}",
         appConfig.signInUrl)
-    case _: AuthorisationException =>
-      if(appConfig.emaSupportingAgentsEnabled) {
-        authService.authorised(secondaryAgentPredicate(mtdItId))
-          .retrieve(allEnrolments) { enrolments =>
-            populateAgent(block, request, hc, mtdItId, nino, enrolments)
-          }.recoverWith {
+    case _: AuthorisationException if appConfig.emaSupportingAgentsEnabled =>
+      authService.authorised(secondaryAgentPredicate(mtdItId))
+        .retrieve(allEnrolments) { enrolments =>
+          populateAgent(block, request, hc, mtdItId, nino, enrolments)
+        }.recoverWith {
           case _: AuthorisationException =>
             logAndRedirect(
               "[AuthorisedAction][agentAuthentication] - Agent does not have secondary delegated authority for Client.",
-              AgentAuthErrorController.show)
+              AgentAuthErrorController.show
+            )
+          case e =>
+            logger.error(s"[AuthorisedAction][agentAuthentication] - Unexpected exception of type '${e.getClass.getSimpleName}' was caught.")
+            Future(errorHandler.internalServerError()(request))
         }
-      }else{
-        logAndRedirect(
-          "[AuthorisedAction][agentAuthentication] - Agent does not have secondary delegated authority for Client.",
-          AgentAuthErrorController.show)
-      }
+    case _: AuthorisationException =>
+      logAndRedirect(
+        "[AuthorisedAction][agentAuthentication] - Agent does not have primary delegated authority for Client.",
+        AgentAuthErrorController.show
+      )
+    case e =>
+      logger.error(s"[AuthorisedAction][agentAuthentication] - Unexpected exception of type '${e.getClass.getSimpleName}' was caught.")
+      Future(errorHandler.internalServerError()(request))
   }
 
   private def populateAgent[A](block: AuthorisationRequest[A] =>
@@ -186,11 +195,11 @@ class AuthorisedAction @Inject()(authService: AuthorisationService,
   }.flatten
 
   private def logAndRedirect(logMessage: String, redirectUrl: => Call): Future[Result] = {
-    logger.info(logMessage)
+    logger.warn(logMessage)
     Future.successful(Redirect(redirectUrl))
   }
   private def logAndRedirectFromUrl(logMessage: String, redirectUrl: String): Future[Result] = {
-    logger.info(logMessage)
+    logger.warn(logMessage)
     Future.successful(Redirect(redirectUrl))
   }
 
@@ -209,13 +218,13 @@ class AuthorisedAction @Inject()(authService: AuthorisationService,
 
   private def redirectToUnauthorisedUserErrorPage(): Result = {
     val logMessage = s"[AuthorisedAction][invokeBlock] - User failed to authenticate"
-    logger.info(logMessage)
+    logger.warn(logMessage)
     Redirect(UnauthorisedUserErrorController.show)
   }
 
   private def redirectToSignInPage(): Result = {
     val logMessage = s"[AuthorisedAction][invokeBlock] - No active session. Redirecting to ${appConfig.signInUrl}"
-    logger.info(logMessage)
+    logger.warn(logMessage)
     Redirect(appConfig.signInUrl)
   }
 
