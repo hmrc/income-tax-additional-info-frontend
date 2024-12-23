@@ -79,7 +79,6 @@ class AuthorisedActionSpec extends ControllerUnitTest
   private val underTestEnabled = new AuthorisedAction(authorisationService, configWithSupportingAgentsEnabled(), mcc: ControllerComponents, mockErrorHandler)(executionContext)
   private val underTestDisabled = new AuthorisedAction(authorisationService, configWithSupportingAgentsDisabled(), mcc: ControllerComponents, mockErrorHandler)(executionContext)
 
-
   ".executionContext" should {
     "return the given execution context" in {
       underTest.executionContext shouldBe executionContext
@@ -424,6 +423,21 @@ class AuthorisedActionSpec extends ControllerUnitTest
         }
 
         status(result) shouldBe SEE_OTHER
+      }
+    }
+
+    "render ISE" when {
+      "an unexpected exception is caught that is not related to Authorisation" in {
+
+        (mockAuthConnector.authorise(_: Predicate, _: Retrieval[_])(_: HeaderCarrier, _: ExecutionContext))
+          .expects(*, *, *, *)
+          .returning(Future.failed(new Exception("bang")))
+
+        mockInternalServerError(InternalServerError("An unexpected error occurred"))
+
+        val result = underTest.invokeBlock(fakeAgentRequest, block)
+
+        status(result) shouldBe INTERNAL_SERVER_ERROR
       }
     }
   }
