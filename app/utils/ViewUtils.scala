@@ -29,7 +29,7 @@ object ViewUtils {
   def summaryListRow(key: HtmlContent,
                      value: HtmlContent,
                      keyClasses: String = "",
-                     valueClasses: String = "govuk-!-text-align-right",
+                     valueClasses: String = "",
                      actionClasses: String = "",
                      actions: Seq[(Call, String, Option[String])]): SummaryListRow = {
     SummaryListRow(
