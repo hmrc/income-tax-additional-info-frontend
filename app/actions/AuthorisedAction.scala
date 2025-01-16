@@ -105,7 +105,7 @@ class AuthorisedAction @Inject()(authService: AuthorisationService,
       case (None, _) =>
         logAndRedirect(
           "[AuthorisedAction][individualAuthentication] - User has no MTD IT enrolment. Redirecting user to sign up for MTD.",
-          IndividualAuthErrorController.show)
+          IndividualAuthErrorController.show())
     }
   }
 
@@ -155,7 +155,7 @@ class AuthorisedAction @Inject()(authService: AuthorisationService,
           case _: AuthorisationException =>
             logAndRedirect(
               "[AuthorisedAction][agentAuthentication] - Agent does not have secondary delegated authority for Client.",
-              AgentAuthErrorController.show
+              AgentAuthErrorController.show()
             )
           case e =>
             logger.error(s"[AuthorisedAction][agentAuthentication] - Unexpected exception of type '${e.getClass.getSimpleName}' was caught.")
@@ -164,7 +164,7 @@ class AuthorisedAction @Inject()(authService: AuthorisationService,
     case _: AuthorisationException =>
       logAndRedirect(
         "[AuthorisedAction][agentAuthentication] - Agent does not have primary delegated authority for Client.",
-        AgentAuthErrorController.show
+        AgentAuthErrorController.show()
       )
     case e =>
       logger.error(s"[AuthorisedAction][agentAuthentication] - Unexpected exception of type '${e.getClass.getSimpleName}' was caught.")
@@ -181,7 +181,7 @@ class AuthorisedAction @Inject()(authService: AuthorisationService,
           block(AuthorisationRequest(models.User(mtdItId, Some(arn), nino, AffinityGroup.Agent.toString, sessionId), request))
         }
       case None =>
-        logAndRedirect("[AuthorisedAction][agentAuthentication] Agent with no HMRC-AS-AGENT enrolment. Rendering unauthorised view.", YouNeedAgentServicesController.show)
+        logAndRedirect("[AuthorisedAction][agentAuthentication] Agent with no HMRC-AS-AGENT enrolment. Rendering unauthorised view.", YouNeedAgentServicesController.show())
     }
   }
 
@@ -219,7 +219,7 @@ class AuthorisedAction @Inject()(authService: AuthorisationService,
   private def redirectToUnauthorisedUserErrorPage(): Result = {
     val logMessage = s"[AuthorisedAction][invokeBlock] - User failed to authenticate"
     logger.warn(logMessage)
-    Redirect(UnauthorisedUserErrorController.show)
+    Redirect(UnauthorisedUserErrorController.show())
   }
 
   private def redirectToSignInPage(): Result = {
