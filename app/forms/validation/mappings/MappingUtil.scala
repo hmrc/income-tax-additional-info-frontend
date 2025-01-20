@@ -23,7 +23,7 @@ import play.api.data.{FieldMapping, Mapping}
 object MappingUtil extends Formatters {
 
   val trimmedText: Mapping[String] = default(text, "").transform(_.trim, identity)
-  val textWithoutSpace: Mapping[String] = default(text, "").transform(_.replaceAll("\\s",""), identity)
+  val noSpaceForwardSlashToDash: Mapping[String] = default(text, "").transform(_.replaceAll("\\s","").replaceAll("/", "-"), identity)
 
   val oText: Mapping[Option[String]] = optional(text)
 
