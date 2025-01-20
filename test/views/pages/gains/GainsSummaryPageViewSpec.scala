@@ -64,7 +64,7 @@ class GainsSummaryPageViewSpec extends ViewUnitTest {
     override val expectedSummaryListValue3: String = "Capital Redemption"
     override val expectedSummaryListValue4: String = "Voided ISA"
     override val expectedSummaryListValue5: String = "A foreign policy"
-    override val expectedSummaryListAction1: String = "Change Change the policy details Remove Remove this policy"
+    override val expectedSummaryListAction1: String = s"Change Change the policy details $expectedSummaryListKey1 Remove Remove this policy $expectedSummaryListKey1"
     override val expectedButtonText: String = "Return to overview"
   }
 
@@ -76,7 +76,7 @@ class GainsSummaryPageViewSpec extends ViewUnitTest {
     override val expectedSummaryListValue3: String = "Adbrynu Cyfalaf"
     override val expectedSummaryListValue4: String = "ISA sydd wedi’i ddirymu"
     override val expectedSummaryListValue5: String = "Polisi tramor"
-    override val expectedSummaryListAction1: String = "Newid Newid y math o bolisi Tynnu Tynnu’r polisi hwn"
+    override val expectedSummaryListAction1: String = s"Newid Newid y math o bolisi $expectedSummaryListKey1 Tynnu Tynnu’r polisi hwn $expectedSummaryListKey1"
     override val expectedButtonText: String = "Yn ôl i’r trosolwg"
   }
 
