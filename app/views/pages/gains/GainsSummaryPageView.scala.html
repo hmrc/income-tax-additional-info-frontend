@@ -100,13 +100,13 @@
         <dd class="govuk-summary-list__actions">
             <a class="govuk-link" id="policy-change" href={controllers.gains.routes.PolicySummaryController.show(taxYear, elem.sessionId).url}>
                 <span aria-hidden ="true" > {messages("common.change")} </span>
-                <span class="govuk-visually-hidden"> {messages("gains.policies-add.summary.hidden.text.change")} </span>
+                <span class="govuk-visually-hidden"> {elem.toChangeHyperlinkText()} </span>
             </a>
         </dd>
         <dd class="govuk-summary-list__actions">
             <a class="govuk-link" id="policy-remove" href={controllers.gains.routes.PoliciesRemoveController.show(taxYear, elem.sessionId).url}>
                 <span aria-hidden ="true" > {messages("common.remove")} </span>
-                <span class="govuk-visually-hidden"> {messages("gains.policies-add.summary.hidden.text.remove")} </span>
+                <span class="govuk-visually-hidden"> {elem.toRemoveHyperlinkText()} </span>
             </a>
         </dd>
     </div>
