@@ -26,7 +26,8 @@ object StringConstraints {
   val monetaryRegex = """\d+|\d*\.\d{1,2}"""
   val alphabetsWithSpaceRegex = """^([a-zA-Z])+([a-zA-Z ])*$"""
   //policy number regex pattern choosen based on downstream api expectation
-  val policyNumberRegex = """^[0-9a-zA-Z{À-˿’}\- _&`():.'^]{1,90}$"""
+  //it should be noted ^[0-9a-zA-Z{À-˿’}\- _&`():.'^]{1,90}$ is the real regex but / has been accepted for data entry though it gets replaced
+  val policyNumberRegex = """^[0-9a-zA-Z{À-˿’}\-/ _&`():.'^]{1,90}$"""
 
   def validateChar(charRegex: String): String => Constraint[String] = msgKey => constraint[String](
     x => if (x.matches(charRegex)) Valid else Invalid(msgKey)

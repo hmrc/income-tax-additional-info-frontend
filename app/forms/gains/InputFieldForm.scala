@@ -18,7 +18,7 @@ package forms.gains
 
 import filters.InputFilters
 import forms.validation.StringConstraints.{nonEmpty, validateAlphabetsWithSpace, validatePolicyNumber}
-import forms.validation.mappings.MappingUtil.{textWithoutSpace, trimmedText}
+import forms.validation.mappings.MappingUtil.{noSpaceForwardSlashToDash, trimmedText}
 import forms.validation.utils.ConstraintUtil.ConstraintUtil
 import play.api.data.Form
 import play.api.data.validation.Constraint
@@ -37,7 +37,7 @@ object InputFieldForm extends InputFilters {
     inputFormat match {
       case "alphabetsWithSpace" => value -> trimmedText.transform[String](filter, identity).verifying(
         notEmpty(isAgent, emptyFieldKey) andThen isValidAlphabetsWithSpace(wrongFormatKey))
-      case "policyNumber" => value -> textWithoutSpace.transform[String](filter, identity)
+      case "policyNumber" => value -> noSpaceForwardSlashToDash.transform[String](filter, identity)
         .verifying(notEmpty(isAgent, emptyFieldKey) andThen isValidPolicyNumber(wrongFormatKey))
     }
   )
