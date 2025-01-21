@@ -186,12 +186,33 @@ class PolicyNamePageViewSpec extends ViewUnitTest {
         implicit val document: Document = Jsoup.parse(page(taxYear, InputFieldForm.inputFieldForm(userScenario.isAgent, inputFormat,
           s"gains.policy-name.question.error-message.1.${if (userScenario.isAgent) "agent" else "individual"}",
           s"gains.policy-name.question.error-message.2.${if (userScenario.isAgent) "agent" else "individual"}")
-          .bind(Map(InputFieldForm.value -> "aaa/")), UUID.randomUUID().toString).body)
+          .bind(Map(InputFieldForm.value -> "aaa#")), UUID.randomUUID().toString).body)
 
         welshToggleCheck(userScenario.isWelsh)
 
         errorSummaryCheck(userScenario.specificExpectedResults.get.expectedErrorText1, Selectors.customerReferenceErrorHref)
         errorAboveElementCheck(userScenario.specificExpectedResults.get.expectedErrorText1, userScenario.isWelsh)
+      }
+    }
+  }
+
+  userScenarios.foreach { userScenario =>
+    s"language is ${welshTest(userScenario.isWelsh)} and request is from an ${agentTest(userScenario.isAgent)}" should {
+      "render customer reference page with no errors if submitted form contains '/'" which {
+        implicit val userPriorDataRequest: AuthorisationRequest[AnyContent] = getAuthRequest(userScenario.isAgent)
+        implicit val messages: Messages = getMessages(userScenario.isWelsh)
+
+        implicit val document: Document = Jsoup.parse(page(taxYear, InputFieldForm.inputFieldForm(userScenario.isAgent, inputFormat,
+            s"gains.policy-name.question.error-message.1.${if (userScenario.isAgent) "agent" else "individual"}",
+            s"gains.policy-name.question.error-message.2.${if (userScenario.isAgent) "agent" else "individual"}")
+          .bind(Map(InputFieldForm.value -> "P/89879/123")), UUID.randomUUID().toString).body)
+
+        welshToggleCheck(userScenario.isWelsh)
+        h1Check(userScenario.specificExpectedResults.get.expectedHeading)
+
+        "does not contain any error text" in {
+          document.select(".govuk-error-summary__title").text() shouldBe ""
+        }
       }
     }
   }

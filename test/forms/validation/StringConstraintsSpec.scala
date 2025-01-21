@@ -82,9 +82,15 @@ class StringConstraintsSpec extends Constraints with AnyWordSpecLike with Matche
       }
     }
 
+    "supplied with a alphanumeric string containing a /" should {
+      "return valid" in {
+        StringConstraints.validatePolicyNumber(errMsgInvalidChar)("P/89879/123") shouldBe Valid
+      }
+    }
+
     "supplied with invalid alphanumeric string" should {
       "return invalid" in {
-        StringConstraints.validatePolicyNumber(errMsgInvalidChar)("123/") shouldBe Invalid(errMsgInvalidChar)
+        StringConstraints.validatePolicyNumber(errMsgInvalidChar)("P#89879#123") shouldBe Invalid(errMsgInvalidChar)
       }
     }
   }

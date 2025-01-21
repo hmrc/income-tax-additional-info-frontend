@@ -23,7 +23,10 @@ class InputFieldFormSpec extends UnitTest{
   private def theForm(inputFormat: String) = InputFieldForm.inputFieldForm(isAgent = false, inputFormat, "nothing to see here", "wrong format")
 
   private val testInputNumber = "123"
-  private val testInputAlphabet = "test/"
+  private val testInputAlphabetSlash = "test/"
+  private val testInputRepeatedSlash = "P/89879/123"
+  private val testInputAlphabetDash = "test-"
+  private val testInputAlphabetHash = "P#89879#123"
   private val testInputAlphabetsWithSpace = "test this input"
   private val testInputPolicyNumber = "P-89879-123"
   private val testInputEmpty = ""
@@ -67,10 +70,35 @@ class InputFieldFormSpec extends UnitTest{
       }
 
       "an invalid policy number is entered" in {
-        val testInput = Map(InputFieldForm.value -> testInputAlphabet)
+        val testInput = Map(InputFieldForm.value -> testInputAlphabetHash)
         val actual = theForm("policyNumber").bind(testInput)
 
         actual.errors should contain(FormError(InputFieldForm.value, "wrong format"))
+      }
+    }
+
+    "replace a '/' for a '-'" when {
+      "an policy number with a '/' is entered" in {
+        val testInput = Map(InputFieldForm.value -> testInputAlphabetSlash)
+        val expected = testInputAlphabetDash
+        val actual = theForm("policyNumber").bind(testInput).value
+        actual shouldBe Some(expected)
+      }
+
+      "an policy number with repeated '/' is entered" in {
+        val testInput = Map(InputFieldForm.value -> testInputRepeatedSlash)
+        val expected = testInputPolicyNumber
+        val actual = theForm("policyNumber").bind(testInput).value
+        actual shouldBe Some(expected)
+      }
+    }
+
+    "clear empty spaces" when {
+      "an policy number with a ' ' is entered" in {
+        val testInput = Map(InputFieldForm.value -> testInputAlphabetsWithSpace)
+        val expected = "testthisinput"
+        val actual = theForm("policyNumber").bind(testInput).value
+        actual shouldBe Some(expected)
       }
     }
   }
