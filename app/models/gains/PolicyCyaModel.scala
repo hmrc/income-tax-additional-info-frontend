@@ -16,23 +16,22 @@
 
 package models.gains
 
+import play.api.i18n.Messages
 import play.api.libs.json.{Json, OFormat}
 import uk.gov.hmrc.crypto.EncryptedValue
 
-case class PolicyCyaModel(
-                           sessionId: String,
-                           policyType: Option[String] = None,
-                           policyNumber: Option[String] = None,
-                           amountOfGain: Option[BigDecimal] = None,
-                           policyEvent: Option[String] = None,
-                           previousGain: Option[Boolean] = None,
-                           yearsPolicyHeld: Option[Int] = None,
-                           yearsPolicyHeldPrevious: Option[Int] = None,
-                           treatedAsTaxPaid: Option[Boolean] = None,
-                           taxPaidAmount: Option[BigDecimal] = None,
-                           entitledToDeficiencyRelief: Option[Boolean] = None,
-                           deficiencyReliefAmount: Option[BigDecimal] = None
-                         ) {
+case class PolicyCyaModel(sessionId: String,
+                          policyType: Option[String] = None,
+                          policyNumber: Option[String] = None,
+                          amountOfGain: Option[BigDecimal] = None,
+                          policyEvent: Option[String] = None,
+                          previousGain: Option[Boolean] = None,
+                          yearsPolicyHeld: Option[Int] = None,
+                          yearsPolicyHeldPrevious: Option[Int] = None,
+                          treatedAsTaxPaid: Option[Boolean] = None,
+                          taxPaidAmount: Option[BigDecimal] = None,
+                          entitledToDeficiencyRelief: Option[Boolean] = None,
+                          deficiencyReliefAmount: Option[BigDecimal] = None) {
 
   private def isFinishedGeneralPolicies: Boolean =
     policyNumber.isDefined &&
@@ -56,6 +55,14 @@ case class PolicyCyaModel(
       case Some("Voided ISA") => isFinishedVoidedIsa
       case _ => isFinishedGeneralPolicies
     }
+  }
+
+  def toRemoveHyperlinkText()(implicit messages: Messages): String = {
+    messages("gains.policies-add.summary.hidden.text.remove") + policyNumber.fold("")(policyNumber => " " + policyNumber)
+  }
+
+  def toChangeHyperlinkText()(implicit messages: Messages): String = {
+    messages("gains.policies-add.summary.hidden.text.change") + policyNumber.fold("")(policyNumber => " " + policyNumber)
   }
 }
 
