@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package test.controllers.gains
+package controllers.gains
 
 import models.mongo.DataNotFound
 import org.mockito.ArgumentMatchers.any
@@ -197,8 +197,13 @@ class PoliciesRemoveControllerISpec extends IntegrationTest {
 
         val result = route(application, request).value
 
+        val policyType: String = completePolicyCyaModel.policyType.fold("")(
+          policyType => "?policyType=" + policyType.replace(" ", "+")
+        )
+
         status(result) shouldBe SEE_OTHER
-        headerStatus(result).headers.get("Location") shouldBe Some(s"/update-and-submit-income-tax-return/additional-information/$taxYear/gains/summary")
+        headerStatus(result).headers.get("Location") shouldBe
+          Some(s"/update-and-submit-income-tax-return/additional-information/$taxYear/gains/summary$policyType")
       }
 
       val applicationWithBackendMongo = GuiceApplicationBuilder()
@@ -219,8 +224,13 @@ class PoliciesRemoveControllerISpec extends IntegrationTest {
 
         val result = route(applicationWithBackendMongo, request).value
 
+        val policyType: String = completePolicyCyaModel.policyType.fold("")(
+          policyType => "?policyType=" + policyType.replace(" ", "+")
+        )
+
         status(result) shouldBe SEE_OTHER
-        headerStatus(result).headers.get("Location") shouldBe Some(s"/update-and-submit-income-tax-return/additional-information/$taxYear/gains/summary")
+        headerStatus(result).headers.get("Location") shouldBe
+          Some(s"/update-and-submit-income-tax-return/additional-information/$taxYear/gains/summary$policyType")
       }
     }
 
@@ -244,7 +254,8 @@ class PoliciesRemoveControllerISpec extends IntegrationTest {
         val result = route(application, request).value
 
         status(result) shouldBe SEE_OTHER
-        headerStatus(result).headers.get("Location") shouldBe Some(s"/update-and-submit-income-tax-return/additional-information/$taxYear/gains/summary")
+        headerStatus(result).headers.get("Location") shouldBe
+          Some(s"/update-and-submit-income-tax-return/additional-information/$taxYear/gains/summary?policyType=")
       }
 
       val applicationWithBackendMongo = GuiceApplicationBuilder()
@@ -266,7 +277,8 @@ class PoliciesRemoveControllerISpec extends IntegrationTest {
         val result = route(applicationWithBackendMongo, request).value
 
         status(result) shouldBe SEE_OTHER
-        headerStatus(result).headers.get("Location") shouldBe Some(s"/update-and-submit-income-tax-return/additional-information/$taxYear/gains/summary")
+        headerStatus(result).headers.get("Location") shouldBe
+          Some(s"/update-and-submit-income-tax-return/additional-information/$taxYear/gains/summary?policyType=")
       }
     }
 
