@@ -45,17 +45,22 @@ class PoliciesRemoveController @Inject()(authorisedAction: AuthorisedAction,
                                         (implicit appConfig: AppConfig, mcc: MessagesControllerComponents, ec: ExecutionContext)
   extends FrontendController(mcc) with I18nSupport {
 
+  private def findGainBySessionId(gainsOpt: Option[AllGainsSessionModel], sessionId: String): PolicyCyaModel = {
+    val emptyPolicyCyaModel: PolicyCyaModel = PolicyCyaModel("", Some(""))
+
+    gainsOpt
+      .getOrElse(AllGainsSessionModel(Seq(emptyPolicyCyaModel), gateway = Some(true)))
+      .allGains
+      .find(_.sessionId == sessionId)
+      .getOrElse(emptyPolicyCyaModel)
+  }
+
 
   def show(taxYear: Int, sessionId: String): Action[AnyContent] = authorisedAction.async { implicit request =>
-    val emptyPolicyCyaModel: PolicyCyaModel = PolicyCyaModel("", Some(""))
     gainsSessionService.getSessionData(taxYear).flatMap {
       case Left(_) => Future.successful(errorHandler.internalServerError())
       case Right(cya) => Future.successful(cya.fold(Redirect(appConfig.incomeTaxSubmissionOverviewUrl(taxYear))) {
-        cyaData =>
-          Future.successful(
-            Ok(view(taxYear, sessionId, cyaData.gains.getOrElse(
-              AllGainsSessionModel(Seq(emptyPolicyCyaModel), gateway = Some(true))).allGains.find(_.sessionId == sessionId).getOrElse(emptyPolicyCyaModel)))
-          ).value.get.get
+        cyaData => Ok(view(taxYear, sessionId, findGainBySessionId(cyaData.gains, sessionId)))
       })
     }
   }
@@ -65,16 +70,18 @@ class PoliciesRemoveController @Inject()(authorisedAction: AuthorisedAction,
       (cya, prior) match {
         case (Some(cya), _) =>
           val newData = AllGainsSessionModel(cya.allGains.filterNot(_.sessionId == sessionId), cya.gateway)
+          val policyType = findGainBySessionId(Some(cya), sessionId).policyType
+
           if (newData.allGains.isEmpty) {
             deleteGainsService.deleteGainsData(request.user.nino, taxYear, request.user.mtditid).flatMap {
               case Left(_) => Future.successful(errorHandler.internalServerError())
-              case Right(_) => auditAndDeleteSessionData(taxYear, prior, cya)
+              case Right(_) => auditAndDeleteSessionData(taxYear, prior, policyType)
             }
           } else {
             //As API deletes all policies, rather deleting one policy updating with full data except that one
             gainsSubmissionService.submitGains(Some(newData.toSubmissionModel), request.user.nino, request.user.mtditid, taxYear).flatMap {
               case Left(_) => Future.successful(errorHandler.internalServerError())
-              case Right(_) => auditAndDeleteSessionData(taxYear, prior, cya)
+              case Right(_) => auditAndDeleteSessionData(taxYear, prior, policyType)
             }
           }
 
@@ -83,12 +90,13 @@ class PoliciesRemoveController @Inject()(authorisedAction: AuthorisedAction,
     }.flatten
   }
 
-  private def auditAndDeleteSessionData(taxYear: Int, prior: Option[GainsPriorDataModel],
-                                        cya: AllGainsSessionModel)
+  private def auditAndDeleteSessionData(taxYear: Int,
+                                        prior: Option[GainsPriorDataModel],
+                                        policyType: Option[String])
                                        (implicit hc: HeaderCarrier, request: AuthorisationRequest[AnyContent]): Future[Result] = {
     auditSubmission(None, prior, request.user.nino, request.user.mtditid, request.user.affinityGroup, taxYear)
     gainsSessionService.deleteSessionData(taxYear)(errorHandler.internalServerError()) {
-      Redirect(controllers.gainsBase.routes.GainsSummaryBaseController.show(taxYear, None))
+      Redirect(controllers.gainsBase.routes.GainsSummaryBaseController.show(taxYear, policyType))
     }
   }
   private def auditSubmission(body: Option[GainsSubmissionModel], prior: Option[GainsPriorDataModel],
