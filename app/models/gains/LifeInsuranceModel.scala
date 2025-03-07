@@ -21,6 +21,7 @@ import play.api.libs.json.{Json, OFormat}
 import java.util.UUID
 
 case class LifeInsuranceModel(
+                               policyId: Option[String] = None,
                                customerReference: Option[String] = None,
                                event: Option[String] = None,
                                gainAmount: BigDecimal,
@@ -31,7 +32,7 @@ case class LifeInsuranceModel(
                              ) {
   def toPolicyCya: PolicyCyaModel = {
     PolicyCyaModel(
-      sessionId = UUID.randomUUID().toString,
+      policyId = this.policyId.getOrElse(UUID.randomUUID().toString),
       policyType = Some("Life Insurance"),
       policyNumber = this.customerReference,
       amountOfGain = Some(this.gainAmount),

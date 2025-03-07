@@ -53,7 +53,7 @@ class PolicyNameController @Inject()(authorisedAction: AuthorisedAction,
           cyaData =>
             cyaData.gains.fold(Ok(view(taxYear, form(request.user.isAgent), sessionId))) {
               data =>
-                data.allGains.find(_.sessionId == sessionId) match {
+                data.allGains.find(_.policyId == sessionId) match {
                   case None => errorHandler.internalServerError()
                   case Some(value) => Ok(view(taxYear, form(request.user.isAgent).fill(value.policyNumber.getOrElse("")), sessionId))
                 }
@@ -71,7 +71,7 @@ class PolicyNameController @Inject()(authorisedAction: AuthorisedAction,
           case Left(_) => Future.successful(errorHandler.internalServerError())
           case Right(sessionData) =>
             val cya = sessionData.flatMap(_.gains).getOrElse(AllGainsSessionModel(Seq.empty))
-            val currentSession = cya.allGains.find(_.sessionId == sessionId)
+            val currentSession = cya.allGains.find(_.policyId == sessionId)
             currentSession match {
               case None => Future.successful(errorHandler.internalServerError())
               case Some(session) => {

@@ -49,7 +49,7 @@ class GainsStatusController @Inject()(authorisedAction: AuthorisedAction,
         Future.successful(cya.fold(Redirect(appConfig.incomeTaxSubmissionOverviewUrl(taxYear))) {
           cyaData =>
             cyaData.gains.map { data =>
-              data.allGains.filter(_.sessionId == sessionId).head.previousGain match {
+              data.allGains.filter(_.policyId == sessionId).head.previousGain match {
                 case None => Ok(view(taxYear, form(request.user.isAgent), sessionId))
                 case Some(value) => Ok(view(taxYear, form(request.user.isAgent).fill(value), sessionId))
               }
@@ -67,7 +67,7 @@ class GainsStatusController @Inject()(authorisedAction: AuthorisedAction,
           case Left(_) => Future.successful(errorHandler.internalServerError())
           case Right(sessionData) =>
             val cya = sessionData.flatMap(_.gains).getOrElse(AllGainsSessionModel(Seq.empty))
-            val index = cya.allGains.indexOf(cya.allGains.filter(_.sessionId == sessionId).head)
+            val index = cya.allGains.indexOf(cya.allGains.filter(_.policyId == sessionId).head)
             val newData = cya.allGains(index).copy(previousGain = Some(gainsStatus))
             val updated = cya.allGains.updated(index, newData)
             gainsSessionService.updateSessionData(AllGainsSessionModel(updated, cya.gateway), taxYear)(errorHandler.internalServerError()) {

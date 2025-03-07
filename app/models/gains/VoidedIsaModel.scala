@@ -30,7 +30,7 @@ case class VoidedIsaModel(
                          ) {
   def toPolicyCya: PolicyCyaModel = {
     PolicyCyaModel(
-      sessionId = UUID.randomUUID().toString,
+      policyId = UUID.randomUUID().toString,
       policyType = Some("Voided ISA"),
       policyNumber = this.customerReference,
       amountOfGain = Some(this.gainAmount),

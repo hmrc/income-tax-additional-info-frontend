@@ -63,7 +63,7 @@
         @heading(headingForUse, Some(messages("gains.caption", (taxYear - 1).toString, taxYear.toString)))
 
         @{
-        gain.filter(_.sessionId == session).map(gains =>
+        gain.filter(_.policyId == session).map(gains =>
             govukSummaryList(SummaryList(Seq(
                 if (appConfig.isSplitGains) {
                     None
@@ -80,18 +80,18 @@
                                 case _ => ""
                             }
                         ),
-                        actions = Seq((controllers.gains.routes.PolicyTypeController.show(taxYear, gains.sessionId), messages("common.change"), Some(messages("gains.policy-summary.list.hidden.text.1"))))
+                        actions = Seq((controllers.gains.routes.PolicyTypeController.show(taxYear, gains.policyId), messages("common.change"), Some(messages("gains.policy-summary.list.hidden.text.1"))))
                     ))
                 },
                 Some(summaryListRow(
                     HtmlContent(messages("common.gains.policy-number")),
                     HtmlContent(gains.policyNumber.getOrElse("")),
-                    actions = Seq((controllers.gainsBase.routes.PolicyNameBaseController.show(taxYear, gains.sessionId, None), messages("common.change"), Some(messages("gains.policy-summary.list.hidden.text.2"))))
+                    actions = Seq((controllers.gainsBase.routes.PolicyNameBaseController.show(taxYear, gains.policyId, None), messages("common.change"), Some(messages("gains.policy-summary.list.hidden.text.2"))))
                 )),
                 Some(summaryListRow(
                     HtmlContent(messages("common.gains.amount-of-gain-made")),
                     HtmlContent(s"£${gains.amountOfGain.getOrElse(BigDecimal(0)).toString}"),
-                    actions = Seq((controllers.gains.routes.GainsAmountController.show(taxYear, gains.sessionId), messages("common.change"), Some(messages("gains.policy-summary.list.hidden.text.3"))))
+                    actions = Seq((controllers.gains.routes.GainsAmountController.show(taxYear, gains.policyId), messages("common.change"), Some(messages("gains.policy-summary.list.hidden.text.3"))))
                 )),
                 Some(summaryListRow(
                     HtmlContent(messages("common.gains.policy-event")),
@@ -105,52 +105,52 @@
                         }
 
                     ),
-                    actions = Seq((controllers.gains.routes.PolicyEventController.show(taxYear, gains.sessionId), messages("common.change"), Some(messages("common.change") + " " + messages("common.gains.policy-event"))))
+                    actions = Seq((controllers.gains.routes.PolicyEventController.show(taxYear, gains.policyId), messages("common.change"), Some(messages("common.change") + " " + messages("common.gains.policy-event"))))
                 )),
                 Some(summaryListRow(
                     HtmlContent(messages("gains.policy-summary.list.tax-paid-on-gain")),
                     HtmlContent({if(gains.previousGain.getOrElse(false)) messages("common.yes") else messages("common.no")}),
-                    actions = Seq((controllers.gains.routes.GainsStatusController.show(taxYear, gains.sessionId), messages("common.change"), Some(messages("common.change") + " " + messages("gains.policy-summary.list.tax-paid-on-gain"))))
+                    actions = Seq((controllers.gains.routes.GainsStatusController.show(taxYear, gains.policyId), messages("common.change"), Some(messages("common.change") + " " + messages("gains.policy-summary.list.tax-paid-on-gain"))))
                 )),
                 {
                 if (gains.previousGain.getOrElse(false)) {
                 Some(summaryListRow(
                     HtmlContent(messages("gains.policy-summary.list.yearsSince")),
                     HtmlContent(gains.yearsPolicyHeldPrevious.getOrElse(0).toString),
-                    actions = Seq((controllers.gains.routes.PolicyHeldPreviousController.show(taxYear, gains.sessionId), messages("common.change"), Some(messages("gains.policy-summary.list.hidden.text.4"))))
+                    actions = Seq((controllers.gains.routes.PolicyHeldPreviousController.show(taxYear, gains.policyId), messages("common.change"), Some(messages("gains.policy-summary.list.hidden.text.4"))))
                 ))
                 } else { None }
                 },
                 Some(summaryListRow(
                     HtmlContent(messages("common.gains.years-policy-held")),
                     HtmlContent(gains.yearsPolicyHeld.getOrElse(0).toString),
-                    actions = Seq((controllers.gains.routes.PolicyHeldController.show(taxYear, gains.sessionId), messages("common.change"), Some(messages("gains.policy-summary.list.hidden.text.5"))))
+                    actions = Seq((controllers.gains.routes.PolicyHeldController.show(taxYear, gains.policyId), messages("common.change"), Some(messages("gains.policy-summary.list.hidden.text.5"))))
                 )),
                 if (gains.policyType.contains("Voided ISA")) {
                     Some(summaryListRow(
                         HtmlContent(messages("common.gains.taxPaidAmount")),
                         HtmlContent(s"£${gains.taxPaidAmount.getOrElse(BigDecimal(0)).toString}"),
-                        actions = Seq((controllers.gains.routes.PaidTaxAmountController.show(taxYear, gains.sessionId), messages("common.change"), Some(messages("common.change") + " " + messages("common.gains.taxPaidAmount"))))
+                        actions = Seq((controllers.gains.routes.PaidTaxAmountController.show(taxYear, gains.policyId), messages("common.change"), Some(messages("common.change") + " " + messages("common.gains.taxPaidAmount"))))
                     ))
                 } else {
                     Some(summaryListRow(
                         HtmlContent(messages("common.gains.gain-treated-as-tax-paid")),
                         HtmlContent({if(gains.treatedAsTaxPaid.getOrElse(false)) messages("common.yes") else messages("common.no")}),
-                        actions = Seq((controllers.gains.routes.PaidTaxStatusController.show(taxYear, gains.sessionId), messages("common.change"), Some(messages("gains.policy-summary.list.hidden.text.6"))))
+                        actions = Seq((controllers.gains.routes.PaidTaxStatusController.show(taxYear, gains.policyId), messages("common.change"), Some(messages("gains.policy-summary.list.hidden.text.6"))))
                     ))
                 },
                 if (!gains.policyType.contains("Voided ISA")) {
                     Some(summaryListRow(
                         HtmlContent(messages("common.gains.deficiency-relief-status")),
                         HtmlContent({if(gains.entitledToDeficiencyRelief.getOrElse(false)) messages("common.yes") else messages("common.no")}),
-                        actions = Seq((controllers.gains.routes.GainsDeficiencyReliefController.show(taxYear, gains.sessionId), messages("common.change"), Some(messages("gains.policy-summary.list.hidden.text.7"))))
+                        actions = Seq((controllers.gains.routes.GainsDeficiencyReliefController.show(taxYear, gains.policyId), messages("common.change"), Some(messages("gains.policy-summary.list.hidden.text.7"))))
                     ))} else { None },
                     {
                     if (gains.entitledToDeficiencyRelief.getOrElse(false) && !gains.policyType.contains("Voided ISA")) {
                         Some(summaryListRow(
                             HtmlContent(messages("common.gains.amount-of-relief-available")),
                             HtmlContent("£" + gains.deficiencyReliefAmount.getOrElse("0")),
-                            actions = Seq((controllers.gains.routes.GainsDeficiencyReliefController.show(taxYear, gains.sessionId), messages("common.change"), Some(messages("gains.policy-summary.list.hidden.text.8"))))
+                            actions = Seq((controllers.gains.routes.GainsDeficiencyReliefController.show(taxYear, gains.policyId), messages("common.change"), Some(messages("gains.policy-summary.list.hidden.text.8"))))
                         ))
                     } else { None }
                     }

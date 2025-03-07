@@ -55,7 +55,7 @@ class PolicyEventController @Inject()(authorisedAction: AuthorisedAction,
           cyaData =>
             cyaData.gains.fold(Ok(view(taxYear, policyEventForm(request.user.isAgent), sessionId))) {
               data =>
-                data.allGains.filter(_.sessionId == sessionId).head.policyEvent match {
+                data.allGains.filter(_.policyId == sessionId).head.policyEvent match {
                   case None => Ok(view(taxYear, policyEventForm(request.user.isAgent), sessionId))
                   case Some(value) => Ok(view(taxYear, policyEventForm(request.user.isAgent).fill(value match {
                     case `policyEventType1` => (value, "")
@@ -79,7 +79,7 @@ class PolicyEventController @Inject()(authorisedAction: AuthorisedAction,
           case Left(_) => Future.successful(errorHandler.internalServerError())
           case Right(sessionData) =>
             val cya = sessionData.flatMap(_.gains).getOrElse(AllGainsSessionModel(Seq.empty))
-            val index = cya.allGains.indexOf(cya.allGains.find(_.sessionId == sessionId).get)
+            val index = cya.allGains.indexOf(cya.allGains.find(_.policyId == sessionId).get)
             val newData = cya.allGains(index).copy(policyEvent = if (policyEvent._1 != "Other") Some(policyEvent._1) else Some(policyEvent._2))
             val updated = cya.allGains.updated(index, newData)
             gainsSessionService.updateSessionData(AllGainsSessionModel(updated, cya.gateway), taxYear)(errorHandler.internalServerError()) {

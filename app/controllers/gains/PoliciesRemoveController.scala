@@ -54,7 +54,7 @@ class PoliciesRemoveController @Inject()(authorisedAction: AuthorisedAction,
         cyaData =>
           Future.successful(
             Ok(view(taxYear, sessionId, cyaData.gains.getOrElse(
-              AllGainsSessionModel(Seq(emptyPolicyCyaModel), gateway = Some(true))).allGains.find(_.sessionId == sessionId).getOrElse(emptyPolicyCyaModel)))
+              AllGainsSessionModel(Seq(emptyPolicyCyaModel), gateway = Some(true))).allGains.find(_.policyId == sessionId).getOrElse(emptyPolicyCyaModel)))
           ).value.get.get
       })
     }
@@ -64,7 +64,7 @@ class PoliciesRemoveController @Inject()(authorisedAction: AuthorisedAction,
     gainsSessionService.getAndHandle(taxYear)(Future.successful(errorHandler.internalServerError())) { (cya, prior) =>
       (cya, prior) match {
         case (Some(cya), _) =>
-          val newData = AllGainsSessionModel(cya.allGains.filterNot(_.sessionId == sessionId), cya.gateway)
+          val newData = AllGainsSessionModel(cya.allGains.filterNot(_.policyId == sessionId), cya.gateway)
           if (newData.allGains.isEmpty) {
             deleteGainsService.deleteGainsData(request.user.nino, taxYear, request.user.mtditid).flatMap {
               case Left(_) => Future.successful(errorHandler.internalServerError())

@@ -48,7 +48,7 @@ class PolicySummaryController @Inject()(authorisedAction: AuthorisedAction,
                                        (implicit appConfig: AppConfig, mcc: MessagesControllerComponents, ec: ExecutionContext)
   extends FrontendController(mcc) with Logging with I18nSupport {
 
-  def show(taxYear: Int, sessionId: String): Action[AnyContent] = authorisedAction.async { implicit request =>
+  def show(taxYear: Int, policyId: String): Action[AnyContent] = authorisedAction.async { implicit request =>
     gainsSessionService.getSessionData(taxYear).flatMap {
       case Left(_) =>
         Future.successful(errorHandler.internalServerError())
@@ -58,13 +58,13 @@ class PolicySummaryController @Inject()(authorisedAction: AuthorisedAction,
             cyaData.gains.fold(Future.successful(Redirect(appConfig.incomeTaxSubmissionOverviewUrl(taxYear)))) {
               data: AllGainsSessionModel =>
                 if (data.gateway.contains(true)) {
-                  data.allGains.find(_.sessionId == sessionId) match {
+                  data.allGains.find(_.policyId == policyId) match {
                     case Some(policyCya) if !policyCya.isFinished =>
                       Future.successful(handleUnfinishedRedirect(policyCya, taxYear))
                     case Some(_) =>
                       gainsSessionService.updateSessionData(
                         AllGainsSessionModel(data.allGains, data.gateway), taxYear)(errorHandler.internalServerError()) {
-                        Ok(view(taxYear, data.allGains, gateway = true, sessionId))
+                        Ok(view(taxYear, data.allGains, gateway = true, policyId))
                       }
                     case None =>
                       logger.info("[PolicySummaryController][show] No CYA data in session. Redirecting to the overview page.")
@@ -73,7 +73,7 @@ class PolicySummaryController @Inject()(authorisedAction: AuthorisedAction,
                 } else {
                   gainsSessionService.updateSessionData(
                     AllGainsSessionModel(data.allGains, data.gateway), taxYear)(errorHandler.internalServerError()) {
-                    Ok(view(taxYear, data.allGains, gateway = false, sessionId))
+                    Ok(view(taxYear, data.allGains, gateway = false, policyId))
                   }
                 }
             }
@@ -81,7 +81,7 @@ class PolicySummaryController @Inject()(authorisedAction: AuthorisedAction,
     }
   }
 
-  def submit(taxYear: Int, sessionId: String): Action[AnyContent] = authorisedAction.async { implicit request =>
+  def submit(taxYear: Int, policyId: String): Action[AnyContent] = authorisedAction.async { implicit request =>
     gainsSessionService.getAndHandle(taxYear) {
       Future.successful(errorHandler.internalServerError())
     } {
@@ -99,11 +99,37 @@ class PolicySummaryController @Inject()(authorisedAction: AuthorisedAction,
                     Future.successful(errorHandler.internalServerError())
                 }
               case _ =>
-                val currentPolicyList: Seq[PolicyCyaModel] = cya.allGains.filter(_.sessionId == sessionId)
+                //Test TODO Filter:
+//                val sessionTestId = "A"
+//                val currentSeq = Seq("A", "B", "C", "D").filter(_ == sessionTestId)
+//                println("Current Seq: " + currentSeq)
+//                val priorSeq = Seq("A", "B", "C", "D").filterNot(_ == sessionTestId)
+//                println("Prior Seq: " + priorSeq)
+//
+//                println("New Seq: " + (currentSeq ++ priorSeq).toString())
+
+                val currentPolicyList: Seq[PolicyCyaModel] = cya.allGains.filter(_.policyId == policyId)
+                println("Current PolicyList (NO FILTER): " + cya.allGains)
+                println("Current PolicyList: " + currentPolicyList.toString())
+                println("TEST diff method prior")
                 val priorData: Seq[PolicyCyaModel] = prior.getOrElse(GainsPriorDataModel(Instant.now().toString))
                   .toPolicyCya
-                  .filterNot(_.sessionId == sessionId)
-                  .filter(_.isFinished)
+                  .filterNot(_.policyId == policyId)
+                  .filter(x => x.isFinished)
+                println("Prior Data: " + priorData.toString())
+
+                val currentPolicyList: Seq[PolicyCyaModel] = cya.allGains.filter(x => x.isFinished)
+
+                println("New Policy List: " + (currentPolicyList ++ priorData).toString())
+
+                println("")
+                println("CYA: " + cya)
+                println("PRIOR: " + prior)
+                println("")
+
+
+//                val currentPolicyList: Seq[PolicyCyaModel] = cya.allGains.filter(x => x.isFinished)
+//                println("Current policy list: " + currentPolicyList)
 
                 val optionalQueryParam: Option[String] = if (appConfig.isSplitGains) {
                   Some(currentPolicyList.head.policyType.getOrElse(""))
@@ -112,7 +138,7 @@ class PolicySummaryController @Inject()(authorisedAction: AuthorisedAction,
                 }
 
                 submitGainsAndAudit(
-                  Some(AllGainsSessionModel(currentPolicyList ++ priorData).toSubmissionModel),
+                  Some(AllGainsSessionModel(currentPolicyList).toSubmissionModel),
                   taxYear,
                   user,
                   prior,
@@ -161,22 +187,22 @@ class PolicySummaryController @Inject()(authorisedAction: AuthorisedAction,
       None
     }
     val cyaCommon = ListMap[Call, Option[_]](
-      controllers.gains.routes.PolicyTypeController.show(taxYear, cyaModel.sessionId) -> cyaModel.policyType,
-      controllers.gainsBase.routes.PolicyNameBaseController.show(taxYear, cyaModel.sessionId, optionalQueryParam) -> cyaModel.policyNumber,
-      controllers.gains.routes.GainsAmountController.show(taxYear, cyaModel.sessionId) -> cyaModel.amountOfGain,
-      controllers.gains.routes.PolicyEventController.show(taxYear, cyaModel.sessionId) -> cyaModel.policyEvent
+      controllers.gains.routes.PolicyTypeController.show(taxYear, cyaModel.policyId) -> cyaModel.policyType,
+      controllers.gainsBase.routes.PolicyNameBaseController.show(taxYear, cyaModel.policyId, optionalQueryParam) -> cyaModel.policyNumber,
+      controllers.gains.routes.GainsAmountController.show(taxYear, cyaModel.policyId) -> cyaModel.amountOfGain,
+      controllers.gains.routes.PolicyEventController.show(taxYear, cyaModel.policyId) -> cyaModel.policyEvent
     )
 
     val cyaPolicyHeldPrevious = {
       if (cyaModel.previousGain.contains(true)) {
         ListMap[Call, Option[_]](
-          controllers.gains.routes.PolicyHeldPreviousController.show(taxYear, cyaModel.sessionId) -> cyaModel.yearsPolicyHeldPrevious,
-          controllers.gains.routes.PolicyHeldController.show(taxYear, cyaModel.sessionId) -> cyaModel.yearsPolicyHeld
+          controllers.gains.routes.PolicyHeldPreviousController.show(taxYear, cyaModel.policyId) -> cyaModel.yearsPolicyHeldPrevious,
+          controllers.gains.routes.PolicyHeldController.show(taxYear, cyaModel.policyId) -> cyaModel.yearsPolicyHeld
         )
       } else {
         ListMap[Call, Option[_]](
-          controllers.gains.routes.GainsStatusController.show(taxYear, cyaModel.sessionId) -> cyaModel.previousGain,
-          controllers.gains.routes.PolicyHeldController.show(taxYear, cyaModel.sessionId) -> cyaModel.yearsPolicyHeld
+          controllers.gains.routes.GainsStatusController.show(taxYear, cyaModel.policyId) -> cyaModel.previousGain,
+          controllers.gains.routes.PolicyHeldController.show(taxYear, cyaModel.policyId) -> cyaModel.yearsPolicyHeld
         )
       }
     }
@@ -190,18 +216,18 @@ class PolicySummaryController @Inject()(authorisedAction: AuthorisedAction,
     val cyaSpecific = {
       if (cyaModel.policyType.contains("Voided ISA")) {
         ListMap[Call, Option[_]](
-          controllers.gains.routes.PaidTaxAmountController.show(taxYear, cyaModel.sessionId) -> cyaModel.taxPaidAmount
+          controllers.gains.routes.PaidTaxAmountController.show(taxYear, cyaModel.policyId) -> cyaModel.taxPaidAmount
         )
       } else {
         ListMap[Call, Option[_]](
-          controllers.gains.routes.PaidTaxStatusController.show(taxYear, cyaModel.sessionId) -> cyaModel.treatedAsTaxPaid,
-          controllers.gains.routes.GainsDeficiencyReliefController.show(taxYear, cyaModel.sessionId) -> deficiencyRelief
+          controllers.gains.routes.PaidTaxStatusController.show(taxYear, cyaModel.policyId) -> cyaModel.treatedAsTaxPaid,
+          controllers.gains.routes.GainsDeficiencyReliefController.show(taxYear, cyaModel.policyId) -> deficiencyRelief
         )
       }
     }
 
     val cya: ListMap[Call, Option[_]] = cyaCommon ++ cyaPolicyHeldPrevious ++ cyaSpecific
     cya.find(x => x._2.isEmpty)
-      .fold(Ok(view(taxYear, Seq(cyaModel), gateway = true, cyaModel.sessionId)))(emptyValue => Redirect(emptyValue._1))
+      .fold(Ok(view(taxYear, Seq(cyaModel), gateway = true, cyaModel.policyId)))(emptyValue => Redirect(emptyValue._1))
   }
 }

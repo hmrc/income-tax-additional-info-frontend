@@ -50,7 +50,7 @@ class PolicyTypeController @Inject()(authorisedAction: AuthorisedAction,
           case Some(cyaData) =>
                 cyaData.gains.fold(Future.successful(Ok(view(taxYear, form(request.user.isAgent), sessionId)))) {
                   data =>
-                    data.allGains.filter(_.sessionId == sessionId) match {
+                    data.allGains.filter(_.policyId == sessionId) match {
                       case value => if (value.nonEmpty) {
                         Future.successful(Ok(view(taxYear, form(request.user.isAgent).fill(value.head.policyType.getOrElse("")), sessionId)))
                       }
@@ -79,15 +79,15 @@ class PolicyTypeController @Inject()(authorisedAction: AuthorisedAction,
           case Right(sessionData) =>
             val cya = sessionData.flatMap(_.gains).getOrElse(AllGainsSessionModel(Seq.empty))
             val newData =
-              if (!cya.allGains.map(_.sessionId).contains(sessionId)) {
-                cya.allGains ++ Seq(PolicyCyaModel(sessionId = sessionId, policyType = Some(policy)))
+              if (!cya.allGains.map(_.policyId).contains(sessionId)) {
+                cya.allGains ++ Seq(PolicyCyaModel(policyId = sessionId, policyType = Some(policy)))
               } else {
                 val gains = cya.allGains
-                val newG = cya.allGains.filter(_.sessionId == sessionId).head.copy(policyType = Some(policy))
-                gains.updated(gains.indexOf(gains.find(_.sessionId == sessionId).get), newG)
+                val newG = cya.allGains.filter(_.policyId == sessionId).head.copy(policyType = Some(policy))
+                gains.updated(gains.indexOf(gains.find(_.policyId == sessionId).get), newG)
               }
             gainsSessionService.updateSessionData(AllGainsSessionModel(newData, cya.gateway), taxYear)(errorHandler.internalServerError()) {
-              if (newData.filter(_.sessionId == sessionId).head.isFinished) {
+              if (newData.filter(_.policyId == sessionId).head.isFinished) {
                 Redirect(controllers.gains.routes.PolicySummaryController.show(taxYear, sessionId))
               } else {
                 Redirect(controllers.gainsBase.routes.PolicyNameBaseController.show(taxYear, sessionId, None))

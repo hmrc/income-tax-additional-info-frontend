@@ -465,7 +465,7 @@ class PolicySummaryControllerISpec extends IntegrationTest {
 
       val updatedGainsUserDataModel =
         gainsUserDataModel.copy(
-          gains = Some(AllGainsSessionModel(Seq(completePolicyCyaModel.copy(sessionId = s"sessionId-${UUID.randomUUID().toString}")), gateway = Some(true)))
+          gains = Some(AllGainsSessionModel(Seq(completePolicyCyaModel.copy(policyId = s"sessionId-${UUID.randomUUID().toString}")), gateway = Some(true)))
         )
 
       running(applicationWithBackendMongo) {

@@ -31,7 +31,7 @@ case class LifeAnnuityModel(
                            ) {
   def toPolicyCya: PolicyCyaModel = {
     PolicyCyaModel(
-      sessionId = UUID.randomUUID().toString,
+      policyId = UUID.randomUUID().toString,
       policyType = Some("Life Annuity"),
       policyNumber = this.customerReference,
       amountOfGain = Some(this.gainAmount),

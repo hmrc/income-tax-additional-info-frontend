@@ -75,7 +75,7 @@ class PolicyNameSplitController @Inject()(authorisedAction: AuthorisedAction,
           cyaData =>
             cyaData.gains.fold(Future.successful(errorHandler.internalServerError())) {
               data =>
-                data.allGains.find(_.sessionId == sessionId) match {
+                data.allGains.find(_.policyId == sessionId) match {
                   case None =>
                     logger.info("[PolicyNameSplitController][submit] No policy exists with session id passed")
                     gainsSessionService.updateSessionData(
@@ -111,7 +111,7 @@ class PolicyNameSplitController @Inject()(authorisedAction: AuthorisedAction,
           case Left(_) => Future.successful(errorHandler.internalServerError())
           case Right(sessionData) =>
             val cya = sessionData.flatMap(_.gains).getOrElse(AllGainsSessionModel(Seq.empty))
-            val currentSession = cya.allGains.find(_.sessionId == sessionId)
+            val currentSession = cya.allGains.find(_.policyId == sessionId)
             currentSession match {
               case None => Future.successful(errorHandler.internalServerError())
               case Some(session) =>

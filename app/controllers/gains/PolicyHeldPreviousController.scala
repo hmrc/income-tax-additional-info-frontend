@@ -52,7 +52,7 @@ class PolicyHeldPreviousController @Inject()(authorisedAction: AuthorisedAction,
           cyaData =>
             cyaData.gains.fold(Ok(view(taxYear, form(request.user.isAgent), sessionId))) {
               data =>
-                data.allGains.filter(_.sessionId == sessionId).head.yearsPolicyHeldPrevious match {
+                data.allGains.filter(_.policyId == sessionId).head.yearsPolicyHeldPrevious match {
                   case None => Ok(view(taxYear, form(request.user.isAgent), sessionId))
                   case Some(value) => Ok(view(taxYear, form(request.user.isAgent).fill(Some(value)), sessionId))
                 }
@@ -71,7 +71,7 @@ class PolicyHeldPreviousController @Inject()(authorisedAction: AuthorisedAction,
           case Left(_) => Future.successful(errorHandler.internalServerError())
           case Right(sessionData) =>
             val cya = sessionData.flatMap(_.gains).getOrElse(AllGainsSessionModel(Seq.empty))
-            val index = cya.allGains.indexOf(cya.allGains.filter(_.sessionId == sessionId).head)
+            val index = cya.allGains.indexOf(cya.allGains.filter(_.policyId == sessionId).head)
             val newData = cya.allGains(index).copy(yearsPolicyHeldPrevious = amount)
             val updated = cya.allGains.updated(index, newData)
             gainsSessionService.updateSessionData(AllGainsSessionModel(updated, cya.gateway), taxYear)(errorHandler.internalServerError()) {

@@ -186,7 +186,7 @@ class PoliciesRemoveControllerISpec extends IntegrationTest {
 
       running(application) {
         clearSession()
-        populateWithSessionDataModel(Seq(completePolicyCyaModel.copy(sessionId = sessionId), completePolicyCyaModel.copy(sessionId = "anotherSession")))
+        populateWithSessionDataModel(Seq(completePolicyCyaModel.copy(policyId = sessionId), completePolicyCyaModel.copy(policyId = "anotherSession")))
         authoriseAgentOrIndividual(isAgent = false)
         userDataStub(gainsPriorDataModel, nino, taxYear)
         submitGains()
@@ -208,7 +208,7 @@ class PoliciesRemoveControllerISpec extends IntegrationTest {
 
       running(applicationWithBackendMongo) {
         clearSession()
-        populateWithSessionDataModel(Seq(completePolicyCyaModel.copy(sessionId = sessionId), completePolicyCyaModel.copy(sessionId = "anotherSession")))
+        populateWithSessionDataModel(Seq(completePolicyCyaModel.copy(policyId = sessionId), completePolicyCyaModel.copy(policyId = "anotherSession")))
         authoriseAgentOrIndividual(isAgent = false)
         userDataStub(gainsPriorDataModel, nino, taxYear)
         submitGains()
@@ -320,7 +320,7 @@ class PoliciesRemoveControllerISpec extends IntegrationTest {
 
       running(application) {
         clearSession()
-        populateWithSessionDataModel(Seq(completePolicyCyaModel.copy(sessionId = sessionId), completePolicyCyaModel.copy(sessionId = "anotherSession")))
+        populateWithSessionDataModel(Seq(completePolicyCyaModel.copy(policyId = sessionId), completePolicyCyaModel.copy(policyId = "anotherSession")))
         authoriseAgentOrIndividual(isAgent = false)
         userDataStub(gainsPriorDataModel, nino, taxYear)
         submitGains(status = INTERNAL_SERVER_ERROR, "Failed, unable to submit data")
@@ -341,7 +341,7 @@ class PoliciesRemoveControllerISpec extends IntegrationTest {
 
       running(applicationWithBackendMongo) {
         clearSession()
-        populateWithSessionDataModel(Seq(completePolicyCyaModel.copy(sessionId = sessionId), completePolicyCyaModel.copy(sessionId = "anotherSession")))
+        populateWithSessionDataModel(Seq(completePolicyCyaModel.copy(policyId = sessionId), completePolicyCyaModel.copy(policyId = "anotherSession")))
         authoriseAgentOrIndividual(isAgent = false)
         userDataStub(gainsPriorDataModel, nino, taxYear)
         submitGains(status = INTERNAL_SERVER_ERROR, "Failed, unable to submit data")

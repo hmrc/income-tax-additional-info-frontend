@@ -20,7 +20,7 @@ import play.api.i18n.Messages
 import play.api.libs.json.{Json, OFormat}
 import uk.gov.hmrc.crypto.EncryptedValue
 
-case class PolicyCyaModel(sessionId: String,
+case class PolicyCyaModel(policyId: String,
                           policyType: Option[String] = None,
                           policyNumber: Option[String] = None,
                           amountOfGain: Option[BigDecimal] = None,
@@ -73,7 +73,7 @@ object PolicyCyaModel {
 }
 
 case class EncryptedPolicyCyaModel(
-                                    sessionId: EncryptedValue,
+                                    policyId: EncryptedValue,
                                     policyType: Option[EncryptedValue] = None,
                                     policyNumber: Option[EncryptedValue] = None,
                                     amountOfGain: Option[EncryptedValue] = None,

@@ -53,7 +53,7 @@ class PaidTaxAmountController @Inject()(authorisedAction: AuthorisedAction,
           cyaData =>
             cyaData.gains.fold(Ok(view(taxYear, form(request.user.isAgent), sessionId))) {
               data =>
-                data.allGains.filter(_.sessionId == sessionId) match {
+                data.allGains.filter(_.policyId == sessionId) match {
                   case value => if (value.head.taxPaidAmount.getOrElse(BigDecimal(0)) != 0) {
                     Ok(view(taxYear, form(request.user.isAgent).fill(value.head.taxPaidAmount.getOrElse(BigDecimal(0))), sessionId))
                   } else {
@@ -74,7 +74,7 @@ class PaidTaxAmountController @Inject()(authorisedAction: AuthorisedAction,
           case Left(_) => Future.successful(errorHandler.internalServerError())
           case Right(sessionData) =>
             val cya = sessionData.flatMap(_.gains).getOrElse(AllGainsSessionModel(Seq.empty))
-            val index = cya.allGains.indexOf(cya.allGains.filter(_.sessionId == sessionId).head)
+            val index = cya.allGains.indexOf(cya.allGains.filter(_.policyId == sessionId).head)
             val newData = cya.allGains(index).copy(taxPaidAmount = Some(amount))
             val updated = cya.allGains.updated(index, newData)
             gainsSessionService.updateSessionData(AllGainsSessionModel(updated, cya.gateway), taxYear)(errorHandler.internalServerError()) {

@@ -31,7 +31,7 @@ case class CapitalRedemptionModel(
                                  ) {
   def toPolicyCya: PolicyCyaModel = {
     PolicyCyaModel(
-      sessionId = UUID.randomUUID().toString,
+      policyId = UUID.randomUUID().toString,
       policyType = Some("Capital Redemption"),
       policyNumber = this.customerReference,
       amountOfGain = Some(this.gainAmount),
