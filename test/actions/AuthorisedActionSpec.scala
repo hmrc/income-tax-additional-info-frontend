@@ -16,13 +16,12 @@
 
 package actions
 
-import config.AppConfig
 import org.apache.pekko.actor.ActorSystem
 import models.authorisation.Enrolment.{Agent, Individual, Nino}
 import models.authorisation.SessionValues.{CLIENT_MTDITID, CLIENT_NINO}
 import models.requests.AuthorisationRequest
 import org.scalamock.scalatest.MockFactory
-import play.api.http.Status.{INTERNAL_SERVER_ERROR, OK, SEE_OTHER, UNAUTHORIZED}
+import play.api.http.Status.{INTERNAL_SERVER_ERROR, OK, SEE_OTHER}
 import play.api.mvc.Results.{InternalServerError, Ok}
 import play.api.mvc._
 import play.api.test.FakeRequest
@@ -31,7 +30,6 @@ import support.ControllerUnitTest
 import support.builders.UserBuilder.{aUser, anAgentUser}
 import support.mocks.{MockAuthorisationService, MockErrorHandler}
 import support.providers.FakeRequestProvider
-import support.stubs.AppConfigStub
 import uk.gov.hmrc.auth.core._
 import uk.gov.hmrc.auth.core.authorise.Predicate
 import uk.gov.hmrc.auth.core.retrieve.Retrieval
@@ -72,12 +70,11 @@ class AuthorisedActionSpec extends ControllerUnitTest
   ))
   private val underTest = new AuthorisedAction(authorisationService, appConfig, mcc: ControllerComponents, mockErrorHandler)(executionContext)
 
-  private def configWithSupportingAgentsEnabled(): AppConfig = new AppConfigStub().featureSwitchConfigs(("emaSupportingAgentsEnabled"-> true))
+  def redirectUrl(res: Result): String = {
+    res.header.headers.getOrElse("Location", "/")
+  }
 
-  private def configWithSupportingAgentsDisabled(): AppConfig = new AppConfigStub().featureSwitchConfigs(("emaSupportingAgentsEnabled"-> false))
-
-  private val underTestEnabled = new AuthorisedAction(authorisationService, configWithSupportingAgentsEnabled(), mcc: ControllerComponents, mockErrorHandler)(executionContext)
-  private val underTestDisabled = new AuthorisedAction(authorisationService, configWithSupportingAgentsDisabled(), mcc: ControllerComponents, mockErrorHandler)(executionContext)
+  val baseUrl = "/update-and-submit-income-tax-return/additional-information"
 
   ".executionContext" should {
     "return the given execution context" in {
@@ -209,48 +206,30 @@ class AuthorisedActionSpec extends ControllerUnitTest
 
     "fallback to secondary agent if primary fails" which {
       lazy val result = {
-        mockAuthorisePredicates(underTestEnabled.primaryAgentPredicate(aUser.mtditid), Future.failed(InsufficientEnrolments("Primary failed")))
+        mockAuthorisePredicates(underTest.primaryAgentPredicate(aUser.mtditid), Future.failed(InsufficientEnrolments("Primary failed")))
 
-        mockAuthorisePredicates(underTestEnabled.secondaryAgentPredicate(aUser.mtditid), Future.successful(secondaryAgentEnrolments))
+        mockAuthorisePredicates(underTest.secondaryAgentPredicate(aUser.mtditid), Future.successful(secondaryAgentEnrolments))
 
-        await(underTestEnabled.agentAuthentication(block)(fakeRequestWithMtditidAndNino, headerCarrierWithSession))
+        await(underTest.agentAuthentication(block)(fakeRequestWithMtditidAndNino, headerCarrierWithSession))
       }
 
-      "has a status of OK" in {
-        result.header.status shouldBe OK
+      "has a status of SEE_OTHER" in {
+        result.header.status shouldBe SEE_OTHER
+        redirectUrl(result) shouldBe s"$baseUrl/error/supporting-agent-not-authorised"
+      }
+    }
+    "return error if both primary and secondary fails" which {
+      lazy val result = {
+
+        mockAuthorisePredicates(underTest.primaryAgentPredicate(aUser.mtditid), Future.failed(InsufficientEnrolments("Primary failed")))
+        mockAuthorisePredicates(underTest.secondaryAgentPredicate(aUser.mtditid), Future.failed(InsufficientEnrolments("Secondary failed")))
+
+        await(underTest.agentAuthentication(block)(fakeRequestWithMtditidAndNino, headerCarrierWithSession))
       }
 
-      "has the correct body for limited access" in {
-        await(result.body.consumeData.map(_.utf8String)) shouldBe s"${aUser.mtditid} 0987654321"
-      }
-
-      "not fallback to secondary agent if primary fails when supporting agents are disabled" which {
-        lazy val result = {
-
-          mockAuthorisePredicates(underTestEnabled.primaryAgentPredicate(aUser.mtditid), Future.failed(InsufficientEnrolments("Primary failed")))
-
-          mockAuthorisePredicates(underTestEnabled.secondaryAgentPredicate(aUser.mtditid), Future.failed(InsufficientEnrolments("Secondary failed")))
-
-
-          await(underTestEnabled.agentAuthentication(block)(fakeRequestWithMtditidAndNino, headerCarrierWithSession))
-        }
-
-        "has a status of SEE_OTHER" in {
-          result.header.status shouldBe SEE_OTHER
-        }
-      }
-
-      "return error if both primary and secondary fails when supporting agents are enabled" which {
-        lazy val result = {
-
-          mockAuthorisePredicates(underTestDisabled.primaryAgentPredicate(aUser.mtditid), Future.failed(InsufficientEnrolments("Primary failed")))
-
-          await(underTestDisabled.agentAuthentication(block)(fakeRequestWithMtditidAndNino, headerCarrierWithSession))
-        }
-
-        "has a status of SEE_OTHER" in {
-          result.header.status shouldBe SEE_OTHER
-        }
+      "has a status of SEE_OTHER" in {
+        result.header.status shouldBe SEE_OTHER
+        redirectUrl(result) shouldBe s"$baseUrl/error/you-need-client-authorisation"
       }
     }
   }
@@ -278,21 +257,21 @@ class AuthorisedActionSpec extends ControllerUnitTest
     "render ISE page" when {
       "Agent authentication fails with a non-Auth related exception (Primary Agent)" in {
 
-        mockAuthorisePredicates(underTestEnabled.primaryAgentPredicate(aUser.mtditid), Future.failed(new Exception("bang")))
+        mockAuthorisePredicates(underTest.primaryAgentPredicate(aUser.mtditid), Future.failed(new Exception("bang")))
         mockInternalServerError(InternalServerError)
 
-        val result = underTestEnabled.agentAuthentication(block)(fakeRequestWithMtditidAndNino, headerCarrierWithSession)
+        val result = underTest.agentAuthentication(block)(fakeRequestWithMtditidAndNino, headerCarrierWithSession)
 
         status(result) shouldBe INTERNAL_SERVER_ERROR
       }
 
       "Agent authentication fails with a non-Auth related exception (Secondary Agent)" in {
 
-        mockAuthorisePredicates(underTestEnabled.primaryAgentPredicate(aUser.mtditid), Future.failed(InsufficientEnrolments("Primary failed")))
-        mockAuthorisePredicates(underTestEnabled.secondaryAgentPredicate(aUser.mtditid), Future.failed(new Exception("bang")))
+        mockAuthorisePredicates(underTest.primaryAgentPredicate(aUser.mtditid), Future.failed(InsufficientEnrolments("Primary failed")))
+        mockAuthorisePredicates(underTest.secondaryAgentPredicate(aUser.mtditid), Future.failed(new Exception("bang")))
         mockInternalServerError(InternalServerError)
 
-        val result = underTestEnabled.agentAuthentication(block)(fakeRequestWithMtditidAndNino, headerCarrierWithSession)
+        val result = underTest.agentAuthentication(block)(fakeRequestWithMtditidAndNino, headerCarrierWithSession)
 
         status(result) shouldBe INTERNAL_SERVER_ERROR
       }

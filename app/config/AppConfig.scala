@@ -88,6 +88,7 @@ class AppConfig @Inject()(servicesConfig: ServicesConfig) {
   def feedbackSurveyUrl(isAgent: Boolean): String = s"$feedbackFrontendUrl/feedback/${contactFormServiceIdentifier(isAgent)}"
 
   def viewAndChangeEnterUtrUrl: String = s"$vcBaseUrl/report-quarterly/income-and-expenses/view/agents/client-utr"
+  def viewAndChangeAgentsUrl: String = s"$vcBaseUrl/report-quarterly/income-and-expenses/view/agents"
 
   def betaFeedbackUrl(request: RequestHeader, isAgent: Boolean): String = {
     val requestUri = SafeRedirectUrl(applicationUrl + request.uri).encodedUrl
