@@ -34,6 +34,7 @@ class AppConfigStub extends MockFactory {
     override lazy val signInUrl: String = "/sign-in-url"
     override lazy val incomeTaxSubmissionIvRedirect: String = "/update-and-submit-income-tax-return/iv-uplift"
     override lazy val viewAndChangeEnterUtrUrl: String = "/report-quarterly/income-and-expenses/view/agents/client-utr"
+    override lazy val viewAndChangeAgentsUrl: String = "/report-quarterly/income-and-expenses/view/agents"
     override lazy val incomeTaxSubmissionBaseUrl: String = "/income-tax-submission-base-url"
     override lazy val signOutUrl: String = "/sign-out-url"
 
@@ -67,6 +68,7 @@ class AppConfigStub extends MockFactory {
     override lazy val signInUrl: String = "/sign-in-url"
     override lazy val incomeTaxSubmissionIvRedirect: String = "/update-and-submit-income-tax-return/iv-uplift"
     override lazy val viewAndChangeEnterUtrUrl: String = "/report-quarterly/income-and-expenses/view/agents/client-utr"
+    override lazy val viewAndChangeAgentsUrl: String = "/report-quarterly/income-and-expenses/view/agents"
     override lazy val incomeTaxSubmissionBaseUrl: String = "/income-tax-submission-base-url"
     override lazy val signOutUrl: String = "/sign-out-url"
 
@@ -92,6 +94,7 @@ class AppConfigStub extends MockFactory {
     override lazy val signInUrl: String = "/sign-in-url"
     override lazy val incomeTaxSubmissionIvRedirect: String = "/update-and-submit-income-tax-return/iv-uplift"
     override lazy val viewAndChangeEnterUtrUrl: String = "/report-quarterly/income-and-expenses/view/agents/client-utr"
+    override lazy val viewAndChangeAgentsUrl: String = "/report-quarterly/income-and-expenses/view/agents"
     override lazy val incomeTaxSubmissionBaseUrl: String = "/income-tax-submission-base-url"
     override lazy val signOutUrl: String = "/sign-out-url"
 
