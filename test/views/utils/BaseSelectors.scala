@@ -18,8 +18,6 @@ package views.utils
 
 trait BaseSelectors {
 
-  def concat(selectors: String*): String = selectors.mkString(" ")
-
   val h1 = "h1"
   val h2: Int => String = i => s"h2:nth-of-type($i)"
   val p: Int => String = i => s"p:nth-of-type($i)"
