@@ -16,8 +16,11 @@
 
 package utils
 
+import models.User
+import models.requests.AuthorisationRequest
 import org.scalamock.scalatest.MockFactory
 import play.api.i18n.{Lang, Messages}
+import play.api.test.FakeRequest
 import play.i18n
 import support.UnitTest
 
@@ -49,6 +52,28 @@ class ViewUtilsSpec extends UnitTest
   ".translatedDateFormatter" should {
     "translate date" in {
       ViewUtils.translatedDateFormatter(LocalDate.parse("2002-01-01"))(messages = messages) shouldBe "1 January 2002"
+    }
+  }
+
+  ".dynamicMessage" when {
+    "request is from an Agent" should {
+      "output the Agent message" in {
+
+        implicit val request: AuthorisationRequest[_] = agentRequest
+        implicit val msgs: Messages = messages
+
+        ViewUtils.dynamicMessage("common.test") shouldBe "Test.agent"
+      }
+    }
+
+    "request is from an Individual" should {
+      "output the Individual message" in {
+
+        implicit val request: AuthorisationRequest[_] = individualRequest
+        implicit val msgs: Messages = messages
+
+        ViewUtils.dynamicMessage("common.test") shouldBe "Test.individual"
+      }
     }
   }
 }

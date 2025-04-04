@@ -16,6 +16,7 @@
 
 package utils
 
+import models.requests.AuthorisationRequest
 import play.api.i18n.Messages
 import play.api.mvc.Call
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.HtmlContent
@@ -68,4 +69,7 @@ object ViewUtils {
     val translatedMonth = messages("common." + date.getMonth.toString.toLowerCase)
     s"${date.getDayOfMonth} $translatedMonth ${date.getYear}"
   }
+
+  def dynamicMessage(key: String, args: String*)(implicit messages: Messages, request: AuthorisationRequest[_]): String =
+    messages(key + (if(request.user.isAgent) ".agent" else ".individual"), args: _*)
 }

@@ -1,0 +1,95 @@
+@*
+ * Copyright 2025 HM Revenue & Customs
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *@
+
+@import views.html.templates.Layout
+@import views.html.templates.helpers.Heading
+@import views.html.templates.helpers.InputText
+@import views.html.templates.helpers.Button
+@import views.html.templates.helpers.ErrorSummary
+@import views.html.templates.helpers
+@import utils.ViewUtils._
+@import views.html.templates.helpers.P
+@import play.twirl.api.HtmlFormat
+
+@import models.requests.AuthorisationRequest
+
+@this(
+        layout: Layout,
+        heading: Heading,
+        errorSummary: ErrorSummary,
+        formWithCsrf: FormWithCSRF,
+        inputText: InputText,
+        p: P,
+        details: helpers.Details,
+        bullets: helpers.BulletList,
+        button: Button
+)
+@(taxYear: Int, form: Form[BigDecimal], action: Call)(implicit request: AuthorisationRequest[_], messages: Messages, appConfig: AppConfig)
+
+@layout(
+    pageTitle = messages("postCessationTradeRelief.title"),
+    taxYear = Some(taxYear),
+    hasErrors = form.hasErrors,
+    isAgent = request.user.isAgent
+) {
+
+    @errorSummary(form.errors)
+
+    @heading(messages("postCessationTradeRelief.title"))
+
+    @p { @(dynamicMessage("postCessationTradeRelief.p1")) }
+    @p { @(messages("postCessationTradeRelief.p2")) }
+
+    @details(messages("postCessationTradeRelief.summary.expenses.heading"), id = Some("detailExpenses"), content = {
+        HtmlFormat.fill(Seq(
+            p(Html(messages("postCessationTradeRelief.summary.expenses.p1"))),
+            bullets(Seq(
+                Html(messages("postCessationTradeRelief.summary.expenses.bullet1")),
+                Html(messages("postCessationTradeRelief.summary.expenses.bullet2")),
+                Html(messages("postCessationTradeRelief.summary.expenses.bullet3")),
+                Html(messages("postCessationTradeRelief.summary.expenses.bullet4"))
+            ))
+        ))
+    })
+
+    @details(messages("postCessationTradeRelief.summary.liabilities.heading"), id = Some("detailLiabilities"), content =  {
+        p(Html(dynamicMessage("postCessationTradeRelief.summary.liabilities.p1")))
+    })
+
+    @details(messages("postCessationTradeRelief.summary.loss.heading"), id = Some("detailLoss"), content = {
+        p(Html(messages("postCessationTradeRelief.summary.loss.p1")))
+    })
+
+    @formWithCsrf(action) {
+
+        @inputText(
+            form = form,
+            id = "amount",
+            name = "amount",
+            currency = true,
+            label = dynamicMessage(s"postCessationTradeRelief.label"),
+            labelClasses = Some("govuk-label--m")
+        )
+
+        @button()
+
+    }
+
+}
+
+@{
+    // $COVERAGE-OFF$
+}

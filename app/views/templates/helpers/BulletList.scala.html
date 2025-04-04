@@ -1,5 +1,5 @@
 @*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2025 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,14 +16,10 @@
 
 @this()
 
-@(content: Html, classes: String = "govuk-body", id: Option[String] = None)
+@(elements: Seq[Html], classes: String = "govuk-list govuk-list--bullet", id: Option[String] = None)
 
-@if(id.isDefined){
-    <p class="@classes" id ="@id">@content</p>
-} else {
-    <p class="@classes">@content</p>
-}
-
-@{
-//$COVERAGE-OFF$
-}
+<ul class="@classes" @id.map{id => id="@id"}>
+    @elements.map { element =>
+        <li class="dashed-list-item">@element</li>
+    }
+</ul>

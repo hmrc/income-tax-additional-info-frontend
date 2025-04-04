@@ -71,3 +71,8 @@ POST        /:taxYear/gains/policies-remove-confirmation/:sessionId    controlle
 
 GET         /:taxYear/gains/section-completed                          controllers.gains.SectionCompletedStateController.show(taxYear: Int)
 POST        /:taxYear/gains/section-completed                          controllers.gains.SectionCompletedStateController.submit(taxYear: Int)
+
+
+###########################     Business Tax Reliefs (Other Reliefs) pages     ####################################
+GET         /:taxYear/business-reliefs/post-cessation-trade-relief/relief-claimed   controllers.businessTaxReliefs.PostCessationTradeReliefController.show(taxYear: Int)
+POST        /:taxYear/business-reliefs/post-cessation-trade-relief/relief-claimed   controllers.businessTaxReliefs.PostCessationTradeReliefController.submit(taxYear: Int)
