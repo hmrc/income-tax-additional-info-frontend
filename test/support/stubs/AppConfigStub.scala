@@ -56,6 +56,8 @@ class AppConfigStub extends MockFactory {
 
     override def feedbackSurveyUrl(isAgent: Boolean): String = "/feedback-survey-url"
 
+    override def selfAssessmentHS340Url: String = "https://www.gov.uk/government/publications/interest-and-alternative-finance-payments-eligible-for-relief-on-qualifying-loans-and-alternative-finance-arrangements-hs340-self-assessment-helpshee"
+
     override lazy val emaSupportingAgentsEnabled = false
   }
 
@@ -81,6 +83,8 @@ class AppConfigStub extends MockFactory {
     override lazy val backendSessionEnabled: Boolean = false
 
     override def isSplitGains: Boolean = false
+
+    override def selfAssessmentHS340Url: String = "https://www.gov.uk/government/publications/interest-and-alternative-finance-payments-eligible-for-relief-on-qualifying-loans-and-alternative-finance-arrangements-hs340-self-assessment-helpshee"
   }
 
   //new function to allow values that we need in test, default values in this are kept same as config, to not break other test
@@ -115,6 +119,8 @@ class AppConfigStub extends MockFactory {
     override def betaFeedbackUrl(request: RequestHeader, isAgent: Boolean) = "/beta-feedback-url"
 
     override def feedbackSurveyUrl(isAgent: Boolean): String = "/feedback-survey-url"
+
+    override def selfAssessmentHS340Url: String = "https://www.gov.uk/government/publications/interest-and-alternative-finance-payments-eligible-for-relief-on-qualifying-loans-and-alternative-finance-arrangements-hs340-self-assessment-helpshee"
 
     override lazy val emaSupportingAgentsEnabled = deriveValue("emaSupportingAgentsEnabled",false)
   }

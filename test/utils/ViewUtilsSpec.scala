@@ -16,11 +16,9 @@
 
 package utils
 
-import models.User
 import models.requests.AuthorisationRequest
 import org.scalamock.scalatest.MockFactory
 import play.api.i18n.{Lang, Messages}
-import play.api.test.FakeRequest
 import play.i18n
 import support.UnitTest
 
