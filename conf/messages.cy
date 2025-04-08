@@ -274,6 +274,25 @@ gains.sectionCompletedState.title = A ydych wedi gorffen yr adran hon?
 gains.sectionCompletedState.hint = Byddwch yn dal i allu mynd yn ôl ac adolygu’r wybodaeth rydych wedi’i rhoi i ni.
 gains.sectionCompletedState.error.required = Dewiswch a ydych wedi llenwi’r adran hon
 
+#################       Business Reliefs messages        ########################################
+# TODO Welsh translations
+business-reliefs.qualifying-loan.title = Qualifying loan interest payable in the year
+business-reliefs.qualifying-loan.paragraph1.individual = You can claim tax relief for interest on a loan or alternative finance arrangement used to buy:
+business-reliefs.qualifying-loan.paragraph1.agent = Your client can claim tax relief for interest on a loan or alternative finance arrangement used to buy:
+business-reliefs.qualifying-loan.paragraph2.individual = The total amount of certain Income Tax reliefs that can be used to reduce your total taxable income is limited to £50,000, or 25% of your adjusted total income, whichever amount is greater.
+business-reliefs.qualifying-loan.paragraph2.agent = The total amount of certain Income Tax reliefs that can be used to reduce your client's total taxable income is limited to £50,000, or 25% of your client's adjusted total income, whichever amount is greater.
+business-reliefs.qualifying-loan.bullet1 = shares in, or to fund, a close company
+business-reliefs.qualifying-loan.bullet2 = an interest, or to fund, a partnership(if the partnership is a property letting partnership, follow the link below for further guidance)
+business-reliefs.qualifying-loan.bullet3.individual = plant or machinery for your work(unless you have already deducted this as a business expense)
+business-reliefs.qualifying-loan.bullet3.agent = plant or machinery for your client's work(unless you have already deducted this as a business expense)
+business-reliefs.qualifying-loan.more-info-link = More information about interest and alternative finance payments eligible for relief
+business-reliefs.qualifying-loan.amount.question = How much is the qualifying loan interest payable in the year?
+business-reliefs.qualifying-loan.question.input.error.empty_field = Enter how much interest is payable in the year
+business-reliefs.qualifying-loan.question.input.error.incorrect-characters = Interest payable in the year must only include the numbers 0-9 and a decimal point
+business-reliefs.qualifying-loan.question.input.error.max-amount.individual = The amount of your loan interest must be less than £100,000,000,000
+business-reliefs.qualifying-loan.question.input.error.max-amount.agent = The amount of your client's loan interest must be less than £100,000,000,000
+business-reliefs.qualifying-loan.question.input.error.negative = Enter a valid amount for how much interest is payable in the year
+
 #################       Error messages        ########################################
 common.error.self-assessment.paragraph.1.1 = Os yw’r cyfeiriad gwe yn gywir neu os ydych wedi dewis cysylltiad neu fotwm, gallwch ddefnyddio
 common.error.self-assessment.paragraph.1.2 = Hunanasesiad: ymholiadau cyffredinol

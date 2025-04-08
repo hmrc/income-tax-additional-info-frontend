@@ -71,3 +71,9 @@ POST        /:taxYear/gains/policies-remove-confirmation/:sessionId    controlle
 
 GET         /:taxYear/gains/section-completed                          controllers.gains.SectionCompletedStateController.show(taxYear: Int)
 POST        /:taxYear/gains/section-completed                          controllers.gains.SectionCompletedStateController.submit(taxYear: Int)
+
+
+###########################     Business Relief pages     ####################################
+
+GET         /:taxYear/business-reliefs/qualifying-loan-interest/relief-claimed      controllers.businessReliefs.BusinessReliefsQualifyingLoanController.show(taxYear: Int)
+POST        /:taxYear/business-reliefs/qualifying-loan-interest/relief-claimed      controllers.businessReliefs.BusinessReliefsQualifyingLoanController.submit(taxYear: Int)

@@ -1,0 +1,75 @@
+@*
+ * Copyright 2025 HM Revenue & Customs
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *@
+
+@import views.html.templates.Layout
+@import views.html.templates.helpers.Heading
+@import views.html.templates.helpers.InputText
+@import views.html.templates.helpers.Button
+@import views.html.templates.helpers.ErrorSummary
+@import views.html.templates.helpers.Link
+
+@import models.requests.AuthorisationRequest
+
+@this(
+        layout: Layout,
+        heading: Heading,
+        errorSummary: ErrorSummary,
+        govukWarningText: GovukWarningText,
+        formWithCsrf: FormWithCSRF,
+        inputText: InputText,
+        button: Button,
+        link: Link
+)
+
+@(taxYear: Int, form: Form[BigDecimal])(implicit request: AuthorisationRequest[_], messages: Messages, appConfig: AppConfig)
+
+@layout(pageTitle = messages("business-reliefs.qualifying-loan.title"), hasErrors = form.hasErrors, taxYear = Some(taxYear), isAgent = request.user.isAgent) {
+
+    @heading(messages("business-reliefs.qualifying-loan.title"), None, "govuk-!-margin-bottom-2")
+
+    @formWithCsrf(action = controllers.businessReliefs.routes.BusinessReliefsQualifyingLoanController.submit(taxYear)) {
+
+        <p class="govuk-body" id="qualifying-loan-paragraph1">
+            @messages(s"business-reliefs.qualifying-loan.paragraph1.${if(request.user.isAgent) "agent" else "individual"}")
+        </p>
+
+        <ul class="govuk-list govuk-list--bullet">
+            <li>@messages("business-reliefs.qualifying-loan.bullet1")</li>
+            <li>@messages("business-reliefs.qualifying-loan.bullet2")</li>
+            <li>@messages(s"business-reliefs.qualifying-loan.bullet3.${if(request.user.isAgent) "agent" else "individual"}")</li>
+        </ul>
+
+        <p class="govuk-body">
+            <a href="#" class="govuk-link">@messages("business-reliefs.qualifying-loan.more-info-link")</a>.
+        </p>
+
+        <p class="govuk-body">
+            @messages(s"business-reliefs.qualifying-loan.paragraph2.${if(request.user.isAgent) "agent" else "individual"}")
+        </p>
+
+        @inputText(
+            form = form,
+            id = "amount",
+            name = "amount",
+            currency = true,
+            label = messages("business-reliefs.qualifying-loan.amount.question"),
+            classes = Some("govuk-input--width-10")
+        )
+
+        @button()
+    }
+
+}
