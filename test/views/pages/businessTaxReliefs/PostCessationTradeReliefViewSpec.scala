@@ -34,12 +34,12 @@ class PostCessationTradeReliefViewSpec extends ViewUnitTest {
 
   object Selectors extends BaseSelectors {
     val expensesSummary = "#detailExpenses summary"
-    val expensesP: Int => String = i => s"#detailExpenses div ${Selectors.p(i)}"
-    val expensesBullet: Int => String = i => s"#detailExpenses div ${Selectors.bullet(i)}"
+    def expensesP(nth: Int): String = s"#detailExpenses div ${Selectors.p(nth)}"
+    def expensesBullet(nth: Int): String = s"#detailExpenses div ${Selectors.bullet(nth)}"
     val liabilitiesSummary = "#detailLiabilities summary"
-    val liabilitiesP: Int => String = i => s"#detailLiabilities div ${Selectors.p(i)}"
+    def liabilitiesP(nth: Int): String = s"#detailLiabilities div ${Selectors.p(nth)}"
     val lossSummary = "#detailLoss summary"
-    val lossP: Int => String = i => s"#detailLoss div ${Selectors.p(i)}"
+    def lossP(nth: Int): String = s"#detailLoss div ${Selectors.p(nth)}"
   }
 
   override protected val userScenarios: Seq[UserScenario[PostCessationTradeReliefMessages.Messages with i18n, _]] = Seq(

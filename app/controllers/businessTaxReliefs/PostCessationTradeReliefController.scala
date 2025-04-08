@@ -17,21 +17,16 @@
 package controllers.businessTaxReliefs
 
 import actions.AuthorisedAction
-import config.{AppConfig, ErrorHandler}
-import forms.AmountForm
+import config.AppConfig
 import forms.businessTaxReliefs.PostCessationTradeReliefForm
 import models.requests.AuthorisationRequest
-import models.{AllGainsSessionModel, User}
 import play.api.data.Form
 import play.api.i18n.I18nSupport
 import play.api.mvc._
-import services.GainsSessionServiceProvider
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 import views.html.pages.businessTaxReliefs.PostCessationTradeReliefView
-import views.html.pages.gains.PaidTaxAmountPageView
 
 import javax.inject.{Inject, Singleton}
-import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class PostCessationTradeReliefController @Inject()(authorisedAction: AuthorisedAction,

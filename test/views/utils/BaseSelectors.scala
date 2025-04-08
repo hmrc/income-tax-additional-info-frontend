@@ -19,9 +19,9 @@ package views.utils
 trait BaseSelectors {
 
   val h1 = "h1"
-  val h2: Int => String = i => s"h2:nth-of-type($i)"
-  val p: Int => String = i => s"p:nth-of-type($i)"
-  val bullet: Int => String = i => s"ul li:nth-of-type($i)"
+  def h2(nth: Int): String = s"h2:nth-of-type($nth)"
+  def p(nth: Int): String = s"p:nth-of-type($nth)"
+  def bullet(nth: Int): String = s"ul li:nth-of-type($nth)"
   val summary = "summary"
 
 }
