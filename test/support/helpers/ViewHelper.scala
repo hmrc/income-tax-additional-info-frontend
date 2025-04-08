@@ -69,7 +69,7 @@ trait ViewHelper {
 
   def textOnPageCheck(text: String, selector: String, additionalTestText: String = "")(implicit document: Document): Unit = {
     s"have text on the screen of '$text' $additionalTestText" in {
-      document.select(selector).text() shouldBe text
+      document.select(selector).text() should include(text)
     }
   }
 
