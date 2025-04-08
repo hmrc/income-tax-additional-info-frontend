@@ -1,5 +1,5 @@
-@*
- * Copyright 2023 HM Revenue & Customs
+/*
+ * Copyright 2025 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -12,18 +12,16 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *@
+ */
 
-@this()
+package views.utils
 
-@(content: Html, classes: String = "govuk-body", id: Option[String] = None)
+trait BaseSelectors {
 
-@if(id.isDefined){
-    <p class="@classes" id ="@id">@content</p>
-} else {
-    <p class="@classes">@content</p>
-}
+  val h1 = "h1"
+  def h2(nth: Int): String = s"h2:nth-of-type($nth)"
+  def p(nth: Int): String = s"p:nth-of-type($nth)"
+  def bullet(nth: Int): String = s"ul li:nth-of-type($nth)"
+  val summary = "summary"
 
-@{
-//$COVERAGE-OFF$
 }

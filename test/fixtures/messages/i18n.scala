@@ -1,5 +1,5 @@
-@*
- * Copyright 2023 HM Revenue & Customs
+/*
+ * Copyright 2025 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -12,18 +12,24 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *@
+ */
 
-@this()
+package fixtures.messages
 
-@(content: Html, classes: String = "govuk-body", id: Option[String] = None)
+import play.api.i18n.Lang
+import uk.gov.hmrc.hmrcfrontend.views.viewmodels.language.{Cy, En, Language}
 
-@if(id.isDefined){
-    <p class="@classes" id ="@id">@content</p>
-} else {
-    <p class="@classes">@content</p>
+sealed trait i18n {
+  val language: Language
+  lazy val lang: Lang = Lang(language.code)
+  val continue = "Continue"
 }
 
-@{
-//$COVERAGE-OFF$
+trait En extends i18n {
+  override val language: Language = En
+}
+
+trait Cy extends i18n {
+  override val language: Language = Cy
+  override val continue = "Yn eich blaen"
 }
