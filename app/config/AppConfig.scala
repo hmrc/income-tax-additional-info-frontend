@@ -39,6 +39,8 @@ class AppConfig @Inject()(servicesConfig: ServicesConfig) {
   private lazy val signInContinueUrlKey = "microservice.services.sign-in.continueUrl"
   private val incomeTaxSubmissionUrlKey = "microservice.services.income-tax-submission.url"
 
+  private lazy val selfAssessmentHS340UrlKey = "microservice.publications.selfAssessmentHS340Url"
+
   private lazy val applicationUrl: String = servicesConfig.getString("microservice.url")
   private lazy val basGatewayUrl = servicesConfig.getString(basGatewayFrontendUrlKey)
   private lazy val feedbackFrontendUrl = servicesConfig.getString(feedbackFrontendUrlKey)
@@ -86,6 +88,8 @@ class AppConfig @Inject()(servicesConfig: ServicesConfig) {
   def contactFormServiceIdentifier(isAgent: Boolean): String = if (isAgent) contactFormServiceAgentKey else contactFormServiceIndividualKey
 
   def feedbackSurveyUrl(isAgent: Boolean): String = s"$feedbackFrontendUrl/feedback/${contactFormServiceIdentifier(isAgent)}"
+
+  def selfAssessmentHS340Url: String = servicesConfig.getString(selfAssessmentHS340UrlKey)
 
   def viewAndChangeEnterUtrUrl: String = s"$vcBaseUrl/report-quarterly/income-and-expenses/view/agents/client-utr"
   def viewAndChangeAgentsUrl: String = s"$vcBaseUrl/report-quarterly/income-and-expenses/view/agents"
