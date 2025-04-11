@@ -16,7 +16,7 @@
 
 package utils
 
-import models.requests.AuthorisationRequest
+import models.requests.JourneyDataRequest
 import play.api.i18n.Messages
 import play.api.mvc.Call
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.HtmlContent
@@ -70,6 +70,6 @@ object ViewUtils {
     s"${date.getDayOfMonth} $translatedMonth ${date.getYear}"
   }
 
-  def dynamicMessage(key: String, args: String*)(implicit messages: Messages, request: AuthorisationRequest[_]): String =
+  def dynamicMessage(key: String, args: String*)(implicit messages: Messages, request: JourneyDataRequest[_]): String =
     messages(key + (if(request.user.isAgent) ".agent" else ".individual"), args: _*)
 }

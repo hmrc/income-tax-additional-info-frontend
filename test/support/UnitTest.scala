@@ -16,13 +16,14 @@
 
 package support
 
-import models.User
+import models.{Journey, UserAnswersModel}
 import models.requests.AuthorisationRequest
 import org.scalamock.scalatest.MockFactory
 import org.scalatest.BeforeAndAfterEach
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
 import play.api.test.{DefaultAwaitTimeout, FakeRequest, FutureAwaits}
+import support.builders.UserBuilder.{aUser, anAgentUser}
 import uk.gov.hmrc.http.HeaderCarrier
 
 trait UnitTest extends AnyWordSpec with Matchers with MockFactory with BeforeAndAfterEach
@@ -30,6 +31,8 @@ trait UnitTest extends AnyWordSpec with Matchers with MockFactory with BeforeAnd
 
   implicit val emptyHeaderCarrier: HeaderCarrier = HeaderCarrier()
 
-  val agentRequest: AuthorisationRequest[_] = AuthorisationRequest(User("123", Some("arn"), "AA12346B", "Agent", "sessionId"), FakeRequest())
-  val individualRequest: AuthorisationRequest[_] = AuthorisationRequest(User("123", None, "AA12346B", "Individual", "sessionId"), FakeRequest())
+  val agentRequest: AuthorisationRequest[_] = AuthorisationRequest(anAgentUser, FakeRequest())
+  val individualRequest: AuthorisationRequest[_] = AuthorisationRequest(aUser, FakeRequest())
+
+  def emptyUserAnswers(taxYear: Int, journey: Journey) = UserAnswersModel(aUser.mtditid, aUser.nino, taxYear, journey)
 }

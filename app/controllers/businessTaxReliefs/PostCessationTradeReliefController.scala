@@ -16,39 +16,46 @@
 
 package controllers.businessTaxReliefs
 
-import actions.AuthorisedAction
+import actions.{AuthorisedAction, JourneyDataRetrievalAction}
 import config.AppConfig
+import controllers.BaseController
 import forms.businessTaxReliefs.PostCessationTradeReliefForm
-import models.requests.AuthorisationRequest
+import models.BusinessTaxReliefs
+import models.requests.JourneyDataRequest
+import pages.businessTaxReliefs.PostCessationTradeReliefPage
 import play.api.data.Form
-import play.api.i18n.I18nSupport
-import play.api.mvc._
-import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
+import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
+import services.UserAnswersService
 import views.html.pages.businessTaxReliefs.PostCessationTradeReliefView
 
-import javax.inject.{Inject, Singleton}
+import javax.inject.Inject
+import scala.concurrent.{ExecutionContext, Future}
 
-@Singleton
-class PostCessationTradeReliefController @Inject()(authorisedAction: AuthorisedAction,
+class PostCessationTradeReliefController @Inject()(override val controllerComponents: MessagesControllerComponents,
+                                                   authorisedAction: AuthorisedAction,
+                                                   retrieveJourney: JourneyDataRetrievalAction,
+                                                   userAnswersService: UserAnswersService,
                                                    view: PostCessationTradeReliefView)
-                                                  (implicit mcc: MessagesControllerComponents, appConfig: AppConfig)
-  extends FrontendController(mcc) with I18nSupport {
+                                                  (implicit appConfig: AppConfig, ec: ExecutionContext) extends BaseController {
 
-  def show(taxYear: Int): Action[AnyContent] = authorisedAction { implicit request =>
-    renderView(Ok, taxYear, PostCessationTradeReliefForm())
-  }
+  def show(taxYear: Int): Action[AnyContent] =
+    (authorisedAction andThen retrieveJourney(taxYear, BusinessTaxReliefs)).async { implicit request =>
+      renderView(Ok, taxYear, fillForm(PostCessationTradeReliefPage, PostCessationTradeReliefForm()))
+    }
 
-  def submit(taxYear: Int): Action[AnyContent] = authorisedAction { implicit request =>
-    PostCessationTradeReliefForm().bindFromRequest().fold(
-      renderView(BadRequest, taxYear, _),
-      _ =>
-        //TODO:
-        // - Save the data to the User Answers (future story)
-        // - Redirect to CYA (future story)
-        NotImplemented
-    )
-  }
+  def submit(taxYear: Int): Action[AnyContent] =
+    (authorisedAction andThen retrieveJourney(taxYear, BusinessTaxReliefs)).async { implicit request =>
+      PostCessationTradeReliefForm().bindFromRequest().fold(
+        renderView(BadRequest, taxYear, _),
+        amount => {
+          val updatedAnswers = request.userAnswers.set(PostCessationTradeReliefPage, amount)
+          userAnswersService.set(updatedAnswers).map { _ =>
+            NotImplemented
+          }
+        }
+      )
+    }
 
-  private def renderView(status: Status, taxYear: Int, form: Form[BigDecimal])(implicit request: AuthorisationRequest[_]): Result =
-    status(view(taxYear, form, routes.PostCessationTradeReliefController.submit(taxYear)))
+  private def renderView(status: Status, taxYear: Int, form: Form[BigDecimal])(implicit request: JourneyDataRequest[_]): Future[Result] =
+    Future.successful(status(view(taxYear, form, routes.PostCessationTradeReliefController.submit(taxYear))))
 }

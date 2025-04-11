@@ -18,11 +18,13 @@ package forms.businessTaxReliefs
 
 import fixtures.messages.businessTaxReliefs.PostCessationTradeReliefMessages
 import forms.businessTaxReliefs.PostCessationTradeReliefForm.{key => formKey}
-import models.requests.AuthorisationRequest
+import models.BusinessTaxReliefs
+import models.requests.{AuthorisationRequest, JourneyDataRequest}
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.data.FormError
 import play.api.i18n.{Messages, MessagesApi}
 import support.UnitTest
+import support.utils.TaxYearUtils.taxYear
 
 class PostCessationTradeReliefFormSpec extends UnitTest with GuiceOneAppPerSuite {
 
@@ -41,7 +43,8 @@ class PostCessationTradeReliefFormSpec extends UnitTest with GuiceOneAppPerSuite
 
       s"the user is an ${if(isAgent) "Agent" else "Individual"}" when {
 
-        implicit val request: AuthorisationRequest[_] = if (isAgent) agentRequest else individualRequest
+        val authRequest: AuthorisationRequest[_] = if (isAgent) agentRequest else individualRequest
+        implicit val request: JourneyDataRequest[_] = JourneyDataRequest(authRequest.user, authRequest, emptyUserAnswers(taxYear, BusinessTaxReliefs))
 
         "bind valid values" when {
 

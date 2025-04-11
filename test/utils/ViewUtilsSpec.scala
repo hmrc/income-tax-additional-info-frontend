@@ -16,11 +16,14 @@
 
 package utils
 
-import models.requests.AuthorisationRequest
+import models.BusinessTaxReliefs
+import models.requests.{AuthorisationRequest, JourneyDataRequest}
 import org.scalamock.scalatest.MockFactory
 import play.api.i18n.{Lang, Messages}
+import play.api.mvc.AnyContent
 import play.i18n
 import support.UnitTest
+import support.utils.TaxYearUtils.taxYear
 
 import java.time.LocalDate
 
@@ -57,7 +60,7 @@ class ViewUtilsSpec extends UnitTest
     "request is from an Agent" should {
       "output the Agent message" in {
 
-        implicit val request: AuthorisationRequest[_] = agentRequest
+        implicit val request: JourneyDataRequest[_] = JourneyDataRequest(agentRequest.user, agentRequest, emptyUserAnswers(taxYear, BusinessTaxReliefs))
         implicit val msgs: Messages = messages
 
         ViewUtils.dynamicMessage("common.test") shouldBe "Test.agent"
@@ -67,7 +70,7 @@ class ViewUtilsSpec extends UnitTest
     "request is from an Individual" should {
       "output the Individual message" in {
 
-        implicit val request: AuthorisationRequest[_] = individualRequest
+        implicit val request: JourneyDataRequest[_] = JourneyDataRequest(individualRequest.user, individualRequest, emptyUserAnswers(taxYear, BusinessTaxReliefs))
         implicit val msgs: Messages = messages
 
         ViewUtils.dynamicMessage("common.test") shouldBe "Test.individual"
