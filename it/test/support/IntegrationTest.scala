@@ -24,7 +24,7 @@ import models.authorisation.SessionValues
 import models.gains.prior.GainsPriorDataModel
 import models.gains.{LifeInsuranceModel, PolicyCyaModel}
 import models.mongo.GainsUserDataModel
-import models.{AllGainsSessionModel, User}
+import models.{AllGainsSessionModel, Journey, User, UserAnswersModel}
 import org.apache.pekko.actor.ActorSystem
 import org.scalatest.BeforeAndAfterAll
 import org.scalatest.matchers.should.Matchers
@@ -63,6 +63,9 @@ trait IntegrationTest extends AnyWordSpec
   val mtditid = "1234567890"
   val sessionId = "sessionId-eb3158c2-0aff-4ce8-8d1b-f2208ace52fe"
   val affinityGroup = "affinityGroup"
+
+  def emptyUserAnswers(taxYear: Int, journey: Journey): UserAnswersModel =
+    UserAnswersModel(aUser.mtditid, aUser.nino, taxYear, journey)
 
   val backendSessionEnabled = "backendSessionEnabled"
 
