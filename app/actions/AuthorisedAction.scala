@@ -30,9 +30,7 @@ import uk.gov.hmrc.auth.core.authorise.Predicate
 import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals.{affinityGroup, allEnrolments, confidenceLevel}
 import uk.gov.hmrc.auth.core.retrieve.~
 import uk.gov.hmrc.http.{HeaderCarrier, SessionKeys}
-import uk.gov.hmrc.play.http.HeaderCarrierConverter
 
-import java.util.UUID
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -41,7 +39,7 @@ class AuthorisedAction @Inject()(authService: AuthorisationService,
                                  cc: ControllerComponents,
                                  errorHandler: ErrorHandler)
                                 (implicit ec: ExecutionContext)
-  extends ActionBuilder[AuthorisationRequest, AnyContent] with Logging {
+  extends ActionBuilder[AuthorisationRequest, AnyContent] with HeaderCarrierHelper with Logging {
 
   private val minimumConfidenceLevel: Int = ConfidenceLevel.L250.level
 
@@ -53,8 +51,8 @@ class AuthorisedAction @Inject()(authService: AuthorisationService,
   override def parser: BodyParser[AnyContent] = cc.parsers.default
 
   override def invokeBlock[A](request: Request[A], block: AuthorisationRequest[A] => Future[Result]): Future[Result] = {
-    implicit lazy val headerCarrier: HeaderCarrier = HeaderCarrierConverter.fromRequestAndSession(request, request.session)
-      .withExtraHeaders("X-CorrelationId" -> correlationId(request.headers.get("CorrelationId")))
+
+    implicit lazy val headerCarrier: HeaderCarrier = hcWithCorrelationId(request)
 
     authService.authorised().retrieve(affinityGroup) {
       case Some(AffinityGroup.Agent) => agentAuthentication(block)(request, headerCarrier)
@@ -65,18 +63,6 @@ class AuthorisedAction @Inject()(authService: AuthorisationService,
       case _: AuthorisationException => redirectToUnauthorisedUserErrorPage()
       case e => logger.error(s"$agentAuthLogString - Unexpected exception of type '${e.getClass.getSimpleName}' was caught.")
         errorHandler.internalServerError()(request)
-    }
-  }
-
-  private def correlationId(correlationIdHeader: Option[String]): String = {
-
-    if (correlationIdHeader.isDefined) {
-      logger.info("[AuthorisedAction]Valid CorrelationId header found.")
-      correlationIdHeader.get
-    } else {
-      lazy val id = UUID.randomUUID().toString
-      logger.warn(s"[AuthorisedAction]No valid CorrelationId found in headers. Defaulting Correlation Id. $id")
-      id
     }
   }
 

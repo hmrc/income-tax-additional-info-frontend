@@ -17,7 +17,7 @@
 package forms.businessTaxReliefs
 
 import forms.validation.mappings.MappingUtil.currency
-import models.requests.AuthorisationRequest
+import models.requests.JourneyDataRequest
 import play.api.data.Form
 import play.api.i18n.Messages
 import utils.ViewUtils.dynamicMessage
@@ -26,7 +26,7 @@ object PostCessationTradeReliefForm {
 
   val key: String = "amount"
 
-  def apply()(implicit messages: Messages, request: AuthorisationRequest[_]): Form[BigDecimal] =
+  def apply()(implicit messages: Messages, request: JourneyDataRequest[_]): Form[BigDecimal] =
     Form(
       key -> currency(
         requiredKey = dynamicMessage("postCessationTradeRelief.amount.error.required"),

@@ -16,7 +16,8 @@
 
 package models
 
-import play.api.libs.json.{JsObject, Json, OFormat}
+import pages.{QuestionPage, Settable}
+import play.api.libs.json._
 
 import java.time.Instant
 
@@ -25,7 +26,22 @@ case class UserAnswersModel(mtdItId: String,
                             taxYear: Int,
                             journey: Journey,
                             data: JsObject = Json.obj(),
-                            lastUpdated: Instant = Instant.now)
+                            lastUpdated: Instant = Instant.now) {
+
+  def get[A](page: QuestionPage[A])(implicit rds: Reads[A]): Option[A] =
+    Reads.optionNoError(Reads.at(page.path)).reads(data).asOpt.flatten
+
+  def set[A](page: Settable[A], value: A)(implicit writes: Writes[A]): UserAnswersModel =
+    handleResult { data.setObject(page.path, Json.toJson(value)) }
+
+  def remove[A](page: Settable[A]): UserAnswersModel =
+    handleResult { data.removeObject(page.path) }
+
+  private[models] def handleResult: JsResult[JsObject] => UserAnswersModel = {
+    case JsSuccess(updatedAnswers, _) => copy(data = updatedAnswers)
+    case JsError(errors) => throw JsResultException(errors)
+  }
+}
 
 object UserAnswersModel {
   implicit val format: OFormat[UserAnswersModel] = Json.format[UserAnswersModel]
