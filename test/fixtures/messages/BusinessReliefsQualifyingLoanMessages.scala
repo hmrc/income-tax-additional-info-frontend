@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-package fixtures.messages.businessTaxReliefs
+package fixtures.messages
 
 import fixtures.messages.{Cy, En, i18n}
 
-object BusinessReliefsNonDeductibleMessages {
+object BusinessReliefsQualifyingLoanMessages {
 
   sealed trait Messages { _: i18n =>
     val headingAndTitle = "Qualifying loan interest payable in the year"
