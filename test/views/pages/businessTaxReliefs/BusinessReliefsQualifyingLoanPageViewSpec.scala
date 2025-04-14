@@ -16,11 +16,11 @@
 
 package views.pages.businessTaxReliefs
 
+import controllers.businessTaxReliefs.BusinessReliefsQualifyingLoanController
 import fixtures.messages.BusinessReliefsQualifyingLoanMessages
 import fixtures.messages.i18n
 import forms.AmountForm
 import forms.AmountForm.amountForm
-import controllers.businessReliefs.BusinessReliefsQualifyingLoanController
 import models.requests.AuthorisationRequest
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document

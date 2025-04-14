@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package controllers.businessReliefs
+package controllers.businessTaxReliefs
 
 import actions.AuthorisedAction
 import config.AppConfig
@@ -49,7 +49,7 @@ class BusinessReliefsQualifyingLoanController @Inject()(authorisedAction: Author
       .fold(
         formWithErrors => Future.successful(BadRequest(view(taxYear, formWithErrors))),
         //TODO: Temporary redirect. Should redirect to CYA page
-        _ => Future(Redirect(controllers.businessReliefs.routes.BusinessReliefsQualifyingLoanController.show(taxYear)))
+        _ => Future(Redirect(controllers.businessTaxReliefs.routes.BusinessReliefsQualifyingLoanController.show(taxYear)))
       )
   }
 }

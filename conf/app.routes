@@ -79,5 +79,5 @@ GET         /:taxYear/business-reliefs/post-cessation-trade-relief/relief-claime
 POST        /:taxYear/business-reliefs/post-cessation-trade-relief/relief-claimed       controllers.businessTaxReliefs.PostCessationTradeReliefController.submit(taxYear: Int)
 GET         /:taxYear/business-reliefs/non-deductible-loan-interest/relief-claimed      controllers.businessTaxReliefs.BusinessReliefsNonDeductibleController.show(taxYear: Int)
 POST        /:taxYear/business-reliefs/non-deductible-loan-interest/relief-claimed      controllers.businessTaxReliefs.BusinessReliefsNonDeductibleController.submit(taxYear: Int)
-GET         /:taxYear/business-reliefs/qualifying-loan-interest/relief-claimed          controllers.businessReliefs.BusinessReliefsQualifyingLoanController.show(taxYear: Int)
-POST        /:taxYear/business-reliefs/qualifying-loan-interest/relief-claimed          controllers.businessReliefs.BusinessReliefsQualifyingLoanController.submit(taxYear: Int)
+GET         /:taxYear/business-reliefs/qualifying-loan-interest/relief-claimed          controllers.businessTaxReliefs.BusinessReliefsQualifyingLoanController.show(taxYear: Int)
+POST        /:taxYear/business-reliefs/qualifying-loan-interest/relief-claimed          controllers.businessTaxReliefs.BusinessReliefsQualifyingLoanController.submit(taxYear: Int)

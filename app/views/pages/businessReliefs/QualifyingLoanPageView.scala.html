@@ -40,7 +40,7 @@
 
     @heading(messages("business-reliefs.qualifying-loan.title"), None, "govuk-!-margin-bottom-2")
 
-    @formWithCsrf(action = controllers.businessReliefs.routes.BusinessReliefsQualifyingLoanController.submit(taxYear)) {
+    @formWithCsrf(action = controllers.businessTaxReliefs.routes.BusinessReliefsQualifyingLoanController.submit(taxYear)) {
 
         <p class="govuk-body" id="qualifying-loan-paragraph1">
             @messages(s"business-reliefs.qualifying-loan.paragraph1.${if(request.user.isAgent) "agent" else "individual"}")
