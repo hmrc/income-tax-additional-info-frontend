@@ -1,5 +1,4 @@
 #################       Service messages       ########################################
-
 betaBar.banner.message.1 = Gwasanaeth newydd yw hwn – bydd eich
 betaBar.banner.message.2 = adborth
 betaBar.banner.message.3 = yn ein helpu i’w wella.
@@ -296,17 +295,17 @@ business-reliefs.qualifying-loan.title = Qualifying loan interest payable in the
 business-reliefs.qualifying-loan.paragraph1.individual = You can claim tax relief for interest on a loan or alternative finance arrangement used to buy:
 business-reliefs.qualifying-loan.paragraph1.agent = Your client can claim tax relief for interest on a loan or alternative finance arrangement used to buy:
 business-reliefs.qualifying-loan.paragraph2.individual = The total amount of certain Income Tax reliefs that can be used to reduce your total taxable income is limited to £50,000, or 25% of your adjusted total income, whichever amount is greater.
-business-reliefs.qualifying-loan.paragraph2.agent = The total amount of certain Income Tax reliefs that can be used to reduce your client's total taxable income is limited to £50,000, or 25% of your client's adjusted total income, whichever amount is greater.
+business-reliefs.qualifying-loan.paragraph2.agent = The total amount of certain Income Tax reliefs that can be used to reduce your client''s total taxable income is limited to £50,000, or 25% of your client''s adjusted total income, whichever amount is greater.
 business-reliefs.qualifying-loan.bullet1 = shares in, or to fund, a close company
 business-reliefs.qualifying-loan.bullet2 = an interest, or to fund, a partnership(if the partnership is a property letting partnership, follow the link below for further guidance)
 business-reliefs.qualifying-loan.bullet3.individual = plant or machinery for your work(unless you have already deducted this as a business expense)
-business-reliefs.qualifying-loan.bullet3.agent = plant or machinery for your client's work(unless you have already deducted this as a business expense)
+business-reliefs.qualifying-loan.bullet3.agent = plant or machinery for your client''s work(unless you have already deducted this as a business expense)
 business-reliefs.qualifying-loan.more-info-link = More information about interest and alternative finance payments eligible for relief
 business-reliefs.qualifying-loan.amount.question = How much is the qualifying loan interest payable in the year?
 business-reliefs.qualifying-loan.question.input.error.empty_field = Enter how much interest is payable in the year
 business-reliefs.qualifying-loan.question.input.error.incorrect-characters = Interest payable in the year must only include the numbers 0-9 and a decimal point
 business-reliefs.qualifying-loan.question.input.error.max-amount.individual = The amount of your loan interest must be less than £100,000,000,000
-business-reliefs.qualifying-loan.question.input.error.max-amount.agent = The amount of your client's loan interest must be less than £100,000,000,000
+business-reliefs.qualifying-loan.question.input.error.max-amount.agent = The amount of your client''s loan interest must be less than £100,000,000,000
 business-reliefs.qualifying-loan.question.input.error.negative = Enter a valid amount for how much interest is payable in the year
 
 ### Post Cessation Trade Relief
@@ -376,7 +375,6 @@ taxYear-error-template.paragraph.1.single = Dim ond gwybodaeth ar gyfer blwyddyn
 taxYear-error-template.paragraph.2 = Gwiriwch eich bod wedi nodi’r cyfeiriad gwe cywir.
 
 #################       Timeout messages        ########################################
-
 timeout.button = Mewngofnodi
 timeout.heading = Er eich diogelwch, gwnaethom eich allgofnodi
 timeout.p1 = Ni wnaethom gadw’ch atebion.

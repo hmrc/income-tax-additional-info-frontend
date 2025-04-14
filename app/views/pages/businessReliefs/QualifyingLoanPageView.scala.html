@@ -38,6 +38,8 @@
 
 @layout(pageTitle = messages("business-reliefs.qualifying-loan.title"), hasErrors = form.hasErrors, taxYear = Some(taxYear), isAgent = request.user.isAgent) {
 
+    @errorSummary(form.errors)
+
     @heading(messages("business-reliefs.qualifying-loan.title"), None, "govuk-!-margin-bottom-2")
 
     @formWithCsrf(action = controllers.businessTaxReliefs.routes.BusinessReliefsQualifyingLoanController.submit(taxYear)) {
@@ -53,7 +55,7 @@
         </ul>
 
         <p class="govuk-body">
-            <a href="#" class="govuk-link">@messages("business-reliefs.qualifying-loan.more-info-link")</a>.
+            <a href=@{appConfig.selfAssessmentHS340Url} class="govuk-link">@messages("business-reliefs.qualifying-loan.more-info-link")</a>
         </p>
 
         <p class="govuk-body">

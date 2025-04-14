@@ -16,8 +16,6 @@
 
 package fixtures.messages
 
-import fixtures.messages.{Cy, En, i18n}
-
 object BusinessReliefsQualifyingLoanMessages {
 
   sealed trait Messages { _: i18n =>

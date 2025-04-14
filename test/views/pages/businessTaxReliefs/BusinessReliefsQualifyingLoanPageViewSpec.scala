@@ -16,11 +16,9 @@
 
 package views.pages.businessTaxReliefs
 
-import controllers.businessTaxReliefs.BusinessReliefsQualifyingLoanController
 import fixtures.messages.BusinessReliefsQualifyingLoanMessages
 import fixtures.messages.i18n
 import forms.AmountForm
-import forms.AmountForm.amountForm
 import models.requests.AuthorisationRequest
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
@@ -82,7 +80,7 @@ class BusinessReliefsQualifyingLoanPageViewSpec extends ViewUnitTest {
         textOnPageCheck(expectedMessages.b1, "main " + Selectors.bullet(1))
         textOnPageCheck(expectedMessages.b2, "main " + Selectors.bullet(2))
         textOnPageCheck(expectedMessages.b3, "main " + Selectors.bullet(3))
-        textOnPageCheck(expectedMessages.p2, "main " + Selectors.p(2))
+        textOnPageCheck(expectedMessages.p2, "main " + Selectors.p(3))
         buttonCheck(expectedMessages.continue)
       }
     }
