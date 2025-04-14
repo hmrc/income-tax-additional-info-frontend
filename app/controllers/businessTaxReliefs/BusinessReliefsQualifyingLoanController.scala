@@ -37,7 +37,7 @@ class BusinessReliefsQualifyingLoanController @Inject()(authorisedAction: Author
     AmountForm.amountForm(
       emptyFieldKey = "business-reliefs.qualifying-loan.question.input.error.empty_field",
       wrongFormatKey = "business-reliefs.qualifying-loan.question.input.error.incorrect-characters",
-      exceedsMaxAmountKey = s"business-reliefs.qualifying-loan.question.input.error.${if (isAgent) "agent" else "individual"}",
+      exceedsMaxAmountKey = s"business-reliefs.qualifying-loan.question.input.error.max-amount.${if (isAgent) "agent" else "individual"}",
       underMinAmountKey = Some("business-reliefs.qualifying-loan.question.input.error.negative")
     )
 
