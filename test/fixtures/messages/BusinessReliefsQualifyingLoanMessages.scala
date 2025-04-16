@@ -25,7 +25,7 @@ object BusinessReliefsQualifyingLoanMessages {
     val b1 = "shares in, or to fund, a close company"
     val b2 = "an interest, or to fund, a partnership (if the partnership is a property letting partnership, follow the link below for further guidance)"
     val b3 = "plant or machinery for your work (unless you have already deducted this as a business expense)"
-    val link = "More information about interest and alternative finance payments eligible for relief"
+    val link = "More information about interest and alternative finance payments eligible for relief (opens in new tab)"
     val label = "How much is the qualifying loan interest payable in the year?"
 
     val amountEmpty = "Enter how much interest is payable in the year"
@@ -50,7 +50,7 @@ object BusinessReliefsQualifyingLoanMessages {
     override val b1 = "shares in, or to fund, a close company"
     override val b2 = "an interest, or to fund, a partnership (if the partnership is a property letting partnership, follow the link below for further guidance)"
     override val b3 = "plant or machinery for your work (unless you have already deducted this as a business expense)"
-    override val link = "More information about interest and alternative finance payments eligible for relief"
+    override val link = "More information about interest and alternative finance payments eligible for relief (opens in new tab)"
     override val label = "How much is the qualifying loan interest payable in the year?"
 
     override val amountEmpty = "Enter how much interest is payable in the year"
@@ -66,7 +66,7 @@ object BusinessReliefsQualifyingLoanMessages {
     override val b1 = "shares in, or to fund, a close company"
     override val b2 = "an interest, or to fund, a partnership (if the partnership is a property letting partnership, follow the link below for further guidance)"
     override val b3 = "plant or machinery for your client's work (unless you have already deducted this as a business expense)"
-    override val link = "More information about interest and alternative finance payments eligible for relief"
+    override val link = "More information about interest and alternative finance payments eligible for relief (opens in new tab)"
     override val label = "How much is the qualifying loan interest payable in the year?"
 
     override val amountEmpty = "Enter how much interest is payable in the year"
