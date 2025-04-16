@@ -1,5 +1,4 @@
 #################       Service messages       ########################################
-
 betaBar.banner.message.1 = Gwasanaeth newydd yw hwn – bydd eich
 betaBar.banner.message.2 = adborth
 betaBar.banner.message.3 = yn ein helpu i’w wella.
@@ -291,6 +290,55 @@ business-reliefs.non-deductible.question.input.error.incorrect-characters = Non-
 business-reliefs.non-deductible.question.input.error.max-amount.agent = The amount of your client''s non-deductible loan interest must be less than £100,000,000,000 (Welsh)
 business-reliefs.non-deductible.question.input.error.max-amount.individual = The amount of your non-deductible loan interest must be less than £100,000,000,000 (Welsh)
 business-reliefs.non-deductible.question.input.error.negative = Enter a valid amount for the value of the non-deductible loan interest (Welsh)
+# TODO Welsh translations
+business-reliefs.qualifying-loan.title = Qualifying loan interest payable in the year
+business-reliefs.qualifying-loan.paragraph1.individual = You can claim tax relief for interest on a loan or alternative finance arrangement used to buy:
+business-reliefs.qualifying-loan.paragraph1.agent = Your client can claim tax relief for interest on a loan or alternative finance arrangement used to buy:
+business-reliefs.qualifying-loan.paragraph2.individual = The total amount of certain Income Tax reliefs that can be used to reduce your total taxable income is limited to £50,000, or 25% of your adjusted total income, whichever amount is greater.
+business-reliefs.qualifying-loan.paragraph2.agent = The total amount of certain Income Tax reliefs that can be used to reduce your client''s total taxable income is limited to £50,000, or 25% of your client''s adjusted total income, whichever amount is greater.
+business-reliefs.qualifying-loan.bullet1 = shares in, or to fund, a close company
+business-reliefs.qualifying-loan.bullet2 = an interest, or to fund, a partnership (if the partnership is a property letting partnership, follow the link below for further guidance)
+business-reliefs.qualifying-loan.bullet3.individual = plant or machinery for your work (unless you have already deducted this as a business expense)
+business-reliefs.qualifying-loan.bullet3.agent = plant or machinery for your client''s work (unless you have already deducted this as a business expense)
+business-reliefs.qualifying-loan.more-info-link = More information about interest and alternative finance payments eligible for relief (opens in new tab)
+business-reliefs.qualifying-loan.amount.question = How much is the qualifying loan interest payable in the year?
+business-reliefs.qualifying-loan.question.input.error.empty_field = Enter how much interest is payable in the year
+business-reliefs.qualifying-loan.question.input.error.incorrect-characters = Interest payable in the year must only include the numbers 0-9 and a decimal point
+business-reliefs.qualifying-loan.question.input.error.max-amount.individual = The amount of your loan interest must be less than £100,000,000,000
+business-reliefs.qualifying-loan.question.input.error.max-amount.agent = The amount of your client''s loan interest must be less than £100,000,000,000
+business-reliefs.qualifying-loan.question.input.error.negative = Enter a valid amount for how much interest is payable in the year
+
+### Post Cessation Trade Relief
+postCessationTradeRelief.title = Post-cessation trade relief and certain other losses (Welsh)
+
+postCessationTradeRelief.p1.individual = If you’ve paid expenses in connection with a business that has ceased, you may be able to get tax relief on those payments. This relief can only be claimed if you didn’t claim those expenses at the time the business ceased, or anywhere else in this or an earlier tax return. Post-cessation expenses are always set against post-cessation receipts first.  (Welsh)
+postCessationTradeRelief.p1.agent = If your client has paid expenses in connection with a business that has ceased, they may be able to get tax relief on those payments. This relief can only be claimed if they didn’t claim those expenses at the time the business ceased, or anywhere else in this or an earlier tax return. Post-cessation expenses are always set against post-cessation receipts first. (Welsh)
+postCessationTradeRelief.p2 = The expenses must be paid within 7 years of your cessation, and should be claimed against the tax return for the year the expense was paid. The claim must also be made by the anniversary of the filing deadline for the tax year in question. For example, a claim for an expense paid in the tax year 6 April 2026 to 5 April 2027 must be made by 31 January 2029. (Welsh)
+
+postCessationTradeRelief.summary.expenses.heading = Post-cessation expenses (Welsh)
+postCessationTradeRelief.summary.expenses.p1 = Post-cessation expenses are expenses that would have been taken from the business’s profits had it not ceased trading. These expenses are: (Welsh)
+postCessationTradeRelief.summary.expenses.bullet1 = fixing defective work done, or replacing defective services or goods supplied (Welsh)
+postCessationTradeRelief.summary.expenses.bullet2 = any legal or professional costs for any claim against you for defective work (Welsh)
+postCessationTradeRelief.summary.expenses.bullet3 = insurance against such expenses (Welsh)
+postCessationTradeRelief.summary.expenses.bullet4 = recovering debts that were taken into account in calculating your pre-cessation profits. This can include debts that have gone bad, or have been voluntarily released, within 7 years of cessation (Welsh)
+
+postCessationTradeRelief.summary.liabilities.heading = Relief for former employee’s liabilities and costs (Welsh)
+postCessationTradeRelief.summary.liabilities.p1.individual = If the amount of liabilities or costs to be entered relating to your actual or alleged wrongful acts in a former employment, exceed your total income in the year you may be able to claim the excess against capital gains. There are special rules limiting the relief if you did not pay for these costs, for example, yourself. (Welsh)
+postCessationTradeRelief.summary.liabilities.p1.agent = If the amount of liabilities or costs to be entered, relating to your client’s actual or alleged wrongful acts in a former employment, exceed their total income in the year, they may be able to claim the excess against capital gains. There are special rules limiting the relief if they did not pay for these costs, for example, themselves. (Welsh)
+
+postCessationTradeRelief.summary.loss.heading = Employment loss relief (Welsh)
+postCessationTradeRelief.summary.loss.p1 = Relief for losses arising from an employment or office is only available in exceptional circumstances. This is because, as a general rule, employment expenses cannot exceed the earnings from which they are deductible. A loss can sometimes arise where capital allowances due cannot be deducted from the earnings from the employment. Additionally, a loss may also come directly from the conditions of the employment. Otherwise, relief cannot usually be claimed for these losses. (Welsh)
+
+postCessationTradeRelief.label.individual = How much are you claiming for post-cessation trade relief and certain other losses? (Welsh)
+postCessationTradeRelief.label.agent = How much is your client claiming for post-cessation trade relief and certain other losses? (Welsh)
+
+postCessationTradeRelief.amount.error.required.individual = Enter how much relief you are claiming (Welsh)
+postCessationTradeRelief.amount.error.required.agent = Enter how much relief your client is claiming (Welsh)
+postCessationTradeRelief.amount.error.invalid = The amount of relief must only include the numbers 0-9 and a decimal point (Welsh)
+postCessationTradeRelief.amount.error.max.individual = The amount of your relief must be less than £100,000,000,000 (Welsh)
+postCessationTradeRelief.amount.error.max.agent = The amount of your client’s relief must be less than £100,000,000,000 (Welsh)
+postCessationTradeRelief.amount.error.min.individual = Enter a valid amount for how much relief you are claiming (Welsh)
+postCessationTradeRelief.amount.error.min.agent = Enter a valid amount for how much relief your client is claiming (Welsh)
 
 #################       Error messages        ########################################
 common.error.self-assessment.paragraph.1.1 = Os yw’r cyfeiriad gwe yn gywir neu os ydych wedi dewis cysylltiad neu fotwm, gallwch ddefnyddio
@@ -326,42 +374,7 @@ taxYear-error-template.paragraph.1 = Dim ond gwybodaeth ar gyfer y blynyddoedd t
 taxYear-error-template.paragraph.1.single = Dim ond gwybodaeth ar gyfer blwyddyn dreth ddilys y gallwch ei nodi.
 taxYear-error-template.paragraph.2 = Gwiriwch eich bod wedi nodi’r cyfeiriad gwe cywir.
 
-#################       Business Tax Reliefs messages        ########################################
-
-### Post Cessation Trade Relief
-postCessationTradeRelief.title = Post-cessation trade relief and certain other losses (Welsh)
-
-postCessationTradeRelief.p1.individual = If you’ve paid expenses in connection with a business that has ceased, you may be able to get tax relief on those payments. This relief can only be claimed if you didn’t claim those expenses at the time the business ceased, or anywhere else in this or an earlier tax return. Post-cessation expenses are always set against post-cessation receipts first.  (Welsh)
-postCessationTradeRelief.p1.agent = If your client has paid expenses in connection with a business that has ceased, they may be able to get tax relief on those payments. This relief can only be claimed if they didn’t claim those expenses at the time the business ceased, or anywhere else in this or an earlier tax return. Post-cessation expenses are always set against post-cessation receipts first. (Welsh)
-postCessationTradeRelief.p2 = The expenses must be paid within 7 years of your cessation, and should be claimed against the tax return for the year the expense was paid. The claim must also be made by the anniversary of the filing deadline for the tax year in question. For example, a claim for an expense paid in the tax year 6 April 2026 to 5 April 2027 must be made by 31 January 2029. (Welsh)
-
-postCessationTradeRelief.summary.expenses.heading = Post-cessation expenses (Welsh)
-postCessationTradeRelief.summary.expenses.p1 = Post-cessation expenses are expenses that would have been taken from the business’s profits had it not ceased trading. These expenses are: (Welsh)
-postCessationTradeRelief.summary.expenses.bullet1 = fixing defective work done, or replacing defective services or goods supplied (Welsh)
-postCessationTradeRelief.summary.expenses.bullet2 = any legal or professional costs for any claim against you for defective work (Welsh)
-postCessationTradeRelief.summary.expenses.bullet3 = insurance against such expenses (Welsh)
-postCessationTradeRelief.summary.expenses.bullet4 = recovering debts that were taken into account in calculating your pre-cessation profits. This can include debts that have gone bad, or have been voluntarily released, within 7 years of cessation (Welsh)
-
-postCessationTradeRelief.summary.liabilities.heading = Relief for former employee’s liabilities and costs (Welsh)
-postCessationTradeRelief.summary.liabilities.p1.individual = If the amount of liabilities or costs to be entered relating to your actual or alleged wrongful acts in a former employment, exceed your total income in the year you may be able to claim the excess against capital gains. There are special rules limiting the relief if you did not pay for these costs, for example, yourself. (Welsh)
-postCessationTradeRelief.summary.liabilities.p1.agent = If the amount of liabilities or costs to be entered, relating to your client’s actual or alleged wrongful acts in a former employment, exceed their total income in the year, they may be able to claim the excess against capital gains. There are special rules limiting the relief if they did not pay for these costs, for example, themselves. (Welsh)
-
-postCessationTradeRelief.summary.loss.heading = Employment loss relief (Welsh)
-postCessationTradeRelief.summary.loss.p1 = Relief for losses arising from an employment or office is only available in exceptional circumstances. This is because, as a general rule, employment expenses cannot exceed the earnings from which they are deductible. A loss can sometimes arise where capital allowances due cannot be deducted from the earnings from the employment. Additionally, a loss may also come directly from the conditions of the employment. Otherwise, relief cannot usually be claimed for these losses. (Welsh)
-
-postCessationTradeRelief.label.individual = How much are you claiming for post-cessation trade relief and certain other losses? (Welsh)
-postCessationTradeRelief.label.agent = How much is your client claiming for post-cessation trade relief and certain other losses? (Welsh)
-
-postCessationTradeRelief.amount.error.required.individual = Enter how much relief you are claiming (Welsh)
-postCessationTradeRelief.amount.error.required.agent = Enter how much relief your client is claiming (Welsh)
-postCessationTradeRelief.amount.error.invalid = The amount of relief must only include the numbers 0-9 and a decimal point (Welsh)
-postCessationTradeRelief.amount.error.max.individual = The amount of your relief must be less than £100,000,000,000 (Welsh)
-postCessationTradeRelief.amount.error.max.agent = The amount of your client’s relief must be less than £100,000,000,000 (Welsh)
-postCessationTradeRelief.amount.error.min.individual = Enter a valid amount for how much relief you are claiming (Welsh)
-postCessationTradeRelief.amount.error.min.agent = Enter a valid amount for how much relief your client is claiming (Welsh)
-
 #################       Timeout messages        ########################################
-
 timeout.button = Mewngofnodi
 timeout.heading = Er eich diogelwch, gwnaethom eich allgofnodi
 timeout.p1 = Ni wnaethom gadw’ch atebion.
