@@ -282,13 +282,13 @@ business-reliefs.non-deductible.paragraph2.agent = The tax relief your client ca
 business-reliefs.non-deductible.paragraph1.individual = You can claim tax relief on the cost of getting a loan to fund a partnership, or the interest on such a loan. Relief can also be claimed on the cost of getting alternative finance arrangements, and the interest on payments for such arrangements. This relief is limited to the extent that those funds are used for any part of the business that consists of residential properties. (Welsh)
 business-reliefs.non-deductible.paragraph2.individual = The tax relief you can claim is restricted to the basic rate of Income Tax. (Welsh)
 business-reliefs.non-deductible.paragraph3.1 = For more information, visit
-business-reliefs.non-deductible.paragraph3.link = Helpsheet 340
+business-reliefs.non-deductible.paragraph3.link = Helpsheet 340 (opens in new tab)
 business-reliefs.non-deductible.paragraph3.3 = and read the section titled
 business-reliefs.non-deductible.paragraph3.4 = Residential property finance cost restriction. (Welsh)
 business-reliefs.non-deductible.question.input = How much is the non-deductible loan interest from interest investments into property letting partnerships? (Welsh)
 business-reliefs.non-deductible.question.input.error.empty_field = Enter the value of the non-deductible loan interest (Welsh)
 business-reliefs.non-deductible.question.input.error.incorrect-characters = Non-deductible loan interest must only include the numbers 0-9 and a decimal point (Welsh)
-business-reliefs.non-deductible.question.input.error.max-amount.agent = The amount of your clients non-deductible loan interest must be less than £100,000,000,000 (Welsh)
+business-reliefs.non-deductible.question.input.error.max-amount.agent = The amount of your client''s non-deductible loan interest must be less than £100,000,000,000 (Welsh)
 business-reliefs.non-deductible.question.input.error.max-amount.individual = The amount of your non-deductible loan interest must be less than £100,000,000,000 (Welsh)
 business-reliefs.non-deductible.question.input.error.negative = Enter a valid amount for the value of the non-deductible loan interest (Welsh)
 

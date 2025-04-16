@@ -62,7 +62,7 @@ class BusinessReliefsNonDeductiblePageViewSpec extends ViewUnitTest {
         val form: Form[BigDecimal] = AmountForm.amountForm(
           emptyFieldKey = "Enter the value of the non-deductible loan interest",
           wrongFormatKey = "Non-deductible loan interest must only include the numbers 0-9 and a decimal point",
-          exceedsMaxAmountKey = s"The amount of ${if (userScenario.isAgent) "your clients" else "your"} non-deductible loan interest must be less than £100,000,000,000",
+          exceedsMaxAmountKey = s"The amount of ${if (userScenario.isAgent) "your client's" else "your"} non-deductible loan interest must be less than £100,000,000,000",
           underMinAmountKey = Some("Enter a valid amount for the value of the non-deductible loan interest"),
         )
 
