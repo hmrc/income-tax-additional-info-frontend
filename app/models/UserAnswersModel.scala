@@ -16,8 +16,7 @@
 
 package models
 
-import play.api.libs.json.{Format, JsObject, Json, OFormat}
-import uk.gov.hmrc.mongo.play.json.formats.MongoJavatimeFormats
+import play.api.libs.json.{JsObject, Json, OFormat}
 
 import java.time.Instant
 
