@@ -24,16 +24,16 @@ import play.api.http.Status._
 import play.api.libs.json.{JsError, JsSuccess}
 import uk.gov.hmrc.http.{HttpReads, HttpResponse}
 
-object UserAnswersHttpParser extends Logging {
+object UserAnswersHttpReads {
 
   type UserAnswersResponse[T] = Either[ErrorResponse, T]
 
-  implicit object StoreOrDeleteUserAnswersResponseReads extends HttpReads[UserAnswersResponse[Done]] {
+  implicit object StoreOrDeleteUserAnswersResponseReads extends HttpReads[UserAnswersResponse[Done]] with Logging {
     override def read(method: String, url: String, response: HttpResponse): UserAnswersResponse[Done] = response.status match {
       case NO_CONTENT => Right(Done)
       case status =>
         val message = s"Received status '$status' from income-tax-additional-information, with message: ${response.body}"
-        logger.warn(s"[StoreOrDeleteUserAnswersResponseReads][read] $message")
+        logger.warn(s"$message")
         Left(if(method == "PUT") {
           FailedToStoreUserAnswers(status, response.body)
         } else {
@@ -42,7 +42,7 @@ object UserAnswersHttpParser extends Logging {
     }
   }
 
-  implicit object GetUserAnswersResponseReads extends HttpReads[UserAnswersResponse[Option[UserAnswersModel]]] {
+  implicit object GetUserAnswersResponseReads extends HttpReads[UserAnswersResponse[Option[UserAnswersModel]]] with Logging {
     override def read(method: String, url: String, response: HttpResponse): UserAnswersResponse[Option[UserAnswersModel]] =
       response.status match {
         case NO_CONTENT => Right(None)
@@ -50,11 +50,11 @@ object UserAnswersHttpParser extends Logging {
           response.json.validate[UserAnswersModel] match {
             case JsSuccess(answers, _) => Right(Some(answers))
             case JsError(errors) =>
-              logger.warn(s"[GetUserAnswersResponseReads][read] Failed to parse JSON response. Errors:\n${errors.mkString("\n")}")
+              logger.warn(s"Failed to parse JSON response. Errors:\n${errors.mkString("\n")}")
               Left(FailedToParseJson(errors.toSeq))
           }
         case status =>
-          logger.warn(s"[GetUserAnswersResponseReads][read] Received status '$status' from income-tax-additional-information, with message: ${response.body}")
+          logger.warn(s"Received status '$status' from income-tax-additional-information, with message: ${response.body}")
           Left(UnexpectedErrorResponse(status, response.body))
       }
   }

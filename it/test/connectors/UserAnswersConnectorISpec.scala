@@ -17,7 +17,7 @@
 package connectors
 
 import connectors.errors.{FailedToDeleteUserAnswers, FailedToParseJson, FailedToStoreUserAnswers, UnexpectedErrorResponse}
-import connectors.httpParsers.UserAnswersHttpParser.UserAnswersResponse
+import connectors.httpParsers.UserAnswersHttpReads.UserAnswersResponse
 import connectors.session.UserAnswersConnector
 import models.{BusinessTaxReliefs, Journey, UserAnswersModel}
 import org.apache.pekko.Done
@@ -29,8 +29,6 @@ import uk.gov.hmrc.http.HeaderCarrier
 
 import java.time.Instant
 import java.time.temporal.ChronoUnit
-import scala.concurrent.Await
-import scala.concurrent.duration.Duration
 
 class UserAnswersConnectorISpec extends IntegrationTest with ConnectorIntegrationTest {
 
@@ -60,7 +58,7 @@ class UserAnswersConnectorISpec extends IntegrationTest with ConnectorIntegratio
 
           stubGetWithHeadersCheck(getUrl(taxYear, BusinessTaxReliefs), NO_CONTENT, "")
 
-          val result: UserAnswersResponse[Option[UserAnswersModel]] = Await.result(connector.get(taxYear, BusinessTaxReliefs), Duration.Inf)
+          val result: UserAnswersResponse[Option[UserAnswersModel]] = await(connector.get(taxYear, BusinessTaxReliefs))
           result shouldBe Right(None)
         }
       }
@@ -73,7 +71,7 @@ class UserAnswersConnectorISpec extends IntegrationTest with ConnectorIntegratio
 
             stubGetWithHeadersCheck(getUrl(taxYear, BusinessTaxReliefs), OK, Json.toJson(userAnswers).toString())
 
-            val result: UserAnswersResponse[Option[UserAnswersModel]] = Await.result(connector.get(taxYear, BusinessTaxReliefs), Duration.Inf)
+            val result: UserAnswersResponse[Option[UserAnswersModel]] = await(connector.get(taxYear, BusinessTaxReliefs))
             result shouldBe Right(Some(userAnswers))
           }
         }
@@ -84,7 +82,7 @@ class UserAnswersConnectorISpec extends IntegrationTest with ConnectorIntegratio
 
             stubGetWithHeadersCheck(getUrl(taxYear, BusinessTaxReliefs), OK, Json.obj().toString())
 
-            val result: UserAnswersResponse[Option[UserAnswersModel]] = Await.result(connector.get(taxYear, BusinessTaxReliefs), Duration.Inf)
+            val result: UserAnswersResponse[Option[UserAnswersModel]] = await(connector.get(taxYear, BusinessTaxReliefs))
             result shouldBe a[Left[FailedToParseJson, _]]
           }
         }
@@ -96,7 +94,7 @@ class UserAnswersConnectorISpec extends IntegrationTest with ConnectorIntegratio
 
           stubGetWithHeadersCheck(getUrl(taxYear, BusinessTaxReliefs), INTERNAL_SERVER_ERROR, "bang")
 
-          val result: UserAnswersResponse[Option[UserAnswersModel]] = Await.result(connector.get(taxYear, BusinessTaxReliefs), Duration.Inf)
+          val result: UserAnswersResponse[Option[UserAnswersModel]] = await(connector.get(taxYear, BusinessTaxReliefs))
           result shouldBe Left(UnexpectedErrorResponse(INTERNAL_SERVER_ERROR, "bang"))
         }
       }
@@ -110,7 +108,7 @@ class UserAnswersConnectorISpec extends IntegrationTest with ConnectorIntegratio
 
           stubDeleteWithoutResponseBody(deleteUrl(taxYear, BusinessTaxReliefs), NO_CONTENT)
 
-          val result: UserAnswersResponse[Done] = Await.result(connector.delete(taxYear, BusinessTaxReliefs), Duration.Inf)
+          val result: UserAnswersResponse[Done] = await(connector.delete(taxYear, BusinessTaxReliefs))
           result shouldBe Right(Done)
         }
       }
@@ -121,7 +119,7 @@ class UserAnswersConnectorISpec extends IntegrationTest with ConnectorIntegratio
 
           stubDeleteWithResponseBody(deleteUrl(taxYear, BusinessTaxReliefs), INTERNAL_SERVER_ERROR, "bang")
 
-          val result: UserAnswersResponse[Done] = Await.result(connector.delete(taxYear, BusinessTaxReliefs), Duration.Inf)
+          val result: UserAnswersResponse[Done] = await(connector.delete(taxYear, BusinessTaxReliefs))
           result shouldBe Left(FailedToDeleteUserAnswers(INTERNAL_SERVER_ERROR, "bang"))
         }
       }
@@ -135,7 +133,7 @@ class UserAnswersConnectorISpec extends IntegrationTest with ConnectorIntegratio
 
           stubPut(putUrl, NO_CONTENT, "")
 
-          val result: UserAnswersResponse[Done] = Await.result(connector.set(userAnswers), Duration.Inf)
+          val result: UserAnswersResponse[Done] = await(connector.set(userAnswers))
           result shouldBe Right(Done)
         }
       }
@@ -146,7 +144,7 @@ class UserAnswersConnectorISpec extends IntegrationTest with ConnectorIntegratio
 
           stubPut(putUrl, INTERNAL_SERVER_ERROR, "bang")
 
-          val result: UserAnswersResponse[Done] = Await.result(connector.set(userAnswers), Duration.Inf)
+          val result: UserAnswersResponse[Done] = await(connector.set(userAnswers))
           result shouldBe Left(FailedToStoreUserAnswers(INTERNAL_SERVER_ERROR, "bang"))
         }
       }

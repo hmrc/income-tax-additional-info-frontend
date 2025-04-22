@@ -17,7 +17,7 @@
 package connectors.session
 
 import config.AppConfig
-import connectors.httpParsers.UserAnswersHttpParser._
+import connectors.httpParsers.UserAnswersHttpReads._
 import models.{Journey, UserAnswersModel}
 import org.apache.pekko.Done
 import play.api.Logging
