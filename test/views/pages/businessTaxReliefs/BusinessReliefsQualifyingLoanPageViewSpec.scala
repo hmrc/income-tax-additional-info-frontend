@@ -26,7 +26,7 @@ import play.api.data.Form
 import play.api.i18n.Messages
 import play.api.mvc.AnyContent
 import support.ViewUnitTest
-import views.html.pages.businessReliefs.QualifyingLoanPageView
+import views.html.pages.businessTaxReliefs.QualifyingLoanPageView
 import views.utils.BaseSelectors
 
 class BusinessReliefsQualifyingLoanPageViewSpec extends ViewUnitTest {
