@@ -18,16 +18,19 @@ package controllers.businessTaxReliefs
 
 import fixtures.messages.BusinessReliefsQualifyingLoanMessages
 import forms.AmountForm
+import models.{BusinessTaxReliefs, UserAnswersModel}
 import org.scalatest.OptionValues.convertOptionToValuable
 import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
+import pages.businessTaxReliefs.QualifyingLoanReliefPage
 import play.api.http.HeaderNames
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import play.api.{Application, Environment, Mode}
+import support.stubs.UserAnswersStub
 import test.support.IntegrationTest
 
-class BusinessReliefsQualifyingLoanControllerISpec extends IntegrationTest {
+class BusinessReliefsQualifyingLoanControllerISpec extends IntegrationTest with UserAnswersStub {
 
   lazy val application: Application = GuiceApplicationBuilder()
     .in(Environment.simple(mode = Mode.Dev))
@@ -37,13 +40,16 @@ class BusinessReliefsQualifyingLoanControllerISpec extends IntegrationTest {
   private def url(taxYear: Int): String =
     s"/update-and-submit-income-tax-return/additional-information/$taxYear/business-reliefs/qualifying-loan-interest/relief-claimed"
 
+  lazy val userAnswers: UserAnswersModel = emptyUserAnswers(taxYear, BusinessTaxReliefs)
+
   ".show" when {
 
     "user is an Agent" should {
 
-      "render the Non Deductible amount page" in {
+      "render the Non Deductible amount page (page not previously answered)" in {
 
         authoriseAgentOrIndividual(isAgent = true)
+        stubGetUserAnswers(taxYear, BusinessTaxReliefs)(userAnswers)
 
         val request = FakeRequest(GET, url(taxYear)).withHeaders(HeaderNames.COOKIE -> playSessionCookies(taxYear))
         val result = route(application, request).value
@@ -55,15 +61,17 @@ class BusinessReliefsQualifyingLoanControllerISpec extends IntegrationTest {
 
     "user is an Individual" should {
 
-      "render the Post-Cessation Trade Relief amount page" in {
+      "render the Post-Cessation Trade Relief amount page (page previously answered - value pre-popped)" in {
 
         authoriseAgentOrIndividual(isAgent = false)
+        stubGetUserAnswers(taxYear, BusinessTaxReliefs)(userAnswers.set(QualifyingLoanReliefPage, BigDecimal(22.45)))
 
         val request = FakeRequest(GET, url(taxYear)).withHeaders(HeaderNames.COOKIE -> playSessionCookies(taxYear))
         val result = route(application, request).value
 
         status(result) mustEqual OK
         contentAsString(result) must include(BusinessReliefsQualifyingLoanMessages.English.headingAndTitle)
+        contentAsString(result) must include("22.45")
       }
     }
   }
@@ -77,6 +85,8 @@ class BusinessReliefsQualifyingLoanControllerISpec extends IntegrationTest {
         "redirect to the Check Your Answers page" in {
 
           authoriseAgentOrIndividual(isAgent = true)
+          stubGetUserAnswers(taxYear, BusinessTaxReliefs)(userAnswers)
+          stubStoreUserAnswers()
 
           val request = FakeRequest(POST, url(taxYear))
             .withHeaders(HeaderNames.COOKIE -> playSessionCookies(taxYear), "Csrf-Token" -> "nocheck")
@@ -94,6 +104,7 @@ class BusinessReliefsQualifyingLoanControllerISpec extends IntegrationTest {
         "render the page as a bad request" in {
 
           authoriseAgentOrIndividual(isAgent = true)
+          stubGetUserAnswers(taxYear, BusinessTaxReliefs)(userAnswers)
 
           val request = FakeRequest(POST, url(taxYear))
             .withHeaders(HeaderNames.COOKIE -> playSessionCookies(taxYear), "Csrf-Token" -> "nocheck")
@@ -114,6 +125,7 @@ class BusinessReliefsQualifyingLoanControllerISpec extends IntegrationTest {
         "redirect to the Check Your Answers page" in {
 
           authoriseAgentOrIndividual(isAgent = false)
+          stubGetUserAnswers(taxYear, BusinessTaxReliefs)(userAnswers)
 
           val request = FakeRequest(POST, url(taxYear))
             .withHeaders(HeaderNames.COOKIE -> playSessionCookies(taxYear), "Csrf-Token" -> "nocheck")
@@ -131,6 +143,7 @@ class BusinessReliefsQualifyingLoanControllerISpec extends IntegrationTest {
         "render the page as a bad request" in {
 
           authoriseAgentOrIndividual(isAgent = true)
+          stubGetUserAnswers(taxYear, BusinessTaxReliefs)(userAnswers)
 
           val request = FakeRequest(POST, url(taxYear))
             .withHeaders(HeaderNames.COOKIE -> playSessionCookies(taxYear), "Csrf-Token" -> "nocheck")

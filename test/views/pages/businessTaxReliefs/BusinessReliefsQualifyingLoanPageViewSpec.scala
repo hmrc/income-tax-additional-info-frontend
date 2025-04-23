@@ -19,7 +19,8 @@ package views.pages.businessTaxReliefs
 import fixtures.messages.BusinessReliefsQualifyingLoanMessages
 import fixtures.messages.i18n
 import forms.AmountForm
-import models.requests.AuthorisationRequest
+import models.BusinessTaxReliefs
+import models.requests.{AuthorisationRequest, JourneyDataRequest}
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import play.api.data.Form
@@ -56,7 +57,8 @@ class BusinessReliefsQualifyingLoanPageViewSpec extends ViewUnitTest {
 
       "render post-cessation trade relief amount page" which {
 
-        implicit val request: AuthorisationRequest[AnyContent] = getAuthRequest(userScenario.isAgent)
+        val authRequest = getAuthRequest(userScenario.isAgent)
+        implicit val request: JourneyDataRequest[AnyContent] = JourneyDataRequest(authRequest.user, authRequest, emptyUserAnswers(taxYear, BusinessTaxReliefs))
         implicit val messages: Messages = getMessages(userScenario.isWelsh)
 
         val form: Form[BigDecimal] = AmountForm.amountForm(
