@@ -16,7 +16,7 @@
 
 package support.mocks
 
-import connectors.httpParsers.UserAnswersHttpParser.UserAnswersResponse
+import connectors.httpParsers.UserAnswersHttpReads.UserAnswersResponse
 import connectors.session.UserAnswersConnector
 import models.{Journey, UserAnswersModel}
 import org.apache.pekko.Done
