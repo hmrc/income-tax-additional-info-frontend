@@ -17,6 +17,6 @@
 package models.requests
 
 import models.{User, UserAnswersModel}
-import play.api.mvc.{Request, WrappedRequest}
+import play.api.mvc.WrappedRequest
 
 case class JourneyDataRequest[T](user: User, request: AuthorisationRequest[T], userAnswers: UserAnswersModel) extends WrappedRequest[T](request)

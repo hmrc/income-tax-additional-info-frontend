@@ -19,10 +19,9 @@ package controllers.businessTaxReliefs
 import actions.{AuthorisedAction, JourneyDataRetrievalAction}
 import config.AppConfig
 import controllers.BaseController
-import forms.AmountForm
+import forms.businessTaxReliefs.BusinessReliefsQualifyingLoanForm
 import models.BusinessTaxReliefs
 import pages.businessTaxReliefs.QualifyingLoanReliefPage
-import play.api.data.Form
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import services.UserAnswersService
 import views.html.pages.businessTaxReliefs.QualifyingLoanPageView
@@ -37,22 +36,14 @@ class BusinessReliefsQualifyingLoanController @Inject()(override val controllerC
                                                         view: QualifyingLoanPageView)
                                                        (implicit appConfig: AppConfig, ec: ExecutionContext) extends BaseController {
 
-  def form(isAgent: Boolean): Form[BigDecimal] =
-    AmountForm.amountForm(
-      emptyFieldKey = "business-reliefs.qualifying-loan.question.input.error.empty_field",
-      wrongFormatKey = "business-reliefs.qualifying-loan.question.input.error.incorrect-characters",
-      exceedsMaxAmountKey = s"business-reliefs.qualifying-loan.question.input.error.max-amount.${if (isAgent) "agent" else "individual"}",
-      underMinAmountKey = Some("business-reliefs.qualifying-loan.question.input.error.negative")
-    )
-
   def show(taxYear: Int): Action[AnyContent] =
     (authorisedAction andThen retrieveJourney(taxYear, BusinessTaxReliefs)).async { implicit request =>
-      Future(Ok(view(taxYear, fillForm(QualifyingLoanReliefPage, form(request.user.isAgent)))))
+      Future(Ok(view(taxYear, fillForm(QualifyingLoanReliefPage, BusinessReliefsQualifyingLoanForm()))))
     }
 
   def submit(taxYear: Int): Action[AnyContent] =
     (authorisedAction andThen retrieveJourney(taxYear, BusinessTaxReliefs)).async { implicit request =>
-      form(request.user.isAgent).bindFromRequest()
+      BusinessReliefsQualifyingLoanForm().bindFromRequest()
         .fold(
           formWithErrors => Future.successful(BadRequest(view(taxYear, formWithErrors))),
           amount => {

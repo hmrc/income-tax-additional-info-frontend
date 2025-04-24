@@ -29,7 +29,7 @@ import scala.concurrent.{ExecutionContext, Future}
 class UserAnswersService @Inject()(userAnswersConnector: UserAnswersConnector)(implicit ec: ExecutionContext) {
 
   def get(taxYear: Int, journey: Journey)(implicit hc: HeaderCarrier, request: AuthorisationRequest[_]): Future[Option[UserAnswersModel]] =
-    userAnswersConnector.get(taxYear, journey).map {
+    userAnswersConnector.get(taxYear, journey)(hc.withExtraHeaders("mtditid" -> request.user.mtditid)).map {
       case Right(answers) => answers
       case Left(_) => throw new Exception(
         s"Failed to retrieve UserAnswers from income-tax-additional-information for taxYear: '$taxYear', journey: '$journey', mtditid: '${request.user.mtditid}'"
@@ -37,7 +37,7 @@ class UserAnswersService @Inject()(userAnswersConnector: UserAnswersConnector)(i
     }
 
   def set(answers: UserAnswersModel)(implicit hc: HeaderCarrier): Future[UserAnswersModel] = {
-    userAnswersConnector.set(answers).map {
+    userAnswersConnector.set(answers)(hc.withExtraHeaders("mtditid" -> answers.mtdItId)).map {
       case Right(_) => answers
       case Left(_) => throw new Exception(
         s"Failed to store UserAnswers in income-tax-additional-information for for taxYear: '${answers.taxYear}', journey: '${answers.journey}', mtditid: '${answers.mtdItId}'"
@@ -46,7 +46,7 @@ class UserAnswersService @Inject()(userAnswersConnector: UserAnswersConnector)(i
   }
 
   def delete(taxYear: Int, journey: Journey)(implicit hc: HeaderCarrier, request: AuthorisationRequest[_]): Future[Done] =
-    userAnswersConnector.delete(taxYear, journey).map {
+    userAnswersConnector.delete(taxYear, journey)(hc.withExtraHeaders("mtditid" -> request.user.mtditid)).map {
       case Right(response) => response
       case Left(_) => throw new Exception(
         s"Failed to delete UserAnswers from income-tax-additional-information for taxYear: '$taxYear', journey: '$journey', mtditid: '${request.user.mtditid}'"

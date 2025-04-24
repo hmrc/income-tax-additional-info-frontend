@@ -19,10 +19,9 @@ package controllers.businessTaxReliefs
 import actions.{AuthorisedAction, JourneyDataRetrievalAction}
 import config.AppConfig
 import controllers.BaseController
-import forms.AmountForm
+import forms.businessTaxReliefs.BusinessReliefsNonDeductibleForm
 import models.BusinessTaxReliefs
 import pages.businessTaxReliefs.NonDeductibleReliefsPage
-import play.api.data.Form
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import services.UserAnswersService
 import views.html.pages.businessTaxReliefs.BusinessReliefsNonDeductiblePageView
@@ -37,22 +36,14 @@ class BusinessReliefsNonDeductibleController @Inject()(override val controllerCo
                                                        view: BusinessReliefsNonDeductiblePageView)
                                                       (implicit appConfig: AppConfig, ec: ExecutionContext) extends BaseController {
 
-  def form(isAgent: Boolean): Form[BigDecimal] =
-    AmountForm.amountForm(
-      emptyFieldKey = "business-reliefs.non-deductible.question.input.error.empty_field",
-      wrongFormatKey = "business-reliefs.non-deductible.question.input.error.incorrect-characters",
-      exceedsMaxAmountKey = s"business-reliefs.non-deductible.question.input.error.max-amount.${if (isAgent) "agent" else "individual"}",
-      underMinAmountKey = Some("business-reliefs.non-deductible.question.input.error.negative")
-    )
-
   def show(taxYear: Int): Action[AnyContent] =
     (authorisedAction andThen retrieveJourney(taxYear, BusinessTaxReliefs)).async { implicit request =>
-      Future.successful(Ok(view(taxYear, fillForm(NonDeductibleReliefsPage, form(request.user.isAgent)))))
+      Future.successful(Ok(view(taxYear, fillForm(NonDeductibleReliefsPage, BusinessReliefsNonDeductibleForm()))))
     }
 
   def submit(taxYear: Int): Action[AnyContent] =
     (authorisedAction andThen retrieveJourney(taxYear, BusinessTaxReliefs)).async { implicit request =>
-      form(request.user.isAgent).bindFromRequest().fold(
+      BusinessReliefsNonDeductibleForm().bindFromRequest().fold(
         formWithErrors => Future.successful(BadRequest(view(taxYear, formWithErrors))),
         amount => {
           val updatedAnswers = request.userAnswers.set(NonDeductibleReliefsPage, amount)

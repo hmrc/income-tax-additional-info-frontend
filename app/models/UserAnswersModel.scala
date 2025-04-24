@@ -18,6 +18,7 @@ package models
 
 import pages.{QuestionPage, Settable}
 import play.api.libs.json._
+import uk.gov.hmrc.mongo.play.json.formats.MongoJavatimeFormats
 
 import java.time.Instant
 
@@ -44,5 +45,6 @@ case class UserAnswersModel(mtdItId: String,
 }
 
 object UserAnswersModel {
+  implicit val instantFormat: Format[Instant] = MongoJavatimeFormats.instantFormat
   implicit val format: OFormat[UserAnswersModel] = Json.format[UserAnswersModel]
 }
