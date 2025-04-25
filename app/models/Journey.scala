@@ -23,13 +23,11 @@ sealed abstract class Journey(val name: String) {
 }
 
 object BusinessTaxReliefs extends Journey("businessTaxReliefs")
-object postCessationTradeRelief extends Journey("postCessationTradeRelief")
 
 object Journey {
 
   def apply(name: String): Journey = name match {
     case BusinessTaxReliefs.name => BusinessTaxReliefs
-    case postCessationTradeRelief.name => postCessationTradeRelief
     case invalid                 => throw new IllegalArgumentException("Invalid journey name supplied: " + invalid)
   }
 

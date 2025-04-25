@@ -18,7 +18,7 @@ package views.pages.businessTaxReliefs
 
 import fixtures.messages.businessTaxReliefs.PostCessationTradeReliefMessages
 import fixtures.messages.i18n
-import models.postCessationTradeRelief
+import models.BusinessTaxReliefs
 import models.requests.JourneyDataRequest
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
@@ -53,7 +53,7 @@ class CheckAnswersPostCessationTradeReliefViewSpec extends ViewUnitTest {
         implicit val request: JourneyDataRequest[AnyContent] = JourneyDataRequest(
           authRequest.user,
           authRequest,
-          emptyUserAnswers(taxYear, postCessationTradeRelief)
+          emptyUserAnswers(taxYear, BusinessTaxReliefs)
             .set(PostCessationTradeReliefPage, BigDecimal("1000.01"))
         )
         implicit val messages: Messages = getMessages(userScenario.isWelsh)
