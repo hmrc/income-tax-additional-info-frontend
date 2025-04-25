@@ -94,8 +94,8 @@ class PostCessationTradeReliefControllerISpec extends IntegrationTest with UserA
 
           val result = route(application, request).value
 
-          //TODO: In future story, this will be updated to redirect to the CYA page
-          status(result) mustEqual NOT_IMPLEMENTED
+          status(result) mustEqual SEE_OTHER
+          redirectLocation(result) mustBe Some(routes.CheckAnswersPostCessationTradeReliefController.show(taxYear).url)
         }
       }
 
@@ -134,8 +134,8 @@ class PostCessationTradeReliefControllerISpec extends IntegrationTest with UserA
 
           val result = route(application, request).value
 
-          //TODO: In future story, this will be updated to redirect to the CYA page
-          status(result) mustEqual NOT_IMPLEMENTED
+          status(result) mustEqual SEE_OTHER
+          redirectLocation(result) mustBe Some(routes.CheckAnswersPostCessationTradeReliefController.show(taxYear).url)
         }
       }
 
