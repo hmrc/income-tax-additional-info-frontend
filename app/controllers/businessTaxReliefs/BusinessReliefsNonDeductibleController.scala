@@ -16,42 +16,41 @@
 
 package controllers.businessTaxReliefs
 
-import actions.AuthorisedAction
+import actions.{AuthorisedAction, JourneyDataRetrievalAction}
 import config.AppConfig
-import forms.AmountForm
-import play.api.data.Form
-import play.api.i18n.I18nSupport
-import play.api.mvc._
-import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
-import views.html.pages.businessReliefs.BusinessReliefsNonDeductiblePageView
+import controllers.BaseController
+import forms.businessTaxReliefs.BusinessReliefsNonDeductibleForm
+import models.BusinessTaxReliefs
+import pages.businessTaxReliefs.NonDeductibleReliefsPage
+import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
+import services.UserAnswersService
+import views.html.pages.businessTaxReliefs.BusinessReliefsNonDeductiblePageView
 
-import javax.inject.{Inject, Singleton}
+import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
-@Singleton
-class BusinessReliefsNonDeductibleController @Inject()(authorisedAction: AuthorisedAction,
+class BusinessReliefsNonDeductibleController @Inject()(override val controllerComponents: MessagesControllerComponents,
+                                                       authorisedAction: AuthorisedAction,
+                                                       retrieveJourney: JourneyDataRetrievalAction,
+                                                       userAnswersService: UserAnswersService,
                                                        view: BusinessReliefsNonDeductiblePageView)
-                                                      (implicit appConfig: AppConfig, mcc: MessagesControllerComponents, ec: ExecutionContext)
-  extends FrontendController(mcc) with I18nSupport {
+                                                      (implicit appConfig: AppConfig, ec: ExecutionContext) extends BaseController {
 
-  def form(isAgent: Boolean): Form[BigDecimal] =
-    AmountForm.amountForm(
-      emptyFieldKey = "business-reliefs.non-deductible.question.input.error.empty_field",
-      wrongFormatKey = "business-reliefs.non-deductible.question.input.error.incorrect-characters",
-      exceedsMaxAmountKey = s"business-reliefs.non-deductible.question.input.error.max-amount.${if (isAgent) "agent" else "individual"}",
-      underMinAmountKey = Some("business-reliefs.non-deductible.question.input.error.negative")
-    )
+  def show(taxYear: Int): Action[AnyContent] =
+    (authorisedAction andThen retrieveJourney(taxYear, BusinessTaxReliefs)).async { implicit request =>
+      Future.successful(Ok(view(taxYear, fillForm(NonDeductibleReliefsPage, BusinessReliefsNonDeductibleForm()))))
+    }
 
-  def show(taxYear: Int): Action[AnyContent] = authorisedAction.async { implicit request =>
-    Future(Ok(view(taxYear, form(request.user.isAgent))))
-  }
-
-  def submit(taxYear: Int): Action[AnyContent] = authorisedAction.async { implicit request =>
-    form(request.user.isAgent).bindFromRequest()
-      .fold(
+  def submit(taxYear: Int): Action[AnyContent] =
+    (authorisedAction andThen retrieveJourney(taxYear, BusinessTaxReliefs)).async { implicit request =>
+      BusinessReliefsNonDeductibleForm().bindFromRequest().fold(
         formWithErrors => Future.successful(BadRequest(view(taxYear, formWithErrors))),
-        //TODO: Temporary redirect. Should redirect to CYA page
-        _ => Future(Redirect(controllers.businessTaxReliefs.routes.BusinessReliefsNonDeductibleController.show(taxYear)))
+        amount => {
+          val updatedAnswers = request.userAnswers.set(NonDeductibleReliefsPage, amount)
+          userAnswersService.set(updatedAnswers).map { _ =>
+            Redirect(controllers.businessTaxReliefs.routes.BusinessReliefsNonDeductibleController.show(taxYear))
+          }
+        }
       )
-  }
+    }
 }

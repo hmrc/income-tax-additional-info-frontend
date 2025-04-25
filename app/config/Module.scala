@@ -16,6 +16,7 @@
 
 package config
 
+import actions.{JourneyDataRetrievalAction, JourneyDataRetrievalActionImpl}
 import play.api.inject.Binding
 import play.api.{Configuration, Environment}
 import services._
@@ -36,7 +37,8 @@ class Module extends play.api.inject.Module {
     Seq(
       sessionBinding,
       bind[Clock].toInstance(Clock.systemUTC()),
-      bind[AppConfig].toSelf
+      bind[AppConfig].toSelf,
+      bind[JourneyDataRetrievalAction].to[JourneyDataRetrievalActionImpl].eagerly()
     )
   }
 

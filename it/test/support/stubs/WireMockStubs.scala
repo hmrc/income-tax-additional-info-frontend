@@ -65,6 +65,11 @@ trait WireMockStubs {
     ))
   }
 
+  protected def stubGet(url: String,
+                        status: Int,
+                        responseBody: String): StubMapping =
+    stubFor(get(urlMatching(url)).willReturn(aResponse().withStatus(status).withBody(responseBody)))
+
   protected def stubPost(url: String, status: Int, responseBody: String, requestHeaders: Seq[HttpHeader] = Seq.empty): StubMapping = {
     val mappingWithHeaders: MappingBuilder = requestHeaders.foldLeft(post(urlMatching(url))) { (result, nxt) =>
       result.withHeader(nxt.key(), equalTo(nxt.firstValue()))

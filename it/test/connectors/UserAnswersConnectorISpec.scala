@@ -24,21 +24,18 @@ import org.apache.pekko.Done
 import play.api.http.Status._
 import play.api.libs.json.Json
 import play.api.test.Helpers.OK
+import support.stubs.UserAnswersStub
 import test.support.{ConnectorIntegrationTest, IntegrationTest}
 import uk.gov.hmrc.http.HeaderCarrier
 
 import java.time.Instant
 import java.time.temporal.ChronoUnit
 
-class UserAnswersConnectorISpec extends IntegrationTest with ConnectorIntegrationTest {
+class UserAnswersConnectorISpec extends IntegrationTest with ConnectorIntegrationTest with UserAnswersStub {
 
   val connector: UserAnswersConnector = app.injector.instanceOf[UserAnswersConnector]
 
   implicit override val headerCarrier: HeaderCarrier = HeaderCarrier().withExtraHeaders("mtditid" -> mtditid, "X-Session-ID" -> sessionId)
-
-  val putUrl = s"/income-tax-additional-information/income-tax/user-answers"
-  def getUrl(taxYear: Int, journey: Journey): String = s"/income-tax-additional-information/income-tax/user-answers/$taxYear/$journey"
-  def deleteUrl(taxYear: Int, journey: Journey): String = getUrl(taxYear, journey)
 
   val userAnswers: UserAnswersModel = UserAnswersModel(
     mtdItId = mtditid,

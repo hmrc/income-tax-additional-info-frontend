@@ -16,23 +16,19 @@
 
 package forms.businessTaxReliefs
 
-import forms.validation.mappings.MappingUtil.currency
+import forms.AmountForm
 import models.requests.JourneyDataRequest
 import play.api.data.Form
 import play.api.i18n.Messages
 import utils.ViewUtils.dynamicMessage
 
-object PostCessationTradeReliefForm {
-
-  val key: String = "amount"
+object BusinessReliefsQualifyingLoanForm {
 
   def apply()(implicit messages: Messages, request: JourneyDataRequest[_]): Form[BigDecimal] =
-    Form(
-      key -> currency(
-        requiredKey = dynamicMessage("postCessationTradeRelief.amount.error.required"),
-        wrongFormatKey = messages("postCessationTradeRelief.amount.error.invalid"),
-        maxAmountKey = dynamicMessage("postCessationTradeRelief.amount.error.max"),
-        minAmountKey = Some(dynamicMessage("postCessationTradeRelief.amount.error.min"))
-      )
+    AmountForm.amountForm(
+      emptyFieldKey = "business-reliefs.qualifying-loan.question.input.error.empty_field",
+      wrongFormatKey = "business-reliefs.qualifying-loan.question.input.error.incorrect-characters",
+      exceedsMaxAmountKey = dynamicMessage("business-reliefs.qualifying-loan.question.input.error.max-amount"),
+      underMinAmountKey = Some("business-reliefs.qualifying-loan.question.input.error.negative")
     )
 }

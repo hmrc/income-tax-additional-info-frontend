@@ -16,40 +16,42 @@
 
 package controllers.businessTaxReliefs
 
-import actions.AuthorisedAction
+import actions.{AuthorisedAction, JourneyDataRetrievalAction}
 import config.AppConfig
-import forms.AmountForm
-import play.api.data.Form
-import play.api.i18n.I18nSupport
+import controllers.BaseController
+import forms.businessTaxReliefs.BusinessReliefsQualifyingLoanForm
+import models.BusinessTaxReliefs
+import pages.businessTaxReliefs.QualifyingLoanReliefPage
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
-import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
-import views.html.pages.businessReliefs.QualifyingLoanPageView
+import services.UserAnswersService
+import views.html.pages.businessTaxReliefs.QualifyingLoanPageView
 
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
-class BusinessReliefsQualifyingLoanController @Inject()(authorisedAction: AuthorisedAction,
+class BusinessReliefsQualifyingLoanController @Inject()(override val controllerComponents: MessagesControllerComponents,
+                                                        authorisedAction: AuthorisedAction,
+                                                        retrieveJourney: JourneyDataRetrievalAction,
+                                                        userAnswersService: UserAnswersService,
                                                         view: QualifyingLoanPageView)
-                                                       (implicit appConfig: AppConfig, mcc: MessagesControllerComponents, ec: ExecutionContext)
-  extends FrontendController(mcc) with I18nSupport {
+                                                       (implicit appConfig: AppConfig, ec: ExecutionContext) extends BaseController {
 
-  def form(isAgent: Boolean): Form[BigDecimal] =
-    AmountForm.amountForm(
-      emptyFieldKey = "business-reliefs.qualifying-loan.question.input.error.empty_field",
-      wrongFormatKey = "business-reliefs.qualifying-loan.question.input.error.incorrect-characters",
-      exceedsMaxAmountKey = s"business-reliefs.qualifying-loan.question.input.error.max-amount.${if (isAgent) "agent" else "individual"}",
-      underMinAmountKey = Some("business-reliefs.qualifying-loan.question.input.error.negative")
-    )
+  def show(taxYear: Int): Action[AnyContent] =
+    (authorisedAction andThen retrieveJourney(taxYear, BusinessTaxReliefs)).async { implicit request =>
+      Future(Ok(view(taxYear, fillForm(QualifyingLoanReliefPage, BusinessReliefsQualifyingLoanForm()))))
+    }
 
-  def show(taxYear: Int): Action[AnyContent] = authorisedAction.async { implicit request =>
-    Future(Ok(view(taxYear, form(request.user.isAgent))))
-  }
-  def submit(taxYear: Int): Action[AnyContent] = authorisedAction.async { implicit request =>
-    form(request.user.isAgent).bindFromRequest()
-      .fold(
-        formWithErrors => Future.successful(BadRequest(view(taxYear, formWithErrors))),
-        //TODO: Temporary redirect. Should redirect to CYA page
-        _ => Future(Redirect(controllers.businessTaxReliefs.routes.BusinessReliefsQualifyingLoanController.show(taxYear)))
-      )
-  }
+  def submit(taxYear: Int): Action[AnyContent] =
+    (authorisedAction andThen retrieveJourney(taxYear, BusinessTaxReliefs)).async { implicit request =>
+      BusinessReliefsQualifyingLoanForm().bindFromRequest()
+        .fold(
+          formWithErrors => Future.successful(BadRequest(view(taxYear, formWithErrors))),
+          amount => {
+            val updatedAnswers = request.userAnswers.set(QualifyingLoanReliefPage, amount)
+            userAnswersService.set(updatedAnswers).map { _ =>
+              Redirect(controllers.businessTaxReliefs.routes.BusinessReliefsQualifyingLoanController.show(taxYear))
+            }
+          }
+        )
+    }
 }
