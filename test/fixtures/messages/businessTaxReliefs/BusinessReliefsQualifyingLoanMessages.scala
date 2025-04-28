@@ -14,7 +14,9 @@
  * limitations under the License.
  */
 
-package fixtures.messages
+package fixtures.messages.businessTaxReliefs
+
+import fixtures.messages.{Cy, En, i18n}
 
 object BusinessReliefsQualifyingLoanMessages {
 

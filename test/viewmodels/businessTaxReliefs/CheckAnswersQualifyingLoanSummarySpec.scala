@@ -16,7 +16,8 @@
 
 package viewmodels.businessTaxReliefs
 
-import fixtures.messages.{BusinessReliefsQualifyingLoanMessages, i18n}
+import fixtures.messages.businessTaxReliefs.BusinessReliefsQualifyingLoanMessages
+import fixtures.messages.i18n
 import models.BusinessTaxReliefs
 import models.requests.JourneyDataRequest
 import pages.businessTaxReliefs.QualifyingLoanReliefPage

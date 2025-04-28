@@ -16,7 +16,8 @@
 
 package views.pages.businessTaxReliefs
 
-import fixtures.messages.{BusinessReliefsQualifyingLoanMessages, i18n}
+import fixtures.messages.businessTaxReliefs.BusinessReliefsQualifyingLoanMessages
+import fixtures.messages.i18n
 import forms.AmountForm
 import models.BusinessTaxReliefs
 import models.requests.JourneyDataRequest
@@ -48,7 +49,7 @@ class CheckAnswersQualifyingLoanPageViewSpec extends ViewUnitTest {
 
     s"language is ${welshTest(userScenario.isWelsh)} and request is from an ${agentTest(userScenario.isAgent)}" should {
 
-      "render post-cessation trade relief amount page" which {
+      "render the Check Answers for Qualifying Loan Interest page" which {
 
         val authRequest = getAuthRequest(userScenario.isAgent)
         implicit val request: JourneyDataRequest[AnyContent] = JourneyDataRequest(

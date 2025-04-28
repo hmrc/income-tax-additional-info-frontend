@@ -16,7 +16,7 @@
 
 package views.pages.businessTaxReliefs
 
-import fixtures.messages.BusinessReliefsQualifyingLoanMessages
+import fixtures.messages.businessTaxReliefs.BusinessReliefsQualifyingLoanMessages
 import fixtures.messages.i18n
 import forms.AmountForm
 import models.BusinessTaxReliefs

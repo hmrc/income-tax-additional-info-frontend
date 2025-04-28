@@ -16,7 +16,7 @@
 
 package controllers.businessTaxReliefs
 
-import fixtures.messages.BusinessReliefsQualifyingLoanMessages
+import fixtures.messages.businessTaxReliefs.BusinessReliefsQualifyingLoanMessages
 import forms.AmountForm
 import models.{BusinessTaxReliefs, UserAnswersModel}
 import org.scalatest.OptionValues.convertOptionToValuable
