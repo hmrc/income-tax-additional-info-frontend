@@ -292,6 +292,8 @@ business-reliefs.non-deductible.question.input.error.max-amount.agent = The amou
 business-reliefs.non-deductible.question.input.error.max-amount.individual = The amount of your non-deductible loan interest must be less than £100,000,000,000
 business-reliefs.non-deductible.question.input.error.negative = Enter a valid amount for the value of the non-deductible loan interest
 
+business-reliefs.non-deductible.check-answers.label = How much is the interest on the loan or alternative finance arrangement?
+
 business-reliefs.qualifying-loan.title = Qualifying loan interest payable in the year
 business-reliefs.qualifying-loan.paragraph1.individual = You can claim tax relief for interest on a loan or alternative finance arrangement used to buy:
 business-reliefs.qualifying-loan.paragraph1.agent = Your client can claim tax relief for interest on a loan or alternative finance arrangement used to buy:

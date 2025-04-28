@@ -31,6 +31,8 @@ object BusinessReliefsNonDeductibleMessages {
     val amountInvalid = "Non-deductible loan interest must only include the numbers 0-9 and a decimal point"
     val amountTooLarge = "The amount of your non-deductible loan interest must be less than £100,000,000,000"
     val amountTooSmall = "Enter a valid amount for the value of the non-deductible loan interest"
+
+    val cyaLabel = "How much is the interest on the loan or alternative finance arrangement?"
   }
 
   object English extends Messages with En
@@ -52,6 +54,8 @@ object BusinessReliefsNonDeductibleMessages {
     override val amountInvalid = "Non-deductible loan interest must only include the numbers 0-9 and a decimal point (Welsh)"
     override val amountTooLarge = "The amount of your non-deductible loan interest must be less than £100,000,000,000 (Welsh)"
     override val amountTooSmall = "Enter a valid amount for the value of the non-deductible loan interest (Welsh)"
+
+    override val cyaLabel = "How much is the interest on the loan or alternative finance arrangement? (Welsh)"
   }
 
   object WelshAgent extends Messages with Cy {
@@ -65,5 +69,7 @@ object BusinessReliefsNonDeductibleMessages {
     override val amountInvalid = "Non-deductible loan interest must only include the numbers 0-9 and a decimal point (Welsh)"
     override val amountTooLarge = "The amount of your client's non-deductible loan interest must be less than £100,000,000,000 (Welsh)"
     override val amountTooSmall = "Enter a valid amount for the value of the non-deductible loan interest (Welsh)"
+
+    override val cyaLabel = "How much is the interest on the loan or alternative finance arrangement? (Welsh)"
   }
 }

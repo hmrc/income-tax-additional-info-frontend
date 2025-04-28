@@ -94,8 +94,8 @@ class BusinessReliefsNonDeductibleControllerISpec extends IntegrationTest with U
 
           val result = route(application, request).value
 
-          //TODO: In future story, this will be updated to redirect to the CYA page
           status(result) mustEqual SEE_OTHER
+          redirectLocation(result) mustBe Some(controllers.businessTaxReliefs.routes.CheckAnswersNonDeductibleController.show(taxYear).url)
         }
       }
 
@@ -134,8 +134,8 @@ class BusinessReliefsNonDeductibleControllerISpec extends IntegrationTest with U
 
           val result = route(application, request).value
 
-          //TODO: In future story, this will be updated to redirect to the CYA page
           status(result) mustEqual SEE_OTHER
+          redirectLocation(result) mustBe Some(controllers.businessTaxReliefs.routes.CheckAnswersNonDeductibleController.show(taxYear).url)
         }
       }
 

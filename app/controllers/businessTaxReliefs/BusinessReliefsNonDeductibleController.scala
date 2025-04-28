@@ -48,7 +48,7 @@ class BusinessReliefsNonDeductibleController @Inject()(override val controllerCo
         amount => {
           val updatedAnswers = request.userAnswers.set(NonDeductibleReliefsPage, amount)
           userAnswersService.set(updatedAnswers).map { _ =>
-            Redirect(controllers.businessTaxReliefs.routes.BusinessReliefsNonDeductibleController.show(taxYear))
+            Redirect(controllers.businessTaxReliefs.routes.CheckAnswersNonDeductibleController.show(taxYear))
           }
         }
       )

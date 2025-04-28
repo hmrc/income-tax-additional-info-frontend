@@ -87,3 +87,6 @@ POST        /:taxYear/business-reliefs/qualifying-loan-interest/check-answers   
 
 GET         /:taxYear/business-reliefs/post-cessation-trade-relief/check-answers        controllers.businessTaxReliefs.CheckAnswersPostCessationTradeReliefController.show(taxYear: Int)
 POST        /:taxYear/business-reliefs/post-cessation-trade-relief/check-answers        controllers.businessTaxReliefs.CheckAnswersPostCessationTradeReliefController.submit(taxYear: Int)
+
+GET         /:taxYear/business-reliefs/non-deductible-loan-interest/check-answers       controllers.businessTaxReliefs.CheckAnswersNonDeductibleController.show(taxYear: Int)
+POST        /:taxYear/business-reliefs/non-deductible-loan-interest/check-answers       controllers.businessTaxReliefs.CheckAnswersNonDeductibleController.submit(taxYear: Int)
