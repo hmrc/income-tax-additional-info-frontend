@@ -23,6 +23,9 @@ sealed trait i18n {
   val language: Language
   lazy val lang: Lang = Lang(language.code)
   val continue = "Continue"
+  val change = "Change"
+  def taxYearCaption(year: Int): String = s"6 April ${year - 1} to 5 April $year"
+  val cya = "Check your answers"
 }
 
 trait En extends i18n {
@@ -32,4 +35,7 @@ trait En extends i18n {
 trait Cy extends i18n {
   override val language: Language = Cy
   override val continue = "Yn eich blaen"
+  override val change = "Newid"
+  override def taxYearCaption(year: Int): String = s"6 Ebrill ${year - 1} i 5 Ebrill $year"
+  override val cya = "Check your answers (Welsh)"
 }

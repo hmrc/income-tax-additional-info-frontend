@@ -39,6 +39,7 @@ common.opensInNewTab = (yn agor tab newydd)
 common.return.to.overview = Yn ôl i’r trosolwg
 common.view = View
 common.yes = Iawn
+common.cya = Check your answers (Welsh)
 
 common.error.amountMaxLimit = Nodwch swm sy’n llai na £100,000,000,000
 common.error.invalid_currency_format = Nodwch y swm yn y fformat cywir
@@ -67,6 +68,7 @@ common.gains.policy-held.paragraph.2.agent = Os oedd eich cleient yn byw y tu al
 common.gains.policy-held.paragraph.2.link-text.agent  = sut i ostwng swm ei dreth (yn agor tab newydd)
 
 #################       Captions       ########################################
+taxYear.caption = 6 Ebrill {0} i 5 Ebrill {1}
 gains.caption = Enillion o bolisïau yswiriant bywyd a chontractau ar gyfer 6 Ebrill {0} i 5 Ebrill {1}
 
 ################# Gains from life insurance policies and contracts messages #################

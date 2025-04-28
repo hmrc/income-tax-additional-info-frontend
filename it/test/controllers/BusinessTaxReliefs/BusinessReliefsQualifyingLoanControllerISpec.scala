@@ -16,7 +16,7 @@
 
 package controllers.businessTaxReliefs
 
-import fixtures.messages.BusinessReliefsQualifyingLoanMessages
+import fixtures.messages.businessTaxReliefs.BusinessReliefsQualifyingLoanMessages
 import forms.AmountForm
 import models.{BusinessTaxReliefs, UserAnswersModel}
 import org.scalatest.OptionValues.convertOptionToValuable
@@ -94,8 +94,8 @@ class BusinessReliefsQualifyingLoanControllerISpec extends IntegrationTest with 
 
           val result = route(application, request).value
 
-          //TODO: In future story, this will be updated to redirect to the CYA page
           status(result) mustEqual SEE_OTHER
+          redirectLocation(result) mustBe Some(routes.CheckAnswersQualifyingLoanController.show(taxYear).url)
         }
       }
 
@@ -133,8 +133,8 @@ class BusinessReliefsQualifyingLoanControllerISpec extends IntegrationTest with 
 
           val result = route(application, request).value
 
-          //TODO: In future story, this will be updated to redirect to the CYA page
           status(result) mustEqual SEE_OTHER
+          redirectLocation(result) mustBe Some(routes.CheckAnswersQualifyingLoanController.show(taxYear).url)
         }
       }
 

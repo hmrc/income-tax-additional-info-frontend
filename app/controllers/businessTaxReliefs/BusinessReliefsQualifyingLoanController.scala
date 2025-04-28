@@ -49,7 +49,7 @@ class BusinessReliefsQualifyingLoanController @Inject()(override val controllerC
           amount => {
             val updatedAnswers = request.userAnswers.set(QualifyingLoanReliefPage, amount)
             userAnswersService.set(updatedAnswers).map { _ =>
-              Redirect(controllers.businessTaxReliefs.routes.BusinessReliefsQualifyingLoanController.show(taxYear))
+              Redirect(routes.CheckAnswersQualifyingLoanController.show(taxYear))
             }
           }
         )

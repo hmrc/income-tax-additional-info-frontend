@@ -39,6 +39,7 @@ common.opensInNewTab = (opens in new tab)
 common.return.to.overview = Return to overview
 common.view = View
 common.yes = Yes
+common.cya = Check your answers
 
 common.error.amountMaxLimit = Enter an amount less than £100,000,000,000
 common.error.invalid_currency_format = Enter the amount in the correct format
@@ -67,6 +68,7 @@ common.gains.policy-held.paragraph.2.agent = If your client lived outside the UK
 common.gains.policy-held.paragraph.2.link-text.agent  = how to reduce their tax amount (opens in new tab)
 
 #################       Captions       ########################################
+taxYear.caption = 6 April {0} to 5 April {1}
 gains.caption = Gains from life insurance policies and contracts for 6 April {0} to 5 April {1}
 
 ################# Gains from life insurance policies and contracts messages #################
@@ -306,6 +308,7 @@ business-reliefs.qualifying-loan.question.input.error.incorrect-characters = Int
 business-reliefs.qualifying-loan.question.input.error.max-amount.individual = The amount of your loan interest must be less than £100,000,000,000
 business-reliefs.qualifying-loan.question.input.error.max-amount.agent = The amount of your client''s loan interest must be less than £100,000,000,000
 business-reliefs.qualifying-loan.question.input.error.negative = Enter a valid amount for how much interest is payable in the year
+
 
 ### Post Cessation Trade Relief
 postCessationTradeRelief.title = Post-cessation trade relief and certain other losses
