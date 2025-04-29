@@ -30,7 +30,7 @@ object CheckAnswersNonDeductibleSummary  {
       request.userAnswers.get(NonDeductibleReliefsPage).map { answer =>
         SummaryListRow(
           key = Key(
-            content = Text(messages("business-reliefs.non-deductible.check-answers.label")),
+            content = Text(messages("business-reliefs.non-deductible.question.input")),
             classes = "govuk-!-width-two-thirds"
           ),
           value = Value(
@@ -42,7 +42,7 @@ object CheckAnswersNonDeductibleSummary  {
               ActionItem(
                 href = controllers.businessTaxReliefs.routes.BusinessReliefsNonDeductibleController.show(taxYear).url,
                 content = Text(messages("common.change")),
-                visuallyHiddenText = Some(messages("business-reliefs.non-deductible.check-answers.label"))
+                visuallyHiddenText = Some(messages("business-reliefs.non-deductible.question.input"))
               )
             )))
         )

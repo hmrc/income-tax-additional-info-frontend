@@ -292,7 +292,6 @@ business-reliefs.non-deductible.question.input.error.incorrect-characters = Non-
 business-reliefs.non-deductible.question.input.error.max-amount.agent = The amount of your client''s non-deductible loan interest must be less than £100,000,000,000 (Welsh)
 business-reliefs.non-deductible.question.input.error.max-amount.individual = The amount of your non-deductible loan interest must be less than £100,000,000,000 (Welsh)
 business-reliefs.non-deductible.question.input.error.negative = Enter a valid amount for the value of the non-deductible loan interest (Welsh)
-business-reliefs.non-deductible.check-answers.label = How much is the interest on the loan or alternative finance arrangement? (Welsh)
 
 # TODO Welsh translations
 business-reliefs.qualifying-loan.title = Qualifying loan interest payable in the year

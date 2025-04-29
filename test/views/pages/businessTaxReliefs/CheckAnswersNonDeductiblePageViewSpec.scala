@@ -69,7 +69,7 @@ class CheckAnswersNonDeductiblePageViewSpec extends ViewUnitTest {
         titleCheck(expectedMessages.cya, userScenario.isWelsh)
         captionCheck(expectedMessages.taxYearCaption(taxYear))
         h1Check(expectedMessages.cya)
-        textOnPageCheck(expectedMessages.cyaLabel, Selectors.summaryKey(row = 1))
+        textOnPageCheck(expectedMessages.label, Selectors.summaryKey(row = 1))
         textOnPageCheck(bigDecimalCurrency("1000.01"), Selectors.summaryValue(row = 1))
         textOnPageCheck(expectedMessages.change, Selectors.summaryActions(row = 1, link = 1))
         buttonCheck(expectedMessages.continue)

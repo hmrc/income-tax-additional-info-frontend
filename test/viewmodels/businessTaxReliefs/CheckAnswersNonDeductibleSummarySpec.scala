@@ -58,7 +58,7 @@ class CheckAnswersNonDeductibleSummarySpec extends ViewUnitTest {
             SummaryList(Seq(
               SummaryListRow(
                 key = Key(
-                  content = Text(userScenario.commonExpectedResults.cyaLabel),
+                  content = Text(userScenario.commonExpectedResults.label),
                   classes = "govuk-!-width-two-thirds"
                 ),
                 value = Value(
@@ -70,7 +70,7 @@ class CheckAnswersNonDeductibleSummarySpec extends ViewUnitTest {
                     ActionItem(
                       href = controllers.businessTaxReliefs.routes.BusinessReliefsNonDeductibleController.show(taxYear).url,
                       content = Text(userScenario.commonExpectedResults.change),
-                      visuallyHiddenText = Some(userScenario.commonExpectedResults.cyaLabel)
+                      visuallyHiddenText = Some(userScenario.commonExpectedResults.label)
                     )
                   )))
               )
