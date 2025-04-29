@@ -25,7 +25,7 @@ object BusinessReliefsNonDeductibleMessages {
     val p1 = "You can claim tax relief on the cost of getting a loan to fund a partnership, or the interest on such a loan. Relief can also be claimed on the cost of getting alternative finance arrangements, and the interest on payments for such arrangements. This relief is limited to the extent that those funds are used for any part of the business that consists of residential properties."
     val p2 = "The tax relief you can claim is restricted to the basic rate of Income Tax."
     val p3 = "For more information, visit Helpsheet 340 (opens in new tab) and read the section titled Residential property finance cost restriction."
-    val label = "How much is the non-deductible loan interest from interest investments into property letting partnerships?"
+    val label = "How much is the non-deductible loan interest from investments into property letting partnerships?"
 
     val amountEmpty = "Enter the value of the non-deductible loan interest"
     val amountInvalid = "Non-deductible loan interest must only include the numbers 0-9 and a decimal point"
@@ -46,7 +46,7 @@ object BusinessReliefsNonDeductibleMessages {
     override val p1 = "You can claim tax relief on the cost of getting a loan to fund a partnership, or the interest on such a loan. Relief can also be claimed on the cost of getting alternative finance arrangements, and the interest on payments for such arrangements. This relief is limited to the extent that those funds are used for any part of the business that consists of residential properties. (Welsh)"
     override val p2 = "The tax relief you can claim is restricted to the basic rate of Income Tax. (Welsh)"
     override val p3 = "For more information, visit Helpsheet 340 (opens in new tab) and read the section titled Residential property finance cost restriction. (Welsh)"
-    override val label = "How much is the non-deductible loan interest from interest investments into property letting partnerships? (Welsh)"
+    override val label = "How much is the non-deductible loan interest from investments into property letting partnerships? (Welsh)"
 
     override val amountEmpty = "Enter the value of the non-deductible loan interest (Welsh)"
     override val amountInvalid = "Non-deductible loan interest must only include the numbers 0-9 and a decimal point (Welsh)"
@@ -59,7 +59,7 @@ object BusinessReliefsNonDeductibleMessages {
     override val p1 = "Your client can claim tax relief on the cost of getting a loan to fund a partnership, or the interest on such a loan. Relief can also be claimed on the cost of getting alternative finance arrangements, and the interest on payments for such arrangements. This relief is limited to the extent that those funds are used for any part of the business that consists of residential properties. (Welsh)"
     override val p2 = "The tax relief your client can claim is restricted to the basic rate of Income Tax. (Welsh)"
     override val p3 = "For more information, visit Helpsheet 340 (opens in new tab) and read the section titled Residential property finance cost restriction. (Welsh)"
-    override val label = "How much is the non-deductible loan interest from interest investments into property letting partnerships? (Welsh)"
+    override val label = "How much is the non-deductible loan interest from investments into property letting partnerships? (Welsh)"
 
     override val amountEmpty = "Enter the value of the non-deductible loan interest (Welsh)"
     override val amountInvalid = "Non-deductible loan interest must only include the numbers 0-9 and a decimal point (Welsh)"
