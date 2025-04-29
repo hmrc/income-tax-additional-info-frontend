@@ -58,7 +58,7 @@ class CheckAnswersPostCessationTradeReliefSummarySpec extends ViewUnitTest {
             SummaryList(Seq(
               SummaryListRow(
                 key = Key(
-                  content = Text(userScenario.commonExpectedResults.checkAnswerQuestion),
+                  content = Text(userScenario.commonExpectedResults.label),
                   classes = "govuk-!-width-two-thirds"
                 ),
                 value = Value(
@@ -70,7 +70,7 @@ class CheckAnswersPostCessationTradeReliefSummarySpec extends ViewUnitTest {
                     ActionItem(
                       href = controllers.businessTaxReliefs.routes.PostCessationTradeReliefController.show(taxYear).url,
                       content = Text(userScenario.commonExpectedResults.change),
-                      visuallyHiddenText = Some(userScenario.commonExpectedResults.checkAnswerQuestion)
+                      visuallyHiddenText = Some(userScenario.commonExpectedResults.label)
                     )
                   )))
               )

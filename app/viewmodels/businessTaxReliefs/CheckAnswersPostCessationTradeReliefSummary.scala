@@ -30,7 +30,7 @@ object CheckAnswersPostCessationTradeReliefSummary {
       request.userAnswers.get(PostCessationTradeReliefPage).map { answer =>
         SummaryListRow(
           key = Key(
-            content = Text(messages("postCessationTradeRelief.check-answers.question")),
+            content = Text(messages(if(request.user.isAgent) "postCessationTradeRelief.label.agent" else "postCessationTradeRelief.label.individual")),
             classes = "govuk-!-width-two-thirds"
           ),
           value = Value(
@@ -42,7 +42,7 @@ object CheckAnswersPostCessationTradeReliefSummary {
               ActionItem(
                 href = controllers.businessTaxReliefs.routes.PostCessationTradeReliefController.show(taxYear).url,
                 content = Text(messages("common.change")),
-                visuallyHiddenText = Some(messages("postCessationTradeRelief.check-answers.question"))
+                visuallyHiddenText = Some(messages(if(request.user.isAgent) "postCessationTradeRelief.label.agent" else "postCessationTradeRelief.label.individual"))
               )
             )))
         )

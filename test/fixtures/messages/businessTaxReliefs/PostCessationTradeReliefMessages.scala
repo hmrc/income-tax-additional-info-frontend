@@ -40,8 +40,6 @@ object PostCessationTradeReliefMessages {
     val amountInvalid = "The amount of relief must only include the numbers 0-9 and a decimal point"
     val amountTooLarge = "The amount of your relief must be less than £100,000,000,000"
     val amountTooSmall = "Enter a valid amount for how much relief you are claiming"
-
-    val checkAnswerQuestion = "How much post-cessation trade relief and certain other losses are you claiming?"
   }
 
   object English extends Messages with En
@@ -76,8 +74,6 @@ object PostCessationTradeReliefMessages {
     override val amountInvalid = "The amount of relief must only include the numbers 0-9 and a decimal point (Welsh)"
     override val amountTooLarge = "The amount of your relief must be less than £100,000,000,000 (Welsh)"
     override val amountTooSmall = "Enter a valid amount for how much relief you are claiming (Welsh)"
-
-    override val checkAnswerQuestion = "How much post-cessation trade relief and certain other losses are you claiming? (Welsh)"
   }
 
   object WelshAgent extends Messages with Cy {
@@ -100,7 +96,5 @@ object PostCessationTradeReliefMessages {
     override val amountInvalid = Welsh.amountInvalid
     override val amountTooLarge = "The amount of your client’s relief must be less than £100,000,000,000 (Welsh)"
     override val amountTooSmall = "Enter a valid amount for how much relief your client is claiming (Welsh)"
-
-    override val checkAnswerQuestion = "How much post-cessation trade relief and certain other losses are you claiming? (Welsh)"
   }
 }

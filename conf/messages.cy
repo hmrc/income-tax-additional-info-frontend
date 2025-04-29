@@ -342,8 +342,6 @@ postCessationTradeRelief.amount.error.max.agent = The amount of your client’s 
 postCessationTradeRelief.amount.error.min.individual = Enter a valid amount for how much relief you are claiming (Welsh)
 postCessationTradeRelief.amount.error.min.agent = Enter a valid amount for how much relief your client is claiming (Welsh)
 
-postCessationTradeRelief.check-answers.question = How much post-cessation trade relief and certain other losses are you claiming? (Welsh)
-
 #################       Error messages        ########################################
 common.error.self-assessment.paragraph.1.1 = Os yw’r cyfeiriad gwe yn gywir neu os ydych wedi dewis cysylltiad neu fotwm, gallwch ddefnyddio
 common.error.self-assessment.paragraph.1.2 = Hunanasesiad: ymholiadau cyffredinol
