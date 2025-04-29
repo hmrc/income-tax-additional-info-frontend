@@ -50,7 +50,7 @@ class PostCessationTradeReliefController @Inject()(override val controllerCompon
         amount => {
           val updatedAnswers = request.userAnswers.set(PostCessationTradeReliefPage, amount)
           userAnswersService.set(updatedAnswers).map { _ =>
-            NotImplemented
+            Redirect(routes.CheckAnswersPostCessationTradeReliefController.show(taxYear))
           }
         }
       )
