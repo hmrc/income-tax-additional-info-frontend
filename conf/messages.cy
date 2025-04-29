@@ -286,12 +286,13 @@ business-reliefs.non-deductible.paragraph3.1 = For more information, visit
 business-reliefs.non-deductible.paragraph3.link = Helpsheet 340 (opens in new tab)
 business-reliefs.non-deductible.paragraph3.3 = and read the section titled
 business-reliefs.non-deductible.paragraph3.4 = Residential property finance cost restriction. (Welsh)
-business-reliefs.non-deductible.question.input = How much is the non-deductible loan interest from interest investments into property letting partnerships? (Welsh)
+business-reliefs.non-deductible.question.input = How much is the non-deductible loan interest from investments into property letting partnerships? (Welsh)
 business-reliefs.non-deductible.question.input.error.empty_field = Enter the value of the non-deductible loan interest (Welsh)
 business-reliefs.non-deductible.question.input.error.incorrect-characters = Non-deductible loan interest must only include the numbers 0-9 and a decimal point (Welsh)
 business-reliefs.non-deductible.question.input.error.max-amount.agent = The amount of your client''s non-deductible loan interest must be less than £100,000,000,000 (Welsh)
 business-reliefs.non-deductible.question.input.error.max-amount.individual = The amount of your non-deductible loan interest must be less than £100,000,000,000 (Welsh)
 business-reliefs.non-deductible.question.input.error.negative = Enter a valid amount for the value of the non-deductible loan interest (Welsh)
+
 # TODO Welsh translations
 business-reliefs.qualifying-loan.title = Qualifying loan interest payable in the year
 business-reliefs.qualifying-loan.paragraph1.individual = You can claim tax relief for interest on a loan or alternative finance arrangement used to buy:
