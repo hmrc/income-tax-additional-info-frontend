@@ -20,7 +20,7 @@ import fixtures.messages.businessTaxReliefs.BusinessReliefsNonDeductibleMessages
 import fixtures.messages.i18n
 import forms.AmountForm
 import models.BusinessTaxReliefs
-import models.requests.{AuthorisationRequest, JourneyDataRequest}
+import models.requests.JourneyDataRequest
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import play.api.data.Form
@@ -81,6 +81,7 @@ class BusinessReliefsNonDeductiblePageViewSpec extends ViewUnitTest {
         textOnPageCheck(expectedMessages.p1, "main " + Selectors.p(1))
         textOnPageCheck(expectedMessages.p2, "main " + Selectors.p(2))
         textOnPageCheck(expectedMessages.p3, "main " + Selectors.p(3))
+        textOnPageCheck(expectedMessages.hint, Selectors.ammountHint)
         buttonCheck(expectedMessages.continue)
       }
     }

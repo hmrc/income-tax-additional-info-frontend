@@ -18,18 +18,16 @@ package views.pages.businessTaxReliefs
 
 import fixtures.messages.businessTaxReliefs.BusinessReliefsQualifyingLoanMessages
 import fixtures.messages.i18n
-import forms.AmountForm
 import models.BusinessTaxReliefs
 import models.requests.JourneyDataRequest
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import pages.businessTaxReliefs.QualifyingLoanReliefPage
-import play.api.data.Form
 import play.api.i18n.Messages
 import play.api.mvc.AnyContent
 import support.ViewUnitTest
 import utils.ViewUtils.bigDecimalCurrency
-import views.html.pages.businessTaxReliefs.{CheckAnswersQualifyingLoanPageView, QualifyingLoanPageView}
+import views.html.pages.businessTaxReliefs.CheckAnswersQualifyingLoanPageView
 import views.utils.BaseSelectors
 
 class CheckAnswersQualifyingLoanPageViewSpec extends ViewUnitTest {

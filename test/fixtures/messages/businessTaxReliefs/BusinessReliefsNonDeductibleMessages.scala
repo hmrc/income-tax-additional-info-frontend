@@ -26,6 +26,7 @@ object BusinessReliefsNonDeductibleMessages {
     val p2 = "The tax relief you can claim is restricted to the basic rate of Income Tax."
     val p3 = "For more information, visit Helpsheet 340 (opens in new tab) and read the section titled Residential property finance cost restriction."
     val label = "How much is the non-deductible loan interest from investments into property letting partnerships?"
+    val hint: String = "For example, £193.54"
 
     val amountEmpty = "Enter the value of the non-deductible loan interest"
     val amountInvalid = "Non-deductible loan interest must only include the numbers 0-9 and a decimal point"
@@ -47,6 +48,7 @@ object BusinessReliefsNonDeductibleMessages {
     override val p2 = "The tax relief you can claim is restricted to the basic rate of Income Tax. (Welsh)"
     override val p3 = "For more information, visit Helpsheet 340 (opens in new tab) and read the section titled Residential property finance cost restriction. (Welsh)"
     override val label = "How much is the non-deductible loan interest from investments into property letting partnerships? (Welsh)"
+    override val hint: String = "Er enghraifft, £193.54"
 
     override val amountEmpty = "Enter the value of the non-deductible loan interest (Welsh)"
     override val amountInvalid = "Non-deductible loan interest must only include the numbers 0-9 and a decimal point (Welsh)"
@@ -60,6 +62,7 @@ object BusinessReliefsNonDeductibleMessages {
     override val p2 = "The tax relief your client can claim is restricted to the basic rate of Income Tax. (Welsh)"
     override val p3 = "For more information, visit Helpsheet 340 (opens in new tab) and read the section titled Residential property finance cost restriction. (Welsh)"
     override val label = "How much is the non-deductible loan interest from investments into property letting partnerships? (Welsh)"
+    override val hint: String = "Er enghraifft, £193.54"
 
     override val amountEmpty = "Enter the value of the non-deductible loan interest (Welsh)"
     override val amountInvalid = "Non-deductible loan interest must only include the numbers 0-9 and a decimal point (Welsh)"

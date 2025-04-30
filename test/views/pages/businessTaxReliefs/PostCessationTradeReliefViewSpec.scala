@@ -20,7 +20,7 @@ import fixtures.messages.businessTaxReliefs.PostCessationTradeReliefMessages
 import fixtures.messages.i18n
 import forms.businessTaxReliefs.PostCessationTradeReliefForm
 import models.BusinessTaxReliefs
-import models.requests.{AuthorisationRequest, JourneyDataRequest}
+import models.requests.JourneyDataRequest
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import play.api.i18n.Messages
@@ -83,6 +83,7 @@ class PostCessationTradeReliefViewSpec extends ViewUnitTest {
         textOnPageCheck(expectedMessages.liabilitiesSummaryP1, Selectors.liabilitiesP(1))
         textOnPageCheck(expectedMessages.lossSummaryHeading, Selectors.lossSummary)
         textOnPageCheck(expectedMessages.lossSummaryP1, Selectors.lossP(1))
+        textOnPageCheck(expectedMessages.hint, Selectors.ammountHint)
         buttonCheck(expectedMessages.continue)
       }
     }

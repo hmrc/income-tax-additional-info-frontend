@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package controllers.BusinessTaxReliefs
+package controllers.businessTaxReliefs
 
 import fixtures.messages.businessTaxReliefs.PostCessationTradeReliefMessages
 import models.{BusinessTaxReliefs, UserAnswersModel}
