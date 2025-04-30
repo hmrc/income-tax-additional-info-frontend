@@ -76,7 +76,8 @@
             name = "amount",
             currency = true,
             label = dynamicMessage(s"postCessationTradeRelief.label"),
-            labelClasses = Some("govuk-label--m")
+            labelClasses = Some("govuk-label--m"),
+            hint = Some(messages("common.monetary.input.hint"))
         )
 
         @button()

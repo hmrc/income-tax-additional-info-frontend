@@ -26,5 +26,6 @@ trait BaseSelectors {
   def summaryKey(row: Int): String = s".govuk-summary-list__row:nth-of-type($row) .govuk-summary-list__key"
   def summaryValue(row: Int): String = s".govuk-summary-list__row:nth-of-type($row) .govuk-summary-list__value"
   def summaryActions(row: Int, link: Int): String = s".govuk-summary-list__row:nth-of-type($row) .govuk-summary-list__actions a:nth-of-type($link)"
+  val ammountHint = "#amount-hint"
 
 }

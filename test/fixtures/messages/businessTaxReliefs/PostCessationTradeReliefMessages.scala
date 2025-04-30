@@ -35,6 +35,7 @@ object PostCessationTradeReliefMessages {
     val lossSummaryHeading = "Employment loss relief"
     val lossSummaryP1 = "Relief for losses arising from an employment or office is only available in exceptional circumstances. This is because, as a general rule, employment expenses cannot exceed the earnings from which they are deductible. A loss can sometimes arise where capital allowances due cannot be deducted from the earnings from the employment. Additionally, a loss may also come directly from the conditions of the employment. Otherwise, relief cannot usually be claimed for these losses."
     val label = "How much are you claiming for post-cessation trade relief and certain other losses?"
+    val hint: String = "For example, £193.54"
 
     val amountEmpty = "Enter how much relief you are claiming"
     val amountInvalid = "The amount of relief must only include the numbers 0-9 and a decimal point"
@@ -69,6 +70,7 @@ object PostCessationTradeReliefMessages {
     override val lossSummaryHeading = "Employment loss relief (Welsh)"
     override val lossSummaryP1 = "Relief for losses arising from an employment or office is only available in exceptional circumstances. This is because, as a general rule, employment expenses cannot exceed the earnings from which they are deductible. A loss can sometimes arise where capital allowances due cannot be deducted from the earnings from the employment. Additionally, a loss may also come directly from the conditions of the employment. Otherwise, relief cannot usually be claimed for these losses. (Welsh)"
     override val label = "How much are you claiming for post-cessation trade relief and certain other losses? (Welsh)"
+    override val hint: String = "Er enghraifft, £193.54"
 
     override val amountEmpty = "Enter how much relief you are claiming (Welsh)"
     override val amountInvalid = "The amount of relief must only include the numbers 0-9 and a decimal point (Welsh)"
@@ -91,6 +93,7 @@ object PostCessationTradeReliefMessages {
     override val lossSummaryHeading = Welsh.lossSummaryHeading
     override val lossSummaryP1 = Welsh.lossSummaryP1
     override val label = "How much is your client claiming for post-cessation trade relief and certain other losses? (Welsh)"
+    override val hint: String = "Er enghraifft, £193.54"
 
     override val amountEmpty = "Enter how much relief your client is claiming (Welsh)"
     override val amountInvalid = Welsh.amountInvalid

@@ -20,7 +20,7 @@ import fixtures.messages.businessTaxReliefs.BusinessReliefsQualifyingLoanMessage
 import fixtures.messages.i18n
 import forms.AmountForm
 import models.BusinessTaxReliefs
-import models.requests.{AuthorisationRequest, JourneyDataRequest}
+import models.requests.JourneyDataRequest
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import play.api.data.Form
@@ -83,6 +83,7 @@ class BusinessReliefsQualifyingLoanPageViewSpec extends ViewUnitTest {
         textOnPageCheck(expectedMessages.b2, "main " + Selectors.bullet(2))
         textOnPageCheck(expectedMessages.b3, "main " + Selectors.bullet(3))
         textOnPageCheck(expectedMessages.p2, "main " + Selectors.p(3))
+        textOnPageCheck(expectedMessages.hint, Selectors.ammountHint)
         buttonCheck(expectedMessages.continue)
       }
     }

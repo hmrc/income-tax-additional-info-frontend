@@ -29,6 +29,7 @@ object BusinessReliefsQualifyingLoanMessages {
     val b3 = "plant or machinery for your work (unless you have already deducted this as a business expense)"
     val link = "More information about interest and alternative finance payments eligible for relief (opens in new tab)"
     val label = "How much is the qualifying loan interest payable in the year?"
+    val hint: String = "For example, £193.54"
 
     val amountEmpty = "Enter how much interest is payable in the year"
     val amountInvalid = "Interest payable in the year must only include the numbers 0-9 and a decimal point"
@@ -54,6 +55,7 @@ object BusinessReliefsQualifyingLoanMessages {
     override val b3 = "plant or machinery for your work (unless you have already deducted this as a business expense)"
     override val link = "More information about interest and alternative finance payments eligible for relief (opens in new tab)"
     override val label = "How much is the qualifying loan interest payable in the year?"
+    override val hint: String = "Er enghraifft, £193.54"
 
     override val amountEmpty = "Enter how much interest is payable in the year"
     override val amountInvalid = "Interest payable in the year must only include the numbers 0-9 and a decimal point"
@@ -70,6 +72,7 @@ object BusinessReliefsQualifyingLoanMessages {
     override val b3 = "plant or machinery for your client's work (unless you have already deducted this as a business expense)"
     override val link = "More information about interest and alternative finance payments eligible for relief (opens in new tab)"
     override val label = "How much is the qualifying loan interest payable in the year?"
+    override val hint: String = "Er enghraifft, £193.54"
 
     override val amountEmpty = "Enter how much interest is payable in the year"
     override val amountInvalid = "Interest payable in the year must only include the numbers 0-9 and a decimal point"
