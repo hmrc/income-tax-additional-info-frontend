@@ -41,7 +41,7 @@ class Module extends play.api.inject.Module {
       bind[Clock].toInstance(Clock.systemUTC()),
       bind[AppConfig].toSelf,
       bind[JourneyDataRetrievalAction].to[JourneyDataRetrievalActionImpl].eagerly(),
-      bind[SessionDataConnectorConfig].toInstance(new ConfigLoaderProvider[SessionDataConnectorConfig](configuration).get())
+      bind[SessionDataConnectorConfig].toInstance(ConfigLoaderProvider.get[SessionDataConnectorConfig](configuration))
     )
   }
 

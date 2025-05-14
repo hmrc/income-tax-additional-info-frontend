@@ -18,9 +18,7 @@ package utils
 
 import play.api.{ConfigLoader, Configuration}
 
-import javax.inject.{Inject, Provider}
-
-class ConfigLoaderProvider[A: ConfigLoader] @Inject() (config: Configuration) extends Provider[A] {
-  def get(): A = implicitly[ConfigLoader[A]].load(config.underlying, "")
+object ConfigLoaderProvider {
+  def get[A: ConfigLoader](config: Configuration): A = implicitly[ConfigLoader[A]].load(config.underlying, "")
 }
 
