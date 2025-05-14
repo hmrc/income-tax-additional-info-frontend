@@ -27,6 +27,8 @@ trait WireMockServer {
 
   private lazy val wireMockServer = new wiremock.WireMockServer(wireMockConfig().port(wiremockPort))
 
+  lazy val wireMockUrl: String =s"http://$wiremockHost:$wiremockPort"
+
   def startWiremock(): Unit = {
     wireMockServer.start()
     WireMock.configureFor(wiremockHost, wiremockPort)

@@ -36,4 +36,7 @@ object PagerDutyHelper extends Logging {
     logger.error(s"$pagerDutyKey $otherDetail")
   }
 
+  def formatErrorMessage(pagerDutyKey: PagerDutyKeys.Value, otherDetail: String): String =
+    s"$pagerDutyKey $otherDetail"
+
 }
