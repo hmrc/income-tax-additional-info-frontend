@@ -14,11 +14,9 @@
  * limitations under the License.
  */
 
-package utils
+package connectors
 
-import play.api.{ConfigLoader, Configuration}
-
-object ConfigLoaderProvider {
-  def get[A: ConfigLoader](config: Configuration): A = implicitly[ConfigLoader[A]].load(config.underlying, "")
-}
+case class TestConnectorConfig(
+  vcSessionServiceBaseUrl: String 
+) extends ConnectorConfig 
 

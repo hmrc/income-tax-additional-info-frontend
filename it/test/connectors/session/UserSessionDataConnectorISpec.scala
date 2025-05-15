@@ -16,6 +16,7 @@
 
 package connectors.session
 
+import connectors.TestConnectorConfig
 import connectors.errors.{ApiError, SingleErrorBody}
 import models.session.UserSessionData
 import org.scalatest.{EitherValues, OptionValues}
@@ -40,7 +41,9 @@ class UserSessionDataConnectorISpec
     implicit val hc: HeaderCarrier = HeaderCarrier()
 
     val connector = new UserSessionDataConnectorImpl(
-      config = SessionDataConnectorConfig(wireMockUrl),
+      config = TestConnectorConfig(
+        vcSessionServiceBaseUrl = wireMockUrl
+      ),
       httpClient = httpClientV2
     )
   }

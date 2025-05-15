@@ -17,42 +17,20 @@
 package connectors.session
 
 import connectors.httpParsers.UserSessionDataHttpReads.{UserSessionDataResponse, SessionDataResponseReads}
-import play.api.ConfigLoader
 import uk.gov.hmrc.http.client.HttpClientV2
 import uk.gov.hmrc.http.{HeaderCarrier, StringContextOps}
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
-import scala.util.Try
+import connectors.ConnectorConfig
 
 trait UserSessionDataConnector {
   def getSessionData(implicit hc: HeaderCarrier): Future[UserSessionDataResponse]
 }
 
-case class SessionDataConnectorConfig(vcSessionServiceBaseUrl: String)
-object SessionDataConnectorConfig {
-  implicit val configLoader: ConfigLoader[SessionDataConnectorConfig] = {
-    ConfigLoader(
-      config =>
-        _ => {
-          Try(config.getString("microservice.services.income-tax-session-data.url"))
-            .fold(
-              _ => {
-                val protocol = config.getString("microservice.services.income-tax-session-data.protocol")
-                val host     = config.getString("microservice.services.income-tax-session-data.host")
-                val port     = config.getInt("microservice.services.income-tax-session-data.port")
-                SessionDataConnectorConfig(s"$protocol://$host:$port")
-              },
-              SessionDataConnectorConfig(_)
-            )
-        }
-    )
-  }
-}
-
 @Singleton
 class UserSessionDataConnectorImpl @Inject()(
-  config: SessionDataConnectorConfig,
+  config: ConnectorConfig,
   httpClient: HttpClientV2
 )(implicit ec: ExecutionContext) extends UserSessionDataConnector {
 

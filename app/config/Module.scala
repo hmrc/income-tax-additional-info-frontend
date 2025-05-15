@@ -17,13 +17,13 @@
 package config
 
 import actions.{JourneyDataRetrievalAction, JourneyDataRetrievalActionImpl}
-import connectors.session.SessionDataConnectorConfig
 import play.api.inject.Binding
 import play.api.{Configuration, Environment}
 import services._
-import utils.ConfigLoaderProvider
 
 import java.time.Clock
+import connectors.ConnectorConfig
+import connectors.ConnectorConfigImpl
 
 class Module extends play.api.inject.Module {
 
@@ -39,9 +39,9 @@ class Module extends play.api.inject.Module {
     Seq(
       sessionBinding,
       bind[Clock].toInstance(Clock.systemUTC()),
-      bind[AppConfig].toSelf,
-      bind[JourneyDataRetrievalAction].to[JourneyDataRetrievalActionImpl].eagerly(),
-      bind[SessionDataConnectorConfig].toInstance(ConfigLoaderProvider.get[SessionDataConnectorConfig](configuration))
+      bind[AppConfig].toSelf.eagerly(),
+      bind[ConnectorConfig].to[ConnectorConfigImpl].eagerly(),
+      bind[JourneyDataRetrievalAction].to[JourneyDataRetrievalActionImpl].eagerly()
     )
   }
 
