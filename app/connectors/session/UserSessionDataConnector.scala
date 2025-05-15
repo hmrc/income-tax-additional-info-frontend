@@ -43,7 +43,7 @@ object SessionDataConnectorConfig {
                 val port     = config.getInt("microservice.services.income-tax-session-data.port")
                 SessionDataConnectorConfig(s"$protocol://$host:$port")
               },
-              SessionDataConnectorConfig(_),
+              SessionDataConnectorConfig(_)
             )
         }
     )
