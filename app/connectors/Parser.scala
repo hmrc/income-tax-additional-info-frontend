@@ -24,6 +24,8 @@ import uk.gov.hmrc.http.HttpResponse
 import utils.PagerDutyHelper.PagerDutyKeys.BAD_SUCCESS_JSON_FROM_IF
 import utils.PagerDutyHelper.pagerDutyLog
 
+import scala.util.control.NonFatal
+
 trait Parser extends Logging{
 
   protected val parserName: String
@@ -57,7 +59,7 @@ trait Parser extends Logging{
         case _ => Left(ApiError(status, SingleErrorBody.parsingError))
       }
     } catch {
-      case _: Exception => Left(ApiError(status, SingleErrorBody.parsingError))
+      case NonFatal(_) => Left(ApiError(status, SingleErrorBody.parsingError))
     }
   }
 }

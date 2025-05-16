@@ -22,6 +22,8 @@ import play.api.{Configuration, Environment}
 import services._
 
 import java.time.Clock
+import connectors.ConnectorConfig
+import connectors.ConnectorConfigImpl
 
 class Module extends play.api.inject.Module {
 
@@ -37,7 +39,8 @@ class Module extends play.api.inject.Module {
     Seq(
       sessionBinding,
       bind[Clock].toInstance(Clock.systemUTC()),
-      bind[AppConfig].toSelf,
+      bind[AppConfig].toSelf.eagerly(),
+      bind[ConnectorConfig].to[ConnectorConfigImpl].eagerly(),
       bind[JourneyDataRetrievalAction].to[JourneyDataRetrievalActionImpl].eagerly()
     )
   }
