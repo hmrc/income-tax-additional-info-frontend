@@ -56,7 +56,7 @@ object PostCessationTradeReliefMessages {
   }
 
   object Welsh extends Messages with Cy {
-    override val headingAndTitle = "hyddhad masnach ôl-derfynu a rhai colledion penodol eraill"
+    override val headingAndTitle = "Rhyddhad masnach ôl-derfynu a rhai colledion penodol eraill"
     override val p1 = "Os ydych wedi talu treuliau mewn perthynas â busnes ers i’r busnes hwnnw ddod i ben, efallai y gallwch gael rhyddhad treth ar y taliadau hynny. Gall y rhyddhad dim ond cael ei hawlio os na wnaethoch hawlio’r treuliau hynny ar yr adeg y gwnaeth y busnes ddod i ben, neu unrhyw fan arall yn y Ffurflen Dreth hon neu Ffurflen Dreth gynharach. Mae treuliau ôl-derfynu pob tro yn cael eu gosod yn erbyn derbyniadau ôl-derfynu yn gyntaf."
     override val p2 = "Mae’n rhaid i’r treuliau gael eu talu cyn pen 7 mlynedd i’r dyddiad y gwnaeth y busnes ddod i ben, a dylent gael eu hawlio yn erbyn y Ffurflen Dreth ar gyfer y flwyddyn y talwyd y treuliau. Mae’n rhaid i’r hawliad hefyd gael ei wneud erbyn pen-blwydd y dyddiad cau ar gyfer cyflwyno ar gyfer y flwyddyn dreth dan sylw. Er enghraifft, mae’n rhaid i gais am draul a delir yn y flwyddyn dreth 6 Ebrill 2026 i 5 Ebrill 2027 gael ei wneud erbyn 31 Ionawr 2029."
     override val expensesSummaryHeading = "Treuliau ôl-derfynu"

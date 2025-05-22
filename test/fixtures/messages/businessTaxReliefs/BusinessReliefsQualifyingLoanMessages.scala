@@ -64,19 +64,19 @@ object BusinessReliefsQualifyingLoanMessages {
   }
 
   object WelshAgent extends Messages with Cy {
-    override val headingAndTitle = "Llog ar fenthyciad cymwys yn daladwy yn y flwyddyn"
+    override val headingAndTitle = Welsh.headingAndTitle
     override val p1 = "Gall eich cleient hawlio rhyddhad treth ar log ar fenthyciad neu drefniant ariannu amgen a ddefnyddiwyd i brynu’r canlynol:"
     override val p2 = "Mae cyfanswm y rhyddhadau Treth Incwm penodol y gellir eu defnyddio i leihau cyfanswm incwm trethadwy eich cleient wedi’i gyfyngu i £50,000, neu 25% o gyfanswm incwm eich cleient wedi’i addasu – pa un bynnag sydd fwyaf."
-    override val b1 = "cyfranddaliadau mewn, neu i ariannu, cwmni caeedig"
-    override val b2 = "buddiant mewn, neu i ariannu, partneriaeth (os yw’r bartneriaeth yn bartneriaeth gosod eiddo, dilynwch y cysylltiad isod i gael arweiniad pellach)"
+    override val b1 = Welsh.b1
+    override val b2 = Welsh.b2
     override val b3 = "offer neu beiriannau ar gyfer gwaith eich cleient (oni bai eich bod eisoes wedi didynnu hwn fel traul busnes)"
-    override val link = "Rhagor o wybodaeth ynghylch llog a thaliadau cyllid amgen sy’n gymwys ar gyfer ryddhad (yn agor tab newydd)"
-    override val label = "Beth yw swm y llog ar fenthyciad cymwys sy’n daladwy yn y flwyddyn?"
+    override val link = Welsh.link
+    override val label = Welsh.label
     override val hint: String = "Er enghraifft, £193.54"
 
-    override val amountEmpty = "Nodwch swm y log sy’n daladwy yn y flwyddyn"
-    override val amountInvalid = "Mae’n rhaid i swm y llog sy’n daladwy yn y flwyddyn gynnwys y rhifau 0 i 9 a phwynt degol yn unig"
+    override val amountEmpty = Welsh.amountEmpty
+    override val amountInvalid = Welsh.amountInvalid
     override val amountTooLarge = "Mae’n rhaid i swm llog ar fenthyciad eich cleient fod yn llai na £100,000,000,000"
-    override val amountTooSmall = "Nodwch swm dilys ar gyfer faint o log sy’n daladwy yn y flwyddyn"
+    override val amountTooSmall = Welsh.amountTooSmall
   }
 }
