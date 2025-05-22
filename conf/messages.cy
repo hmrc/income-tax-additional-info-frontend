@@ -276,22 +276,21 @@ gains.sectionCompletedState.hint = Byddwch yn dal i allu mynd yn ôl ac adolygu�
 gains.sectionCompletedState.error.required = Dewiswch a ydych wedi llenwi’r adran hon
 
 #################       Business Reliefs      ########################################
-# TODO: Welsh tranlations
-business-reliefs.non-deductible.title = Non-deductible loan interest from investments into property letting partnerships (Welsh)
-business-reliefs.non-deductible.paragraph1.agent = Your client can claim tax relief on the cost of getting a loan to fund a partnership, or the interest on such a loan. Relief can also be claimed on the cost of getting alternative finance arrangements, and the interest on payments for such arrangements. This relief is limited to the extent that those funds are used for any part of the business that consists of residential properties. (Welsh)
-business-reliefs.non-deductible.paragraph2.agent = The tax relief your client can claim is restricted to the basic rate of Income Tax. (Welsh)
-business-reliefs.non-deductible.paragraph1.individual = You can claim tax relief on the cost of getting a loan to fund a partnership, or the interest on such a loan. Relief can also be claimed on the cost of getting alternative finance arrangements, and the interest on payments for such arrangements. This relief is limited to the extent that those funds are used for any part of the business that consists of residential properties. (Welsh)
-business-reliefs.non-deductible.paragraph2.individual = The tax relief you can claim is restricted to the basic rate of Income Tax. (Welsh)
-business-reliefs.non-deductible.paragraph3.1 = For more information, visit
-business-reliefs.non-deductible.paragraph3.link = Helpsheet 340 (opens in new tab)
-business-reliefs.non-deductible.paragraph3.3 = and read the section titled
-business-reliefs.non-deductible.paragraph3.4 = Residential property finance cost restriction. (Welsh)
-business-reliefs.non-deductible.question.input = How much is the non-deductible loan interest from investments into property letting partnerships? (Welsh)
-business-reliefs.non-deductible.question.input.error.empty_field = Enter the value of the non-deductible loan interest (Welsh)
-business-reliefs.non-deductible.question.input.error.incorrect-characters = Non-deductible loan interest must only include the numbers 0-9 and a decimal point (Welsh)
-business-reliefs.non-deductible.question.input.error.max-amount.agent = The amount of your client''s non-deductible loan interest must be less than £100,000,000,000 (Welsh)
-business-reliefs.non-deductible.question.input.error.max-amount.individual = The amount of your non-deductible loan interest must be less than £100,000,000,000 (Welsh)
-business-reliefs.non-deductible.question.input.error.negative = Enter a valid amount for the value of the non-deductible loan interest (Welsh)
+business-reliefs.non-deductible.title = Llog ar fenthyciad na ellir ei ddidynnu o fuddsoddiadau mewn partneriaethau gosod eiddo
+business-reliefs.non-deductible.paragraph1.agent = Gall eich cleient hawlio rhyddhad treth ar y gost o gael benthyciad i ariannu partneriaeth, neu’r llog ar fenthyciad o’r fath. Hefyd, mae modd hawlio rhyddhad ar y gost o gael trefniadau ariannol amgen yn eu lle, a’r llog ar daliadau am drefniadau o’r fath. Mae’r rhyddhad hwn wedi’i gyfyngu i ddefnydd yr arian hwnnw ar gyfer unrhyw ran o’r busnes sy’n ymwneud ag eiddo preswyl.
+business-reliefs.non-deductible.paragraph2.agent = Mae’r rhyddhad treth y gall eich cleient ei hawlio wedi’i gyfyngu i’r gyfradd sylfaenol o Dreth Incwm.
+business-reliefs.non-deductible.paragraph1.individual = Gallwch hawlio rhyddhad treth ar y gost o gael benthyciad i ariannu partneriaeth, neu’r llog ar fenthyciad o’r fath. Hefyd, mae modd hawlio rhyddhad ar y gost o gael trefniadau ariannol amgen yn eu lle, a’r llog ar daliadau am drefniadau o’r fath. Mae’r rhyddhad hwn wedi’i gyfyngu i ddefnydd yr arian hwnnw ar gyfer unrhyw ran o’r busnes sy’n ymwneud ag eiddo preswyl.
+business-reliefs.non-deductible.paragraph2.individual = Mae’r rhyddhad treth y gallwch ei hawlio wedi’i gyfyngu i’r gyfradd sylfaenol o Dreth Incwm.
+business-reliefs.non-deductible.paragraph3.1 = Am ragor o wybodaeth, ewch i
+business-reliefs.non-deductible.paragraph3.link = Daflen Gymorth 340 (yn agor tab newydd)
+business-reliefs.non-deductible.paragraph3.3 = a darllen yr adran,
+business-reliefs.non-deductible.paragraph3.4 = ‘Cyfyngiad ar gostau ariannol eiddo preswyl’.
+business-reliefs.non-deductible.question.input = Faint yw’r llog ar fenthyciad na ellir ei ddidynnu o fuddsoddiadau mewn partneriaethau gosod eiddo?
+business-reliefs.non-deductible.question.input.error.empty_field = Nodwch swm y llog ar fenthyciad na ellir ei ddidynnu
+business-reliefs.non-deductible.question.input.error.incorrect-characters = Dim ond y rhifau 0-9 ac un pwynt degol y mae’n rhaid i’r llog ar fenthyciad na ellir ei ddidynnu gynnwys.
+business-reliefs.non-deductible.question.input.error.max-amount.agent = Mae’n rhaid i swm llog eich cleient ar fenthyciad na ellir ei ddidynnu fod yn llai na £100,000,000,000
+business-reliefs.non-deductible.question.input.error.max-amount.individual = Mae’n rhaid i swm eich llog ar fenthyciad na ellir ei ddidynnu fod yn llai na £100,000,000,000
+business-reliefs.non-deductible.question.input.error.negative = Nodwch swm dilys ar gyfer swm y llog ar fenthyciad na ellir ei ddidynnu
 
 # TODO Welsh translations
 business-reliefs.qualifying-loan.title = Qualifying loan interest payable in the year
