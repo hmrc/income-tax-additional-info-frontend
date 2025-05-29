@@ -22,11 +22,11 @@ import play.api.http.Status.INTERNAL_SERVER_ERROR
 import play.api.libs.json.{JsPath, JsonValidationError}
 import uk.gov.hmrc.http.HttpResponse
 import utils.PagerDutyHelper.PagerDutyKeys.BAD_SUCCESS_JSON_FROM_IF
-import utils.PagerDutyHelper.pagerDutyLog
+import utils.PagerDutyHelper.formatErrorMessage
 
 import scala.util.control.NonFatal
 
-trait Parser extends Logging{
+trait Parser extends Logging {
 
   protected val parserName: String
   protected val service: String
@@ -36,15 +36,21 @@ trait Parser extends Logging{
   }
 
   def badSuccessJsonResponse[Response]: Either[ApiError, Response] = {
-    pagerDutyLog(BAD_SUCCESS_JSON_FROM_IF, s"[$parserName][read] Invalid Json from $service API.")
+    logger.error(formatErrorMessage(BAD_SUCCESS_JSON_FROM_IF, s"[$parserName][read] Invalid Json from $service API."))
     Left(ApiError(INTERNAL_SERVER_ERROR, SingleErrorBody.parsingError))
   }
 
   def badSuccessJsonFromAPIWithErrors[Response](
-                                                 validationErrors: scala.collection.Seq[(JsPath,
-                                                   scala.collection.Seq[JsonValidationError])]): Either[ApiError, Response] = {
-    pagerDutyLog(BAD_SUCCESS_JSON_FROM_IF, s"[$parserName][badSuccessJsonFromAPIWithErrors] Invalid Json response. " + validationErrors)
-    Left(ApiError(INTERNAL_SERVER_ERROR, SingleErrorBody("PARSING_ERROR", "Error parsing response from API - " + validationErrors)))
+    validationErrors: scala.collection.Seq[(JsPath, scala.collection.Seq[JsonValidationError])]
+  ): Either[ApiError, Response] = {
+    val otherDetails = s"[$parserName][badSuccessJsonFromAPIWithErrors] Invalid Json response. " + validationErrors
+    logger.error(formatErrorMessage(BAD_SUCCESS_JSON_FROM_IF, otherDetails))
+    Left(
+      ApiError(
+        INTERNAL_SERVER_ERROR,
+        SingleErrorBody("PARSING_ERROR", "Error parsing response from API - " + validationErrors)
+      )
+    )
   }
 
   def handleError[Response](response: HttpResponse, status: Int): Either[ApiError, Response] = {

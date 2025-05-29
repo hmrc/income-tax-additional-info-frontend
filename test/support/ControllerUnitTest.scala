@@ -27,7 +27,8 @@ import support.stubs.AppConfigStub
 import scala.concurrent.ExecutionContext
 
 trait ControllerUnitTest extends UnitTest
-  with FutureAwaits with DefaultAwaitTimeout
+  with FutureAwaits
+  with DefaultAwaitTimeout
   with GuiceOneAppPerSuite
   with Injecting
   with TaxYearProvider
