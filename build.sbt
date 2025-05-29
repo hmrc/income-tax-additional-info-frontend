@@ -76,6 +76,7 @@ lazy val microservice = Project(appName, file("."))
     )
   )
   .settings(Test / fork := false)
+  .settings(resolvers += Resolver.jcenterRepo)
   .settings(coverageSettings *)
   .settings(
     // concatenate js
