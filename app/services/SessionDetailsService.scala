@@ -30,11 +30,14 @@ import scala.util.control.NoStackTrace
 
 case class MissingAgentClientDetails(message: String) extends Exception(message) with NoStackTrace
 
+trait SessionDetailsService {
+  def getSessionData[A](sessionId: String)(implicit request: Request[A], hc: HeaderCarrier): Future[UserSessionData]
+}
 
 @Singleton
-class SessionDetailsService @Inject()(sessionDataConnector: UserSessionDataConnector,
+class SessionDetailsServiceImpl @Inject()(sessionDataConnector: UserSessionDataConnector,
                                       featureConfig: FeatureConfig)
-                                     (implicit ec: ExecutionContext) extends Logging {
+                                     (implicit ec: ExecutionContext) extends SessionDetailsService with Logging {
 
   logger.info(s"Feature switch sessionCookieServiceEnabled is ${featureConfig.sessionCookieServiceEnabled}")
 

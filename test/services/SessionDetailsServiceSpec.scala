@@ -45,7 +45,7 @@ class SessionDetailsServiceSpec extends AnyWordSpec with Matchers with MockFacto
         "return the session data" in {
           val config = TestFeatureConfig.allDisabled.enableSessionCookieService
           val mockSessionDataConnector = mock[UserSessionDataConnector]
-          val testService = new SessionDetailsService(mockSessionDataConnector, config)
+          val testService = new SessionDetailsServiceImpl(mockSessionDataConnector, config)
 
           val userSessionData = UserSessionData(sessionId = sessionId, mtditid = "111111", nino = "AA111111A", utr = Some("123456"))
           (mockSessionDataConnector.getSessionData(_: HeaderCarrier))
@@ -68,7 +68,7 @@ class SessionDetailsServiceSpec extends AnyWordSpec with Matchers with MockFacto
           "return session data" in {
             val config = TestFeatureConfig.allDisabled.enableSessionCookieService
             val mockSessionDataConnector = mock[UserSessionDataConnector]
-            val testService = new SessionDetailsService(mockSessionDataConnector, config)
+            val testService = new SessionDetailsServiceImpl(mockSessionDataConnector, config)
 
             val error = ApiError(IM_A_TEAPOT, SingleErrorBody("codeValue", "reasonValue"))
             (mockSessionDataConnector.getSessionData(_: HeaderCarrier))
@@ -91,7 +91,7 @@ class SessionDetailsServiceSpec extends AnyWordSpec with Matchers with MockFacto
           "return an error when session values are missing" in {
             val config = TestFeatureConfig.allDisabled.enableSessionCookieService
             val mockSessionDataConnector = mock[UserSessionDataConnector]
-            val testService = new SessionDetailsService(mockSessionDataConnector, config)
+            val testService = new SessionDetailsServiceImpl(mockSessionDataConnector, config)
 
             val error = ApiError(IM_A_TEAPOT, SingleErrorBody("codeValue", "reasonValue"))
             (mockSessionDataConnector.getSessionData(_: HeaderCarrier))
@@ -112,7 +112,7 @@ class SessionDetailsServiceSpec extends AnyWordSpec with Matchers with MockFacto
         "return session data" in {
           val config = TestFeatureConfig.allDisabled.disableSessionCookieService
           val mockSessionDataConnector = mock[UserSessionDataConnector]
-          val testService = new SessionDetailsService(mockSessionDataConnector, config)
+          val testService = new SessionDetailsServiceImpl(mockSessionDataConnector, config)
 
           (mockSessionDataConnector.getSessionData(_: HeaderCarrier))
             .expects(*)
@@ -133,7 +133,7 @@ class SessionDetailsServiceSpec extends AnyWordSpec with Matchers with MockFacto
       "return an error when session values are missing" in {
         val config = TestFeatureConfig.allDisabled.disableSessionCookieService
         val mockSessionDataConnector = mock[UserSessionDataConnector]
-        val testService = new SessionDetailsService(mockSessionDataConnector, config)
+        val testService = new SessionDetailsServiceImpl(mockSessionDataConnector, config)
 
         (mockSessionDataConnector.getSessionData(_: HeaderCarrier))
           .expects(*)

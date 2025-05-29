@@ -26,6 +26,7 @@ import support.ControllerUnitTest
 import support.builders.UserBuilder.aUser
 import support.mocks.{MockAuthorisedAction, MockErrorHandler}
 
+// TODO: Remove. Dead code.
 class ActionsProviderSpec extends ControllerUnitTest
   with MockAuthorisedAction
   with MockErrorHandler {

@@ -16,7 +16,7 @@
 
 package config
 
-import actions.{JourneyDataRetrievalAction, JourneyDataRetrievalActionImpl}
+import actions.{AuthorisedAction, AuthorisedActionImpl, JourneyDataRetrievalAction, JourneyDataRetrievalActionImpl}
 import play.api.inject.Binding
 import play.api.{Configuration, Environment}
 import services._
@@ -24,6 +24,7 @@ import services._
 import java.time.Clock
 import connectors.ConnectorConfig
 import connectors.ConnectorConfigImpl
+import connectors.session.{UserSessionDataConnector, UserSessionDataConnectorImpl}
 
 class Module extends play.api.inject.Module {
 
@@ -42,7 +43,10 @@ class Module extends play.api.inject.Module {
       bind[AppConfig].toSelf.eagerly(),
       bind[ConnectorConfig].to[ConnectorConfigImpl].eagerly(),
       bind[JourneyDataRetrievalAction].to[JourneyDataRetrievalActionImpl].eagerly(),
-      bind[FeatureConfig].to[FeatureConfigImpl].eagerly()
+      bind[FeatureConfig].to[FeatureConfigImpl].eagerly(),
+      bind[UserSessionDataConnector].to[UserSessionDataConnectorImpl],
+      bind[SessionDetailsService].to[SessionDetailsServiceImpl],
+      bind[AuthorisedAction].to[AuthorisedActionImpl]
     )
   }
 

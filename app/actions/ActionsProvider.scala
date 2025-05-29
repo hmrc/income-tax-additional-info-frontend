@@ -23,6 +23,7 @@ import play.api.mvc.{ActionBuilder, AnyContent}
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.ExecutionContext
 
+// TODO: Remove. Dead code.
 @Singleton
 class ActionsProvider @Inject()(authAction: AuthorisedAction,
                                 appConfig: AppConfig)

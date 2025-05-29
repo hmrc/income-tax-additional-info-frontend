@@ -25,6 +25,7 @@ import support.builders.UserBuilder.aUser
 
 import scala.concurrent.{ExecutionContext, Future}
 
+// TODO: Remove. Dead code.
 trait MockActionsProvider extends MockFactory
   with MockAuthorisedAction
   with MockErrorHandler {

@@ -16,7 +16,7 @@
 
 package support.mocks
 
-import actions.AuthorisedAction
+import actions.{AuthorisedAction, AuthorisedActionImpl}
 import models.authorisation.Enrolment.{Agent, Individual, Nino}
 import org.scalamock.handlers.CallHandler4
 import org.scalamock.scalatest.MockFactory
@@ -34,14 +34,16 @@ import uk.gov.hmrc.http.HeaderCarrier
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.{ExecutionContext, Future}
 
+// TODO: Remove. Dead code
 trait MockAuthorisedActionCIS extends AppConfigStubProvider with MockErrorHandler
   with MockFactory {
 
   private val mockAuthConnector = mock[AuthConnector]
   private val mockAuthService = new AuthorisationService(mockAuthConnector)
 
-  protected val mockAuthorisedAction: AuthorisedAction = new AuthorisedAction(
+  protected val mockAuthorisedAction: AuthorisedAction = new AuthorisedActionImpl(
     mockAuthService,
+    ???,
     appConfigStub,
     stubMessagesControllerComponents(),
     mockErrorHandler
