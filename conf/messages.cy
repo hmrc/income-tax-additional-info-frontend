@@ -39,7 +39,7 @@ common.opensInNewTab = (yn agor tab newydd)
 common.return.to.overview = Yn ôl i’r trosolwg
 common.view = View
 common.yes = Iawn
-common.cya = Gwirio''ch atebion
+common.cya = Gwiriwch Eich Atebion
 
 common.error.amountMaxLimit = Nodwch swm sy’n llai na £100,000,000,000
 common.error.invalid_currency_format = Nodwch y swm yn y fformat cywir

@@ -37,5 +37,5 @@ trait Cy extends i18n {
   override val continue = "Yn eich blaen"
   override val change = "Newid"
   override def taxYearCaption(year: Int): String = s"6 Ebrill ${year - 1} i 5 Ebrill $year"
-  override val cya = "Gwirio''ch atebion"
+  override val cya = "Gwiriwch Eich Atebion"
 }
