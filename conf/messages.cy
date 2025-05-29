@@ -39,7 +39,7 @@ common.opensInNewTab = (yn agor tab newydd)
 common.return.to.overview = Yn ôl i’r trosolwg
 common.view = View
 common.yes = Iawn
-common.cya = Check your answers (Welsh)
+common.cya = Gwiriwch Eich Atebion
 
 common.error.amountMaxLimit = Nodwch swm sy’n llai na £100,000,000,000
 common.error.invalid_currency_format = Nodwch y swm yn y fformat cywir
@@ -276,72 +276,64 @@ gains.sectionCompletedState.hint = Byddwch yn dal i allu mynd yn ôl ac adolygu�
 gains.sectionCompletedState.error.required = Dewiswch a ydych wedi llenwi’r adran hon
 
 #################       Business Reliefs      ########################################
-# TODO: Welsh tranlations
-business-reliefs.non-deductible.title = Non-deductible loan interest from investments into property letting partnerships (Welsh)
-business-reliefs.non-deductible.paragraph1.agent = Your client can claim tax relief on the cost of getting a loan to fund a partnership, or the interest on such a loan. Relief can also be claimed on the cost of getting alternative finance arrangements, and the interest on payments for such arrangements. This relief is limited to the extent that those funds are used for any part of the business that consists of residential properties. (Welsh)
-business-reliefs.non-deductible.paragraph2.agent = The tax relief your client can claim is restricted to the basic rate of Income Tax. (Welsh)
-business-reliefs.non-deductible.paragraph1.individual = You can claim tax relief on the cost of getting a loan to fund a partnership, or the interest on such a loan. Relief can also be claimed on the cost of getting alternative finance arrangements, and the interest on payments for such arrangements. This relief is limited to the extent that those funds are used for any part of the business that consists of residential properties. (Welsh)
-business-reliefs.non-deductible.paragraph2.individual = The tax relief you can claim is restricted to the basic rate of Income Tax. (Welsh)
-business-reliefs.non-deductible.paragraph3.1 = For more information, visit
-business-reliefs.non-deductible.paragraph3.link = Helpsheet 340 (opens in new tab)
-business-reliefs.non-deductible.paragraph3.3 = and read the section titled
-business-reliefs.non-deductible.paragraph3.4 = Residential property finance cost restriction. (Welsh)
-business-reliefs.non-deductible.question.input = How much is the non-deductible loan interest from investments into property letting partnerships? (Welsh)
-business-reliefs.non-deductible.question.input.error.empty_field = Enter the value of the non-deductible loan interest (Welsh)
-business-reliefs.non-deductible.question.input.error.incorrect-characters = Non-deductible loan interest must only include the numbers 0-9 and a decimal point (Welsh)
-business-reliefs.non-deductible.question.input.error.max-amount.agent = The amount of your client''s non-deductible loan interest must be less than £100,000,000,000 (Welsh)
-business-reliefs.non-deductible.question.input.error.max-amount.individual = The amount of your non-deductible loan interest must be less than £100,000,000,000 (Welsh)
-business-reliefs.non-deductible.question.input.error.negative = Enter a valid amount for the value of the non-deductible loan interest (Welsh)
+business-reliefs.non-deductible.title = Llog ar fenthyciad na ellir ei ddidynnu o fuddsoddiadau mewn partneriaethau gosod eiddo
+business-reliefs.non-deductible.paragraph1.agent = Gall eich cleient hawlio rhyddhad treth ar y gost o gael benthyciad i ariannu partneriaeth, neu’r llog ar fenthyciad o’r fath. Hefyd, mae modd hawlio rhyddhad ar y gost o gael trefniadau ariannol amgen yn eu lle, a’r llog ar daliadau am drefniadau o’r fath. Mae’r rhyddhad hwn wedi’i gyfyngu i ddefnydd yr arian hwnnw ar gyfer unrhyw ran o’r busnes sy’n ymwneud ag eiddo preswyl.
+business-reliefs.non-deductible.paragraph2.agent = Mae’r rhyddhad treth y gall eich cleient ei hawlio wedi’i gyfyngu i’r gyfradd sylfaenol o Dreth Incwm.
+business-reliefs.non-deductible.paragraph1.individual = Gallwch hawlio rhyddhad treth ar y gost o gael benthyciad i ariannu partneriaeth, neu’r llog ar fenthyciad o’r fath. Hefyd, mae modd hawlio rhyddhad ar y gost o gael trefniadau ariannol amgen yn eu lle, a’r llog ar daliadau am drefniadau o’r fath. Mae’r rhyddhad hwn wedi’i gyfyngu i ddefnydd yr arian hwnnw ar gyfer unrhyw ran o’r busnes sy’n ymwneud ag eiddo preswyl.
+business-reliefs.non-deductible.paragraph2.individual = Mae’r rhyddhad treth y gallwch ei hawlio wedi’i gyfyngu i’r gyfradd sylfaenol o Dreth Incwm.
+business-reliefs.non-deductible.paragraph3.1 = Am ragor o wybodaeth, ewch i
+business-reliefs.non-deductible.paragraph3.link = Daflen Gymorth 340 (yn agor tab newydd)
+business-reliefs.non-deductible.paragraph3.3 = a darllen yr adran,
+business-reliefs.non-deductible.paragraph3.4 = ‘Cyfyngiad ar gostau ariannol eiddo preswyl’.
+business-reliefs.non-deductible.question.input = Faint yw’r llog ar fenthyciad na ellir ei ddidynnu o fuddsoddiadau mewn partneriaethau gosod eiddo?
+business-reliefs.non-deductible.question.input.error.empty_field = Nodwch swm y llog ar fenthyciad na ellir ei ddidynnu
+business-reliefs.non-deductible.question.input.error.incorrect-characters = Dim ond y rhifau 0-9 ac un pwynt degol y mae’n rhaid i’r llog ar fenthyciad na ellir ei ddidynnu gynnwys.
+business-reliefs.non-deductible.question.input.error.max-amount.agent = Mae’n rhaid i swm llog eich cleient ar fenthyciad na ellir ei ddidynnu fod yn llai na £100,000,000,000
+business-reliefs.non-deductible.question.input.error.max-amount.individual = Mae’n rhaid i swm eich llog ar fenthyciad na ellir ei ddidynnu fod yn llai na £100,000,000,000
+business-reliefs.non-deductible.question.input.error.negative = Nodwch swm dilys ar gyfer swm y llog ar fenthyciad na ellir ei ddidynnu
 
-# TODO Welsh translations
-business-reliefs.qualifying-loan.title = Qualifying loan interest payable in the year
-business-reliefs.qualifying-loan.paragraph1.individual = You can claim tax relief for interest on a loan or alternative finance arrangement used to buy:
-business-reliefs.qualifying-loan.paragraph1.agent = Your client can claim tax relief for interest on a loan or alternative finance arrangement used to buy:
-business-reliefs.qualifying-loan.paragraph2.individual = The total amount of certain Income Tax reliefs that can be used to reduce your total taxable income is limited to £50,000, or 25% of your adjusted total income, whichever amount is greater.
-business-reliefs.qualifying-loan.paragraph2.agent = The total amount of certain Income Tax reliefs that can be used to reduce your client''s total taxable income is limited to £50,000, or 25% of your client''s adjusted total income, whichever amount is greater.
-business-reliefs.qualifying-loan.bullet1 = shares in, or to fund, a close company
-business-reliefs.qualifying-loan.bullet2 = an interest, or to fund, a partnership (if the partnership is a property letting partnership, follow the link below for further guidance)
-business-reliefs.qualifying-loan.bullet3.individual = plant or machinery for your work (unless you have already deducted this as a business expense)
-business-reliefs.qualifying-loan.bullet3.agent = plant or machinery for your client''s work (unless you have already deducted this as a business expense)
-business-reliefs.qualifying-loan.more-info-link = More information about interest and alternative finance payments eligible for relief (opens in new tab)
-business-reliefs.qualifying-loan.amount.question = How much is the qualifying loan interest payable in the year?
-business-reliefs.qualifying-loan.question.input.error.empty_field = Enter how much interest is payable in the year
-business-reliefs.qualifying-loan.question.input.error.incorrect-characters = Interest payable in the year must only include the numbers 0-9 and a decimal point
-business-reliefs.qualifying-loan.question.input.error.max-amount.individual = The amount of your loan interest must be less than £100,000,000,000
-business-reliefs.qualifying-loan.question.input.error.max-amount.agent = The amount of your client''s loan interest must be less than £100,000,000,000
-business-reliefs.qualifying-loan.question.input.error.negative = Enter a valid amount for how much interest is payable in the year
+business-reliefs.qualifying-loan.title = Llog ar fenthyciad cymwys yn daladwy yn y flwyddyn
+business-reliefs.qualifying-loan.paragraph1.individual = Gallwch hawlio rhyddhad treth ar log ar fenthyciad neu drefniant ariannu amgen a ddefnyddiwyd i brynu’r canlynol:
+business-reliefs.qualifying-loan.paragraph1.agent = Gall eich cleient hawlio rhyddhad treth ar log ar fenthyciad neu drefniant ariannu amgen a ddefnyddiwyd i brynu’r canlynol:
+business-reliefs.qualifying-loan.paragraph2.individual = Mae cyfanswm y rhyddhadau Treth Incwm penodol y gellir eu defnyddio i leihau cyfanswm eich incwm trethadwy wedi’i gyfyngu i £50,000, neu 25% o gyfanswm eich incwm wedi’i addasu – pa un bynnag sydd fwyaf.
+business-reliefs.qualifying-loan.paragraph2.agent = Mae cyfanswm y rhyddhadau Treth Incwm penodol y gellir eu defnyddio i leihau cyfanswm incwm trethadwy eich cleient wedi’i gyfyngu i £50,000, neu 25% o gyfanswm incwm eich cleient wedi’i addasu – pa un bynnag sydd fwyaf.
+business-reliefs.qualifying-loan.bullet1 = cyfranddaliadau mewn, neu i ariannu, cwmni caeedig
+business-reliefs.qualifying-loan.bullet2 = buddiant mewn, neu i ariannu, partneriaeth (os yw’r bartneriaeth yn bartneriaeth gosod eiddo, dilynwch y cysylltiad isod i gael arweiniad pellach)
+business-reliefs.qualifying-loan.bullet3.individual = offer neu beiriannau ar gyfer eich gwaith (oni bai eich bod eisoes wedi didynnu hwn fel traul busnes)
+business-reliefs.qualifying-loan.bullet3.agent = offer neu beiriannau ar gyfer gwaith eich cleient (oni bai eich bod eisoes wedi didynnu hwn fel traul busnes)
+business-reliefs.qualifying-loan.more-info-link = Rhagor o wybodaeth ynghylch llog a thaliadau cyllid amgen sy’n gymwys ar gyfer ryddhad (yn agor tab newydd)
+business-reliefs.qualifying-loan.amount.question = Beth yw swm y llog ar fenthyciad cymwys sy’n daladwy yn y flwyddyn?
+business-reliefs.qualifying-loan.question.input.error.empty_field = Nodwch swm y log sy’n daladwy yn y flwyddyn
+business-reliefs.qualifying-loan.question.input.error.incorrect-characters = Mae’n rhaid i swm y llog sy’n daladwy yn y flwyddyn gynnwys y rhifau 0 i 9 a phwynt degol yn unig
+business-reliefs.qualifying-loan.question.input.error.max-amount.individual = Mae’n rhaid i swm eich llog ar fenthyciad fod yn llai na £100,000,000,000
+business-reliefs.qualifying-loan.question.input.error.max-amount.agent = Mae’n rhaid i swm llog ar fenthyciad eich cleient fod yn llai na £100,000,000,000
+business-reliefs.qualifying-loan.question.input.error.negative = Nodwch swm dilys ar gyfer faint o log sy’n daladwy yn y flwyddyn
 
 ### Post Cessation Trade Relief
-postCessationTradeRelief.title = Post-cessation trade relief and certain other losses (Welsh)
-
-postCessationTradeRelief.p1.individual = If you’ve paid expenses in connection with a business that has ceased, you may be able to get tax relief on those payments. This relief can only be claimed if you didn’t claim those expenses at the time the business ceased, or anywhere else in this or an earlier tax return. Post-cessation expenses are always set against post-cessation receipts first.  (Welsh)
-postCessationTradeRelief.p1.agent = If your client has paid expenses in connection with a business that has ceased, they may be able to get tax relief on those payments. This relief can only be claimed if they didn’t claim those expenses at the time the business ceased, or anywhere else in this or an earlier tax return. Post-cessation expenses are always set against post-cessation receipts first. (Welsh)
-postCessationTradeRelief.p2 = The expenses must be paid within 7 years of your cessation, and should be claimed against the tax return for the year the expense was paid. The claim must also be made by the anniversary of the filing deadline for the tax year in question. For example, a claim for an expense paid in the tax year 6 April 2026 to 5 April 2027 must be made by 31 January 2029. (Welsh)
-
-postCessationTradeRelief.summary.expenses.heading = Post-cessation expenses (Welsh)
-postCessationTradeRelief.summary.expenses.p1 = Post-cessation expenses are expenses that would have been taken from the business’s profits had it not ceased trading. These expenses are: (Welsh)
-postCessationTradeRelief.summary.expenses.bullet1 = fixing defective work done, or replacing defective services or goods supplied (Welsh)
-postCessationTradeRelief.summary.expenses.bullet2 = any legal or professional costs for any claim against you for defective work (Welsh)
-postCessationTradeRelief.summary.expenses.bullet3 = insurance against such expenses (Welsh)
-postCessationTradeRelief.summary.expenses.bullet4 = recovering debts that were taken into account in calculating your pre-cessation profits. This can include debts that have gone bad, or have been voluntarily released, within 7 years of cessation (Welsh)
-
-postCessationTradeRelief.summary.liabilities.heading = Relief for former employee’s liabilities and costs (Welsh)
-postCessationTradeRelief.summary.liabilities.p1.individual = If the amount of liabilities or costs to be entered relating to your actual or alleged wrongful acts in a former employment, exceed your total income in the year you may be able to claim the excess against capital gains. There are special rules limiting the relief if you did not pay for these costs, for example, yourself. (Welsh)
-postCessationTradeRelief.summary.liabilities.p1.agent = If the amount of liabilities or costs to be entered, relating to your client’s actual or alleged wrongful acts in a former employment, exceed their total income in the year, they may be able to claim the excess against capital gains. There are special rules limiting the relief if they did not pay for these costs, for example, themselves. (Welsh)
-
-postCessationTradeRelief.summary.loss.heading = Employment loss relief (Welsh)
-postCessationTradeRelief.summary.loss.p1 = Relief for losses arising from an employment or office is only available in exceptional circumstances. This is because, as a general rule, employment expenses cannot exceed the earnings from which they are deductible. A loss can sometimes arise where capital allowances due cannot be deducted from the earnings from the employment. Additionally, a loss may also come directly from the conditions of the employment. Otherwise, relief cannot usually be claimed for these losses. (Welsh)
-
-postCessationTradeRelief.label.individual = How much are you claiming for post-cessation trade relief and certain other losses? (Welsh)
-postCessationTradeRelief.label.agent = How much is your client claiming for post-cessation trade relief and certain other losses? (Welsh)
-
-postCessationTradeRelief.amount.error.required.individual = Enter how much relief you are claiming (Welsh)
-postCessationTradeRelief.amount.error.required.agent = Enter how much relief your client is claiming (Welsh)
-postCessationTradeRelief.amount.error.invalid = The amount of relief must only include the numbers 0-9 and a decimal point (Welsh)
-postCessationTradeRelief.amount.error.max.individual = The amount of your relief must be less than £100,000,000,000 (Welsh)
-postCessationTradeRelief.amount.error.max.agent = The amount of your client’s relief must be less than £100,000,000,000 (Welsh)
-postCessationTradeRelief.amount.error.min.individual = Enter a valid amount for how much relief you are claiming (Welsh)
-postCessationTradeRelief.amount.error.min.agent = Enter a valid amount for how much relief your client is claiming (Welsh)
+postCessationTradeRelief.title = Rhyddhad masnach ôl-derfynu a rhai colledion penodol eraill
+postCessationTradeRelief.p1.individual = Os ydych wedi talu treuliau mewn perthynas â busnes ers i’r busnes hwnnw ddod i ben, efallai y gallwch gael rhyddhad treth ar y taliadau hynny. Gall y rhyddhad dim ond cael ei hawlio os na wnaethoch hawlio’r treuliau hynny ar yr adeg y gwnaeth y busnes ddod i ben, neu unrhyw fan arall yn y Ffurflen Dreth hon neu Ffurflen Dreth gynharach. Mae treuliau ôl-derfynu pob tro yn cael eu gosod yn erbyn derbyniadau ôl-derfynu yn gyntaf.
+postCessationTradeRelief.p1.agent = Os yw’ch cleient wedi talu treuliau mewn perthynas â busnes ers i’r busnes hwnnw ddod i ben, efallai gall eich cleient gael rhyddhad treth ar y taliadau hynny. Gall y rhyddhad dim ond cael ei hawlio os na wnaeth eich cleient hawlio’r treuliau hynny ar yr adeg y gwnaeth y busnes ddod i ben, neu unrhyw fan arall yn y Ffurflen Dreth hon neu Ffurflen Dreth gynharach. Mae treuliau ôl-derfynu pob tro yn cael eu gosod yn erbyn derbyniadau ôl-derfynu yn gyntaf.
+postCessationTradeRelief.p2 = Mae’n rhaid i’r treuliau gael eu talu cyn pen 7 mlynedd i’r dyddiad y gwnaeth y busnes ddod i ben, a dylent gael eu hawlio yn erbyn y Ffurflen Dreth ar gyfer y flwyddyn y talwyd y treuliau. Mae’n rhaid i’r hawliad hefyd gael ei wneud erbyn pen-blwydd y dyddiad cau ar gyfer cyflwyno ar gyfer y flwyddyn dreth dan sylw. Er enghraifft, mae’n rhaid i gais am draul a delir yn y flwyddyn dreth 6 Ebrill 2026 i 5 Ebrill 2027 gael ei wneud erbyn 31 Ionawr 2029.
+postCessationTradeRelief.summary.expenses.heading = Treuliau ôl-derfynu
+postCessationTradeRelief.summary.expenses.p1 = Ystyr treuliau ôl-derfynu yw treuliau y byddai wedi cael eu cymryd o elw’r busnes os nad oedd y busnes wedi rhoi’r gorau i fasnachu. Mae’r treuliau hyn yn cynnwys y canlynol:
+postCessationTradeRelief.summary.expenses.bullet1 = trwsio gwaith diffygiol wedi’i wneud, neu amnewid gwasanaethau neu nwyddau diffygiol a gyflenwyd
+postCessationTradeRelief.summary.expenses.bullet2 = unrhyw gostau cyfreithiol neu broffesiynol ar gyfer unrhyw hawliadau yn eich erbyn am waith diffygiol
+postCessationTradeRelief.summary.expenses.bullet3 = yswiriant yn erbyn treuliau o’r fath
+postCessationTradeRelief.summary.expenses.bullet4 = adennill dyledion a gymerwyd i ystyriaeth wrth gyfrifo eich elw cyn-derfynu. Gall hyn gynnwys dyledion sydd wedi’u troi’n ddrwgddyled, neu sydd wedi’u rhyddhau’n wirfoddol, o fewn 7 mlynedd o’r flwyddyn darfod
+postCessationTradeRelief.summary.liabilities.heading = Rhyddhad ar gyfer rhwymedigaethau a chostau cyn gyflogai
+postCessationTradeRelief.summary.liabilities.p1.individual = Os yw swm y rhwymedigaethau neu gostau sydd i’w nodi ac sy’n ymwneud â gweithredoedd anghyfreithlon gwirioneddol neu honedig a gyflawnwyd gennych mewn cyflogaeth flaenorol, yn fwy na chyfanswm eich incwm yn y flwyddyn, efallai y gallwch hawlio’r swm gormodol drwy ei osod yn erbyn enillion cyfalaf. Mae rheolau arbennig sy’n cyfyngu ar y rhyddhad os na wnaethoch, er enghraifft, dalu am y costau hyn eich hun.
+postCessationTradeRelief.summary.liabilities.p1.agent = Os yw swm y rhwymedigaethau neu gostau sydd i’w nodi ac sy’n ymwneud â gweithredoedd anghyfreithlon gwirioneddol neu honedig a gyflawnwyd gan eich cleient mewn cyflogaeth flaenorol, yn fwy na chyfanswm ei incwm yn y flwyddyn, efallai y gall eich cleient hawlio’r swm gormodol drwy ei osod yn erbyn enillion cyfalaf. Mae rheolau arbennig sy’n cyfyngu ar y rhyddhad os na wnaeth eich cleient, er enghraifft, dalu am y costau hyn ei hun.
+postCessationTradeRelief.summary.loss.heading = Rhyddhad colledion ar gyfer cyflogaeth
+postCessationTradeRelief.summary.loss.p1 = Mae rhyddhad ar gyfer colledion sy’n deillio o gyflogaeth neu swydd ar gael mewn amgylchiadau eithriadol yn unig. Mae hyn oherwydd, fel rheol gyffredinol, ni all treuliau cyflogaeth fod yn fwy na’r enillion y maent yn cael ei ddidynnu ohono. Gall colled weithiau digwydd pan na ellir didynnu’r lwfansau cyfalaf sy’n ddyledus o’r enillion o gyflogaeth. Ar ben hynny, gall colled hefyd ddigwydd yn uniongyrchol oherwydd amodau’r gyflogaeth. Fel arall, ni all rhyddhad gael ei hawlio ar gyfer y colledion hyn fel arfer.
+postCessationTradeRelief.label.individual = Faint ydych chi’n ei hawlio ar gyfer rhyddhad masnach ôl-derfynu a rhai colledion penodol eraill?
+postCessationTradeRelief.label.agent = Faint mae’ch cleient yn ei hawlio ar gyfer rhyddhad masnach ôl-derfynu a rhai colledion penodol eraill?
+postCessationTradeRelief.amount.error.required.individual = Nodwch faint o ryddhad rydych yn ei hawlio
+postCessationTradeRelief.amount.error.required.agent = Nodwch faint o ryddhad y mae’ch cleient yn ei hawlio
+postCessationTradeRelief.amount.error.invalid = Mae’n rhaid i swm y rhyddhad gynnwys y rhifau 0-9 a phwynt degol yn unig
+postCessationTradeRelief.amount.error.max.individual = Mae’n rhaid i swm eich rhyddhad fod yn llai na £100,000,000,000
+postCessationTradeRelief.amount.error.max.agent = Mae’n rhaid i swm rhyddhad eich cleient fod yn llai na £100,000,000,000
+postCessationTradeRelief.amount.error.min.individual = Nodwch rif dilys am faint o ryddhad rydych yn ei hawlio
+postCessationTradeRelief.amount.error.min.agent = Nodwch rif dilys am faint o ryddhad y mae’ch cleient yn ei hawlio
 
 #################       Error messages        ########################################
 common.error.self-assessment.paragraph.1.1 = Os yw’r cyfeiriad gwe yn gywir neu os ydych wedi dewis cysylltiad neu fotwm, gallwch ddefnyddio
