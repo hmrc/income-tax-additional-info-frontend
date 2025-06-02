@@ -16,8 +16,8 @@
 
 package actions
 
-import config.{AppConfig, ErrorHandler}
 import controllers.errors.routes.{AgentAuthErrorController, IndividualAuthErrorController, UnauthorisedUserErrorController, YouNeedAgentServicesController}
+import config.{AppConfig, ErrorHandler}
 import models.authorisation.Enrolment.{Agent, Individual, Nino}
 import models.requests.AuthorisationRequest
 import play.api.Logging
@@ -87,13 +87,13 @@ class AuthorisedActionImpl @Inject()(authService: AuthorisationService,
   private def handleEnrolmentValidation[A](enrolments: Enrolments,
                                            affinityGroup: AffinityGroup,
                                            sessionId: String,
-                                           request: Request[A],
+                                           request: Request[A]
                                           )(block: AuthorisationRequest[A] => Future[Result]): Future[Result] = {
     val optionalMtdItId: Option[String] = enrolmentGetIdentifierValue(Individual.key, Individual.value, enrolments)
     val optionalNino: Option[String] = enrolmentGetIdentifierValue(Nino.key, Nino.value, enrolments)
     (optionalMtdItId, optionalNino) match {
       case (Some(mtdItId), Some(nino)) =>
-          block(AuthorisationRequest(models.User(mtdItId, None, nino, affinityGroup.toString, sessionId), request))
+        block(AuthorisationRequest(models.User(mtdItId, None, nino, affinityGroup.toString, sessionId), request))
       case (_, None) =>
         logger.info(s"$individualLogPrefix - No active session. Redirecting to sign-in URL.")
         Future.successful(Redirect(appConfig.signInUrl))
