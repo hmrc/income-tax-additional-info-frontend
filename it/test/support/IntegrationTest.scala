@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package test.support
+package support
 
 import com.github.tomakehurst.wiremock.http.HttpHeader
 import com.github.tomakehurst.wiremock.stubbing.StubMapping
@@ -43,8 +43,8 @@ import support.builders.UserBuilder.aUser
 import support.builders.requests.AuthorisationRequestBuilder.anAuthorisationRequest
 import support.helpers.WireMockServer
 import support.providers.TaxYearProvider
-import test.support.helpers.PlaySessionCookieBaker
-import test.support.stubs.WireMockStubs
+import support.helpers.PlaySessionCookieBaker
+import support.stubs.WireMockStubs
 import uk.gov.hmrc.http.{HeaderCarrier, SessionKeys}
 
 import java.util.UUID

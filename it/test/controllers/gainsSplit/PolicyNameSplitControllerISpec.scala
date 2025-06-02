@@ -33,7 +33,7 @@ import play.api.test.Helpers._
 import play.api.{Environment, Mode}
 import services.GainsSessionServiceProvider
 import support.helpers.ViewHelper
-import test.support.IntegrationTest
+import support.IntegrationTest
 
 import scala.concurrent.Future
 

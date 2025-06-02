@@ -25,7 +25,7 @@ import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import play.api.{Environment, Mode}
-import test.support.IntegrationTest
+import support.IntegrationTest
 
 class PolicyNameBaseControllerISpec extends IntegrationTest {
 

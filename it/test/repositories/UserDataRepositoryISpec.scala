@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package test.repositories
+package repositories
 
 import com.mongodb.client.result.InsertOneResult
 import models.{AllGainsSessionModel, User}
@@ -25,7 +25,7 @@ import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
 import play.api.mvc.AnyContent
 import play.api.test.{DefaultAwaitTimeout, FakeRequest, FutureAwaits}
 import repositories.GainsUserDataRepository
-import test.support.IntegrationTest
+import support.IntegrationTest
 
 class UserDataRepositoryISpec extends IntegrationTest with FutureAwaits with DefaultAwaitTimeout {
 
@@ -92,7 +92,7 @@ class UserDataRepositoryISpec extends IntegrationTest with FutureAwaits with Def
 
       val res: Boolean = await(gainsRepo.update(newUserData).map {
         case Right(value) => value
-        case Left(value) => false
+        case Left(_) => false
       })
       res mustBe true
       count mustBe 1

@@ -20,7 +20,7 @@ import connectors.ExcludeJourneyConnector
 import connectors.errors.{ApiError, SingleErrorBody}
 import play.api.http.Status.{BAD_REQUEST, IM_A_TEAPOT, INTERNAL_SERVER_ERROR, NO_CONTENT}
 import play.api.libs.json.Json
-import test.support.IntegrationTest
+import support.IntegrationTest
 
 class ExcludeJourneyConnectorISpec extends IntegrationTest {
 

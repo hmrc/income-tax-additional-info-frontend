@@ -22,7 +22,7 @@ import models.session.UserSessionData
 import org.scalatest.{EitherValues, OptionValues}
 import play.api.http.Status._
 import play.api.libs.json.Json
-import test.support.ConnectorIntegrationTest
+import support.ConnectorIntegrationTest
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.http.test.HttpClientV2Support
 

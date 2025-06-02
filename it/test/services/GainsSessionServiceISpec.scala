@@ -14,13 +14,13 @@
  * limitations under the License.
  */
 
-package test.services
+package services
 
 import models.AllGainsSessionModel
 import models.gains.PolicyCyaModel
 import services.GainsSessionServiceImpl
 import support.builders.requests.AuthorisationRequestBuilder
-import test.support.IntegrationTest
+import support.IntegrationTest
 
 
 class GainsSessionServiceISpec extends IntegrationTest {

@@ -14,13 +14,13 @@
  * limitations under the License.
  */
 
-package test.controllers.gains
+package controllers.gains
 
 import models.AllGainsSessionModel
 import play.api.http.HeaderNames
 import play.api.http.Status.{BAD_REQUEST, NO_CONTENT, OK, SEE_OTHER}
 import play.api.libs.ws.WSResponse
-import test.support.IntegrationTest
+import support.IntegrationTest
 
 class GainsGatewayControllerISpec extends IntegrationTest {
 

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package test.controllers.gains
+package controllers.gains
 
 import forms.gains.InputYearForm
 import models.AllGainsSessionModel
@@ -34,7 +34,7 @@ import play.api.test.FakeRequest
 import play.api.test.Helpers.{GET, contentAsString, defaultAwaitTimeout, route, running, writeableOf_AnyContentAsEmpty, writeableOf_AnyContentAsFormUrlEncoded}
 import play.api.{Environment, Mode}
 import repositories.GainsUserDataRepository
-import test.support.IntegrationTest
+import support.IntegrationTest
 import uk.gov.hmrc.http.HttpVerbs.POST
 
 import scala.concurrent.Future

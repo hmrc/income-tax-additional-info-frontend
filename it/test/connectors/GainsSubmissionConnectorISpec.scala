@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package test.connectors
+package connectors
 
 import com.github.tomakehurst.wiremock.http.HttpHeader
 import config.AppConfig
@@ -25,7 +25,7 @@ import models.gains._
 import play.api.http.Status._
 import play.api.libs.json.Json
 import play.api.test.Helpers.NO_CONTENT
-import test.support.IntegrationTest
+import support.IntegrationTest
 import uk.gov.hmrc.http.{HeaderCarrier, HeaderNames, HttpClient, SessionId}
 import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 

@@ -21,7 +21,7 @@ import config.AppConfig
 import connectors.errors.{ApiError, SingleErrorBody}
 import connectors.session.DeleteGainsSessionConnector
 import play.api.http.Status._
-import test.support.IntegrationTest
+import support.IntegrationTest
 import uk.gov.hmrc.http.{HeaderCarrier, HeaderNames, HttpClient, SessionId}
 import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 

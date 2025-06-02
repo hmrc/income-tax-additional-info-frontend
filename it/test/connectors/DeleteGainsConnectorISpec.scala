@@ -14,14 +14,14 @@
  * limitations under the License.
  */
 
-package test.connectors
+package connectors
 
 import com.github.tomakehurst.wiremock.http.HttpHeader
 import config.AppConfig
 import connectors.DeleteGainsConnector
 import connectors.errors.{ApiError, SingleErrorBody}
 import play.api.http.Status._
-import test.support.IntegrationTest
+import support.IntegrationTest
 import uk.gov.hmrc.http.{HeaderCarrier, HeaderNames, HttpClient, SessionId}
 import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 

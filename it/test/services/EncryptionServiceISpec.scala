@@ -14,14 +14,14 @@
  * limitations under the License.
  */
 
-package test.services
+package services
 
 import models.AllGainsSessionModel
 import models.mongo.{EncryptedGainsUserDataModel, GainsUserDataModel}
 import services.EncryptionService
 
 import java.time.Instant
-import test.support.IntegrationTest
+import support.IntegrationTest
 import utils.AesGcmAdCrypto
 
 class EncryptionServiceISpec extends IntegrationTest {

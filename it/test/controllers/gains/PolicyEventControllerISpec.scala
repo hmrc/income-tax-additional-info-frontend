@@ -33,7 +33,7 @@ import play.api.test.FakeRequest
 import play.api.test.Helpers.{GET, route, running, writeableOf_AnyContentAsEmpty, writeableOf_AnyContentAsFormUrlEncoded}
 import play.api.{Environment, Mode}
 import repositories.GainsUserDataRepository
-import test.support.IntegrationTest
+import support.IntegrationTest
 import uk.gov.hmrc.http.HttpVerbs.POST
 
 import scala.concurrent.Future

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package test.support.helpers
+package support.helpers
 
 import play.api.http.SecretConfiguration
 import play.api.libs.crypto.DefaultCookieSigner

@@ -19,7 +19,7 @@ package controllers.gains
 import play.api.http.HeaderNames
 import play.api.http.Status.{BAD_REQUEST, OK, SEE_OTHER}
 import play.api.libs.ws.WSResponse
-import test.support.IntegrationTest
+import support.IntegrationTest
 
 class SectionCompletedStateControllerISpec extends IntegrationTest {
 

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package test.support
+package support
 
 import org.scalatest.BeforeAndAfterAll
 import org.scalatest.matchers.should.Matchers
@@ -22,7 +22,7 @@ import org.scalatest.wordspec.AnyWordSpec
 import play.api.test.{DefaultAwaitTimeout, FutureAwaits}
 import support.helpers.WireMockServer
 import support.providers.AppConfigStubProvider
-import test.support.stubs.WireMockStubs
+import support.stubs.WireMockStubs
 import uk.gov.hmrc.http.test.HttpClientSupport
 
 trait ConnectorIntegrationTest extends AnyWordSpec with Matchers

@@ -27,7 +27,7 @@ import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar.mock
 import play.api.http.Status.{INTERNAL_SERVER_ERROR, NO_CONTENT}
 import support.builders.requests.AuthorisationRequestBuilder.anAuthorisationRequest
-import test.support.IntegrationTest
+import support.IntegrationTest
 
 import scala.concurrent.Future
 
