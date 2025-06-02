@@ -16,27 +16,16 @@
 
 package controllers.errors
 
-import actions.AuthorisedAction
+import actions.{AuthorisedAction, FakeIdentifyAction}
 import models.authorisation.SessionValues._
-import models.requests.AuthorisationRequest
 import play.api.Application
 import play.api.http.Status.OK
-import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.inject.bind
-import play.api.mvc.{AnyContent, BodyParser, Request, Result}
-import play.api.test.{FakeRequest, Helpers}
+import play.api.inject.guice.GuiceApplicationBuilder
+import play.api.test.FakeRequest
 import play.api.test.Helpers.{contentType, status}
 import support.ControllerUnitTest
-import support.builders.UserBuilder.aUser
 
-import scala.concurrent.{ExecutionContext, Future}
-
-class FakeIdentifyAction() extends AuthorisedAction {
-  override def parser: BodyParser[AnyContent] = Helpers.stubBodyParser()
-  override def invokeBlock[A](request: Request[A], block: AuthorisationRequest[A] => Future[Result]): Future[Result] =
-    block(AuthorisationRequest(aUser, request))
-  override protected def executionContext: ExecutionContext = ExecutionContext.global
-}
 
 class TaxYearErrorControllerSpec extends ControllerUnitTest {
 
