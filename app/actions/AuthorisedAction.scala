@@ -36,11 +36,11 @@ import scala.concurrent.{ExecutionContext, Future}
 trait AuthorisedAction extends ActionBuilder[AuthorisationRequest, AnyContent]
 
 class AuthorisedActionImpl @Inject()(authService: AuthorisationService,
-                                 sessionDetailsService: SessionDetailsService,
-                                 appConfig: AppConfig,
-                                 cc: ControllerComponents,
-                                 errorHandler: ErrorHandler)
-                                (implicit val executionContext: ExecutionContext)
+                                     sessionDetailsService: SessionDetailsService,
+                                     appConfig: AppConfig,
+                                     cc: ControllerComponents,
+                                     errorHandler: ErrorHandler)
+                                    (implicit val executionContext: ExecutionContext)
   extends AuthorisedAction with HeaderCarrierHelper with Logging {
 
   private val minimumConfidenceLevel: Int = ConfidenceLevel.L250.level
@@ -100,8 +100,8 @@ class AuthorisedActionImpl @Inject()(authService: AuthorisationService,
             Future.successful(Redirect(appConfig.signInUrl))
         }
       case (_, None) =>
-          logger.warn(s"$individualLogPrefix - No active session. Redirecting to sign-in URL.")
-          Future.successful(Redirect(appConfig.signInUrl))
+        logger.warn(s"$individualLogPrefix - No active session. Redirecting to sign-in URL.")
+        Future.successful(Redirect(appConfig.signInUrl))
       case (None, _) =>
         logger.warn(s"$individualLogPrefix - User has no MTD IT enrolment. Redirecting user to sign up for MTD.")
         Future.successful(Redirect(IndividualAuthErrorController.show()))
@@ -119,9 +119,9 @@ class AuthorisedActionImpl @Inject()(authService: AuthorisationService,
       .withDelegatedAuthRule("mtd-it-auth-supp")
 
   private[actions] def agentAuthentication[A](block: AuthorisationRequest[A] => Future[Result],
-                                        sessionId: String
-                                       )(implicit request: Request[A],
-                                         hc: HeaderCarrier): Future[Result] = {
+                                              sessionId: String
+                                             )(implicit request: Request[A],
+                                               hc: HeaderCarrier): Future[Result] = {
     sessionDetailsService.getSessionData(sessionId).flatMap { sessionData =>
       authService
         .authorised(primaryAgentPredicate(sessionData.mtditid))
@@ -147,8 +147,8 @@ class AuthorisedActionImpl @Inject()(authService: AuthorisationService,
                                mtdItId: String
                               )(implicit hc: HeaderCarrier): PartialFunction[Throwable, Future[Result]] = {
     case _: NoActiveSession =>
-        logger.warn(s"$agentLogPrefix - No active session. Redirecting to ${appConfig.signInUrl}")
-        Future.successful(Redirect(appConfig.signInUrl))
+      logger.warn(s"$agentLogPrefix - No active session. Redirecting to ${appConfig.signInUrl}")
+      Future.successful(Redirect(appConfig.signInUrl))
     case _: AuthorisationException =>
       authService.authorised(secondaryAgentPredicate(mtdItId))
         .retrieve(allEnrolments) { enrolments =>

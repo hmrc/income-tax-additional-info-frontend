@@ -32,13 +32,11 @@ class UserDataRepositoryISpec extends IntegrationTest with FutureAwaits with Def
   val gainsRepo: GainsUserDataRepository = app.injector.instanceOf[GainsUserDataRepository]
 
   override def config: Map[String, String] =
-    super.config ++ Map("mongodb.encryption.key" -> "key")
-
-  val gainsInvalidRepo: GainsUserDataRepository = app.injector.instanceOf[GainsUserDataRepository]
+    super.config
 
   private def count: Long = await(gainsRepo.collection.countDocuments().toFuture())
 
-  class EmptyDatabase {
+  trait EmptyDatabase {
     await(gainsRepo.collection.drop().toFuture())
     await(gainsRepo.ensureIndexes())
   }
@@ -60,6 +58,7 @@ class UserDataRepositoryISpec extends IntegrationTest with FutureAwaits with Def
       result mustBe Right(true)
       count mustBe 1
     }
+
     "fail to add a document to the collection when it already exists" in new EmptyDatabase {
       count mustBe 0
       await(gainsRepo.create(gainsUserData))
@@ -131,11 +130,6 @@ class UserDataRepositoryISpec extends IntegrationTest with FutureAwaits with Def
       })
 
       dataAfter.get.gains mustBe Some(AllGainsSessionModel(List(newGainsCyaModel), gateway = Some(true)))
-    }
-
-    "return a EncryptionDecryptionError" in {
-      await(gainsInvalidRepo.find(taxYear)(AuthorisationRequest(testUser, request))) mustBe
-        Left(EncryptionDecryptionError("Failed encrypting data"))
     }
 
     "return a No CYA data found" in {

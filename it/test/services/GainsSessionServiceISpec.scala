@@ -16,54 +16,89 @@
 
 package services
 
+import connectors.GetGainsConnector
 import models.AllGainsSessionModel
 import models.gains.PolicyCyaModel
-import services.GainsSessionServiceImpl
+import models.mongo.DataNotUpdated
+import org.mockito.ArgumentMatchers.any
+import org.mockito.Mockito.when
+import org.scalatest.matchers.should.Matchers
+import org.scalatest.wordspec.AnyWordSpec
+import org.scalatestplus.mockito.MockitoSugar.mock
+import play.api.test.{DefaultAwaitTimeout, FutureAwaits}
+import repositories.GainsUserDataRepository
 import support.builders.requests.AuthorisationRequestBuilder
-import support.IntegrationTest
+import support.utils.TaxYearUtils
+import uk.gov.hmrc.http.HeaderCarrier
 
+import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.Future
 
-class GainsSessionServiceISpec extends IntegrationTest {
+class GainsSessionServiceISpec extends AnyWordSpec with Matchers with FutureAwaits with DefaultAwaitTimeout {
 
-  override def config: Map[String, String] =
-    super.config ++ Map("mongodb.encryption.key" -> "key")
+  trait Setup {
+    val gainsUserDataRepository: GainsUserDataRepository = mock[GainsUserDataRepository]
+    val getGainsDataConnector: GetGainsConnector = mock[GetGainsConnector]
 
-  val gainsSessionServiceInvalidEncryption: GainsSessionServiceImpl = app.injector.instanceOf[GainsSessionServiceImpl]
-
-  gainsSessionService.createSessionData(AllGainsSessionModel(Seq(PolicyCyaModel(sessionId, Some(""))),
-    gateway = Some(true)), taxYear)(false)(true)(AuthorisationRequestBuilder.anAuthorisationRequest, ec, headerCarrier)
-
-  "create" should {
-    "return false when failing to decrypt the model" in {
-      val result =
-        await(gainsSessionServiceInvalidEncryption.createSessionData(
-          AllGainsSessionModel(Seq(completePolicyCyaModel), gateway = Some(true)), taxYear
-        )(false)(true)(AuthorisationRequestBuilder.anAuthorisationRequest, ec, headerCarrier))
-      result shouldBe false
-    }
-
-    "return true when successful and false when adding a duplicate" in {
-      await(gainsUserDataRepository.collection.drop().toFuture())
-      await(gainsUserDataRepository.ensureIndexes())
-      val initialResult =
-        await(gainsSessionService.createSessionData(AllGainsSessionModel(Seq(completePolicyCyaModel),
-          gateway = Some(true)), taxYear)(false)(true)
-        (AuthorisationRequestBuilder.anAuthorisationRequest, ec, headerCarrier))
-      val duplicateResult =
-        await(gainsSessionService.createSessionData(AllGainsSessionModel(Seq(completePolicyCyaModel),
-          gateway = Some(true)), taxYear)(false)(true)
-        (AuthorisationRequestBuilder.anAuthorisationRequest, ec, headerCarrier))
-      initialResult shouldBe true
-      duplicateResult shouldBe false
-    }
+    val gainsSessionService: GainsSessionServiceImpl = new GainsSessionServiceImpl(gainsUserDataRepository, getGainsDataConnector)
   }
 
-  "update" should {
-    "return false when failing to decrypt the model" in {
-      val result = await(gainsSessionServiceInvalidEncryption.updateSessionData(AllGainsSessionModel
-      (Seq(completePolicyCyaModel), gateway = Some(true)), taxYear)(false)(true)
-      (AuthorisationRequestBuilder.anAuthorisationRequest, ec, headerCarrier))
-      result shouldBe false
+  val sessionId = "sessionId-eb3158c2-0aff-4ce8-8d1b-f2208ace52fe"
+  val completePolicyCyaModel: PolicyCyaModel =
+    PolicyCyaModel(sessionId, Some("Life Insurance"), Some("123"), Some(0), Some(""), Some(true), Some(0), Some(0), Some(true), Some(123.11), Some(true), Some(123.11))
+
+  val headerCarrier = HeaderCarrier()
+
+  val taxYear = TaxYearUtils.taxYear
+
+  "GainsSessionServiceImpl" should {
+
+    "create" should {
+
+      "return false when failing to decrypt the model" in new Setup {
+        when(gainsUserDataRepository.create(any())).thenReturn(Future.successful(Left(DataNotUpdated)))
+
+        val result =
+          await(gainsSessionService.createSessionData(
+            AllGainsSessionModel(Seq(completePolicyCyaModel), gateway = Some(true)), taxYear)(false)(true)(AuthorisationRequestBuilder.anAuthorisationRequest, headerCarrier))
+
+        result shouldBe false
+      }
+
+      "return true when successful and false when adding a duplicate" in new Setup {
+        when(gainsUserDataRepository.create(any()))
+          .thenReturn(
+            Future.successful(Right(true)),
+            Future.successful(Left(DataNotUpdated))
+          )
+
+        val model = AllGainsSessionModel(Seq(completePolicyCyaModel), gateway = Some(true))
+        val initialResult =
+          await(gainsSessionService.createSessionData(model, taxYear)(false)(true)(
+            AuthorisationRequestBuilder.anAuthorisationRequest, headerCarrier)
+          )
+
+        val duplicateResult =
+          await(gainsSessionService.createSessionData(model, taxYear)(false)(true)(
+            AuthorisationRequestBuilder.anAuthorisationRequest, headerCarrier)
+          )
+
+        initialResult shouldBe true
+        duplicateResult shouldBe false
+      }
+    }
+
+    "update" should {
+      "return false when failing to decrypt the model" in new Setup {
+        when(gainsUserDataRepository.update(any()))
+          .thenReturn(Future.successful(Left(DataNotUpdated)))
+
+        val result = await(gainsSessionService.updateSessionData(AllGainsSessionModel
+        (Seq(completePolicyCyaModel), gateway = Some(true)), taxYear)(false)(true)
+        (AuthorisationRequestBuilder.anAuthorisationRequest, headerCarrier))
+
+        result shouldBe false
+      }
     }
   }
 }

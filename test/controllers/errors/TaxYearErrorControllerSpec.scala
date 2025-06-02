@@ -31,7 +31,7 @@ class TaxYearErrorControllerSpec extends ControllerUnitTest {
 
   override def fakeApplication(): Application =
     new GuiceApplicationBuilder()
-     .overrides(bind[AuthorisedAction].to[FakeIdentifyAction])
+      .overrides(bind[AuthorisedAction].to[FakeIdentifyAction])
       .build()
 
   private lazy val underTest = inject[TaxYearErrorController]

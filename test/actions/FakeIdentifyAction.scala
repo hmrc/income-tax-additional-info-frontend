@@ -16,17 +16,16 @@
 
 package actions
 
-import models.User
 import models.requests.AuthorisationRequest
-import play.api.mvc.{AnyContent, BodyParser, Request, Result}
-import play.api.test.Helpers
+import play.api.mvc.{AnyContent, BodyParser, PlayBodyParsers, Request, Result}
 import support.builders.UserBuilder.aUser
 
+import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
-class FakeIdentifyAction(user: User = aUser) extends AuthorisedAction {
-  override def parser: BodyParser[AnyContent] = Helpers.stubBodyParser()
+class FakeIdentifyAction @Inject()(bodyParser: PlayBodyParsers) extends AuthorisedAction {
+  override def parser: BodyParser[AnyContent] = bodyParser.default
   override def invokeBlock[A](request: Request[A], block: AuthorisationRequest[A] => Future[Result]): Future[Result] =
-    block(AuthorisationRequest(user, request))
+    block(AuthorisationRequest(aUser, request))
   override protected def executionContext: ExecutionContext = ExecutionContext.global
 }

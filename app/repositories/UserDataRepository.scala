@@ -63,7 +63,7 @@ trait UserDataRepository[C <: UserDataTemplate] {
             pagerDutyLog(FAILED_TO_CREATE_DATA, s"$start Failed to create user data. Exception: ${exception.getMessage}")
             Left(DataNotUpdated)
         }
-      case _ => Future(Left(DataNotUpdated))
+      case _ => Future.successful(Left(DataNotUpdated))
     }
   }
 

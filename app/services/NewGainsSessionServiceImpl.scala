@@ -34,14 +34,14 @@ class NewGainsSessionServiceImpl @Inject()(getGainsDataConnector: GetGainsConnec
                                            updateGainsSessionConnector: UpdateGainsSessionConnector,
                                            deleteGainsSessionConnector: DeleteGainsSessionConnector,
                                            getGainsSessionConnector: GetGainsSessionConnector
-                                          )(implicit correlationId: String) extends GainsSessionServiceProvider with Logging {
+                                          )(implicit ec: ExecutionContext, correlationId: String) extends GainsSessionServiceProvider with Logging {
 
   def getPriorData(taxYear: Int)(implicit request: AuthorisationRequest[_], hc: HeaderCarrier): Future[GetGainsResponse] = {
     getGainsDataConnector.getUserData(taxYear)(request.user, hc.withExtraHeaders("mtditid" -> request.user.mtditid))
   }
 
   def createSessionData[A](cyaModel: AllGainsSessionModel, taxYear: Int)(onFail: A)(onSuccess: A)
-                          (implicit request: AuthorisationRequest[_], ec: ExecutionContext, hc: HeaderCarrier): Future[A] = {
+                          (implicit request: AuthorisationRequest[_], hc: HeaderCarrier): Future[A] = {
 
     createGainsSessionConnector.createSessionData(cyaModel, taxYear)(
       hc.withExtraHeaders("mtditid" -> request.user.mtditid).withExtraHeaders("X-CorrelationId" -> correlationId)).map {
@@ -54,7 +54,7 @@ class NewGainsSessionServiceImpl @Inject()(getGainsDataConnector: GetGainsConnec
   }
 
   def getSessionData(taxYear: Int)(implicit request: AuthorisationRequest[_],
-                                   ec: ExecutionContext, hc: HeaderCarrier): Future[Either[DatabaseError, Option[GainsUserDataModel]]] = {
+                                   hc: HeaderCarrier): Future[Either[DatabaseError, Option[GainsUserDataModel]]] = {
 
     getGainsSessionConnector.getSessionData(taxYear)(
       hc.withExtraHeaders("mtditid" -> request.user.mtditid).withExtraHeaders("X-CorrelationId" -> correlationId)).map {
@@ -66,8 +66,8 @@ class NewGainsSessionServiceImpl @Inject()(getGainsDataConnector: GetGainsConnec
     }
   }
 
-  def updateSessionData[A](cyaModel: AllGainsSessionModel, taxYear: Int)(onFail: A)(onSuccess: A)
-                          (implicit request: AuthorisationRequest[_], ec: ExecutionContext, hc: HeaderCarrier): Future[A] = {
+  def updateSessionData[A](cyaModel: AllGainsSessionModel, taxYear: Int)(onFail: => A)(onSuccess: A)
+                          (implicit request: AuthorisationRequest[_], hc: HeaderCarrier): Future[A] = {
 
     updateGainsSessionConnector.updateGainsSession(cyaModel, taxYear)(
       hc.withExtraHeaders("mtditid" -> request.user.mtditid).withExtraHeaders("X-CorrelationId" -> correlationId)).map {
@@ -80,7 +80,7 @@ class NewGainsSessionServiceImpl @Inject()(getGainsDataConnector: GetGainsConnec
   }
 
   def deleteSessionData[A](taxYear: Int)(onFail: A)(onSuccess: A)
-                          (implicit request: AuthorisationRequest[_], ec: ExecutionContext, hc: HeaderCarrier): Future[A] = {
+                          (implicit request: AuthorisationRequest[_], hc: HeaderCarrier): Future[A] = {
 
     deleteGainsSessionConnector.deleteGainsData(taxYear)(
       hc.withExtraHeaders("mtditid" -> request.user.mtditid).withExtraHeaders("X-CorrelationId" -> correlationId)).map {
@@ -93,7 +93,7 @@ class NewGainsSessionServiceImpl @Inject()(getGainsDataConnector: GetGainsConnec
   }
 
   def getAndHandle[R](taxYear: Int)(onFail: R)(block: (Option[AllGainsSessionModel], Option[GainsPriorDataModel]) => R)
-                     (implicit request: AuthorisationRequest[_], ec: ExecutionContext, hc: HeaderCarrier): Future[R] = {
+                     (implicit request: AuthorisationRequest[_], hc: HeaderCarrier): Future[R] = {
     for {
       optionalCya <- getSessionData(taxYear)
       priorDataResponse <- getPriorData(taxYear)

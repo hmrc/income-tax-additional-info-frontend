@@ -23,7 +23,7 @@ import models.mongo.{DatabaseError, GainsUserDataModel}
 import models.requests.AuthorisationRequest
 import uk.gov.hmrc.http.HeaderCarrier
 
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.Future
 
 
 trait GainsSessionServiceProvider {
@@ -31,18 +31,18 @@ trait GainsSessionServiceProvider {
   def getPriorData(taxYear: Int)(implicit request: AuthorisationRequest[_], hc: HeaderCarrier): Future[GetGainsResponse]
 
   def createSessionData[A](cyaModel: AllGainsSessionModel, taxYear: Int)(onFail: A)(onSuccess: A)
-                          (implicit request: AuthorisationRequest[_], ec: ExecutionContext, hc: HeaderCarrier): Future[A]
+                          (implicit request: AuthorisationRequest[_], hc: HeaderCarrier): Future[A]
 
   def getSessionData(taxYear: Int)(implicit request: AuthorisationRequest[_],
-                                   ec: ExecutionContext, hc: HeaderCarrier): Future[Either[DatabaseError, Option[GainsUserDataModel]]]
+                                    hc: HeaderCarrier): Future[Either[DatabaseError, Option[GainsUserDataModel]]]
 
-  def updateSessionData[A](cyaModel: AllGainsSessionModel, taxYear: Int)(onFail: A)(onSuccess: A)
-                          (implicit request: AuthorisationRequest[_], ec: ExecutionContext, hc: HeaderCarrier): Future[A]
+  def updateSessionData[A](cyaModel: AllGainsSessionModel, taxYear: Int)(onFail: => A)(onSuccess: A)
+                          (implicit request: AuthorisationRequest[_], hc: HeaderCarrier): Future[A]
 
   def deleteSessionData[A](taxYear: Int)(onFail: A)(onSuccess: A)
-                          (implicit request: AuthorisationRequest[_], ec: ExecutionContext, hc: HeaderCarrier): Future[A]
+                          (implicit request: AuthorisationRequest[_], hc: HeaderCarrier): Future[A]
 
   def getAndHandle[R](taxYear: Int)(onFail: R)(block: (Option[AllGainsSessionModel], Option[GainsPriorDataModel]) => R)
-                     (implicit request: AuthorisationRequest[_], ec: ExecutionContext, hc: HeaderCarrier): Future[R]
+                     (implicit request: AuthorisationRequest[_], hc: HeaderCarrier): Future[R]
 
 }
