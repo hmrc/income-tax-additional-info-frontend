@@ -171,7 +171,7 @@ class AuthorisedActionSpec
 
         mockAuthorise(allEnrolments and confidenceLevel, enrolments and ConfidenceLevel.L250)
 
-        val result = await(underTest.individualAuthentication[AnyContent](block, AffinityGroup.Individual)(fakeIndividualRequest, headerCarrierWithSession))
+        val result = await(underTest.individualAuthentication[AnyContent](aUser.sessionId, AffinityGroup.Individual)(block)(fakeIndividualRequest, headerCarrierWithSession))
 
         "returns an OK status" in {
           result.header.status shouldBe OK
@@ -184,25 +184,13 @@ class AuthorisedActionSpec
     }
 
     "return a redirect" - {
-      "the session id does not exist in the headers" - {
-        val block: AuthorisationRequest[AnyContent] => Future[Result] = request => Future.successful(Ok(request.user.mtditid))
-
-        mockAuthorise(allEnrolments and confidenceLevel, enrolments and ConfidenceLevel.L250)
-
-        val result = await(underTest.individualAuthentication[AnyContent](block, AffinityGroup.Individual)(fakeIndividualRequest.withHeaders(), HeaderCarrier()))
-
-        "returns an SEE_OTHER status" in {
-          result.header.status shouldBe SEE_OTHER
-        }
-      }
-
       "the nino enrolment is missing" - {
         val block: AuthorisationRequest[AnyContent] => Future[Result] = request => Future.successful(Ok(request.user.mtditid))
         val enrolments = Enrolments(Set())
 
         mockAuthorise(allEnrolments and confidenceLevel, enrolments and ConfidenceLevel.L250)
 
-        val result = await(underTest.individualAuthentication[AnyContent](block, AffinityGroup.Individual)(fakeIndividualRequest, headerCarrierWithSession))
+        val result = await(underTest.individualAuthentication[AnyContent](aUser.sessionId, AffinityGroup.Individual)(block)(fakeIndividualRequest, headerCarrierWithSession))
 
         "returns a forbidden" in {
           result.header.status shouldBe SEE_OTHER
@@ -215,7 +203,7 @@ class AuthorisedActionSpec
 
         lazy val result = {
           mockAuthorise(allEnrolments and confidenceLevel, enrolments and ConfidenceLevel.L250)
-          await(underTest.individualAuthentication[AnyContent](block, AffinityGroup.Individual)(fakeIndividualRequest, headerCarrierWithSession))
+          await(underTest.individualAuthentication[AnyContent](aUser.sessionId, AffinityGroup.Individual)(block)(fakeIndividualRequest, headerCarrierWithSession))
         }
 
         "returns an Unauthorised" in {
@@ -234,7 +222,7 @@ class AuthorisedActionSpec
 
         mockAuthorise(allEnrolments and confidenceLevel, enrolments and ConfidenceLevel.L50)
 
-        val result = await(underTest.individualAuthentication[AnyContent](block, AffinityGroup.Individual)(fakeIndividualRequest, headerCarrierWithSession))
+        val result = await(underTest.individualAuthentication[AnyContent](aUser.sessionId, AffinityGroup.Individual)(block)(fakeIndividualRequest, headerCarrierWithSession))
 
         "has a status of 303" in {
           result.header.status shouldBe SEE_OTHER
