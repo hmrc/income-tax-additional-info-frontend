@@ -98,31 +98,12 @@ trait IntegrationTest extends AnyWordSpec
     "useEncryption" -> "true"
   )
 
-  def configWithInvalidEncryptionKey: Map[String, String] = Map(
-    "defaultTaxYear" -> taxYear.toString,
-    "auditing.enabled" -> "false",
-    "play.filters.csrf.header.bypassHeaders.Csrf-Token" -> "nocheck",
-    "microservice.services.income-tax-submission-frontend.url" -> s"http://$wiremockHost:$wiremockPort",
-    "microservice.services.auth.host" -> wiremockHost,
-    "microservice.services.auth.port" -> wiremockPort.toString,
-    "microservice.services.income-tax-employment.url" -> s"http://$wiremockHost:$wiremockPort",
-    "microservice.services.income-tax-expenses.url" -> s"http://$wiremockHost:$wiremockPort",
-    "microservice.services.income-tax-submission.url" -> s"http://$wiremockHost:$wiremockPort",
-    "microservice.services.view-and-change.url" -> s"http://$wiremockHost:$wiremockPort",
-    "microservice.services.sign-in.url" -> s"/auth-login-stub/gg-sign-in",
-    "taxYearErrorFeatureSwitch" -> "false",
-    "useEncryption" -> "true",
-    "mongodb.encryption.key" -> "key"
-  )
 
   override implicit lazy val app: Application = GuiceApplicationBuilder()
     .in(Environment.simple(mode = Mode.Dev))
     .configure(config)
     .build()
 
-  lazy val appWithInvalidEncryptionKey: Application = GuiceApplicationBuilder()
-    .configure(configWithInvalidEncryptionKey)
-    .build()
 
   override def beforeAll(): Unit = {
     super.beforeAll()

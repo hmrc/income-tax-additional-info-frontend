@@ -31,7 +31,10 @@ class UserDataRepositoryISpec extends IntegrationTest with FutureAwaits with Def
 
   val gainsRepo: GainsUserDataRepository = app.injector.instanceOf[GainsUserDataRepository]
 
-  val gainsInvalidRepo: GainsUserDataRepository = appWithInvalidEncryptionKey.injector.instanceOf[GainsUserDataRepository]
+  override def config: Map[String, String] =
+    super.config ++ Map("mongodb.encryption.key" -> "key")
+
+  val gainsInvalidRepo: GainsUserDataRepository = app.injector.instanceOf[GainsUserDataRepository]
 
   private def count: Long = await(gainsRepo.collection.countDocuments().toFuture())
 

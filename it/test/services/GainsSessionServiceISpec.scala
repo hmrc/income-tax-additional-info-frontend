@@ -25,7 +25,10 @@ import test.support.IntegrationTest
 
 class GainsSessionServiceISpec extends IntegrationTest {
 
-  val gainsSessionServiceInvalidEncryption: GainsSessionServiceImpl = appWithInvalidEncryptionKey.injector.instanceOf[GainsSessionServiceImpl]
+  override def config: Map[String, String] =
+    super.config ++ Map("mongodb.encryption.key" -> "key")
+
+  val gainsSessionServiceInvalidEncryption: GainsSessionServiceImpl = app.injector.instanceOf[GainsSessionServiceImpl]
 
   gainsSessionService.createSessionData(AllGainsSessionModel(Seq(PolicyCyaModel(sessionId, Some(""))),
     gateway = Some(true)), taxYear)(false)(true)(AuthorisationRequestBuilder.anAuthorisationRequest, ec, headerCarrier)
