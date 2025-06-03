@@ -25,7 +25,7 @@ import play.api.http.Status._
 import play.api.libs.json.Json
 import play.api.test.Helpers.OK
 import support.stubs.UserAnswersStub
-import test.support.{ConnectorIntegrationTest, IntegrationTest}
+import support.{ConnectorIntegrationTest, IntegrationTest}
 import uk.gov.hmrc.http.HeaderCarrier
 
 import java.time.Instant

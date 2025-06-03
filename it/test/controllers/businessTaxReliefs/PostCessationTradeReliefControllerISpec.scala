@@ -28,7 +28,7 @@ import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import play.api.{Application, Environment, Mode}
 import support.stubs.UserAnswersStub
-import test.support.IntegrationTest
+import support.IntegrationTest
 
 class PostCessationTradeReliefControllerISpec extends IntegrationTest with UserAnswersStub {
 

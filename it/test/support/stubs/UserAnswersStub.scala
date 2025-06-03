@@ -20,7 +20,7 @@ import com.github.tomakehurst.wiremock.stubbing.StubMapping
 import models.{Journey, UserAnswersModel}
 import play.api.http.Status.{NO_CONTENT, OK}
 import play.api.libs.json.Json
-import test.support.stubs.WireMockStubs
+import support.stubs.WireMockStubs
 
 trait UserAnswersStub extends WireMockStubs {
 

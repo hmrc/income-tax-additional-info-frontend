@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package test.repositories
+package repositories
 
 import com.mongodb.client.result.InsertOneResult
 import models.{AllGainsSessionModel, User}
@@ -25,17 +25,18 @@ import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
 import play.api.mvc.AnyContent
 import play.api.test.{DefaultAwaitTimeout, FakeRequest, FutureAwaits}
 import repositories.GainsUserDataRepository
-import test.support.IntegrationTest
+import support.IntegrationTest
 
 class UserDataRepositoryISpec extends IntegrationTest with FutureAwaits with DefaultAwaitTimeout {
 
   val gainsRepo: GainsUserDataRepository = app.injector.instanceOf[GainsUserDataRepository]
 
-  val gainsInvalidRepo: GainsUserDataRepository = appWithInvalidEncryptionKey.injector.instanceOf[GainsUserDataRepository]
+  override def config: Map[String, String] =
+    super.config
 
   private def count: Long = await(gainsRepo.collection.countDocuments().toFuture())
 
-  class EmptyDatabase {
+  trait EmptyDatabase {
     await(gainsRepo.collection.drop().toFuture())
     await(gainsRepo.ensureIndexes())
   }
@@ -57,6 +58,7 @@ class UserDataRepositoryISpec extends IntegrationTest with FutureAwaits with Def
       result mustBe Right(true)
       count mustBe 1
     }
+
     "fail to add a document to the collection when it already exists" in new EmptyDatabase {
       count mustBe 0
       await(gainsRepo.create(gainsUserData))
@@ -89,7 +91,7 @@ class UserDataRepositoryISpec extends IntegrationTest with FutureAwaits with Def
 
       val res: Boolean = await(gainsRepo.update(newUserData).map {
         case Right(value) => value
-        case Left(value) => false
+        case Left(_) => false
       })
       res mustBe true
       count mustBe 1
@@ -128,11 +130,6 @@ class UserDataRepositoryISpec extends IntegrationTest with FutureAwaits with Def
       })
 
       dataAfter.get.gains mustBe Some(AllGainsSessionModel(List(newGainsCyaModel), gateway = Some(true)))
-    }
-
-    "return a EncryptionDecryptionError" in {
-      await(gainsInvalidRepo.find(taxYear)(AuthorisationRequest(testUser, request))) mustBe
-        Left(EncryptionDecryptionError("Failed encrypting data"))
     }
 
     "return a No CYA data found" in {

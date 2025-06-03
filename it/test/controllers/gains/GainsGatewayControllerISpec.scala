@@ -14,15 +14,19 @@
  * limitations under the License.
  */
 
-package test.controllers.gains
+package controllers.gains
 
 import models.AllGainsSessionModel
+import org.scalatest.OptionValues
 import play.api.http.HeaderNames
 import play.api.http.Status.{BAD_REQUEST, NO_CONTENT, OK, SEE_OTHER}
 import play.api.libs.ws.WSResponse
-import test.support.IntegrationTest
+import play.api.test.{DefaultAwaitTimeout, FakeRequest}
+import play.api.test.Helpers._
+import support.IntegrationTest
+import uk.gov.hmrc.http.HttpVerbs.POST
 
-class GainsGatewayControllerISpec extends IntegrationTest {
+class GainsGatewayControllerISpec extends IntegrationTest with DefaultAwaitTimeout with OptionValues {
 
   private def url(taxYear: Int): String = {
     s"/update-and-submit-income-tax-return/additional-information/$taxYear/gains/gains-gateway"
@@ -78,19 +82,21 @@ class GainsGatewayControllerISpec extends IntegrationTest {
 
   }
 
-
   ".submit" should {
     "redirect to policy type page if successful" in {
-      lazy val result: WSResponse = {
-        authoriseAgentOrIndividual(isAgent = false)
-        getSessionDataStub()
-        emptyUserDataStub()
-        updateSession()
-        urlPost(url(taxYear), headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)), body = Map("value" -> "true"))
-      }
+      authoriseAgentOrIndividual(isAgent = false)
+      getSessionDataStub()
+      emptyUserDataStub()
+      updateSession()
 
-      result.status shouldBe SEE_OTHER
-      result.headers("Location").head contains s"/update-and-submit-income-tax-return/additional-information/$taxYear/gains/policy-type/" shouldBe true
+      val request = FakeRequest(POST, url(taxYear))
+        .withHeaders(HeaderNames.COOKIE -> playSessionCookies(taxYear), "Csrf-Token" -> "nocheck")
+        .withFormUrlEncodedBody("value" -> "true")
+
+      val result = route(app, request).value
+
+      status(result) shouldBe SEE_OTHER
+      redirectLocation(result).value contains s"/update-and-submit-income-tax-return/additional-information/$taxYear/gains/policy-type/" shouldBe true
     }
   }
 

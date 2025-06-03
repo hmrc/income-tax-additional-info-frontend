@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
-package test.controllers.gains
+package controllers.gains
 
 import play.api.http.HeaderNames
 import play.api.http.Status._
 import play.api.libs.ws.WSResponse
-import test.support.IntegrationTest
+import support.IntegrationTest
 
 class GainsSummaryControllerISpec extends IntegrationTest {
   private def url(taxYear: Int): String = {

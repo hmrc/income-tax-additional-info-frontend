@@ -14,8 +14,9 @@
  * limitations under the License.
  */
 
-package test.support
+package support
 
+import actions.{AuthorisedAction, FakeIdentifyAction}
 import com.github.tomakehurst.wiremock.http.HttpHeader
 import com.github.tomakehurst.wiremock.stubbing.StubMapping
 import config.AppConfig
@@ -32,10 +33,12 @@ import org.scalatest.wordspec.AnyWordSpec
 import org.scalatestplus.play.guice.GuiceOneServerPerSuite
 import play.api.http.HeaderNames
 import play.api.http.Status._
+import play.api.inject.bind
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.libs.json.Json
 import play.api.libs.ws.{BodyWritable, WSClient, WSResponse}
 import play.api.mvc.{ResponseHeader, Result}
+import play.api.test.{DefaultAwaitTimeout, FutureAwaits}
 import play.api.{Application, Environment, Mode}
 import repositories.GainsUserDataRepository
 import services.{DeleteGainsService, GainsSessionServiceImpl}
@@ -43,21 +46,24 @@ import support.builders.UserBuilder.aUser
 import support.builders.requests.AuthorisationRequestBuilder.anAuthorisationRequest
 import support.helpers.WireMockServer
 import support.providers.TaxYearProvider
-import test.support.helpers.PlaySessionCookieBaker
-import test.support.stubs.WireMockStubs
+import support.helpers.PlaySessionCookieBaker
+import support.stubs.WireMockStubs
 import uk.gov.hmrc.http.{HeaderCarrier, SessionKeys}
 
 import java.util.UUID
 import scala.concurrent.duration.Duration
 import scala.concurrent.{Await, Awaitable, ExecutionContext, Future}
 
-trait IntegrationTest extends AnyWordSpec
-  with Matchers
-  with GuiceOneServerPerSuite
-  with WireMockServer
-  with WireMockStubs
-  with BeforeAndAfterAll
-  with TaxYearProvider {
+trait IntegrationTest
+  extends AnyWordSpec
+    with Matchers
+    with GuiceOneServerPerSuite
+    with WireMockServer
+    with WireMockStubs
+    with BeforeAndAfterAll
+    with TaxYearProvider
+    with FutureAwaits
+    with DefaultAwaitTimeout {
 
   val nino = "AA123456A"
   val mtditid = "1234567890"
@@ -83,7 +89,7 @@ trait IntegrationTest extends AnyWordSpec
     new HttpHeader("mtditid", mtditid)
   )
 
-  protected val config: Map[String, String] = Map(
+  protected def config: Map[String, String] = Map(
     "defaultTaxYear" -> taxYear.toString,
     "auditing.enabled" -> "false",
     "play.filters.csrf.header.bypassHeaders.Csrf-Token" -> "nocheck",
@@ -95,34 +101,19 @@ trait IntegrationTest extends AnyWordSpec
     "microservice.services.view-and-change.url" -> "http://localhost:11111",
     "microservice.services.sign-in.url" -> s"/auth-login-stub/gg-sign-in",
     "taxYearErrorFeatureSwitch" -> "false",
-    "useEncryption" -> "true"
-  )
-
-  def configWithInvalidEncryptionKey: Map[String, String] = Map(
-    "defaultTaxYear" -> taxYear.toString,
-    "auditing.enabled" -> "false",
-    "play.filters.csrf.header.bypassHeaders.Csrf-Token" -> "nocheck",
-    "microservice.services.income-tax-submission-frontend.url" -> s"http://$wiremockHost:$wiremockPort",
-    "microservice.services.auth.host" -> wiremockHost,
-    "microservice.services.auth.port" -> wiremockPort.toString,
-    "microservice.services.income-tax-employment.url" -> s"http://$wiremockHost:$wiremockPort",
-    "microservice.services.income-tax-expenses.url" -> s"http://$wiremockHost:$wiremockPort",
-    "microservice.services.income-tax-submission.url" -> s"http://$wiremockHost:$wiremockPort",
-    "microservice.services.view-and-change.url" -> s"http://$wiremockHost:$wiremockPort",
-    "microservice.services.sign-in.url" -> s"/auth-login-stub/gg-sign-in",
-    "taxYearErrorFeatureSwitch" -> "false",
     "useEncryption" -> "true",
-    "mongodb.encryption.key" -> "key"
+    "feature-switch.sessionCookieService" -> "false"
   )
 
-  override implicit lazy val app: Application = GuiceApplicationBuilder()
-    .in(Environment.simple(mode = Mode.Dev))
-    .configure(config)
-    .build()
 
-  lazy val appWithInvalidEncryptionKey: Application = GuiceApplicationBuilder()
-    .configure(configWithInvalidEncryptionKey)
-    .build()
+  override def fakeApplication(): Application =
+    GuiceApplicationBuilder()
+      .in(Environment.simple(mode = Mode.Dev))
+      .configure(config)
+      .overrides(bind[AuthorisedAction].to[FakeIdentifyAction])
+      .build()
+
+  override lazy val app: Application = fakeApplication()
 
   override def beforeAll(): Unit = {
     super.beforeAll()
@@ -165,8 +156,6 @@ trait IntegrationTest extends AnyWordSpec
 
   private def fullUrl(endOfUrl: String): String = s"http://localhost:$port" + endOfUrl
 
-  protected def await[T](awaitable: Awaitable[T]): T = Await.result(awaitable, Duration.Inf)
-
   protected def status(awaitable: Future[Result]): Int = await(awaitable).header.status
 
   protected def headerStatus(awaitable: Future[Result]): ResponseHeader = await(awaitable).header
@@ -191,8 +180,7 @@ trait IntegrationTest extends AnyWordSpec
   val gainsPriorDataModel: Option[GainsPriorDataModel] =
     Some(GainsPriorDataModel("submittedOn", lifeInsurance = Some(Seq(LifeInsuranceModel(Some("abc123"), Some("event"), BigDecimal(123.45), Some(true), Some(5), Some(10)))), None, None, None, None))
   val gainsUserDataRepository: GainsUserDataRepository = app.injector.instanceOf[GainsUserDataRepository]
-  val getGainsDataConnector: GetGainsConnector = app.injector.instanceOf[GetGainsConnector]
-  val gainsSessionService: GainsSessionServiceImpl = new GainsSessionServiceImpl(gainsUserDataRepository, getGainsDataConnector)(correlationId)
+  val gainsSessionService: GainsSessionServiceImpl = app.injector.instanceOf[GainsSessionServiceImpl]
 
   val deleteGainsConnector: DeleteGainsConnector = app.injector.instanceOf[DeleteGainsConnector]
   val deleteGainsService: DeleteGainsService = new DeleteGainsService(deleteGainsConnector)
@@ -206,7 +194,7 @@ trait IntegrationTest extends AnyWordSpec
   def populateSessionData(): Boolean =
     await(gainsSessionService.createSessionData(AllGainsSessionModel(Seq(PolicyCyaModel(sessionId, Some("Life Insurance"), Some("RefNo13254687"), Some(123.11),
       Some("Full or part surrender"), Some(true), Some(99), Some(10), Some(true), None, Some(true), Some(100))),
-      gateway = Some(true)), taxYear)(false)(true)(anAuthorisationRequest, ec, headerCarrier)
+      gateway = Some(true)), taxYear)(false)(true)(anAuthorisationRequest, headerCarrier)
     )
 
   def populateSessionData(taxYear: Int = taxYear, status: Int = NO_CONTENT, responseBody: String = ""): StubMapping =
@@ -214,19 +202,19 @@ trait IntegrationTest extends AnyWordSpec
 
   def populateSessionDataWithRandomSession(): Boolean =
     await(gainsSessionService.createSessionData(AllGainsSessionModel(Seq(PolicyCyaModel(UUID.randomUUID().toString, Some(""))), gateway = Some(true)), taxYear)
-    (false)(true)(anAuthorisationRequest, ec, headerCarrier))
+    (false)(true)(anAuthorisationRequest, headerCarrier))
 
   def populateOnlyGatewayData(): Boolean =
-    await(gainsSessionService.createSessionData(AllGainsSessionModel(Seq[PolicyCyaModel]().empty, gateway = Some(true)), taxYear)(false)(true)(anAuthorisationRequest, ec, headerCarrier))
+    await(gainsSessionService.createSessionData(AllGainsSessionModel(Seq[PolicyCyaModel]().empty, gateway = Some(true)), taxYear)(false)(true)(anAuthorisationRequest, headerCarrier))
 
   def populateSessionDataWithEmptyGateway(): Boolean =
-    await(gainsSessionService.createSessionData(AllGainsSessionModel(Seq(), gateway = None), taxYear)(false)(true)(anAuthorisationRequest, ec, headerCarrier))
+    await(gainsSessionService.createSessionData(AllGainsSessionModel(Seq(), gateway = None), taxYear)(false)(true)(anAuthorisationRequest, headerCarrier))
 
   def populateSessionDataWithFalseGateway(): Boolean =
-    await(gainsSessionService.createSessionData(AllGainsSessionModel(Seq(), gateway = Some(false)), taxYear)(false)(true)(anAuthorisationRequest, ec, headerCarrier))
+    await(gainsSessionService.createSessionData(AllGainsSessionModel(Seq(), gateway = Some(false)), taxYear)(false)(true)(anAuthorisationRequest, headerCarrier))
 
   def populateWithSessionDataModel(cya: Seq[PolicyCyaModel]): Boolean =
-    await(gainsSessionService.createSessionData(AllGainsSessionModel(cya, gateway = Some(true)), taxYear)(false)(true)(anAuthorisationRequest, ec, headerCarrier))
+    await(gainsSessionService.createSessionData(AllGainsSessionModel(cya, gateway = Some(true)), taxYear)(false)(true)(anAuthorisationRequest, headerCarrier))
 
   def clearSession(): Boolean = await(gainsUserDataRepository.clear(taxYear))
 

@@ -27,8 +27,9 @@ import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar.mock
 import play.api.http.Status.{INTERNAL_SERVER_ERROR, NO_CONTENT}
 import support.builders.requests.AuthorisationRequestBuilder.anAuthorisationRequest
-import test.support.IntegrationTest
+import support.IntegrationTest
 
+import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 
@@ -40,7 +41,7 @@ class NewGainsSessionServiceISpec extends IntegrationTest {
   val mockGetSessionConnector: GetGainsSessionConnector = mock[GetGainsSessionConnector]
   val mockGetGainsConnector: GetGainsConnector = mock[GetGainsConnector]
   val newGainsSessionServiceImpl: NewGainsSessionServiceImpl = new NewGainsSessionServiceImpl(
-    mockGetGainsConnector, mockCreateSessionConnector, mockUpdateSessionConnector, mockDeleteSessionConnector, mockGetSessionConnector)(correlationId)
+    mockGetGainsConnector, mockCreateSessionConnector, mockUpdateSessionConnector, mockDeleteSessionConnector, mockGetSessionConnector)(global, correlationId)
 
   val notFoundMongoError: SingleErrorBody = SingleErrorBody("PARSING_ERROR", "User data could not be found due to mongo exception")
   val createUpdateMongoError: SingleErrorBody = SingleErrorBody("PARSING_ERROR", "User data was not updated due to mongo exception")
@@ -80,7 +81,7 @@ class NewGainsSessionServiceISpec extends IntegrationTest {
       when(mockCreateSessionConnector.createSessionData(any(), any())(any())).thenReturn(Future.successful(Right(NO_CONTENT)))
 
       val result = await(newGainsSessionServiceImpl.createSessionData(
-        AllGainsSessionModel(Seq(completePolicyCyaModel), gateway = Some(true)), taxYear)(false)(true)(anAuthorisationRequest, ec, headerCarrier)
+        AllGainsSessionModel(Seq(completePolicyCyaModel), gateway = Some(true)), taxYear)(false)(true)(anAuthorisationRequest, headerCarrier)
       )
 
       result shouldBe true
@@ -90,7 +91,7 @@ class NewGainsSessionServiceISpec extends IntegrationTest {
       when(mockCreateSessionConnector.createSessionData(any(), any())(any())).thenReturn(Future.successful(Left(ApiError(INTERNAL_SERVER_ERROR, createUpdateMongoError))))
 
       val result = await(newGainsSessionServiceImpl.createSessionData(
-        AllGainsSessionModel(Seq(completePolicyCyaModel), gateway = Some(true)), taxYear)(false)(true)(anAuthorisationRequest, ec, headerCarrier)
+        AllGainsSessionModel(Seq(completePolicyCyaModel), gateway = Some(true)), taxYear)(false)(true)(anAuthorisationRequest, headerCarrier)
       )
 
       result shouldBe false
@@ -102,7 +103,7 @@ class NewGainsSessionServiceISpec extends IntegrationTest {
     "return a Gains User Data Model when session is retrieved" in {
       when(mockGetSessionConnector.getSessionData(any())(any())).thenReturn(Future.successful(Right(Some(gainsUserDataModel))))
 
-      val result = await(newGainsSessionServiceImpl.getSessionData(taxYear)(anAuthorisationRequest, ec, headerCarrier))
+      val result = await(newGainsSessionServiceImpl.getSessionData(taxYear)(anAuthorisationRequest, headerCarrier))
 
       result shouldBe Right(Some(gainsUserDataModel))
     }
@@ -110,7 +111,7 @@ class NewGainsSessionServiceISpec extends IntegrationTest {
     "return Nothing when session is not present" in {
       when(mockGetSessionConnector.getSessionData(any())(any())).thenReturn(Future.successful(Right(None)))
 
-      val result = await(newGainsSessionServiceImpl.getSessionData(taxYear)(anAuthorisationRequest, ec, headerCarrier))
+      val result = await(newGainsSessionServiceImpl.getSessionData(taxYear)(anAuthorisationRequest, headerCarrier))
 
       result shouldBe Right(None)
     }
@@ -118,7 +119,7 @@ class NewGainsSessionServiceISpec extends IntegrationTest {
     "return Error when Gains User Data can not be returned due to mongo exception" in {
       when(mockGetSessionConnector.getSessionData(any())(any())).thenReturn(Future.successful(Left(ApiError(INTERNAL_SERVER_ERROR, notFoundMongoError))))
 
-      val result = await(newGainsSessionServiceImpl.getSessionData(taxYear)(anAuthorisationRequest, ec, headerCarrier))
+      val result = await(newGainsSessionServiceImpl.getSessionData(taxYear)(anAuthorisationRequest, headerCarrier))
 
       result shouldBe Left(DataNotFound)
     }
@@ -130,7 +131,7 @@ class NewGainsSessionServiceISpec extends IntegrationTest {
       when(mockUpdateSessionConnector.updateGainsSession(any(), any())(any())).thenReturn(Future.successful(Right(NO_CONTENT)))
 
       val result = await(newGainsSessionServiceImpl.updateSessionData(
-        AllGainsSessionModel(Seq(completePolicyCyaModel), gateway = Some(true)), taxYear)(false)(true)(anAuthorisationRequest, ec, headerCarrier)
+        AllGainsSessionModel(Seq(completePolicyCyaModel), gateway = Some(true)), taxYear)(false)(true)(anAuthorisationRequest, headerCarrier)
       )
 
       result shouldBe true
@@ -140,7 +141,7 @@ class NewGainsSessionServiceISpec extends IntegrationTest {
       when(mockUpdateSessionConnector.updateGainsSession(any(), any())(any())).thenReturn(Future.successful(Left(ApiError(INTERNAL_SERVER_ERROR, createUpdateMongoError))))
 
       val result = await(newGainsSessionServiceImpl.updateSessionData(
-        AllGainsSessionModel(Seq(completePolicyCyaModel), gateway = Some(true)), taxYear)(false)(true)(anAuthorisationRequest, ec, headerCarrier)
+        AllGainsSessionModel(Seq(completePolicyCyaModel), gateway = Some(true)), taxYear)(false)(true)(anAuthorisationRequest, headerCarrier)
       )
 
       result shouldBe false
@@ -152,7 +153,7 @@ class NewGainsSessionServiceISpec extends IntegrationTest {
     "return true when session is deleted" in {
       when(mockDeleteSessionConnector.deleteGainsData(any())(any())).thenReturn(Future.successful(Right(true)))
 
-      val result = await(newGainsSessionServiceImpl.deleteSessionData(taxYear)(false)(true)(anAuthorisationRequest, ec, headerCarrier))
+      val result = await(newGainsSessionServiceImpl.deleteSessionData(taxYear)(false)(true)(anAuthorisationRequest, headerCarrier))
 
       result shouldBe true
     }
@@ -160,7 +161,7 @@ class NewGainsSessionServiceISpec extends IntegrationTest {
     "return false when failing to delete session" in {
       when(mockDeleteSessionConnector.deleteGainsData(any())(any())).thenReturn(Future.successful(Left(ApiError(INTERNAL_SERVER_ERROR, deleteMongoError))))
 
-      val result = await(newGainsSessionServiceImpl.deleteSessionData(taxYear)(false)(true)(anAuthorisationRequest, ec, headerCarrier))
+      val result = await(newGainsSessionServiceImpl.deleteSessionData(taxYear)(false)(true)(anAuthorisationRequest, headerCarrier))
 
       result shouldBe false
     }
@@ -174,7 +175,7 @@ class NewGainsSessionServiceISpec extends IntegrationTest {
       when(mockGetSessionConnector.getSessionData(any())(any())).thenReturn(Future.successful(Right(Some(gainsUserDataModel))))
       when(mockGetGainsConnector.getUserData(any())(any(), any())).thenReturn(Future.successful(Right(gainsPriorDataModel)))
 
-      val result = await(newGainsSessionServiceImpl.getAndHandle(taxYear)(false)(block)(anAuthorisationRequest, ec, headerCarrier))
+      val result = await(newGainsSessionServiceImpl.getAndHandle(taxYear)(false)(block)(anAuthorisationRequest, headerCarrier))
 
       result shouldBe true
     }
@@ -183,7 +184,7 @@ class NewGainsSessionServiceISpec extends IntegrationTest {
       when(mockGetSessionConnector.getSessionData(any())(any())).thenReturn(Future.successful(Right(None)))
       when(mockGetGainsConnector.getUserData(any())(any(), any())).thenReturn(Future.successful(Right(gainsPriorDataModel)))
 
-      val result = await(newGainsSessionServiceImpl.getAndHandle(taxYear)(false)(block)(anAuthorisationRequest, ec, headerCarrier))
+      val result = await(newGainsSessionServiceImpl.getAndHandle(taxYear)(false)(block)(anAuthorisationRequest, headerCarrier))
 
       result shouldBe true
     }
@@ -192,7 +193,7 @@ class NewGainsSessionServiceISpec extends IntegrationTest {
       when(mockGetSessionConnector.getSessionData(any())(any())).thenReturn(Future.successful(Left(ApiError(INTERNAL_SERVER_ERROR, notFoundMongoError))))
       when(mockGetGainsConnector.getUserData(any())(any(), any())).thenReturn(Future.successful(Right(gainsPriorDataModel)))
 
-      val result = await(newGainsSessionServiceImpl.getAndHandle(taxYear)(false)(block)(anAuthorisationRequest, ec, headerCarrier))
+      val result = await(newGainsSessionServiceImpl.getAndHandle(taxYear)(false)(block)(anAuthorisationRequest, headerCarrier))
 
       result shouldBe false
     }
@@ -201,7 +202,7 @@ class NewGainsSessionServiceISpec extends IntegrationTest {
       when(mockGetSessionConnector.getSessionData(any())(any())).thenReturn(Future.successful(Right(Some(gainsUserDataModel))))
       when(mockGetGainsConnector.getUserData(any())(any(), any())).thenReturn(Future.successful(Left(ApiError(INTERNAL_SERVER_ERROR, notFoundMongoError))))
 
-      val result = await(newGainsSessionServiceImpl.getAndHandle(taxYear)(false)(block)(anAuthorisationRequest, ec, headerCarrier))
+      val result = await(newGainsSessionServiceImpl.getAndHandle(taxYear)(false)(block)(anAuthorisationRequest, headerCarrier))
 
       result shouldBe false
     }

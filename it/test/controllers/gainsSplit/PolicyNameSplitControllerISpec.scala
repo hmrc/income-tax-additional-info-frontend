@@ -33,7 +33,7 @@ import play.api.test.Helpers._
 import play.api.{Environment, Mode}
 import services.GainsSessionServiceProvider
 import support.helpers.ViewHelper
-import test.support.IntegrationTest
+import support.IntegrationTest
 
 import scala.concurrent.Future
 
@@ -202,7 +202,7 @@ class PolicyNameSplitControllerISpec extends IntegrationTest with ViewHelper wit
     "return an INTERNAL_SERVER_ERROR when db returns an error" in {
       val mockService = mock[GainsSessionServiceProvider]
 
-      when(mockService.getSessionData(any())(any(), any(), any())).thenReturn(
+      when(mockService.getSessionData(any())(any(), any())).thenReturn(
         Future.successful(Left(DataNotFound))
       )
 
@@ -379,7 +379,7 @@ class PolicyNameSplitControllerISpec extends IntegrationTest with ViewHelper wit
     "return an INTERNAL_SERVER_ERROR when db returns an error" in {
       val mockService = mock[GainsSessionServiceProvider]
 
-      when(mockService.getSessionData(any())(any(), any(), any())).thenReturn(
+      when(mockService.getSessionData(any())(any(), any())).thenReturn(
         Future.successful(Left(DataNotFound))
       )
 
