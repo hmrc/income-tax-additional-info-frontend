@@ -64,8 +64,12 @@ class SessionDetailsServiceImpl @Inject()(sessionDataConnector: UserSessionDataC
       request.session.get(SessionValues.CLIENT_MTDITID)
     ) match {
       case (Some(nino), Some(mtdItId)) => Some(UserSessionData(sessionId, mtdItId, nino))
-      case _ =>
-        logger.debug(s"Extracting session headers failed for ${SessionValues.CLIENT_NINO}, ${SessionValues.CLIENT_MTDITID}")
+      case (optNino, optMtdItId) =>
+        val missingData = Seq(
+          Option.when(optNino.isEmpty)("NINO"),
+          Option.when(optMtdItId.isEmpty)("MTDITID")
+        ).flatten.mkString(", ")
+        logger.warn(s"[SessionDataService][getFallbackSessionData] Could not find $missingData in request session. Returning no data")
         None
     }
   }
