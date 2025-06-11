@@ -69,7 +69,7 @@ class SessionDetailsServiceImpl @Inject()(sessionDataConnector: UserSessionDataC
           Option.when(optNino.isEmpty)("NINO"),
           Option.when(optMtdItId.isEmpty)("MTDITID")
         ).flatten.mkString(", ")
-        logger.warn(s"[SessionDataService][getFallbackSessionData] Could not find $missingData in request session. Returning no data")
+        logger.info(s"[getFallbackSessionData] Could not find $missingData in request session. Returning no data")
         None
     }
   }
