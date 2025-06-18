@@ -27,7 +27,6 @@ object PagerDutyHelper extends Logging {
 
     val UNEXPECTED_RESPONSE_FROM_IF: PagerDutyKeys.Value = Value
     val UNEXPECTED_RESPONSE: PagerDutyKeys.Value = Value
-
     val FOURXX_RESPONSE_FROM_IF: PagerDutyKeys.Value = Value
     val FOURXX_RESPONSE: PagerDutyKeys.Value = Value
     val ENCRYPTION_DECRYPTION_ERROR: PagerDutyKeys.Value = Value
