@@ -14,20 +14,13 @@
  * limitations under the License.
  */
 
-package connectors
+package models.businessTaxReliefs
 
-import javax.inject.Inject
-import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
-import javax.inject.Singleton
+import play.api.libs.json.{Json, OFormat}
 
-trait ConnectorConfig {
-  def vcSessionServiceBaseUrl: String
-  def additionalInformationServiceBaseUrl: String
+case class QualifyingLoanInterestPayments(customerReference: Option[String],
+                                          lenderName: Option[String],
+                                          reliefClaimed: BigDecimal)
+object QualifyingLoanInterestPayments {
+  implicit val formats: OFormat[QualifyingLoanInterestPayments] = Json.format[QualifyingLoanInterestPayments]
 }
-
-@Singleton
-class ConnectorConfigImpl @Inject() (serviceConfig: ServicesConfig) extends ConnectorConfig {
-  override val vcSessionServiceBaseUrl: String = serviceConfig.baseUrl("income-tax-session-data")
-  override val additionalInformationServiceBaseUrl: String = serviceConfig.getString("microservice.services.income-tax-additional-information.url")
-}
-

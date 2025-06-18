@@ -14,20 +14,8 @@
  * limitations under the License.
  */
 
-package connectors
+package connectors.errors
 
-import javax.inject.Inject
-import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
-import javax.inject.Singleton
+import scala.util.control.NoStackTrace
 
-trait ConnectorConfig {
-  def vcSessionServiceBaseUrl: String
-  def additionalInformationServiceBaseUrl: String
-}
-
-@Singleton
-class ConnectorConfigImpl @Inject() (serviceConfig: ServicesConfig) extends ConnectorConfig {
-  override val vcSessionServiceBaseUrl: String = serviceConfig.baseUrl("income-tax-session-data")
-  override val additionalInformationServiceBaseUrl: String = serviceConfig.getString("microservice.services.income-tax-additional-information.url")
-}
-
+case class OtherReliefsSubmissionException(val responseStatus: Int) extends NoStackTrace

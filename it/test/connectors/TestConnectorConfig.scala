@@ -17,6 +17,6 @@
 package connectors
 
 case class TestConnectorConfig(
-  vcSessionServiceBaseUrl: String 
-) extends ConnectorConfig 
-
+  vcSessionServiceBaseUrl: String,
+   additionalInformationServiceBaseUrl: String
+) extends ConnectorConfig
