@@ -18,10 +18,11 @@ package support.mocks
 
 import org.scalamock.handlers.CallHandler2
 import org.scalamock.scalatest.MockFactory
+import org.scalatest.TestSuite
 import services.PagerDutyLoggerService
 import uk.gov.hmrc.http.HttpResponse
 
-trait MockPagerDutyLoggerService extends MockFactory {
+trait MockPagerDutyLoggerService extends MockFactory { _: TestSuite =>
 
   protected val mockPagerDutyLoggerService: PagerDutyLoggerService = mock[PagerDutyLoggerService]
 

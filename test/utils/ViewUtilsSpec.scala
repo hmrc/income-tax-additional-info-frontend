@@ -17,10 +17,9 @@
 package utils
 
 import models.BusinessTaxReliefs
-import models.requests.{AuthorisationRequest, JourneyDataRequest}
+import models.requests.JourneyDataRequest
 import org.scalamock.scalatest.MockFactory
 import play.api.i18n.{Lang, Messages}
-import play.api.mvc.AnyContent
 import play.i18n
 import support.UnitTest
 import support.utils.TaxYearUtils.taxYear

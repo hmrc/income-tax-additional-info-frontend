@@ -22,11 +22,12 @@ import models.{Journey, UserAnswersModel}
 import org.apache.pekko.Done
 import org.scalamock.handlers.{CallHandler2, CallHandler3}
 import org.scalamock.scalatest.MockFactory
+import org.scalatest.TestSuite
 import uk.gov.hmrc.http.HeaderCarrier
 
 import scala.concurrent.Future
 
-trait MockUserAnswersConnector extends MockFactory {
+trait MockUserAnswersConnector extends MockFactory { _: TestSuite =>
 
   lazy val mockUserAnswersConnector: UserAnswersConnector = mock[UserAnswersConnector]
 
