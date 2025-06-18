@@ -25,7 +25,7 @@ import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
 class GainsSubmissionConnector @Inject()(val http: HttpClient, appConfig: AppConfig)
-                                        (implicit ec: ExecutionContext) extends RawResponseReads {
+                                        (implicit ec: ExecutionContext) {
 
   def submitGains(body: GainsSubmissionModel, nino: String, taxYear: Int)
                  (implicit hc: HeaderCarrier): Future[GainsSubmissionResponse] = {
