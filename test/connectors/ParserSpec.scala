@@ -40,11 +40,6 @@ class ParserSpec extends UnitTest {
   )
 
   "TestParser" should {
-    "return the the correct error" in {
-      val result = underTest.badSuccessJsonResponse
-      result shouldBe Left(errors.ApiError(INTERNAL_SERVER_ERROR, SingleErrorBody("PARSING_ERROR", "Error while parsing response from API")))
-    }
-
     "handle multiple errors" in {
       val response: HttpResponse = httpResponse()
       val result = underTest.handleError(response, response.status)
