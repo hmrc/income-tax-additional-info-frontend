@@ -16,33 +16,29 @@
 
 package connectors.businessTaxReliefs
 
+import com.google.inject.ImplementedBy
 import connectors.ConnectorConfig
 import connectors.errors.OtherReliefsSubmissionException
-import models.{Done, User}
+import models.Done
 import models.businessTaxReliefs.OtherReliefs
 import play.api.Logging
 import play.api.libs.json.Json
-import uk.gov.hmrc.http.client.HttpClientV2
-import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse, StringContextOps}
 import uk.gov.hmrc.http.HttpErrorFunctions._
 import uk.gov.hmrc.http.HttpReads.Implicits.readRaw
+import uk.gov.hmrc.http.client.HttpClientV2
+import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse, StringContextOps}
 import utils.PagerDutyHelper.PagerDutyKeys.{FIVEXX_RESPONSE, FOURXX_RESPONSE, UNEXPECTED_RESPONSE}
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
-
-trait OtherReliefsConnector {
-  def submit(taxYear: Int, user: User, otherReliefs: OtherReliefs)(implicit hc: HeaderCarrier): Future[Done]
-}
-
 @Singleton
-class OtherReliefsConnectorImpl @Inject()(config: ConnectorConfig,
+class OtherReliefsConnector @Inject()(config: ConnectorConfig,
                                           httpClient: HttpClientV2
-                                          )(implicit ec: ExecutionContext) extends OtherReliefsConnector with Logging {
+                                          )(implicit ec: ExecutionContext) extends Logging {
 
-  def submit(taxYear: Int, user: User, otherReliefs: OtherReliefs)(implicit hc: HeaderCarrier): Future[Done] = {
-    val url = url"${config.vcSessionServiceBaseUrl}/income-tax/reliefs/other/${user.nino}/$taxYear"
+  def submit(nino: String, taxYear: Int, otherReliefs: OtherReliefs)(implicit hc: HeaderCarrier): Future[Done] = {
+    val url = url"${config.vcSessionServiceBaseUrl}/income-tax/reliefs/other/$nino/$taxYear"
     httpClient
       .put(url)
       .withBody(Json.toJson(otherReliefs))
