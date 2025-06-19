@@ -16,21 +16,27 @@
 
 package connectors.errors
 
-import play.api.libs.json.{Json, OFormat}
+import play.api.libs.json.{Json, OFormat, Reads}
 
 sealed trait ApiErrorBody
+object ApiErrorBody {
+  implicit val reads: Reads[ApiErrorBody] =
+    SingleErrorBody.formats.widen[ApiErrorBody] orElse
+      MultiErrorsBody.formats.widen[ApiErrorBody] orElse
+      Reads.failed("Failed to read ApiErrorBody as SingleErrorBody or MultiErrorsBody")
+}
 
 /** Single Error * */
 case class SingleErrorBody(code: String, reason: String) extends ApiErrorBody
-
-/** Multiple Errors * */
-case class MultiErrorsBody(failures: Seq[SingleErrorBody]) extends ApiErrorBody
-
 object SingleErrorBody {
   implicit val formats: OFormat[SingleErrorBody] = Json.format[SingleErrorBody]
   val parsingError: SingleErrorBody = SingleErrorBody("PARSING_ERROR", "Error while parsing response from API")
 }
 
+/** Multiple Errors * */
+case class MultiErrorsBody(failures: Seq[SingleErrorBody]) extends ApiErrorBody
 object MultiErrorsBody {
   implicit val formats: OFormat[MultiErrorsBody] = Json.format[MultiErrorsBody]
 }
+
+

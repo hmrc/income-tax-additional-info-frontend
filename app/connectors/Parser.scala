@@ -16,7 +16,7 @@
 
 package connectors
 
-import connectors.errors.{ApiError, MultiErrorsBody, SingleErrorBody}
+import connectors.errors.{ApiError, ApiErrorBody, SingleErrorBody}
 import play.api.Logging
 import play.api.http.Status.INTERNAL_SERVER_ERROR
 import play.api.libs.json.{JsPath, JsonValidationError}
@@ -35,11 +35,6 @@ trait Parser extends Logging {
     Some(s"[$parserName][read] Received ${response.status} from $service API. Body:${response.body}")
   }
 
-  def badSuccessJsonResponse[Response]: Either[ApiError, Response] = {
-    logger.error(formatErrorMessage(BAD_SUCCESS_JSON_FROM_IF, s"[$parserName][read] Invalid Json from $service API."))
-    Left(ApiError(INTERNAL_SERVER_ERROR, SingleErrorBody.parsingError))
-  }
-
   def badSuccessJsonFromAPIWithErrors[Response](
     validationErrors: scala.collection.Seq[(JsPath, scala.collection.Seq[JsonValidationError])]
   ): Either[ApiError, Response] = {
@@ -55,14 +50,9 @@ trait Parser extends Logging {
 
   def handleError[Response](response: HttpResponse, status: Int): Either[ApiError, Response] = {
     try {
-      val json = response.json
-      lazy val singleErrorBody = json.asOpt[SingleErrorBody]
-      lazy val multiErrorsBody = json.asOpt[MultiErrorsBody]
-
-      (singleErrorBody, multiErrorsBody) match {
-        case (Some(error), _) => Left(ApiError(status, error))
-        case (_, Some(error)) => Left(ApiError(status, error))
-        case _ => Left(ApiError(status, SingleErrorBody.parsingError))
+      response.json.asOpt[ApiErrorBody] match {
+        case Some(error) => Left(ApiError(status, error))
+        case None => Left(ApiError(status, SingleErrorBody.parsingError))
       }
     } catch {
       case NonFatal(_) => Left(ApiError(status, SingleErrorBody.parsingError))

@@ -14,20 +14,7 @@
  * limitations under the License.
  */
 
-package connectors
+package models
 
-import javax.inject.Inject
-import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
-import javax.inject.Singleton
-
-trait ConnectorConfig {
-  def vcSessionServiceBaseUrl: String
-  def additionalInformationServiceBaseUrl: String
-}
-
-@Singleton
-class ConnectorConfigImpl @Inject() (serviceConfig: ServicesConfig) extends ConnectorConfig {
-  override val vcSessionServiceBaseUrl: String = serviceConfig.baseUrl("income-tax-session-data")
-  override val additionalInformationServiceBaseUrl: String = serviceConfig.getString("microservice.services.income-tax-additional-information.url")
-}
-
+trait Done
+case object Done extends Done

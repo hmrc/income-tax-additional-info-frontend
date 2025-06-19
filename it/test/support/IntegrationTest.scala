@@ -20,7 +20,7 @@ import actions.{AuthorisedAction, FakeIdentifyAction}
 import com.github.tomakehurst.wiremock.http.HttpHeader
 import com.github.tomakehurst.wiremock.stubbing.StubMapping
 import config.AppConfig
-import connectors.{DeleteGainsConnector, GetGainsConnector}
+import connectors.DeleteGainsConnector
 import models.authorisation.SessionValues
 import models.gains.prior.GainsPriorDataModel
 import models.gains.{LifeInsuranceModel, PolicyCyaModel}
@@ -44,15 +44,13 @@ import repositories.GainsUserDataRepository
 import services.{DeleteGainsService, GainsSessionServiceImpl}
 import support.builders.UserBuilder.aUser
 import support.builders.requests.AuthorisationRequestBuilder.anAuthorisationRequest
-import support.helpers.WireMockServer
+import support.helpers.{PlaySessionCookieBaker, WireMockServer}
 import support.providers.TaxYearProvider
-import support.helpers.PlaySessionCookieBaker
 import support.stubs.WireMockStubs
 import uk.gov.hmrc.http.{HeaderCarrier, SessionKeys}
 
 import java.util.UUID
-import scala.concurrent.duration.Duration
-import scala.concurrent.{Await, Awaitable, ExecutionContext, Future}
+import scala.concurrent.{ExecutionContext, Future}
 
 trait IntegrationTest
   extends AnyWordSpec

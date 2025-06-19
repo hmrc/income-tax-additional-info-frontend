@@ -24,12 +24,16 @@ object PagerDutyHelper extends Logging {
     val BAD_SUCCESS_JSON_FROM_IF: PagerDutyKeys.Value = Value
     val SERVICE_UNAVAILABLE_FROM_IF: PagerDutyKeys.Value = Value
     val INTERNAL_SERVER_ERROR_FROM_IF: PagerDutyKeys.Value = Value
+
     val UNEXPECTED_RESPONSE_FROM_IF: PagerDutyKeys.Value = Value
+    val UNEXPECTED_RESPONSE: PagerDutyKeys.Value = Value
     val FOURXX_RESPONSE_FROM_IF: PagerDutyKeys.Value = Value
+    val FOURXX_RESPONSE: PagerDutyKeys.Value = Value
     val ENCRYPTION_DECRYPTION_ERROR: PagerDutyKeys.Value = Value
     val FAILED_TO_FIND_DATA: PagerDutyKeys.Value = Value
     val FAILED_TO_CREATE_DATA: PagerDutyKeys.Value = Value
     val FAILED_TO_UPDATE_DATA: PagerDutyKeys.Value = Value
+    val FIVEXX_RESPONSE: PagerDutyKeys.Value = Value
   }
 
   def pagerDutyLog(pagerDutyKey: PagerDutyKeys.Value, otherDetail: String): Unit = {

@@ -42,7 +42,8 @@ class UserSessionDataConnectorISpec
 
     val connector = new UserSessionDataConnectorImpl(
       config = TestConnectorConfig(
-        vcSessionServiceBaseUrl = wireMockUrl
+        vcSessionServiceBaseUrl = wireMockUrl,
+        additionalInformationServiceBaseUrl = ""
       ),
       httpClient = httpClientV2
     )

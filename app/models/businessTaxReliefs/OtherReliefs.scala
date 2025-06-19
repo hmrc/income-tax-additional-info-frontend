@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2025 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,14 +14,11 @@
  * limitations under the License.
  */
 
-package connectors
+package models.businessTaxReliefs
 
-import uk.gov.hmrc.http.{HttpReads, HttpResponse}
+import play.api.libs.json.{Json, OFormat}
 
-trait RawResponseReads {
-
-  implicit val httpReads: HttpReads[HttpResponse] = new HttpReads[HttpResponse] {
-    override def read(method: String, url: String, response: HttpResponse) = response
-  }
-
+case class OtherReliefs(qualifyingLoanInterestPayments: Seq[QualifyingLoanInterestPayments])
+object OtherReliefs {
+  implicit val formats: OFormat[OtherReliefs] = Json.format[OtherReliefs]
 }
