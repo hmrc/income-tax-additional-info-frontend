@@ -16,9 +16,23 @@
 
 package models.businessTaxReliefs
 
-import play.api.libs.json.{Json, OFormat}
+import play.api.libs.json.{JsObject, Json, OWrites, Writes}
 
-case class OtherReliefs(qualifyingLoanInterestPayments: Seq[QualifyingLoanInterestPayments])
+// TODO: Remove defaults
+case class OtherReliefs(qualifyingLoanInterestPayments: Option[BigDecimal] = None,
+                        postCessationTradeReliefAndCertainOtherLosses: Option[BigDecimal] = None,
+                        nonDeductableLoanInterest: Option[BigDecimal] = None)
+
 object OtherReliefs {
-  implicit val formats: OFormat[OtherReliefs] = Json.format[OtherReliefs]
+
+  private def nestedReliefClaimedObj[A: Writes](value: Option[A])(key: String): JsObject =
+    value.map(v => Json.obj(key -> Json.arr(Json.obj("reliefClaimed" -> v)))).getOrElse(Json.obj())
+
+  implicit val writes: OWrites[OtherReliefs] = {
+    case OtherReliefs(q, p, n) =>
+      nestedReliefClaimedObj(q)("qualifyingLoanInterestPayments") ++
+      nestedReliefClaimedObj(p)("postCessationTradeReliefAndCertainOtherLosses") ++
+      nestedReliefClaimedObj(n)("nonDeductableLoanInterest")
+  }
+
 }
