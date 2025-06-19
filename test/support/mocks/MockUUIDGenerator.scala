@@ -18,9 +18,10 @@ package support.mocks
 
 import org.scalamock.handlers.CallHandler0
 import org.scalamock.scalatest.MockFactory
+import org.scalatest.TestSuite
 import utils.UUIDGenerator
 
-trait MockUUIDGenerator extends MockFactory {
+trait MockUUIDGenerator extends MockFactory { _: TestSuite =>
 
   protected val mockUUIDGenerator: UUIDGenerator = mock[UUIDGenerator]
 
