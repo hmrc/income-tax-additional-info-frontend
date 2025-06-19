@@ -21,15 +21,19 @@ import config.AppConfig
 import controllers.BaseController
 import models.BusinessTaxReliefs
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
+import services.businessTaxReliefs.OtherReliefsService
 import views.html.pages.businessTaxReliefs.CheckAnswersQualifyingLoanPageView
 
 import javax.inject.Inject
+import scala.concurrent.ExecutionContext
 
 class CheckAnswersQualifyingLoanController @Inject()(override val controllerComponents: MessagesControllerComponents,
                                                      authorisedAction: AuthorisedAction,
                                                      retrieveJourney: JourneyDataRetrievalAction,
-                                                     view: CheckAnswersQualifyingLoanPageView)
-                                                    (implicit appConfig: AppConfig) extends BaseController {
+                                                     view: CheckAnswersQualifyingLoanPageView,
+                                                     service: OtherReliefsService
+                                                    )(implicit appConfig: AppConfig,
+                                                      ec: ExecutionContext) extends BaseController {
 
   def show(taxYear: Int): Action[AnyContent] =
     (authorisedAction andThen retrieveJourney(taxYear, BusinessTaxReliefs)) { implicit request =>
@@ -37,9 +41,10 @@ class CheckAnswersQualifyingLoanController @Inject()(override val controllerComp
     }
 
   def submit(taxYear: Int): Action[AnyContent] =
-    (authorisedAction andThen retrieveJourney(taxYear, BusinessTaxReliefs)) { _ =>
-      //TODO: In future, this will redirect to the 'have you completed this section' page
-      NotImplemented
+    (authorisedAction andThen retrieveJourney(taxYear, BusinessTaxReliefs)).async { implicit request =>
+      service.submit(taxYear, request.userAnswers).map {
+        _ => Redirect(appConfig.incomeTaxSubmissionOverviewUrl(taxYear))
+      }
     }
 
 }

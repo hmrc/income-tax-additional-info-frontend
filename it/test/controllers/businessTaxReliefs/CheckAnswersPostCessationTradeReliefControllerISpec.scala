@@ -17,24 +17,40 @@
 package controllers.businessTaxReliefs
 
 import fixtures.messages.businessTaxReliefs.PostCessationTradeReliefMessages
-import models.{BusinessTaxReliefs, UserAnswersModel}
+import models.{BusinessTaxReliefs, Done, UserAnswersModel}
+import org.mockito.ArgumentMatchers.{any, eq => eqTo}
+import org.mockito.Mockito
+import org.mockito.Mockito.when
+import org.scalatest.BeforeAndAfterEach
 import org.scalatest.OptionValues.convertOptionToValuable
 import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
+import org.scalatestplus.mockito.MockitoSugar.mock
 import pages.businessTaxReliefs.PostCessationTradeReliefPage
 import play.api.http.HeaderNames
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import play.api.{Application, Environment, Mode}
+import play.api.{Application, Environment, Mode, inject}
+import services.businessTaxReliefs.OtherReliefsService
 import support.stubs.UserAnswersStub
 import support.IntegrationTest
 import utils.ViewUtils.bigDecimalCurrency
 
-class CheckAnswersPostCessationTradeReliefControllerISpec extends IntegrationTest with UserAnswersStub {
+import scala.concurrent.Future
+
+class CheckAnswersPostCessationTradeReliefControllerISpec extends IntegrationTest with UserAnswersStub with BeforeAndAfterEach {
+
+  val mockService: OtherReliefsService = mock[OtherReliefsService]
+
+  override def beforeEach(): Unit = {
+    super.beforeEach()
+    Mockito.reset(mockService)
+  }
 
   lazy val application: Application = GuiceApplicationBuilder()
     .in(Environment.simple(mode = Mode.Dev))
     .configure(config)
+    .bindings(inject.bind[OtherReliefsService].toInstance(mockService))
     .build()
 
   private def url(taxYear: Int): String =
@@ -87,14 +103,15 @@ class CheckAnswersPostCessationTradeReliefControllerISpec extends IntegrationTes
         authoriseAgentOrIndividual(isAgent = true)
         stubGetUserAnswers(taxYear, BusinessTaxReliefs)(userAnswers)
         stubStoreUserAnswers()
+        when(mockService.submit(eqTo(taxYear), any())(any())).thenReturn(Future.successful(Done))
 
         val request = FakeRequest(POST, url(taxYear))
           .withHeaders(HeaderNames.COOKIE -> playSessionCookies(taxYear), "Csrf-Token" -> "nocheck")
 
         val result = route(application, request).value
 
-        //TODO: In future story, this will be updated to redirect to the 'Have you finished' page - add check for this
-        status(result) mustEqual NOT_IMPLEMENTED
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual appConfig.incomeTaxSubmissionOverviewUrl(taxYear)
       }
     }
 
@@ -104,14 +121,15 @@ class CheckAnswersPostCessationTradeReliefControllerISpec extends IntegrationTes
 
         authoriseAgentOrIndividual(isAgent = false)
         stubGetUserAnswers(taxYear, BusinessTaxReliefs)(userAnswers)
+        when(mockService.submit(eqTo(taxYear), any())(any())).thenReturn(Future.successful(Done))
 
         val request = FakeRequest(POST, url(taxYear))
           .withHeaders(HeaderNames.COOKIE -> playSessionCookies(taxYear), "Csrf-Token" -> "nocheck")
 
         val result = route(application, request).value
 
-        //TODO: In future story, this will be updated to redirect to the 'Have you finished' page - add check for this
-        status(result) mustEqual NOT_IMPLEMENTED
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual appConfig.incomeTaxSubmissionOverviewUrl(taxYear)
       }
     }
   }
