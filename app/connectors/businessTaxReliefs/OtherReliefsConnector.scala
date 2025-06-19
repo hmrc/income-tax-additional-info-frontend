@@ -16,7 +16,6 @@
 
 package connectors.businessTaxReliefs
 
-import com.google.inject.ImplementedBy
 import connectors.ConnectorConfig
 import connectors.errors.OtherReliefsSubmissionException
 import models.Done

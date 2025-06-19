@@ -56,7 +56,7 @@ class OtherReliefsServiceSpec extends AnyFreeSpec with Matchers with MockitoSuga
       }
 
       "when qualifyingLoanInterestPayments is defined" in new Setup {
-        val otherReliefs = OtherReliefs(qualifyingLoanInterestPayments = Some(BigDecimal(1)))
+        val otherReliefs = OtherReliefs(Some(BigDecimal(1)), None, None)
 
         val userAnswers =
           emptyUserAnswers
@@ -72,7 +72,7 @@ class OtherReliefsServiceSpec extends AnyFreeSpec with Matchers with MockitoSuga
       }
 
       "when postCessationTradeReliefAndCertainOtherLosses is defined" in new Setup {
-        val otherReliefs = OtherReliefs(postCessationTradeReliefAndCertainOtherLosses = Some(BigDecimal(1)))
+        val otherReliefs = OtherReliefs(None, Some(BigDecimal(1)), None)
 
         val userAnswers =
           emptyUserAnswers
@@ -88,7 +88,7 @@ class OtherReliefsServiceSpec extends AnyFreeSpec with Matchers with MockitoSuga
       }
 
       "when nonDeductibleReliefs is defined" in new Setup {
-        val otherReliefs = OtherReliefs(nonDeductableLoanInterest = Some(BigDecimal(1)))
+        val otherReliefs = OtherReliefs(None, None, Some(BigDecimal(1)))
 
         val userAnswers =
           emptyUserAnswers
@@ -124,7 +124,7 @@ class OtherReliefsServiceSpec extends AnyFreeSpec with Matchers with MockitoSuga
     }
 
     "returns a future failed when there is an error when submitting" in new Setup {
-      val otherReliefs = OtherReliefs(nonDeductableLoanInterest = Some(BigDecimal(1)))
+      val otherReliefs = OtherReliefs(None, None, Some(BigDecimal(1)))
 
       val userAnswers =
         emptyUserAnswers

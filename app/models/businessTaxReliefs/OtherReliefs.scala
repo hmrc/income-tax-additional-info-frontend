@@ -18,10 +18,9 @@ package models.businessTaxReliefs
 
 import play.api.libs.json.{JsObject, Json, OWrites, Writes}
 
-// TODO: Remove defaults
-case class OtherReliefs(qualifyingLoanInterestPayments: Option[BigDecimal] = None,
-                        postCessationTradeReliefAndCertainOtherLosses: Option[BigDecimal] = None,
-                        nonDeductableLoanInterest: Option[BigDecimal] = None)
+case class OtherReliefs(qualifyingLoanInterestPayments: Option[BigDecimal],:
+                        postCessationTradeReliefAndCertainOtherLosses: Option[BigDecimal],
+                        nonDeductableLoanInterest: Option[BigDecimal])
 
 object OtherReliefs {
 
