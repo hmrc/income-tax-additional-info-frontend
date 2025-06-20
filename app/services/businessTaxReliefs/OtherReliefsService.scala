@@ -28,6 +28,7 @@ import scala.concurrent.Future
 
 class OtherReliefsService @Inject()(connector: OtherReliefsConnector) {
 
+  // TODO: Add functionaly to marks section as completed.
   def submit(taxYear: Int, userAnswersModel: UserAnswersModel)(implicit hc: HeaderCarrier): Future[Done] = {
     val qualifyingLoanRelief = userAnswersModel.get(QualifyingLoanReliefPage)
     val postCessationTradeRelief = userAnswersModel.get(PostCessationTradeReliefPage)
