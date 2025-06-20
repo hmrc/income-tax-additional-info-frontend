@@ -19,8 +19,8 @@ package connectors.businessTaxReliefs
 import com.github.tomakehurst.wiremock.client.WireMock._
 import connectors.TestConnectorConfig
 import connectors.errors.OtherReliefsSubmissionException
-import models.{Done, User}
-import models.businessTaxReliefs.{OtherReliefs, QualifyingLoanInterestPayments}
+import models.Done
+import models.businessTaxReliefs.OtherReliefs
 import org.scalatest.{EitherValues, OptionValues}
 import play.api.http.Status._
 import play.api.libs.json.Json
@@ -37,15 +37,19 @@ class OtherReliefsConnectorISpec
   with OptionValues {
 
   private val taxYear = 2099
-  private val user = User("", None, "nino-value", "", "", isSupportingAgent = false)
-  private val data = OtherReliefs(Seq(QualifyingLoanInterestPayments(None, None, BigDecimal(1))))
+  private val nino = "nino-value"
+  private val data = OtherReliefs(
+    Some(BigDecimal(1)),
+    Some(BigDecimal(2)),
+    Some(BigDecimal(3))
+  )
 
-  private val url = s"/income-tax/reliefs/other/${user.nino}/$taxYear"
+  private val url = s"/income-tax/reliefs/other/$nino/$taxYear"
 
   trait Test {
     implicit val hc: HeaderCarrier = HeaderCarrier()
 
-    val connector = new OtherReliefsConnectorImpl(
+    val connector = new OtherReliefsConnector(
       config = TestConnectorConfig(
         vcSessionServiceBaseUrl = wireMockUrl,
         additionalInformationServiceBaseUrl = ""
@@ -67,7 +71,7 @@ class OtherReliefsConnectorISpec
             )
         )
 
-        val result = await(connector.submit(taxYear, user, data)(hc))
+        val result = await(connector.submit(nino, taxYear, data)(hc))
 
         result shouldBe Done
       }
@@ -83,7 +87,7 @@ class OtherReliefsConnectorISpec
             )
         )
 
-        val result = await(connector.submit(taxYear, user, data)(hc).failed)
+        val result = await(connector.submit(nino, taxYear, data)(hc).failed)
 
         result shouldBe OtherReliefsSubmissionException(BAD_REQUEST)
       }
@@ -97,7 +101,7 @@ class OtherReliefsConnectorISpec
             )
         )
 
-        val result = await(connector.submit(taxYear, user, data)(hc).failed)
+        val result = await(connector.submit(nino, taxYear, data)(hc).failed)
 
         result shouldBe OtherReliefsSubmissionException(NOT_FOUND)
       }
@@ -111,7 +115,7 @@ class OtherReliefsConnectorISpec
             )
         )
 
-        val result = await(connector.submit(taxYear, user, data)(hc).failed)
+        val result = await(connector.submit(nino, taxYear, data)(hc).failed)
 
         result shouldBe OtherReliefsSubmissionException(UNPROCESSABLE_ENTITY)
       }
@@ -127,7 +131,7 @@ class OtherReliefsConnectorISpec
             )
         )
 
-        val result = await(connector.submit(taxYear, user, data)(hc).failed)
+        val result = await(connector.submit(nino, taxYear, data)(hc).failed)
 
         result shouldBe OtherReliefsSubmissionException(INTERNAL_SERVER_ERROR)
       }
@@ -141,7 +145,7 @@ class OtherReliefsConnectorISpec
             )
         )
 
-        val result = await(connector.submit(taxYear, user, data)(hc).failed)
+        val result = await(connector.submit(nino, taxYear, data)(hc).failed)
 
         result shouldBe OtherReliefsSubmissionException(SERVICE_UNAVAILABLE)
       }

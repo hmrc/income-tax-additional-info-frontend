@@ -21,15 +21,18 @@ import config.AppConfig
 import controllers.BaseController
 import models.BusinessTaxReliefs
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
+import services.businessTaxReliefs.OtherReliefsService
 import views.html.pages.businessTaxReliefs.CheckAnswersPostCessationTradeReliefView
 
 import javax.inject.Inject
+import scala.concurrent.ExecutionContext
 
 class CheckAnswersPostCessationTradeReliefController @Inject()(override val controllerComponents: MessagesControllerComponents,
                                                                authorisedAction: AuthorisedAction,
                                                                retrieveJourney: JourneyDataRetrievalAction,
-                                                               view: CheckAnswersPostCessationTradeReliefView)
-                                                              (implicit appConfig: AppConfig) extends BaseController {
+                                                               view: CheckAnswersPostCessationTradeReliefView,
+                                                               service: OtherReliefsService
+                                                              )(implicit appConfig: AppConfig, ec: ExecutionContext) extends BaseController {
 
   def show(taxYear: Int): Action[AnyContent] =
     (authorisedAction andThen retrieveJourney(taxYear, BusinessTaxReliefs)) { implicit request =>
@@ -37,8 +40,9 @@ class CheckAnswersPostCessationTradeReliefController @Inject()(override val cont
     }
 
   def submit(taxYear: Int): Action[AnyContent] =
-    (authorisedAction andThen retrieveJourney(taxYear, BusinessTaxReliefs)) { _ =>
-      //TODO: In future, this will redirect to the 'have you completed this section' page
-      NotImplemented
+    (authorisedAction andThen retrieveJourney(taxYear, BusinessTaxReliefs)).async { implicit request =>
+      service.submit(taxYear, request.userAnswers).map {
+        _ => Redirect(appConfig.incomeTaxSubmissionOverviewUrl(taxYear))
+      }
     }
 }

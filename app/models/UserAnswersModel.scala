@@ -16,7 +16,7 @@
 
 package models
 
-import pages.{QuestionPage, Settable}
+import pages.{Gettable, Settable}
 import play.api.libs.json._
 import uk.gov.hmrc.mongo.play.json.formats.MongoJavatimeFormats
 
@@ -29,7 +29,7 @@ case class UserAnswersModel(mtdItId: String,
                             data: JsObject = Json.obj(),
                             lastUpdated: Instant = Instant.now) {
 
-  def get[A](page: QuestionPage[A])(implicit rds: Reads[A]): Option[A] =
+  def get[A](page: Gettable[A])(implicit rds: Reads[A]): Option[A] =
     Reads.optionNoError(Reads.at(page.path)).reads(data).asOpt.flatten
 
   def set[A](page: Settable[A], value: A)(implicit writes: Writes[A]): UserAnswersModel =
