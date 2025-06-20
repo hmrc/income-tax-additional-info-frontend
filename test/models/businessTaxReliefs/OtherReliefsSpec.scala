@@ -31,8 +31,8 @@ class OtherReliefsSpec extends AnyFreeSpec with Matchers {
 
       val expected = Json.obj(
         "qualifyingLoanInterestPayments" -> Json.arr(Json.obj("reliefClaimed" -> BigDecimal(1))),
-        "postCessationTradeReliefAndCertainOtherLosses" -> Json.arr(Json.obj("reliefClaimed" -> BigDecimal(2))),
-        "nonDeductableLoanInterest" -> Json.arr(Json.obj("reliefClaimed" -> BigDecimal(3)))
+        "postCessationTradeReliefAndCertainOtherLosses" -> Json.arr(Json.obj("amount" -> BigDecimal(2))),
+        "nonDeductableLoanInterest" -> Json.obj("reliefClaimed" -> BigDecimal(3))
       )
 
       Json.toJson(otherReliefs) mustEqual expected
@@ -61,7 +61,7 @@ class OtherReliefsSpec extends AnyFreeSpec with Matchers {
         )
 
         val expected = Json.obj(
-          "postCessationTradeReliefAndCertainOtherLosses" -> Json.arr(Json.obj("reliefClaimed" -> BigDecimal(2)))
+          "postCessationTradeReliefAndCertainOtherLosses" -> Json.arr(Json.obj("amount" -> BigDecimal(2)))
         )
 
         Json.toJson(otherReliefs) mustEqual expected
@@ -75,7 +75,7 @@ class OtherReliefsSpec extends AnyFreeSpec with Matchers {
         )
 
         val expected = Json.obj(
-          "nonDeductableLoanInterest" -> Json.arr(Json.obj("reliefClaimed" -> BigDecimal(3)))
+          "nonDeductableLoanInterest" -> Json.obj("reliefClaimed" -> BigDecimal(3))
         )
 
         Json.toJson(otherReliefs) mustEqual expected

@@ -16,22 +16,21 @@
 
 package models.businessTaxReliefs
 
-import play.api.libs.json.{JsObject, Json, OWrites, Writes}
+import play.api.libs.json.{JsObject, OWrites, Writes}
+import play.api.libs.json.Json.{obj, arr}
+import play.api.libs.json.Json
 
-case class OtherReliefs(qualifyingLoanInterestPayments: Option[BigDecimal],:
+case class OtherReliefs(qualifyingLoanInterestPayments: Option[BigDecimal],
                         postCessationTradeReliefAndCertainOtherLosses: Option[BigDecimal],
                         nonDeductableLoanInterest: Option[BigDecimal])
 
 object OtherReliefs {
 
-  private def nestedReliefClaimedObj[A: Writes](value: Option[A])(key: String): JsObject =
-    value.map(v => Json.obj(key -> Json.arr(Json.obj("reliefClaimed" -> v)))).getOrElse(Json.obj())
-
   implicit val writes: OWrites[OtherReliefs] = {
     case OtherReliefs(q, p, n) =>
-      nestedReliefClaimedObj(q)("qualifyingLoanInterestPayments") ++
-      nestedReliefClaimedObj(p)("postCessationTradeReliefAndCertainOtherLosses") ++
-      nestedReliefClaimedObj(n)("nonDeductableLoanInterest")
+      q.fold(obj())(value => obj("qualifyingLoanInterestPayments" -> arr(obj("reliefClaimed" -> value)))) ++
+      p.fold(obj())(value => obj("postCessationTradeReliefAndCertainOtherLosses" -> arr(obj("amount" -> value)))) ++
+      n.fold(obj())(value => obj("nonDeductableLoanInterest" -> obj("reliefClaimed" -> value)))
   }
 
 }
