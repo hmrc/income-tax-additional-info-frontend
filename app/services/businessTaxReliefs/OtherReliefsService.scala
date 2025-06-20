@@ -20,7 +20,6 @@ package services.businessTaxReliefs
 import connectors.businessTaxReliefs.OtherReliefsConnector
 import models.{Done, UserAnswersModel}
 import models.businessTaxReliefs.OtherReliefs
-import pages.businessTaxReliefs._
 import uk.gov.hmrc.http.HeaderCarrier
 
 import javax.inject.Inject
@@ -28,21 +27,11 @@ import scala.concurrent.Future
 
 class OtherReliefsService @Inject()(connector: OtherReliefsConnector) {
 
-  // TODO: Add functionaly to marks section as completed.
+  // TODO: Add functionality to marks section as completed.
   def submit(taxYear: Int, userAnswersModel: UserAnswersModel)(implicit hc: HeaderCarrier): Future[Done] = {
-    val qualifyingLoanRelief = userAnswersModel.get(QualifyingLoanReliefPage)
-    val postCessationTradeRelief = userAnswersModel.get(PostCessationTradeReliefPage)
-    val nonDeductibleReliefs = userAnswersModel.get(NonDeductibleReliefsPage)
-
-    if (qualifyingLoanRelief.nonEmpty || postCessationTradeRelief.nonEmpty || nonDeductibleReliefs.nonEmpty) {
-      val otherReliefs = OtherReliefs(
-        qualifyingLoanInterestPayments = qualifyingLoanRelief,
-        postCessationTradeReliefAndCertainOtherLosses = postCessationTradeRelief,
-        nonDeductableLoanInterest = nonDeductibleReliefs
-      )
-      connector.submit(userAnswersModel.nino, taxYear, otherReliefs)
-    } else {
-        Future.successful(Done)
+    OtherReliefs(userAnswersModel) match {
+      case None => Future.successful(Done)
+      case Some(otherReliefs) => connector.submit(userAnswersModel.nino, taxYear, otherReliefs)
     }
   }
 }

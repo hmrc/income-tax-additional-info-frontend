@@ -16,15 +16,31 @@
 
 package models.businessTaxReliefs
 
-import play.api.libs.json.{JsObject, OWrites, Writes}
-import play.api.libs.json.Json.{obj, arr}
-import play.api.libs.json.Json
+import models.UserAnswersModel
+import pages.businessTaxReliefs.{NonDeductibleReliefsPage, PostCessationTradeReliefPage, QualifyingLoanReliefPage}
+import play.api.libs.json.Json.{arr, obj}
+import play.api.libs.json.OWrites
 
 case class OtherReliefs(qualifyingLoanInterestPayments: Option[BigDecimal],
                         postCessationTradeReliefAndCertainOtherLosses: Option[BigDecimal],
                         nonDeductableLoanInterest: Option[BigDecimal])
 
 object OtherReliefs {
+
+  def apply(userAnswersModel: UserAnswersModel): Option[OtherReliefs] =
+    (
+      userAnswersModel.get(QualifyingLoanReliefPage),
+      userAnswersModel.get(PostCessationTradeReliefPage),
+      userAnswersModel.get(NonDeductibleReliefsPage)
+    ) match {
+      case (None, None, None) => None
+      case (q, p, n) =>
+        Some(OtherReliefs(
+          qualifyingLoanInterestPayments = q,
+          postCessationTradeReliefAndCertainOtherLosses = p,
+          nonDeductableLoanInterest = n
+        ))
+    }
 
   implicit val writes: OWrites[OtherReliefs] = {
     case OtherReliefs(q, p, n) =>
