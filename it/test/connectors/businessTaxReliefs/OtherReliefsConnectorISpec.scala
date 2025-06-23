@@ -51,8 +51,8 @@ class OtherReliefsConnectorISpec
 
     val connector = new OtherReliefsConnector(
       config = TestConnectorConfig(
-        vcSessionServiceBaseUrl = wireMockUrl,
-        additionalInformationServiceBaseUrl = ""
+        vcSessionServiceBaseUrl = "",
+        additionalInformationServiceBaseUrl =  wireMockUrl
       ),
       httpClient = httpClientV2
     )
