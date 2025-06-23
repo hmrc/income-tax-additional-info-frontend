@@ -16,9 +16,37 @@
 
 package models.businessTaxReliefs
 
-import play.api.libs.json.{Json, OFormat}
+import models.UserAnswersModel
+import pages.businessTaxReliefs.{NonDeductibleReliefsPage, PostCessationTradeReliefPage, QualifyingLoanReliefPage}
+import play.api.libs.json.Json.{arr, obj}
+import play.api.libs.json.OWrites
 
-case class OtherReliefs(qualifyingLoanInterestPayments: Seq[QualifyingLoanInterestPayments])
+case class OtherReliefs(qualifyingLoanInterestPayments: Option[BigDecimal],
+                        postCessationTradeReliefAndCertainOtherLosses: Option[BigDecimal],
+                        nonDeductableLoanInterest: Option[BigDecimal])
+
 object OtherReliefs {
-  implicit val formats: OFormat[OtherReliefs] = Json.format[OtherReliefs]
+
+  def apply(userAnswersModel: UserAnswersModel): Option[OtherReliefs] =
+    (
+      userAnswersModel.get(QualifyingLoanReliefPage),
+      userAnswersModel.get(PostCessationTradeReliefPage),
+      userAnswersModel.get(NonDeductibleReliefsPage)
+    ) match {
+      case (None, None, None) => None
+      case (q, p, n) =>
+        Some(OtherReliefs(
+          qualifyingLoanInterestPayments = q,
+          postCessationTradeReliefAndCertainOtherLosses = p,
+          nonDeductableLoanInterest = n
+        ))
+    }
+
+  implicit val writes: OWrites[OtherReliefs] = {
+    case OtherReliefs(q, p, n) =>
+      q.fold(obj())(value => obj("qualifyingLoanInterestPayments" -> arr(obj("reliefClaimed" -> value)))) ++
+      p.fold(obj())(value => obj("postCessationTradeReliefAndCertainOtherLosses" -> arr(obj("amount" -> value)))) ++
+      n.fold(obj())(value => obj("nonDeductableLoanInterest" -> obj("reliefClaimed" -> value)))
+  }
+
 }
