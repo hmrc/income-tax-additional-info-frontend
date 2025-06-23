@@ -37,7 +37,7 @@ class OtherReliefsConnector @Inject()(config: ConnectorConfig,
                                           )(implicit ec: ExecutionContext) extends Logging {
 
   def submit(nino: String, taxYear: Int, otherReliefs: OtherReliefs)(implicit hc: HeaderCarrier): Future[Done] = {
-    val url = url"${config.vcSessionServiceBaseUrl}/income-tax/reliefs/other/$nino/$taxYear"
+    val url = url"${config.additionalInformationServiceBaseUrl}/income-tax/reliefs/other/$nino/$taxYear"
     httpClient
       .put(url)
       .withBody(Json.toJson(otherReliefs))
