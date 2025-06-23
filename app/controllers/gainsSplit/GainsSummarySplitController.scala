@@ -29,13 +29,13 @@ import utils.HMRCHeaderNames.CORRELATION_ID
 import views.html.pages.gains.GainsSummaryPageView
 
 import javax.inject.Inject
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.Future
 
 class GainsSummarySplitController @Inject()(authorisedAction: AuthorisedAction,
                                             view: GainsSummaryPageView,
                                             gainsSessionService: GainsSessionServiceProvider,
                                             errorHandler: ErrorHandler)
-                                           (implicit appConfig: AppConfig, mcc: MessagesControllerComponents, ec: ExecutionContext)
+                                           (implicit appConfig: AppConfig, mcc: MessagesControllerComponents)
   extends FrontendController(mcc) with I18nSupport with Logging {
   private def getCorrelationid(implicit hc: HeaderCarrier): Serializable = hc.extraHeaders.find(_._1 == CORRELATION_ID).getOrElse("-")
 
@@ -45,8 +45,8 @@ class GainsSummarySplitController @Inject()(authorisedAction: AuthorisedAction,
   private val VOIDED_ISA: String = "Voided ISA"
 
   def show(taxYear: Int, policyType: Option[String]): Action[AnyContent] = authorisedAction.async { implicit request =>
-    gainsSessionService.deleteSessionData(taxYear)(Future.successful(errorHandler.internalServerError())) {
-      gainsSessionService.getAndHandle(taxYear)(Future.successful(errorHandler.internalServerError())) {
+    gainsSessionService.deleteSessionData(taxYear)(errorHandler.internalServerError()) {
+      gainsSessionService.getAndHandle(taxYear)(errorHandler.internalServerError()) {
         (_, prior) =>
           prior match {
             case Some(prior) =>
@@ -63,7 +63,7 @@ class GainsSummarySplitController @Inject()(authorisedAction: AuthorisedAction,
                 Future.successful(Redirect(s"${appConfig.incomeTaxSubmissionBaseUrl}/$taxYear/tasklist"))
               } else {
                 gainsSessionService.createSessionData(AllGainsSessionModel(priorData, gateway = Some(true)), taxYear)(errorHandler.internalServerError())(
-                  Ok(view(taxYear, priorData))
+                  Future.successful(Ok(view(taxYear, priorData)))
                 )
               }
 
@@ -71,7 +71,7 @@ class GainsSummarySplitController @Inject()(authorisedAction: AuthorisedAction,
               logger.info("[GainsSummarySplitController][show] No cya or prior data found, redirecting to task list. CorrelationId: " + getCorrelationid)
               Future.successful(Redirect(s"${appConfig.incomeTaxSubmissionBaseUrl}/$taxYear/tasklist"))
           }
-      }.flatten
-    }.flatten
+      }
+    }
   }
 }

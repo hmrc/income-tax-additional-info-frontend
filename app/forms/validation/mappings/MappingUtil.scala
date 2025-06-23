@@ -52,13 +52,15 @@ object MappingUtil extends Formatters {
   def optionCurrency(requiredKey: String,
                      wrongFormatKey: String,
                      maxAmountKey: String,
-                     minAmountKey: String,
+                     minAmountKey: Option[String],
                      args: Seq[String] = Seq.empty[String]
                     ): FieldMapping[Option[BigDecimal]] = {
     of(optionCurrencyFormatter(requiredKey, wrongFormatKey, maxAmountKey, minAmountKey, args))
 }
 
-  def optionString(missingInputError: String,wrongFormatKey: String): FieldMapping[String] = {
-    of(stringFormatterWrongFormat(missingInputError,wrongFormatKey, optional = true))
+  def optionString(missingInputError: String,
+                   wrongFormatKey: String,
+                   args: Seq[String] = Seq.empty[String]): FieldMapping[String] = {
+    of(stringFormatterWrongFormat(missingInputError,wrongFormatKey, optional = true, args))
   }
 }

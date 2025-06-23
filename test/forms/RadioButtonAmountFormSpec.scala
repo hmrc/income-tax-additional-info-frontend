@@ -26,8 +26,7 @@ class RadioButtonAmountFormSpec extends UnitTest {
     "no radio input",
     "nothing to see here",
     "this not good",
-    "too big",
-    ""
+    "too big"
   )
 
   private val testCurrencyValid = 1000
@@ -47,7 +46,7 @@ class RadioButtonAmountFormSpec extends UnitTest {
           yesNo -> yes,
           amount -> testCurrencyValid.toString
         )
-        val expected = Some((yes.toBoolean, Option[BigDecimal](testCurrencyValid)))
+        val expected = Some((yes.toBoolean, Some(testCurrencyValid)))
         val actual = theForm().bind(testInput).value
         actual shouldBe expected
       }
@@ -57,7 +56,7 @@ class RadioButtonAmountFormSpec extends UnitTest {
           yesNo -> yes,
           amount -> testCurrencyZeroAmount.toString
         )
-        val expected = Some((yes.toBoolean, Option[BigDecimal](testCurrencyZeroAmount)))
+        val expected = Some((yes.toBoolean, Some(testCurrencyZeroAmount)))
         val actual = theForm().bind(testInput).value
         actual shouldBe expected
       }
@@ -67,7 +66,7 @@ class RadioButtonAmountFormSpec extends UnitTest {
           yesNo -> yes,
           amount -> testCurrencyNegativeAmount.toString
         )
-        val expected = Some((yes.toBoolean, Option[BigDecimal](testCurrencyNegativeAmount)))
+        val expected = Some((yes.toBoolean, Some(testCurrencyNegativeAmount)))
         val actual = theForm().bind(testInput).value
         actual shouldBe expected
       }
@@ -79,7 +78,7 @@ class RadioButtonAmountFormSpec extends UnitTest {
           yesNo -> yes,
           amount -> testCurrencyWithSpaces
         )
-        val expected = Some((yes.toBoolean, Option[BigDecimal](testCurrencyWithSpacesExpected)))
+        val expected = Some((yes.toBoolean, Some(testCurrencyWithSpacesExpected)))
         val actual = theForm().bind(testInput).value
         actual shouldBe expected
       }
@@ -123,7 +122,7 @@ class RadioButtonAmountFormSpec extends UnitTest {
 
     "return a Map of strings" when {
       "containing the input values using unbind" in {
-        val testInput = (yes.toBoolean, Option[BigDecimal](testCurrencyValid))
+        val testInput: (Boolean, Option[BigDecimal]) = (yes.toBoolean, Some(testCurrencyValid))
         val expected = Map(
           yesNo -> yes,
           amount -> testCurrencyValid.toString

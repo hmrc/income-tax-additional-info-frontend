@@ -44,7 +44,7 @@ trait Formatters {
                                           invalidNumericKey: String,
                                           maxAmountKey: String,
                                           minAmountKey: Option[String],
-                                          args: Seq[String] = Seq.empty[String]
+                                          args: Seq[String] = Seq()
                                          ): Formatter[BigDecimal] =
     new Formatter[BigDecimal] {
       private val baseFormatter = stringFormatter(requiredKey)
@@ -71,7 +71,7 @@ trait Formatters {
   private[mappings] def yearFormatter(requiredKey: String,
                                       wrongFormatKey: String,
                                       maxYearKey: String,
-                                      args: Seq[String] = Seq.empty[String]
+                                      args: Seq[String] = Seq()
                                      ): Formatter[Option[Int]] =
     new Formatter[Option[Int]] {
       private val baseFormatter = stringFormatter(requiredKey)
@@ -82,7 +82,7 @@ trait Formatters {
           .map(_.replaceAll("""\s""", "")), key)
       }
 
-      override def unbind(key: String, value: Option[Int]): Map[String, String] = baseFormatter.unbind(key, value.getOrElse(new String()).toString)
+      override def unbind(key: String, value: Option[Int]): Map[String, String] = baseFormatter.unbind(key, value.fold("")(_.toString))
 
       private def validYear(input: Either[Seq[FormError], String], key: String): Either[Seq[FormError], Option[Int]] = {
 
@@ -134,8 +134,8 @@ trait Formatters {
   private[mappings] def optionCurrencyFormatter(requiredKey: String,
                                                 invalidNumericKey: String,
                                                 maxAmountKey: String = "",
-                                                minAmountKey: String,
-                                                args: Seq[String] = Seq.empty[String]
+                                                minAmountKey: Option[String],
+                                                args: Seq[String] = Seq()
                                                ): Formatter[Option[BigDecimal]] =
     new Formatter[Option[BigDecimal]] {
 
@@ -148,22 +148,25 @@ trait Formatters {
           .map(_.replace("£", ""))
           .map(_.replaceAll("""\s""", ""))
           .flatMap(s => checkIfValidAmountString(Right(s), key, requiredKey, invalidNumericKey, args)).flatMap {
-          case bigDecimal if minAmountKey != "" => checksWithMinAmount(bigDecimal, key, minAmountKey, maxAmountKey, args)
-          case bigDecimal if minAmountKey == "" => checksWithOutMinAmount(bigDecimal, key, maxAmountKey, args)
+          case bigDecimal if minAmountKey.isDefined => checksWithMinAmount(bigDecimal, key, minAmountKey.get, maxAmountKey, args)
+          case bigDecimal => checksWithOutMinAmount(bigDecimal, key, maxAmountKey, args)
         }
       }
 
       override def unbind(key: String, value: Option[BigDecimal]): Map[String, String] =
-        baseFormatter.unbind(key, value.getOrElse("").toString)
+        baseFormatter.unbind(key, value.fold("")(_.toString))
     }
 
-  private[mappings] def stringFormatterWrongFormat(errorKey: String,wrongFormatKey: String, optional: Boolean = false): Formatter[String] = new Formatter[String] {
+  private[mappings] def stringFormatterWrongFormat(errorKey: String,
+                                                   wrongFormatKey: String,
+                                                   optional: Boolean = false,
+                                                   args: Seq[String] = Seq()): Formatter[String] = new Formatter[String] {
 
     override def bind(key: String, data: Map[String, String]): Either[Seq[FormError], String] =
       data.get(key) match {
-        case None => Left(Seq(FormError(key, errorKey)))
-        case Some(x) if x.trim.isEmpty && optional => Left(Seq(FormError(key, errorKey)))
-        case Some(x) if (!x.matches(alphabetsWithSpaceRegex)) => Left(Seq(FormError(key,wrongFormatKey)))
+        case None => Left(Seq(FormError(key, errorKey, args)))
+        case Some(x) if x.trim.isEmpty && optional => Left(Seq(FormError(key, errorKey, args)))
+        case Some(x) if (!x.matches(alphabetsWithSpaceRegex)) => Left(Seq(FormError(key, wrongFormatKey, args)))
         case Some(x) if x.trim.isEmpty && optional => Right(x.trim)
         case Some(s) => Right(s.trim)
       }

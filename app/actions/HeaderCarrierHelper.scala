@@ -30,12 +30,9 @@ trait HeaderCarrierHelper extends Logging {
       .withExtraHeaders("X-CorrelationId" -> correlationId(request.headers.get("CorrelationId")))
 
   private def correlationId(correlationIdHeader: Option[String]): String =
-    if (correlationIdHeader.isDefined) {
-      logger.info("[AuthorisedAction]Valid CorrelationId header found.")
-      correlationIdHeader.get
-    } else {
+    correlationIdHeader.getOrElse {
       lazy val id = UUID.randomUUID().toString
-      logger.warn(s"[AuthorisedAction]No valid CorrelationId found in headers. Defaulting Correlation Id. $id")
+      logger.info(s"[AuthorisedAction] Added CorrelationId to headers. $id")
       id
     }
 }

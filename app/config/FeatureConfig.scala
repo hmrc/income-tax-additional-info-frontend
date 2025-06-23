@@ -16,10 +16,9 @@
 
 package config
 
-import play.api.{Configuration, Logging}
+import play.api.Configuration
 
 import javax.inject.Inject
-import scala.util.chaining.scalaUtilChainingOps
 
 trait FeatureConfig {
   def welshLanguageEnabled: Boolean

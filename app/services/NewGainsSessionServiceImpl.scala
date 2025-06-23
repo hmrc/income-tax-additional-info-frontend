@@ -40,11 +40,12 @@ class NewGainsSessionServiceImpl @Inject()(getGainsDataConnector: GetGainsConnec
     getGainsDataConnector.getUserData(taxYear)(request.user, hc.withExtraHeaders("mtditid" -> request.user.mtditid))
   }
 
-  def createSessionData[A](cyaModel: AllGainsSessionModel, taxYear: Int)(onFail: A)(onSuccess: A)
+  def createSessionData[A](cyaModel: AllGainsSessionModel, taxYear: Int)(onFail: => Future[A])(onSuccess: => Future[A])
                           (implicit request: AuthorisationRequest[_], hc: HeaderCarrier): Future[A] = {
 
     createGainsSessionConnector.createSessionData(cyaModel, taxYear)(
-      hc.withExtraHeaders("mtditid" -> request.user.mtditid).withExtraHeaders("X-CorrelationId" -> correlationId)).map {
+      hc.withExtraHeaders("mtditid" -> request.user.mtditid).withExtraHeaders("X-CorrelationId" -> correlationId)
+    ).flatMap {
       case Right(_) =>
         onSuccess
       case Left(_) =>
@@ -66,11 +67,12 @@ class NewGainsSessionServiceImpl @Inject()(getGainsDataConnector: GetGainsConnec
     }
   }
 
-  def updateSessionData[A](cyaModel: AllGainsSessionModel, taxYear: Int)(onFail: => A)(onSuccess: A)
+  def updateSessionData[A](cyaModel: AllGainsSessionModel, taxYear: Int)(onFail: => Future[A])(onSuccess: => Future[A])
                           (implicit request: AuthorisationRequest[_], hc: HeaderCarrier): Future[A] = {
 
     updateGainsSessionConnector.updateGainsSession(cyaModel, taxYear)(
-      hc.withExtraHeaders("mtditid" -> request.user.mtditid).withExtraHeaders("X-CorrelationId" -> correlationId)).map {
+      hc.withExtraHeaders("mtditid" -> request.user.mtditid).withExtraHeaders("X-CorrelationId" -> correlationId)
+    ).flatMap {
       case Right(_) =>
         onSuccess
       case Left(_) =>
@@ -79,11 +81,12 @@ class NewGainsSessionServiceImpl @Inject()(getGainsDataConnector: GetGainsConnec
     }
   }
 
-  def deleteSessionData[A](taxYear: Int)(onFail: A)(onSuccess: A)
+  def deleteSessionData[A](taxYear: Int)(onFail: => Future[A])(onSuccess: => Future[A])
                           (implicit request: AuthorisationRequest[_], hc: HeaderCarrier): Future[A] = {
 
     deleteGainsSessionConnector.deleteGainsData(taxYear)(
-      hc.withExtraHeaders("mtditid" -> request.user.mtditid).withExtraHeaders("X-CorrelationId" -> correlationId)).map {
+      hc.withExtraHeaders("mtditid" -> request.user.mtditid).withExtraHeaders("X-CorrelationId" -> correlationId)
+    ).flatMap {
       case Right(_) =>
         onSuccess
       case _ =>
@@ -92,7 +95,7 @@ class NewGainsSessionServiceImpl @Inject()(getGainsDataConnector: GetGainsConnec
     }
   }
 
-  def getAndHandle[R](taxYear: Int)(onFail: R)(block: (Option[AllGainsSessionModel], Option[GainsPriorDataModel]) => R)
+  def getAndHandle[R](taxYear: Int)(onFail: => Future[R])(block: (Option[AllGainsSessionModel], Option[GainsPriorDataModel]) => Future[R])
                      (implicit request: AuthorisationRequest[_], hc: HeaderCarrier): Future[R] = {
     for {
       optionalCya <- getSessionData(taxYear)
@@ -110,5 +113,5 @@ class NewGainsSessionServiceImpl @Inject()(getGainsDataConnector: GetGainsConnec
           onFail
       }
     }
-  }
+  }.flatten
 }

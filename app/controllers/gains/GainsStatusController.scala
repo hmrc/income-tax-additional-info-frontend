@@ -44,7 +44,7 @@ class GainsStatusController @Inject()(authorisedAction: AuthorisedAction,
 
   def show(taxYear: Int, sessionId: String): Action[AnyContent] = authorisedAction.async { implicit request =>
     gainsSessionService.getSessionData(taxYear).flatMap {
-      case Left(_) => Future.successful(errorHandler.internalServerError())
+      case Left(_) => errorHandler.internalServerError()
       case Right(cya) =>
         Future.successful(cya.fold(Redirect(appConfig.incomeTaxSubmissionOverviewUrl(taxYear))) {
           cyaData =>
@@ -64,20 +64,20 @@ class GainsStatusController @Inject()(authorisedAction: AuthorisedAction,
     }, {
       gainsStatus =>
         gainsSessionService.getSessionData(taxYear).flatMap {
-          case Left(_) => Future.successful(errorHandler.internalServerError())
+          case Left(_) => errorHandler.internalServerError()
           case Right(sessionData) =>
             val cya = sessionData.flatMap(_.gains).getOrElse(AllGainsSessionModel(Seq.empty))
             val index = cya.allGains.indexOf(cya.allGains.filter(_.sessionId == sessionId).head)
             val newData = cya.allGains(index).copy(previousGain = Some(gainsStatus))
             val updated = cya.allGains.updated(index, newData)
             gainsSessionService.updateSessionData(AllGainsSessionModel(updated, cya.gateway), taxYear)(errorHandler.internalServerError()) {
-              if (!gainsStatus && newData.isFinished) {
+              Future.successful(if (!gainsStatus && newData.isFinished) {
                 Redirect(controllers.gains.routes.PolicySummaryController.show(taxYear, sessionId))
               } else if (gainsStatus) {
                 Redirect(controllers.gains.routes.PolicyHeldPreviousController.show(taxYear, sessionId))
               } else {
                 Redirect(controllers.gains.routes.PolicyHeldController.show(taxYear, sessionId))
-              }
+              })
             }
         }
     })

@@ -32,8 +32,8 @@ import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import play.api.{Application, Environment, Mode, inject}
 import services.businessTaxReliefs.OtherReliefsService
-import support.stubs.UserAnswersStub
 import support.IntegrationTest
+import support.stubs.UserAnswersStub
 import utils.ViewUtils.bigDecimalCurrency
 
 import scala.concurrent.Future

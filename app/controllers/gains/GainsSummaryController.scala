@@ -30,20 +30,20 @@ import utils.HMRCHeaderNames.CORRELATION_ID
 import views.html.pages.gains.GainsSummaryPageView
 
 import javax.inject.Inject
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.Future
 
 class GainsSummaryController @Inject()(authorisedAction: AuthorisedAction,
                                        view: GainsSummaryPageView,
                                        gainsSessionService: GainsSessionServiceProvider,
                                        errorHandler: ErrorHandler)
-                                      (implicit appConfig: AppConfig, mcc: MessagesControllerComponents, ec: ExecutionContext)
+                                      (implicit appConfig: AppConfig, mcc: MessagesControllerComponents)
   extends FrontendController(mcc) with I18nSupport with Logging{
   private def getCorrelationid(implicit hc:HeaderCarrier) = hc.extraHeaders.find(_._1 == CORRELATION_ID).getOrElse("-")
   def show(taxYear: Int): Action[AnyContent] = authorisedAction.async { implicit request =>
   //Clear the session and load it only with prior data to avoid any incomplete session data that may exists
 
-    gainsSessionService.deleteSessionData(taxYear)(Future.successful(errorHandler.internalServerError())) {
-      gainsSessionService.getAndHandle(taxYear)(Future.successful(errorHandler.internalServerError())) {
+    gainsSessionService.deleteSessionData(taxYear)(errorHandler.internalServerError()) {
+      gainsSessionService.getAndHandle(taxYear)(errorHandler.internalServerError()) {
         (cya, prior) =>
           prior match {
             case Some(prior) =>
@@ -51,13 +51,13 @@ class GainsSummaryController @Inject()(authorisedAction: AuthorisedAction,
               val priorData = prior.toPolicyCya
               gainsSessionService.createSessionData(AllGainsSessionModel(priorData, gateway = Some(true)), taxYear)(
                 errorHandler.internalServerError())(
-                Ok(view(taxYear, priorData))
+                Future.successful(Ok(view(taxYear, priorData)))
               )
             case None =>
               logger.info("[GainsSummaryController][show] No cya and prior data found. CorrelationId: " + getCorrelationid)
               Future.successful(Ok(view(taxYear, Seq[PolicyCyaModel]())))
           }
-      }.flatten
-    }.flatten
+      }
+    }
   }
 }

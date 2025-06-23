@@ -19,7 +19,7 @@ package connectors
 import connectors.errors.{FailedToDeleteUserAnswers, FailedToParseJson, FailedToStoreUserAnswers, UnexpectedErrorResponse}
 import connectors.httpParsers.UserAnswersHttpReads.UserAnswersResponse
 import connectors.session.UserAnswersConnector
-import models.{BusinessTaxReliefs, Journey, UserAnswersModel}
+import models.{BusinessTaxReliefs, UserAnswersModel}
 import org.apache.pekko.Done
 import play.api.http.Status._
 import play.api.libs.json.Json

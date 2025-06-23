@@ -37,11 +37,13 @@ trait InputFilters {
 
   // scalastyle:off
   def filter(input: String): String = {
+
     @tailrec
-    def applyFilters(filters: Seq[Pattern], sanitizedOutput: String): String = filters match {
-      case Nil => sanitizedOutput.filterNot(_ == '|')
-      case filter :: tail => applyFilters(tail, filter.matcher(sanitizedOutput).replaceAll(""))
-    }
+    def applyFilters(filters: Seq[Pattern], sanitizedOutput: String): String =
+      (filters: @unchecked) match { //This is an exhaustive match, but the compiler doesn't recognise that - hence safe @unchecked annotation
+        case Nil => sanitizedOutput.filterNot(_ == '|')
+        case filter :: tail => applyFilters(tail, filter.matcher(sanitizedOutput).replaceAll(""))
+      }
 
     applyFilters(filters, input)
   }

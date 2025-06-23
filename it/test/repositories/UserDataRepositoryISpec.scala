@@ -17,21 +17,20 @@
 package repositories
 
 import com.mongodb.client.result.InsertOneResult
-import models.{AllGainsSessionModel, User}
 import models.gains.PolicyCyaModel
 import models.mongo._
 import models.requests.AuthorisationRequest
+import models.{AllGainsSessionModel, User}
 import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
 import play.api.mvc.AnyContent
 import play.api.test.{DefaultAwaitTimeout, FakeRequest, FutureAwaits}
-import repositories.GainsUserDataRepository
 import support.IntegrationTest
 
 class UserDataRepositoryISpec extends IntegrationTest with FutureAwaits with DefaultAwaitTimeout {
 
   val gainsRepo: GainsUserDataRepository = app.injector.instanceOf[GainsUserDataRepository]
 
-  override def config: Map[String, String] =
+  override def config: Map[String, Any] =
     super.config
 
   private def count: Long = await(gainsRepo.collection.countDocuments().toFuture())

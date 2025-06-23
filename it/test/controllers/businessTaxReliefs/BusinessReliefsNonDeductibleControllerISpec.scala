@@ -27,8 +27,8 @@ import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import play.api.{Application, Environment, Mode}
-import support.stubs.UserAnswersStub
 import support.IntegrationTest
+import support.stubs.UserAnswersStub
 
 class BusinessReliefsNonDeductibleControllerISpec extends IntegrationTest with UserAnswersStub {
 

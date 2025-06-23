@@ -20,6 +20,7 @@ import com.github.tomakehurst.wiremock.http.HttpHeader
 import config.AppConfig
 import connectors.errors.{ApiError, SingleErrorBody}
 import connectors.session.DeleteGainsSessionConnector
+import play.api.Configuration
 import play.api.http.Status._
 import support.IntegrationTest
 import uk.gov.hmrc.http.{HeaderCarrier, HeaderNames, HttpClient, SessionId}
@@ -33,7 +34,7 @@ class DeleteGainsSessionConnectorISpec extends IntegrationTest {
 
   val sessionUrl: String = s"/income-tax-additional-information/income-tax/income/insurance-policies/$taxYear/session"
 
-  def appConfig(host: String): AppConfig = new AppConfig(app.injector.instanceOf[ServicesConfig]) {
+  def appConfig(host: String): AppConfig = new AppConfig(app.injector.instanceOf[ServicesConfig], app.injector.instanceOf[Configuration]) {
     override lazy val additionalInformationServiceBaseUrl: String = s"http://$host:$wiremockPort/income-tax-additional-information"
   }
 
