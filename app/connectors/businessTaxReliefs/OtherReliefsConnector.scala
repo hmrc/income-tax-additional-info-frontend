@@ -36,10 +36,11 @@ class OtherReliefsConnector @Inject()(config: ConnectorConfig,
                                           httpClient: HttpClientV2
                                           )(implicit ec: ExecutionContext) extends Logging {
 
-  def submit(nino: String, taxYear: Int, otherReliefs: OtherReliefs)(implicit hc: HeaderCarrier): Future[Done] = {
-    val url = url"${config.additionalInformationServiceBaseUrl}/income-tax/reliefs/other/$nino/$taxYear"
+  def submit(nino: String, mtdItId: String, taxYear: Int, otherReliefs: OtherReliefs)(implicit hc: HeaderCarrier): Future[Done] = {
+    val url = url"${config.additionalInformationServiceBaseUrl}/income-tax-additional-information/income-tax/reliefs/other/$nino/$taxYear"
     httpClient
       .put(url)
+      .setHeader("mtditid" -> mtdItId)
       .withBody(Json.toJson(otherReliefs))
       .execute[HttpResponse]
       .map { res =>

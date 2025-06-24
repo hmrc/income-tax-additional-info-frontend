@@ -38,13 +38,14 @@ class OtherReliefsConnectorISpec
 
   private val taxYear = 2099
   private val nino = "nino-value"
+  private val mtdItId = "mtdItId-value"
   private val data = OtherReliefs(
     Some(BigDecimal(1)),
     Some(BigDecimal(2)),
     Some(BigDecimal(3))
   )
 
-  private val url = s"/income-tax/reliefs/other/$nino/$taxYear"
+  private val url = s"/income-tax-additional-information/income-tax/reliefs/other/$nino/$taxYear"
 
   trait Test {
     implicit val hc: HeaderCarrier = HeaderCarrier()
@@ -71,7 +72,7 @@ class OtherReliefsConnectorISpec
             )
         )
 
-        val result = await(connector.submit(nino, taxYear, data)(hc))
+        val result = await(connector.submit(nino, mtdItId, taxYear, data)(hc))
 
         result shouldBe Done
       }
@@ -87,7 +88,7 @@ class OtherReliefsConnectorISpec
             )
         )
 
-        val result = await(connector.submit(nino, taxYear, data)(hc).failed)
+        val result = await(connector.submit(nino, mtdItId, taxYear, data)(hc).failed)
 
         result shouldBe OtherReliefsSubmissionException(BAD_REQUEST)
       }
@@ -101,7 +102,7 @@ class OtherReliefsConnectorISpec
             )
         )
 
-        val result = await(connector.submit(nino, taxYear, data)(hc).failed)
+        val result = await(connector.submit(nino, mtdItId, taxYear, data)(hc).failed)
 
         result shouldBe OtherReliefsSubmissionException(NOT_FOUND)
       }
@@ -115,7 +116,7 @@ class OtherReliefsConnectorISpec
             )
         )
 
-        val result = await(connector.submit(nino, taxYear, data)(hc).failed)
+        val result = await(connector.submit(nino, mtdItId, taxYear, data)(hc).failed)
 
         result shouldBe OtherReliefsSubmissionException(UNPROCESSABLE_ENTITY)
       }
@@ -131,7 +132,7 @@ class OtherReliefsConnectorISpec
             )
         )
 
-        val result = await(connector.submit(nino, taxYear, data)(hc).failed)
+        val result = await(connector.submit(nino, mtdItId, taxYear, data)(hc).failed)
 
         result shouldBe OtherReliefsSubmissionException(INTERNAL_SERVER_ERROR)
       }
@@ -145,7 +146,7 @@ class OtherReliefsConnectorISpec
             )
         )
 
-        val result = await(connector.submit(nino, taxYear, data)(hc).failed)
+        val result = await(connector.submit(nino, mtdItId, taxYear, data)(hc).failed)
 
         result shouldBe OtherReliefsSubmissionException(SERVICE_UNAVAILABLE)
       }
