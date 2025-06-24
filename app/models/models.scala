@@ -112,7 +112,7 @@ package object models {
     }
 
     def remove(path: JsPath): JsResult[JsValue] =
-      (path.path, jsValue) match {
+      ((path.path, jsValue): @unchecked) match { //Unchecked to avoid exhaustive match depth breach warning
         case (Nil, _) => JsError("path cannot be empty")
         case ((n: KeyPathNode) :: Nil, value: JsObject) if value.keys.contains(n.key) => JsSuccess(value - n.key)
         case ((n: KeyPathNode) :: Nil, value: JsObject) if !value.keys.contains(n.key) => JsSuccess(value)

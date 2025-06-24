@@ -60,7 +60,7 @@ class GainsSessionServiceISpec extends AnyWordSpec with Matchers with FutureAwai
 
         val result =
           await(gainsSessionService.createSessionData(
-            AllGainsSessionModel(Seq(completePolicyCyaModel), gateway = Some(true)), taxYear)(false)(true)(AuthorisationRequestBuilder.anAuthorisationRequest, headerCarrier))
+            AllGainsSessionModel(Seq(completePolicyCyaModel), gateway = Some(true)), taxYear)(Future.successful(false))(Future.successful(true))(AuthorisationRequestBuilder.anAuthorisationRequest, headerCarrier))
 
         result shouldBe false
       }
@@ -74,12 +74,12 @@ class GainsSessionServiceISpec extends AnyWordSpec with Matchers with FutureAwai
 
         val model = AllGainsSessionModel(Seq(completePolicyCyaModel), gateway = Some(true))
         val initialResult =
-          await(gainsSessionService.createSessionData(model, taxYear)(false)(true)(
+          await(gainsSessionService.createSessionData(model, taxYear)(Future.successful(false))(Future.successful(true))(
             AuthorisationRequestBuilder.anAuthorisationRequest, headerCarrier)
           )
 
         val duplicateResult =
-          await(gainsSessionService.createSessionData(model, taxYear)(false)(true)(
+          await(gainsSessionService.createSessionData(model, taxYear)(Future.successful(false))(Future.successful(true))(
             AuthorisationRequestBuilder.anAuthorisationRequest, headerCarrier)
           )
 
@@ -94,7 +94,7 @@ class GainsSessionServiceISpec extends AnyWordSpec with Matchers with FutureAwai
           .thenReturn(Future.successful(Left(DataNotUpdated)))
 
         val result = await(gainsSessionService.updateSessionData(AllGainsSessionModel
-        (Seq(completePolicyCyaModel), gateway = Some(true)), taxYear)(false)(true)
+        (Seq(completePolicyCyaModel), gateway = Some(true)), taxYear)(Future.successful(false))(Future.successful(true))
         (AuthorisationRequestBuilder.anAuthorisationRequest, headerCarrier))
 
         result shouldBe false

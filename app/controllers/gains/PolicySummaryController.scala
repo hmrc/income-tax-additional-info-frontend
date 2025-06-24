@@ -51,7 +51,7 @@ class PolicySummaryController @Inject()(authorisedAction: AuthorisedAction,
   def show(taxYear: Int, sessionId: String): Action[AnyContent] = authorisedAction.async { implicit request =>
     gainsSessionService.getSessionData(taxYear).flatMap {
       case Left(_) =>
-        Future.successful(errorHandler.internalServerError())
+        errorHandler.internalServerError()
       case Right(cya) =>
         cya.fold(Future.successful(Redirect(appConfig.incomeTaxSubmissionOverviewUrl(taxYear)))) {
           cyaData =>
@@ -64,7 +64,7 @@ class PolicySummaryController @Inject()(authorisedAction: AuthorisedAction,
                     case Some(_) =>
                       gainsSessionService.updateSessionData(
                         AllGainsSessionModel(data.allGains, data.gateway), taxYear)(errorHandler.internalServerError()) {
-                        Ok(view(taxYear, data.allGains, gateway = true, sessionId))
+                        Future.successful(Ok(view(taxYear, data.allGains, gateway = true, sessionId)))
                       }
                     case None =>
                       logger.info("[PolicySummaryController][show] No CYA data in session. Redirecting to the overview page.")
@@ -73,7 +73,7 @@ class PolicySummaryController @Inject()(authorisedAction: AuthorisedAction,
                 } else {
                   gainsSessionService.updateSessionData(
                     AllGainsSessionModel(data.allGains, data.gateway), taxYear)(errorHandler.internalServerError()) {
-                    Ok(view(taxYear, data.allGains, gateway = false, sessionId))
+                    Future.successful(Ok(view(taxYear, data.allGains, gateway = false, sessionId)))
                   }
                 }
             }
@@ -83,7 +83,7 @@ class PolicySummaryController @Inject()(authorisedAction: AuthorisedAction,
 
   def submit(taxYear: Int, sessionId: String): Action[AnyContent] = authorisedAction.async { implicit request =>
     gainsSessionService.getAndHandle(taxYear) {
-      Future.successful(errorHandler.internalServerError())
+      errorHandler.internalServerError()
     } {
       implicit val user: User = request.user
       (cya, prior) =>
@@ -96,7 +96,7 @@ class PolicySummaryController @Inject()(authorisedAction: AuthorisedAction,
                     submitGainsAndAudit(Some(GainsSubmissionModel()), taxYear, user, prior, cya,
                       Redirect(appConfig.incomeTaxSubmissionOverviewUrl(taxYear)))
                   case Left(_) =>
-                    Future.successful(errorHandler.internalServerError())
+                    errorHandler.internalServerError()
                 }
               case _ =>
                 val currentPolicyList: Seq[PolicyCyaModel] = cya.allGains.filter(_.sessionId == sessionId)
@@ -121,9 +121,9 @@ class PolicySummaryController @Inject()(authorisedAction: AuthorisedAction,
                 )
             }
           case (_, _) =>
-            Future.successful(errorHandler.internalServerError())
+            errorHandler.internalServerError()
         }
-    }.flatten
+    }
   }
 
   private def submitGainsAndAudit(body: Option[GainsSubmissionModel], taxYear: Int, user: User,
@@ -133,10 +133,10 @@ class PolicySummaryController @Inject()(authorisedAction: AuthorisedAction,
       case Left(error) =>
         logger.info("[PolicySummaryController][submit] Error while submitting gains data. Redirecting to 500 error page. " +
           "Error status: " + error.status)
-        Future.successful(errorHandler.internalServerError())
+        errorHandler.internalServerError()
       case Right(_) =>
         auditSubmission(body, prior, user.nino, user.mtditid, user.affinityGroup, taxYear)
-        gainsSessionService.deleteSessionData(taxYear)(errorHandler.internalServerError())(successResult)
+        gainsSessionService.deleteSessionData(taxYear)(errorHandler.internalServerError())(Future.successful(successResult))
     }
   }
 

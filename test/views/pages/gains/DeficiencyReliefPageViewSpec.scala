@@ -165,10 +165,10 @@ class DeficiencyReliefPageViewSpec extends ViewUnitTest {
 
         implicit val document: Document = Jsoup.parse(page(taxYear, RadioButtonAmountForm.radioButtonAndAmountForm(
           s"gains.deficiency-relief-status.question.radio.error.noEntry.${if (userScenario.isAgent) "agent" else "individual"}",
-          s"gains.deficiency-relief-status.question.input.error.noEntry",
-          s"gains.deficiency-relief-status.question.input.error.incorrectFormat",
-          s"gains.deficiency-relief-status.question.input.error.amountExceedsMax",
-          s""), sessionId).body)
+          "gains.deficiency-relief-status.question.input.error.noEntry",
+          "gains.deficiency-relief-status.question.input.error.incorrectFormat",
+          "gains.deficiency-relief-status.question.input.error.amountExceedsMax"
+        ), sessionId).body)
 
         welshToggleCheck(userScenario.isWelsh)
         titleCheck(userScenario.specificExpectedResults.get.expectedTitle, userScenario.isWelsh)
@@ -196,10 +196,10 @@ class DeficiencyReliefPageViewSpec extends ViewUnitTest {
 
         implicit val document: Document = Jsoup.parse(page(taxYear, RadioButtonAmountForm.radioButtonAndAmountForm(
           s"gains.deficiency-relief-status.question.radio.error.noEntry.${if (userScenario.isAgent) "agent" else "individual"}",
-          s"gains.deficiency-relief-status.question.input.error.noEntry",
-          s"gains.deficiency-relief-status.question.input.error.incorrectFormat",
-          s"gains.deficiency-relief-status.question.input.error.amountExceedsMax",
-          s"").bind(Map(
+          "gains.deficiency-relief-status.question.input.error.noEntry",
+          "gains.deficiency-relief-status.question.input.error.incorrectFormat",
+          "gains.deficiency-relief-status.question.input.error.amountExceedsMax"
+        ).bind(Map(
           RadioButtonAmountForm.amount -> "",
           RadioButtonAmountForm.yesNo -> ""
         )), sessionId).body)
@@ -229,10 +229,10 @@ class DeficiencyReliefPageViewSpec extends ViewUnitTest {
 
         implicit val document: Document = Jsoup.parse(page(taxYear, RadioButtonAmountForm.radioButtonAndAmountForm(
           s"gains.deficiency-relief-status.question.radio.error.noEntry.${if (userScenario.isAgent) "agent" else "individual"}",
-          s"gains.deficiency-relief-status.question.input.error.noEntry",
-          s"gains.deficiency-relief-status.question.input.error.incorrectFormat",
-          s"gains.deficiency-relief-status.question.input.error.amountExceedsMax",
-          s"").bind(Map(
+          "gains.deficiency-relief-status.question.input.error.noEntry",
+          "gains.deficiency-relief-status.question.input.error.incorrectFormat",
+          "gains.deficiency-relief-status.question.input.error.amountExceedsMax"
+        ).bind(Map(
           RadioButtonAmountForm.amount -> "",
           RadioButtonAmountForm.yesNo -> "true"
         )), sessionId).body)
@@ -253,10 +253,10 @@ class DeficiencyReliefPageViewSpec extends ViewUnitTest {
 
         implicit val document: Document = Jsoup.parse(page(taxYear, RadioButtonAmountForm.radioButtonAndAmountForm(
           s"gains.deficiency-relief-status.question.radio.error.noEntry.${if (userScenario.isAgent) "agent" else "individual"}",
-          s"gains.deficiency-relief-status.question.input.error.noEntry",
-          s"gains.deficiency-relief-status.question.input.error.incorrectFormat",
-          s"gains.deficiency-relief-status.question.input.error.amountExceedsMax",
-          s"").bind(Map(
+          "gains.deficiency-relief-status.question.input.error.noEntry",
+          "gains.deficiency-relief-status.question.input.error.incorrectFormat",
+          "gains.deficiency-relief-status.question.input.error.amountExceedsMax"
+        ).bind(Map(
           RadioButtonAmountForm.amount -> "f",
           RadioButtonAmountForm.yesNo -> "true"
         )), sessionId).body)
@@ -279,8 +279,8 @@ class DeficiencyReliefPageViewSpec extends ViewUnitTest {
           s"gains.deficiency-relief-status.question.radio.error.noEntry.${if (userScenario.isAgent) "agent" else "individual"}",
           s"gains.deficiency-relief-status.question.input.error.noEntry.${if (userScenario.isAgent) "agent" else "individual"}",
           s"gains.deficiency-relief-status.question.input.error.incorrectFormat.${if (userScenario.isAgent) "agent" else "individual"}",
-          s"gains.deficiency-relief-status.question.input.error.amountExceedsMax",
-          s"").bind(Map(
+          "gains.deficiency-relief-status.question.input.error.amountExceedsMax"
+        ).bind(Map(
           RadioButtonAmountForm.amount -> exceedsMaxLimit,
           RadioButtonAmountForm.yesNo -> "true"
         )), sessionId).body)

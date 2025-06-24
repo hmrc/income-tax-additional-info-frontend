@@ -25,8 +25,8 @@ import play.api.libs.ws.DefaultBodyWritables
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import play.api.{Environment, Mode}
-import support.helpers.ViewHelper
 import support.IntegrationTest
+import support.helpers.ViewHelper
 
 class GainsSummarySplitControllerISpec extends IntegrationTest with ViewHelper with DefaultBodyWritables {
 

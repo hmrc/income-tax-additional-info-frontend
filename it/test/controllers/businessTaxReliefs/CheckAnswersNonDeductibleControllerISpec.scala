@@ -18,9 +18,9 @@ package controllers.businessTaxReliefs
 
 import fixtures.messages.businessTaxReliefs.BusinessReliefsNonDeductibleMessages
 import models.{BusinessTaxReliefs, Done, UserAnswersModel}
+import org.mockito.ArgumentMatchers.{eq => eqTo, _}
 import org.mockito.Mockito
 import org.mockito.Mockito.when
-import org.mockito.ArgumentMatchers.{eq => eqTo, _}
 import org.scalatest.BeforeAndAfterEach
 import org.scalatest.OptionValues.convertOptionToValuable
 import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
@@ -32,8 +32,8 @@ import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import play.api.{Application, Environment, Mode, inject}
 import services.businessTaxReliefs.OtherReliefsService
-import support.stubs.UserAnswersStub
 import support.IntegrationTest
+import support.stubs.UserAnswersStub
 import utils.ViewUtils.bigDecimalCurrency
 
 import scala.concurrent.Future

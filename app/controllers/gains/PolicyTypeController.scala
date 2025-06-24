@@ -44,7 +44,7 @@ class PolicyTypeController @Inject()(authorisedAction: AuthorisedAction,
 
   def show(taxYear: Int, sessionId: String): Action[AnyContent] = authorisedAction.async { implicit request =>
     gainsSessionService.getSessionData(taxYear).flatMap {
-      case Left(_) => Future.successful(errorHandler.internalServerError())
+      case Left(_) => errorHandler.internalServerError()
       case Right(cya) =>
         cya match {
           case Some(cyaData) =>
@@ -61,7 +61,7 @@ class PolicyTypeController @Inject()(authorisedAction: AuthorisedAction,
                 }
           case None =>
             gainsSessionService.createSessionData(AllGainsSessionModel(Seq.empty, Some(true)), taxYear)(errorHandler.internalServerError()) {
-              Ok(view(taxYear, form(request.user.isAgent), sessionId))
+              Future.successful(Ok(view(taxYear, form(request.user.isAgent), sessionId)))
             }
 
         }
@@ -75,7 +75,7 @@ class PolicyTypeController @Inject()(authorisedAction: AuthorisedAction,
     }, {
       policy =>
         gainsSessionService.getSessionData(taxYear).flatMap {
-          case Left(_) => Future.successful(errorHandler.internalServerError())
+          case Left(_) => errorHandler.internalServerError()
           case Right(sessionData) =>
             val cya = sessionData.flatMap(_.gains).getOrElse(AllGainsSessionModel(Seq.empty))
             val newData =
@@ -87,11 +87,11 @@ class PolicyTypeController @Inject()(authorisedAction: AuthorisedAction,
                 gains.updated(gains.indexOf(gains.find(_.sessionId == sessionId).get), newG)
               }
             gainsSessionService.updateSessionData(AllGainsSessionModel(newData, cya.gateway), taxYear)(errorHandler.internalServerError()) {
-              if (newData.filter(_.sessionId == sessionId).head.isFinished) {
+              Future.successful(if (newData.filter(_.sessionId == sessionId).head.isFinished) {
                 Redirect(controllers.gains.routes.PolicySummaryController.show(taxYear, sessionId))
               } else {
                 Redirect(controllers.gainsBase.routes.PolicyNameBaseController.show(taxYear, sessionId, None))
-              }
+              })
             }
         }
     })

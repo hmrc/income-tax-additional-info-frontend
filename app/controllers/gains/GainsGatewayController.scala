@@ -47,7 +47,7 @@ class GainsGatewayController @Inject()(authorisedAction: AuthorisedAction,
   def show(taxYear: Int): Action[AnyContent] = authorisedAction.async { implicit request =>
 
     gainsSessionService.getSessionData(taxYear).flatMap {
-      case Left(_) => Future.successful(errorHandler.internalServerError())
+      case Left(_) => errorHandler.internalServerError()
       case Right(cya) =>
         cya match {
           case Some(cya) =>
@@ -62,7 +62,7 @@ class GainsGatewayController @Inject()(authorisedAction: AuthorisedAction,
             }
           case None =>
             gainsSessionService.createSessionData(AllGainsSessionModel(Seq(PolicyCyaModel(sessionId))), taxYear)(errorHandler.internalServerError()) {
-              Ok(view(taxYear, form(request.user.isAgent)))
+              Future.successful(Ok(view(taxYear, form(request.user.isAgent))))
             }
         }
 
@@ -76,11 +76,11 @@ class GainsGatewayController @Inject()(authorisedAction: AuthorisedAction,
       yesNoValue =>
         gainsSessionService.getSessionData(taxYear).flatMap {
           case Left(_) =>
-            Future.successful(errorHandler.internalServerError())
+            errorHandler.internalServerError()
           case Right(sessionData) =>
             val cya = sessionData.flatMap(_.gains).getOrElse(AllGainsSessionModel(Seq.empty)).copy(gateway = Some(yesNoValue))
             gainsSessionService.updateSessionData(cya, taxYear)(errorHandler.internalServerError()) {
-              handleRedirect(yesNoValue, taxYear, sessionId)
+              Future.successful(handleRedirect(yesNoValue, taxYear, sessionId))
             }
         }
     })

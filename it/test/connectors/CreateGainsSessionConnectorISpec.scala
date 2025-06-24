@@ -23,6 +23,7 @@ import connectors.httpParsers.CreateGainsSessionHttpParser.CreateGainsSessionRes
 import connectors.httpParsers.UpdateGainsSessionHttpParser.UpdateGainsSessionResponse
 import connectors.session.{CreateGainsSessionConnector, UpdateGainsSessionConnector}
 import models.AllGainsSessionModel
+import play.api.Configuration
 import play.api.http.Status._
 import play.api.libs.json.Json
 import play.api.test.Helpers.NO_CONTENT
@@ -41,7 +42,7 @@ class CreateGainsSessionConnectorISpec extends IntegrationTest {
 
   implicit val hc: HeaderCarrier = HeaderCarrier()
 
-  def appConfig(host: String): AppConfig = new AppConfig(app.injector.instanceOf[ServicesConfig]) {
+  def appConfig(host: String): AppConfig = new AppConfig(app.injector.instanceOf[ServicesConfig], app.injector.instanceOf[Configuration]) {
     override lazy val additionalInformationServiceBaseUrl: String = s"http://$host:$wiremockPort/income-tax-additional-information"
   }
 

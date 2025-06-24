@@ -47,18 +47,18 @@ class PolicyNameController @Inject()(authorisedAction: AuthorisedAction,
 
   def show(taxYear: Int, sessionId: String): Action[AnyContent] = authorisedAction.async { implicit request =>
     gainsSessionService.getSessionData(taxYear).flatMap {
-      case Left(_) => Future.successful(errorHandler.internalServerError())
+      case Left(_) => errorHandler.internalServerError()
       case Right(cya) =>
-        Future.successful(cya.fold(Redirect(appConfig.incomeTaxSubmissionOverviewUrl(taxYear))) {
+        cya.fold(Future.successful(Redirect(appConfig.incomeTaxSubmissionOverviewUrl(taxYear)))) {
           cyaData =>
-            cyaData.gains.fold(Ok(view(taxYear, form(request.user.isAgent), sessionId))) {
+            cyaData.gains.fold(Future.successful(Ok(view(taxYear, form(request.user.isAgent), sessionId)))) {
               data =>
                 data.allGains.find(_.sessionId == sessionId) match {
                   case None => errorHandler.internalServerError()
-                  case Some(value) => Ok(view(taxYear, form(request.user.isAgent).fill(value.policyNumber.getOrElse("")), sessionId))
+                  case Some(value) => Future.successful(Ok(view(taxYear, form(request.user.isAgent).fill(value.policyNumber.getOrElse("")), sessionId)))
                 }
             }
-        })
+        }
     }
   }
 
@@ -68,24 +68,23 @@ class PolicyNameController @Inject()(authorisedAction: AuthorisedAction,
     }, {
       policyNumber =>
         gainsSessionService.getSessionData(taxYear).flatMap {
-          case Left(_) => Future.successful(errorHandler.internalServerError())
+          case Left(_) => errorHandler.internalServerError()
           case Right(sessionData) =>
             val cya = sessionData.flatMap(_.gains).getOrElse(AllGainsSessionModel(Seq.empty))
             val currentSession = cya.allGains.find(_.sessionId == sessionId)
             currentSession match {
-              case None => Future.successful(errorHandler.internalServerError())
-              case Some(session) => {
+              case None => errorHandler.internalServerError()
+              case Some(session) =>
                 val index = cya.allGains.indexOf(session)
                 val newData = cya.allGains(index).copy(policyNumber = Some(policyNumber))
                 val updated = cya.allGains.updated(index, newData)
                 gainsSessionService.updateSessionData(AllGainsSessionModel(updated, cya.gateway), taxYear)(errorHandler.internalServerError()) {
-                  if (newData.isFinished) {
+                  Future.successful(if (newData.isFinished) {
                     Redirect(controllers.gains.routes.PolicySummaryController.show(taxYear, sessionId))
                   } else {
                     Redirect(controllers.gains.routes.GainsAmountController.show(taxYear, sessionId))
-                  }
+                  })
                 }
-              }
             }
         }
     })

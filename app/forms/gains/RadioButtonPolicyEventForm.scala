@@ -53,18 +53,15 @@ object RadioButtonPolicyEventForm {
 
   def radioButtonCustomOptionForm(missingInputError: String,
                                   emptyFieldKey: String,
-                                  wrongFormatKey: String,
-                                  emptyFieldArguments: Seq[String] = Seq.empty[String]
-                                 ): Form[(String,String)] = {
+                                  wrongFormatKey: String): Form[(String,String)] = {
     Form(
       tuple(
         selectedOption -> of(formatter(emptyFieldKey)),
         input -> of(stringFormatter(
           requiredKey = missingInputError,
           wrongFormatKey= wrongFormatKey,
-          missingInputError = missingInputError,
-          args = emptyFieldArguments)
-        )
+          missingInputError = missingInputError
+        ))
       )
     )
   }
@@ -72,8 +69,7 @@ object RadioButtonPolicyEventForm {
   private def stringFormatter(
                                requiredKey: String,
                                wrongFormatKey: String,
-                               missingInputError: String,
-                               args: Seq[String] = Seq.empty[String]): Formatter[String] = {
+                               missingInputError: String): Formatter[String] = {
     new Formatter[String] {
 
       val optionalString: FieldMapping[String] = optionString(

@@ -42,14 +42,12 @@ class GainsDeficiencyReliefController @Inject()(authorisedAction: AuthorisedActi
     s"gains.deficiency-relief-status.question.radio.error.noEntry.${if (isAgent) "agent" else "individual"}",
     s"gains.deficiency-relief-status.question.input.error.noEntry",
     s"gains.deficiency-relief-status.question.input.error.incorrectFormat",
-    s"gains.deficiency-relief-status.question.input.error.amountExceedsMax",
-    s""
-
+    s"gains.deficiency-relief-status.question.input.error.amountExceedsMax"
   )
 
   def show(taxYear: Int, sessionId: String): Action[AnyContent] = authorisedAction.async { implicit request =>
     gainsSessionService.getSessionData(taxYear).flatMap {
-      case Left(_) => Future.successful(errorHandler.internalServerError())
+      case Left(_) => errorHandler.internalServerError()
       case Right(cya) =>
         Future.successful(cya.fold(Redirect(appConfig.incomeTaxSubmissionOverviewUrl(taxYear))) {
           cyaData =>
@@ -75,14 +73,14 @@ class GainsDeficiencyReliefController @Inject()(authorisedAction: AuthorisedActi
     }, {
       value =>
         gainsSessionService.getSessionData(taxYear).flatMap {
-          case Left(_) => Future.successful(errorHandler.internalServerError())
+          case Left(_) => errorHandler.internalServerError()
           case Right(sessionData) =>
             val cya = sessionData.flatMap(_.gains).getOrElse(AllGainsSessionModel(Seq.empty))
             val index = cya.allGains.indexOf(cya.allGains.filter(_.sessionId.contains(sessionId)).head)
             val newData = cya.allGains(index).copy(entitledToDeficiencyRelief = Some(value._1), deficiencyReliefAmount = value._2)
             val updated = cya.allGains.updated(index, newData)
             gainsSessionService.updateSessionData(AllGainsSessionModel(updated, cya.gateway), taxYear)(errorHandler.internalServerError()) {
-              Redirect(controllers.gains.routes.PolicySummaryController.show(taxYear, sessionId))
+              Future.successful(Redirect(controllers.gains.routes.PolicySummaryController.show(taxYear, sessionId)))
             }
         }
     })

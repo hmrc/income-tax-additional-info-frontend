@@ -18,6 +18,7 @@ package support.stubs
 
 import config.AppConfig
 import org.scalatestplus.mockito.MockitoSugar.mock
+import play.api.Configuration
 import play.api.mvc.RequestHeader
 import support.utils.TaxYearUtils.taxYearEOY
 import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
@@ -25,7 +26,7 @@ import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 //TODO Fix Me : convert AppConfig to Trait and define implementation
 class AppConfigStub {
 
-  def config(): AppConfig = new AppConfig(mock[ServicesConfig]) {
+  def config(): AppConfig = new AppConfig(mock[ServicesConfig], mock[Configuration]) {
     override lazy val timeoutDialogCountdown: Int = 120
     override lazy val timeoutDialogTimeout: Int = 900
     override lazy val defaultTaxYear: Int = taxYearEOY
@@ -61,7 +62,7 @@ class AppConfigStub {
     override lazy val emaSupportingAgentsEnabled = false
   }
 
-  def noEncryptionConfig(): AppConfig = new AppConfig(mock[ServicesConfig]) {
+  def noEncryptionConfig(): AppConfig = new AppConfig(mock[ServicesConfig], mock[Configuration]) {
     override lazy val timeoutDialogCountdown: Int = 120
     override lazy val timeoutDialogTimeout: Int = 900
     override lazy val defaultTaxYear: Int = taxYearEOY
@@ -88,7 +89,7 @@ class AppConfigStub {
   }
 
   //new function to allow values that we need in test, default values in this are kept same as config, to not break other test
-  def featureSwitchConfigs(flags: (String, Boolean)*): AppConfig = new AppConfig(mock[ServicesConfig]) {
+  def featureSwitchConfigs(flags: (String, Boolean)*): AppConfig = new AppConfig(mock[ServicesConfig], mock[Configuration]) {
     def deriveValue(featureName:String,defaultValue:Boolean) = flags.toMap.getOrElse(featureName,false)
     override lazy val timeoutDialogCountdown: Int = 120
     override lazy val timeoutDialogTimeout: Int = 900

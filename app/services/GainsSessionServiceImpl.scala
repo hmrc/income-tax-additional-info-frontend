@@ -39,7 +39,7 @@ class GainsSessionServiceImpl @Inject()(
     getGainsDataConnector.getUserData(taxYear)(request.user, hc.withExtraHeaders("mtditid" -> request.user.mtditid))
   }
 
-  def createSessionData[A](cyaModel: AllGainsSessionModel, taxYear: Int)(onFail: A)(onSuccess: A)
+  def createSessionData[A](cyaModel: AllGainsSessionModel, taxYear: Int)(onFail: => Future[A])(onSuccess: => Future[A])
                           (implicit request: AuthorisationRequest[_], hc: HeaderCarrier): Future[A] = {
     val userData = GainsUserDataModel(
       request.user.sessionId,
@@ -50,7 +50,7 @@ class GainsSessionServiceImpl @Inject()(
       Instant.now
     )
 
-    gainsUserDataRepository.create(userData).map {
+    gainsUserDataRepository.create(userData).flatMap {
       case Right(_) =>
         onSuccess
       case Left(_) =>
@@ -71,7 +71,7 @@ class GainsSessionServiceImpl @Inject()(
     }
   }
 
-  def updateSessionData[A](cyaModel: AllGainsSessionModel, taxYear: Int)(onFail: => A)(onSuccess: A)
+  def updateSessionData[A](cyaModel: AllGainsSessionModel, taxYear: Int)(onFail: => Future[A])(onSuccess: => Future[A])
                           (implicit request: AuthorisationRequest[_], hc: HeaderCarrier): Future[A] = {
 
     val userData = GainsUserDataModel(
@@ -82,7 +82,7 @@ class GainsSessionServiceImpl @Inject()(
       Some(cyaModel),
       Instant.now)
 
-    gainsUserDataRepository.update(userData).map {
+    gainsUserDataRepository.update(userData).flatMap {
       case Right(_) =>
         onSuccess
       case Left(_) =>
@@ -92,10 +92,10 @@ class GainsSessionServiceImpl @Inject()(
 
   }
 
-  def deleteSessionData[A](taxYear: Int)(onFail: A)(onSuccess: A)
+  def deleteSessionData[A](taxYear: Int)(onFail: => Future[A])(onSuccess: => Future[A])
                           (implicit request: AuthorisationRequest[_], hc: HeaderCarrier): Future[A] = {
 
-    gainsUserDataRepository.clear(taxYear)(request.user).map {
+    gainsUserDataRepository.clear(taxYear)(request.user).flatMap {
       case true =>
         onSuccess
       case _ =>
@@ -105,7 +105,7 @@ class GainsSessionServiceImpl @Inject()(
 
   }
 
-  def getAndHandle[R](taxYear: Int)(onFail: R)(block: (Option[AllGainsSessionModel], Option[GainsPriorDataModel]) => R)
+  def getAndHandle[R](taxYear: Int)(onFail: => Future[R])(block: (Option[AllGainsSessionModel], Option[GainsPriorDataModel]) => Future[R])
                      (implicit request: AuthorisationRequest[_], hc: HeaderCarrier): Future[R] = {
     for {
       optionalCya <- getSessionData(taxYear)
@@ -123,5 +123,5 @@ class GainsSessionServiceImpl @Inject()(
           onFail
       }
     }
-  }
+  }.flatten
 }

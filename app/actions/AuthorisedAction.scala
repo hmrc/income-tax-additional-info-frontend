@@ -62,9 +62,9 @@ class AuthorisedActionImpl @Inject()(authService: AuthorisationService,
         case Some(AffinityGroup.Agent) => agentAuthentication(block, sessionId)(request, headerCarrier)
         case Some(affinityGroup) => individualAuthentication(sessionId, affinityGroup)(block)(request, headerCarrier)
         case _ => Future.successful(Redirect(UnauthorisedUserErrorController.show()))
-      } recover {
-        case _: NoActiveSession => Redirect(appConfig.signInUrl)
-        case _: AuthorisationException => Redirect(UnauthorisedUserErrorController.show())
+      } recoverWith {
+        case _: NoActiveSession => Future.successful(Redirect(appConfig.signInUrl))
+        case _: AuthorisationException => Future.successful(Redirect(UnauthorisedUserErrorController.show()))
         case NonFatal(e) => logger.error(s"$agentLogPrefix - Unexpected exception of type '${e.getClass.getSimpleName}' was caught.")
           errorHandler.internalServerError()(request)
       }
@@ -154,11 +154,11 @@ class AuthorisedActionImpl @Inject()(authService: AuthorisationService,
             Future.successful(Redirect(AgentAuthErrorController.show()))
           case e =>
             logger.error(s"$agentLogPrefix - Unexpected exception of type '${e.getClass.getSimpleName}' was caught.")
-            Future(errorHandler.internalServerError()(request))
+            errorHandler.internalServerError()(request)
         }
     case e =>
       logger.error(s"$agentLogPrefix - Unexpected exception of type '${e.getClass.getSimpleName}' was caught.")
-      Future(errorHandler.internalServerError()(request))
+      errorHandler.internalServerError()(request)
   }
 
   private[actions] def enrolmentGetIdentifierValue(checkedKey: String,

@@ -21,8 +21,8 @@ import org.scalatest.OptionValues
 import play.api.http.HeaderNames
 import play.api.http.Status.{BAD_REQUEST, NO_CONTENT, OK, SEE_OTHER}
 import play.api.libs.ws.WSResponse
-import play.api.test.{DefaultAwaitTimeout, FakeRequest}
 import play.api.test.Helpers._
+import play.api.test.{DefaultAwaitTimeout, FakeRequest}
 import support.IntegrationTest
 import uk.gov.hmrc.http.HttpVerbs.POST
 

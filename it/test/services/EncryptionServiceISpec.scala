@@ -18,11 +18,10 @@ package services
 
 import models.AllGainsSessionModel
 import models.mongo.{EncryptedGainsUserDataModel, GainsUserDataModel}
-import services.EncryptionService
-
-import java.time.Instant
 import support.IntegrationTest
 import utils.AesGcmAdCrypto
+
+import java.time.Instant
 
 class EncryptionServiceISpec extends IntegrationTest {
 

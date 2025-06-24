@@ -48,8 +48,7 @@ object RadioButtonAmountForm {
                                emptyFieldKey: String,
                                wrongFormatKey: String,
                                exceedsMaxAmountKey: String,
-                               minAmountKey: String,
-                               emptyFieldArguments: Seq[String] = Seq.empty[String]
+                               minAmountKey: Option[String] = None
                               ): Form[(Boolean, Option[BigDecimal])] = {
     Form(
       tuple(
@@ -58,9 +57,8 @@ object RadioButtonAmountForm {
           requiredKey = emptyFieldKey,
           wrongFormatKey = wrongFormatKey,
           maxAmountKey = exceedsMaxAmountKey,
-          minAmountKey = minAmountKey,
-          args = emptyFieldArguments)
-        )
+          minAmountKey = minAmountKey
+        ))
       )
     )
   }
@@ -69,7 +67,7 @@ object RadioButtonAmountForm {
                                requiredKey: String,
                                wrongFormatKey: String,
                                maxAmountKey: String,
-                               minAmountKey: String,
+                               minAmountKey: Option[String],
                                args: Seq[String] = Seq.empty[String]): Formatter[Option[BigDecimal]] = {
     new Formatter[Option[BigDecimal]] {
 

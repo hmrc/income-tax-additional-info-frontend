@@ -87,9 +87,9 @@ trait IntegrationTest
     new HttpHeader("mtditid", mtditid)
   )
 
-  protected def config: Map[String, String] = Map(
-    "defaultTaxYear" -> taxYear.toString,
-    "auditing.enabled" -> "false",
+  protected def config: Map[String, Any] = Map(
+    "defaultTaxYear" -> taxYear,
+    "auditing.enabled" -> false,
     "play.filters.csrf.header.bypassHeaders.Csrf-Token" -> "nocheck",
     "microservice.services.income-tax-submission-frontend.url" -> "http://localhost:11111",
     "microservice.services.auth.host" -> "localhost",
@@ -98,9 +98,9 @@ trait IntegrationTest
     "microservice.services.income-tax-submission.url" -> "http://localhost:11111",
     "microservice.services.view-and-change.url" -> "http://localhost:11111",
     "microservice.services.sign-in.url" -> s"/auth-login-stub/gg-sign-in",
-    "taxYearErrorFeatureSwitch" -> "false",
-    "useEncryption" -> "true",
-    "feature-switch.sessionCookieService" -> "false"
+    "taxYearErrorFeatureSwitch" -> false,
+    "useEncryption" -> true,
+    "feature-switch.sessionCookieService" -> false
   )
 
 
@@ -192,7 +192,7 @@ trait IntegrationTest
   def populateSessionData(): Boolean =
     await(gainsSessionService.createSessionData(AllGainsSessionModel(Seq(PolicyCyaModel(sessionId, Some("Life Insurance"), Some("RefNo13254687"), Some(123.11),
       Some("Full or part surrender"), Some(true), Some(99), Some(10), Some(true), None, Some(true), Some(100))),
-      gateway = Some(true)), taxYear)(false)(true)(anAuthorisationRequest, headerCarrier)
+      gateway = Some(true)), taxYear)(Future.successful(false))(Future.successful(true))(anAuthorisationRequest, headerCarrier)
     )
 
   def populateSessionData(taxYear: Int = taxYear, status: Int = NO_CONTENT, responseBody: String = ""): StubMapping =
@@ -200,19 +200,19 @@ trait IntegrationTest
 
   def populateSessionDataWithRandomSession(): Boolean =
     await(gainsSessionService.createSessionData(AllGainsSessionModel(Seq(PolicyCyaModel(UUID.randomUUID().toString, Some(""))), gateway = Some(true)), taxYear)
-    (false)(true)(anAuthorisationRequest, headerCarrier))
+    (Future.successful(false))(Future.successful(true))(anAuthorisationRequest, headerCarrier))
 
   def populateOnlyGatewayData(): Boolean =
-    await(gainsSessionService.createSessionData(AllGainsSessionModel(Seq[PolicyCyaModel]().empty, gateway = Some(true)), taxYear)(false)(true)(anAuthorisationRequest, headerCarrier))
+    await(gainsSessionService.createSessionData(AllGainsSessionModel(Seq[PolicyCyaModel]().empty, gateway = Some(true)), taxYear)(Future.successful(false))(Future.successful(true))(anAuthorisationRequest, headerCarrier))
 
   def populateSessionDataWithEmptyGateway(): Boolean =
-    await(gainsSessionService.createSessionData(AllGainsSessionModel(Seq(), gateway = None), taxYear)(false)(true)(anAuthorisationRequest, headerCarrier))
+    await(gainsSessionService.createSessionData(AllGainsSessionModel(Seq(), gateway = None), taxYear)(Future.successful(false))(Future.successful(true))(anAuthorisationRequest, headerCarrier))
 
   def populateSessionDataWithFalseGateway(): Boolean =
-    await(gainsSessionService.createSessionData(AllGainsSessionModel(Seq(), gateway = Some(false)), taxYear)(false)(true)(anAuthorisationRequest, headerCarrier))
+    await(gainsSessionService.createSessionData(AllGainsSessionModel(Seq(), gateway = Some(false)), taxYear)(Future.successful(false))(Future.successful(true))(anAuthorisationRequest, headerCarrier))
 
   def populateWithSessionDataModel(cya: Seq[PolicyCyaModel]): Boolean =
-    await(gainsSessionService.createSessionData(AllGainsSessionModel(cya, gateway = Some(true)), taxYear)(false)(true)(anAuthorisationRequest, headerCarrier))
+    await(gainsSessionService.createSessionData(AllGainsSessionModel(cya, gateway = Some(true)), taxYear)(Future.successful(false))(Future.successful(true))(anAuthorisationRequest, headerCarrier))
 
   def clearSession(): Boolean = await(gainsUserDataRepository.clear(taxYear))
 

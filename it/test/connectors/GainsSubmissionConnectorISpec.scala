@@ -18,10 +18,10 @@ package connectors
 
 import com.github.tomakehurst.wiremock.http.HttpHeader
 import config.AppConfig
-import connectors.GainsSubmissionConnector
 import connectors.errors.{ApiError, SingleErrorBody}
 import connectors.httpParsers.GainsSubmissionHttpParser._
 import models.gains._
+import play.api.Configuration
 import play.api.http.Status._
 import play.api.libs.json.Json
 import play.api.test.Helpers.NO_CONTENT
@@ -38,7 +38,7 @@ class GainsSubmissionConnectorISpec extends IntegrationTest {
 
   lazy val httpClient: HttpClient = app.injector.instanceOf[HttpClient]
 
-  def appConfig(host: String): AppConfig = new AppConfig(app.injector.instanceOf[ServicesConfig]) {
+  def appConfig(host: String): AppConfig = new AppConfig(app.injector.instanceOf[ServicesConfig], app.injector.instanceOf[Configuration]) {
     override lazy val additionalInformationServiceBaseUrl: String = s"http://$host:$wiremockPort/income-tax-additional-information"
   }
 

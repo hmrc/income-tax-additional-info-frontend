@@ -18,23 +18,19 @@ package support.mocks
 
 import config.ErrorHandler
 import models.requests.AuthorisationRequest
+import org.scalamock.handlers.CallHandler1
 import org.scalamock.scalatest.MockFactory
 import org.scalatest.TestSuite
-import play.api.mvc.{Request, Result}
+import play.api.mvc.Result
+
+import scala.concurrent.Future
 
 trait MockErrorHandler extends MockFactory {_: TestSuite =>
 
   protected val mockErrorHandler: ErrorHandler = mock[ErrorHandler]
 
-  def mockHandleError(status: Int, result: Result): Unit = {
-    (mockErrorHandler.handleError(_: Int)(_: Request[_]))
-      .expects(status, *)
-      .returns(result)
-  }
-
-  def mockInternalServerError(result: Result): Unit = {
+  def mockInternalServerError(result: Result): CallHandler1[AuthorisationRequest[_], Future[Result]] =
     (mockErrorHandler.internalServerError()(_: AuthorisationRequest[_]))
       .expects(*)
-      .returns(result)
-  }
+      .returns(Future.successful(result))
 }

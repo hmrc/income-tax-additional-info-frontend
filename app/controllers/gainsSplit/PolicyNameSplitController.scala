@@ -69,11 +69,11 @@ class PolicyNameSplitController @Inject()(authorisedAction: AuthorisedAction,
   private def loadView(taxYear: Int, sessionId: String, gainsModel: Option[AllGainsSessionModel])
                       (implicit request: AuthorisationRequest[AnyContent]): Future[Result] = {
     gainsSessionService.getSessionData(taxYear).flatMap {
-      case Left(_) => Future.successful(errorHandler.internalServerError())
+      case Left(_) => errorHandler.internalServerError()
       case Right(cya) =>
         cya.fold(createSession(taxYear, sessionId, gainsModel.getOrElse(AllGainsSessionModel(Seq.empty, None)))) {
           cyaData =>
-            cyaData.gains.fold(Future.successful(errorHandler.internalServerError())) {
+            cyaData.gains.fold(errorHandler.internalServerError()) {
               data =>
                 data.allGains.find(_.sessionId == sessionId) match {
                   case None =>
@@ -86,7 +86,7 @@ class PolicyNameSplitController @Inject()(authorisedAction: AuthorisedAction,
                       )),
                       taxYear
                     )(errorHandler.internalServerError())(
-                      Ok(view(taxYear, form(request.user.isAgent), sessionId))
+                      Future.successful(Ok(view(taxYear, form(request.user.isAgent), sessionId)))
                     )
                   case Some(value) => Future.successful(Ok(view(taxYear, form(request.user.isAgent).fill(value.policyNumber.getOrElse("")), sessionId)))
                 }
@@ -98,7 +98,7 @@ class PolicyNameSplitController @Inject()(authorisedAction: AuthorisedAction,
   private def createSession(taxYear: Int, sessionId: String, gainsModel: AllGainsSessionModel)
                            (implicit request: AuthorisationRequest[AnyContent]): Future[Result] = {
     gainsSessionService.createSessionData(gainsModel, taxYear)(errorHandler.internalServerError()) {
-      Ok(view(taxYear, form(request.user.isAgent), sessionId))
+      Future.successful(Ok(view(taxYear, form(request.user.isAgent), sessionId)))
     }
   }
 
@@ -108,22 +108,22 @@ class PolicyNameSplitController @Inject()(authorisedAction: AuthorisedAction,
     }, {
       policyNumber =>
         gainsSessionService.getSessionData(taxYear).flatMap {
-          case Left(_) => Future.successful(errorHandler.internalServerError())
+          case Left(_) => errorHandler.internalServerError()
           case Right(sessionData) =>
             val cya = sessionData.flatMap(_.gains).getOrElse(AllGainsSessionModel(Seq.empty))
             val currentSession = cya.allGains.find(_.sessionId == sessionId)
             currentSession match {
-              case None => Future.successful(errorHandler.internalServerError())
+              case None => errorHandler.internalServerError()
               case Some(session) =>
                 val index = cya.allGains.indexOf(session)
                 val newData = cya.allGains(index).copy(policyNumber = Some(policyNumber))
                 val updated = cya.allGains.updated(index, newData)
                 gainsSessionService.updateSessionData(AllGainsSessionModel(updated, cya.gateway), taxYear)(errorHandler.internalServerError()) {
-                  if (newData.isFinished) {
+                  Future.successful(if (newData.isFinished) {
                     Redirect(controllers.gains.routes.PolicySummaryController.show(taxYear, sessionId))
                   } else {
                     Redirect(controllers.gains.routes.GainsAmountController.show(taxYear, sessionId))
-                  }
+                  })
                 }
             }
         }

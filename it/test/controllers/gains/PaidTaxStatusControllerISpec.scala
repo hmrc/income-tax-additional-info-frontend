@@ -16,7 +16,7 @@
 
 package controllers.gains
 
-import forms.{AmountForm, RadioButtonAmountForm}
+import forms.RadioButtonAmountForm
 import models.AllGainsSessionModel
 import models.gains.PolicyCyaModel
 import models.mongo.DataNotFound
@@ -31,7 +31,7 @@ import play.api.inject.bind
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.libs.json.Json
 import play.api.test.FakeRequest
-import play.api.test.Helpers.{GET, contentAsString, defaultAwaitTimeout, route, running, writeableOf_AnyContentAsEmpty, writeableOf_AnyContentAsFormUrlEncoded}
+import play.api.test.Helpers.{GET, contentAsString, route, running, writeableOf_AnyContentAsEmpty, writeableOf_AnyContentAsFormUrlEncoded}
 import play.api.{Environment, Mode}
 import repositories.GainsUserDataRepository
 import support.IntegrationTest

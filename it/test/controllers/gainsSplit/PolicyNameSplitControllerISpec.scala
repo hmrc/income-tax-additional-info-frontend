@@ -32,8 +32,8 @@ import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import play.api.{Environment, Mode}
 import services.GainsSessionServiceProvider
-import support.helpers.ViewHelper
 import support.IntegrationTest
+import support.helpers.ViewHelper
 
 import scala.concurrent.Future
 
