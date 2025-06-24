@@ -53,7 +53,7 @@ class AppConfig @Inject()(servicesConfig: ServicesConfig, configuration: Configu
   private lazy val vcBaseUrl: String = servicesConfig.getString(viewAndChangeUrlKey)
   private lazy val signInBaseUrl: String = servicesConfig.getString("microservice.services.sign-in.url")
   private lazy val signInContinueBaseUrl: String = servicesConfig.getString(signInContinueUrlKey)
-  private lazy val signInContinueUrlRedirect: String = RedirectUrl(signInContinueBaseUrl).get(redirectPolicy).url
+  private lazy val signInContinueUrlRedirect: String = RedirectUrl(signInContinueBaseUrl).get(redirectPolicy).encodedUrl
   private lazy val signInOrigin = servicesConfig.getString("appName")
 
   lazy val signOutUrl: String = s"$basGatewayUrl/bas-gateway/sign-out-without-state"
@@ -100,7 +100,7 @@ class AppConfig @Inject()(servicesConfig: ServicesConfig, configuration: Configu
   def viewAndChangeAgentsUrl: String = s"$vcBaseUrl/report-quarterly/income-and-expenses/view/agents"
 
   def betaFeedbackUrl(request: RequestHeader, isAgent: Boolean): String = {
-    val requestUri = RedirectUrl(applicationUrl + request.uri).get(redirectPolicy).url
+    val requestUri = RedirectUrl(applicationUrl + request.uri).get(redirectPolicy).encodedUrl
     val contactFormService = contactFormServiceIdentifier(isAgent)
     s"$contactFrontEndUrl/contact/beta-feedback?service=$contactFormService&backUrl=$requestUri"
   }
