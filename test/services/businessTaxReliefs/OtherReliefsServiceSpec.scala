@@ -62,13 +62,13 @@ class OtherReliefsServiceSpec extends AnyFreeSpec with Matchers with MockitoSuga
           emptyUserAnswers
             .set(QualifyingLoanReliefPage, otherReliefs.qualifyingLoanInterestPayments.head)
 
-        when(connector.submit(any(), any(), any())(any()))
+        when(connector.submit(any(), any(), any(), any())(any()))
           .thenReturn(Future.successful(Done))
 
         val result = service.submit(taxYear, userAnswers)
 
         result.futureValue mustEqual Done
-        verify(connector, times(1)).submit(eqTo(emptyUserAnswers.nino), eqTo(taxYear), eqTo(otherReliefs))(any())
+        verify(connector, times(1)).submit(eqTo(emptyUserAnswers.nino), eqTo(emptyUserAnswers.mtdItId), eqTo(taxYear), eqTo(otherReliefs))(any())
       }
 
       "when postCessationTradeReliefAndCertainOtherLosses is defined" in new Setup {
@@ -78,13 +78,13 @@ class OtherReliefsServiceSpec extends AnyFreeSpec with Matchers with MockitoSuga
           emptyUserAnswers
             .set(PostCessationTradeReliefPage, otherReliefs.postCessationTradeReliefAndCertainOtherLosses.head)
 
-        when(connector.submit(any(), any(), any())(any()))
+        when(connector.submit(any(), any(), any(), any())(any()))
           .thenReturn(Future.successful(Done))
 
         val result = service.submit(taxYear, userAnswers)
 
         result.futureValue mustEqual Done
-        verify(connector, times(1)).submit(eqTo(emptyUserAnswers.nino), eqTo(taxYear), eqTo(otherReliefs))(any())
+        verify(connector, times(1)).submit(eqTo(emptyUserAnswers.nino), eqTo(emptyUserAnswers.mtdItId), eqTo(taxYear), eqTo(otherReliefs))(any())
       }
 
       "when nonDeductibleReliefs is defined" in new Setup {
@@ -94,13 +94,13 @@ class OtherReliefsServiceSpec extends AnyFreeSpec with Matchers with MockitoSuga
           emptyUserAnswers
             .set(NonDeductibleReliefsPage, otherReliefs.nonDeductableLoanInterest.head)
 
-        when(connector.submit(any(), any(), any())(any()))
+        when(connector.submit(any(), any(), any(), any())(any()))
           .thenReturn(Future.successful(Done))
 
         val result = service.submit(taxYear, userAnswers)
 
         result.futureValue mustEqual Done
-        verify(connector, times(1)).submit(eqTo(emptyUserAnswers.nino), eqTo(taxYear), eqTo(otherReliefs))(any())
+        verify(connector, times(1)).submit(eqTo(emptyUserAnswers.nino), eqTo(emptyUserAnswers.mtdItId), eqTo(taxYear), eqTo(otherReliefs))(any())
       }
 
 
@@ -113,13 +113,13 @@ class OtherReliefsServiceSpec extends AnyFreeSpec with Matchers with MockitoSuga
             .set(PostCessationTradeReliefPage, otherReliefs.postCessationTradeReliefAndCertainOtherLosses.head)
             .set(NonDeductibleReliefsPage, otherReliefs.nonDeductableLoanInterest.head)
 
-        when(connector.submit(any(), any(), any())(any()))
+        when(connector.submit(any(), any(), any(), any())(any()))
           .thenReturn(Future.successful(Done))
 
         val result = service.submit(taxYear, userAnswers)
 
         result.futureValue mustEqual Done
-        verify(connector, times(1)).submit(eqTo(emptyUserAnswers.nino), eqTo(taxYear), eqTo(otherReliefs))(any())
+        verify(connector, times(1)).submit(eqTo(emptyUserAnswers.nino), eqTo(emptyUserAnswers.mtdItId), eqTo(taxYear), eqTo(otherReliefs))(any())
       }
     }
 
@@ -131,13 +131,13 @@ class OtherReliefsServiceSpec extends AnyFreeSpec with Matchers with MockitoSuga
           .set(NonDeductibleReliefsPage, otherReliefs.nonDeductableLoanInterest.head)
 
       val exception = OtherReliefsSubmissionException(500)
-      when(connector.submit(any(), any(), any())(any()))
+      when(connector.submit(any(), any(), any(), any())(any()))
         .thenReturn(Future.failed(exception))
 
       val result = service.submit(taxYear, userAnswers).failed
 
       result.futureValue mustEqual exception
-      verify(connector, times(1)).submit(eqTo(emptyUserAnswers.nino), eqTo(taxYear), eqTo(otherReliefs))(any())
+      verify(connector, times(1)).submit(eqTo(emptyUserAnswers.nino), eqTo(emptyUserAnswers.mtdItId), eqTo(taxYear), eqTo(otherReliefs))(any())
 
     }
   }

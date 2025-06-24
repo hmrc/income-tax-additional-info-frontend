@@ -31,7 +31,7 @@ class OtherReliefsService @Inject()(connector: OtherReliefsConnector) {
   def submit(taxYear: Int, userAnswersModel: UserAnswersModel)(implicit hc: HeaderCarrier): Future[Done] = {
     OtherReliefs(userAnswersModel) match {
       case None => Future.successful(Done)
-      case Some(otherReliefs) => connector.submit(userAnswersModel.nino, taxYear, otherReliefs)
+      case Some(otherReliefs) => connector.submit(userAnswersModel.nino, userAnswersModel.mtdItId, taxYear, otherReliefs)
     }
   }
 }
