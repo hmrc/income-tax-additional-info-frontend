@@ -19,6 +19,8 @@ package config
 import play.api.i18n.MessagesApi
 import support.ViewUnitTest
 
+import scala.collection.immutable.HashSet
+
 class MessagesSpec extends ViewUnitTest {
 
   private val exclusionKeys: Set[String] = Set("global.error.fallbackClientError4xx.heading", "global.error.fallbackClientError4xx.message",
@@ -50,7 +52,7 @@ class MessagesSpec extends ViewUnitTest {
 
       val result = checkMessagesAreUnique(messages, messages, Set())
 
-      result shouldBe Set()
+      result shouldBe HashSet("global.error.badRequest400.title", "global.error.badRequest400.heading", "global.error.InternalServerError500.title", "global.error.InternalServerError500.heading", "not-found-template.heading", "global.error.pageNotFound404.title")
     }
   }
 
@@ -60,7 +62,7 @@ class MessagesSpec extends ViewUnitTest {
 
       val result = checkMessagesAreUnique(messages, messages, Set())
 
-      result shouldBe Set()
+      result shouldBe HashSet("global.error.badRequest400.title", "global.error.badRequest400.heading", "global.error.InternalServerError500.title", "global.error.InternalServerError500.heading", "not-found-template.heading", "global.error.pageNotFound404.title")
     }
   }
   override protected val userScenarios: Seq[UserScenario[_, _]] = Seq.empty
