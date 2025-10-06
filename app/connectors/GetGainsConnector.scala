@@ -19,19 +19,20 @@ package connectors
 import config.AppConfig
 import connectors.httpParsers.GetGainsHttpParser.{GetGainsDataHttpReads, GetGainsResponse}
 import models.User
-
-import javax.inject.Inject
-import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
+import uk.gov.hmrc.http.client.HttpClientV2
+import uk.gov.hmrc.http.{HeaderCarrier, StringContextOps}
 import utils.TaxYearHelper
 
+import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
-class GetGainsConnector @Inject()(val http: HttpClient,
+class GetGainsConnector @Inject()(val http: HttpClientV2,
                                   val config: AppConfig)(implicit ec: ExecutionContext) extends TaxYearHelper {
 
   def getUserData(taxYear: Int)(implicit user: User, hc: HeaderCarrier): Future[GetGainsResponse] = {
     val getGainsDataUrl: String = config.additionalInformationServiceBaseUrl + s"/income-tax/insurance-policies/income/${user.nino}/$taxYear"
 
-    http.GET[GetGainsResponse](getGainsDataUrl)
+    http.get(url"$getGainsDataUrl")
+      .execute[GetGainsResponse]
   }
 }

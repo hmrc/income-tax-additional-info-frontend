@@ -20,18 +20,22 @@ import config.AppConfig
 import connectors.httpParsers.CreateGainsSessionHttpParser.CreateGainsSessionResponse
 import connectors.httpParsers.GainsSubmissionHttpParser._
 import models.AllGainsSessionModel
-import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
+import play.api.libs.json.Json
+import uk.gov.hmrc.http.client.HttpClientV2
+import uk.gov.hmrc.http.{HeaderCarrier, StringContextOps}
 
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
-class CreateGainsSessionConnector @Inject()(http: HttpClient, appConfig: AppConfig)
+class CreateGainsSessionConnector @Inject()(http: HttpClientV2, appConfig: AppConfig)
                                            (implicit ec: ExecutionContext) {
 
   def createSessionData(body: AllGainsSessionModel, taxYear: Int)
                        (implicit hc: HeaderCarrier): Future[CreateGainsSessionResponse] = {
     val createGainsSessionUrl: String = appConfig.additionalInformationServiceBaseUrl + s"/income-tax/income/insurance-policies/$taxYear/session"
 
-    http.POST[AllGainsSessionModel, CreateGainsSessionResponse](createGainsSessionUrl, body)
+    http.post(url"$createGainsSessionUrl")
+      .withBody(Json.toJson(body))
+      .execute[CreateGainsSessionResponse]
   }
 }

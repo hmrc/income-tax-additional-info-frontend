@@ -23,13 +23,14 @@ import connectors.session.DeleteGainsSessionConnector
 import play.api.Configuration
 import play.api.http.Status._
 import support.IntegrationTest
-import uk.gov.hmrc.http.{HeaderCarrier, HeaderNames, HttpClient, SessionId}
+import uk.gov.hmrc.http.client.HttpClientV2
+import uk.gov.hmrc.http.{HeaderCarrier, HeaderNames, SessionId}
 import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 
 class DeleteGainsSessionConnectorISpec extends IntegrationTest {
 
   lazy val connector: DeleteGainsSessionConnector = app.injector.instanceOf[DeleteGainsSessionConnector]
-  lazy val httpClient: HttpClient = app.injector.instanceOf[HttpClient]
+  lazy val httpClient: HttpClientV2 = app.injector.instanceOf[HttpClientV2]
   implicit val hc: HeaderCarrier = HeaderCarrier()
 
   val sessionUrl: String = s"/income-tax-additional-information/income-tax/income/insurance-policies/$taxYear/session"

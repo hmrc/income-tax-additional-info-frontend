@@ -19,16 +19,18 @@ package connectors.session
 import config.AppConfig
 import connectors.httpParsers.DeleteGainsParser.DeleteGainsHttpReads
 import connectors.httpParsers.DeleteGainsSessionHttpParser.DeleteGainsSessionResponse
-import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
+import uk.gov.hmrc.http.client.HttpClientV2
+import uk.gov.hmrc.http.{HeaderCarrier, StringContextOps}
 import utils.TaxYearHelper
 
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
-class DeleteGainsSessionConnector @Inject()(http: HttpClient, val appConfig: AppConfig)(implicit ec: ExecutionContext) extends TaxYearHelper {
+class DeleteGainsSessionConnector @Inject()(http: HttpClientV2, val appConfig: AppConfig)(implicit ec: ExecutionContext) extends TaxYearHelper {
   def deleteGainsData(taxYear: Int)(implicit hc: HeaderCarrier): Future[DeleteGainsSessionResponse] = {
     val deleteGainsDataUrl: String = appConfig.additionalInformationServiceBaseUrl + s"/income-tax/income/insurance-policies/$taxYear/session"
 
-    http.DELETE[DeleteGainsSessionResponse](deleteGainsDataUrl)
+    http.delete(url"$deleteGainsDataUrl")
+      .execute[DeleteGainsSessionResponse]
   }
 }
