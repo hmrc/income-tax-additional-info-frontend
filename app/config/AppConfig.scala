@@ -19,18 +19,14 @@ package config
 import play.api.Configuration
 import play.api.i18n.Lang
 import play.api.mvc.{Call, RequestHeader}
-import uk.gov.hmrc.play.bootstrap.binders.RedirectUrl.idFunctor
-import uk.gov.hmrc.play.bootstrap.binders.{AbsoluteWithHostnameFromAllowlist, OnlyRelative, RedirectUrl}
 import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 
+import java.net.URLEncoder
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.duration.Duration
 
 @Singleton
 class AppConfig @Inject()(servicesConfig: ServicesConfig, configuration: Configuration) {
-
-  private lazy val allowedHosts: Seq[String] = configuration.get[Seq[String]]("microservice.allowedRedirects")
-  private lazy val redirectPolicy = OnlyRelative | AbsoluteWithHostnameFromAllowlist(allowedHosts:_*)
 
   private lazy val additionalInformationUrlKey = "microservice.services.income-tax-additional-information.url"
   private lazy val incomeTaxSubmissionFrontendUrlKey = "microservice.services.income-tax-submission-frontend.url"
@@ -53,7 +49,7 @@ class AppConfig @Inject()(servicesConfig: ServicesConfig, configuration: Configu
   private lazy val vcBaseUrl: String = servicesConfig.getString(viewAndChangeUrlKey)
   private lazy val signInBaseUrl: String = servicesConfig.getString("microservice.services.sign-in.url")
   private lazy val signInContinueBaseUrl: String = servicesConfig.getString(signInContinueUrlKey)
-  private lazy val signInContinueUrlRedirect: String = RedirectUrl(signInContinueBaseUrl).get(redirectPolicy).encodedUrl
+  private lazy val signInContinueUrlRedirect: String = URLEncoder.encode(signInContinueBaseUrl, "UTF-8")
   private lazy val signInOrigin = servicesConfig.getString("appName")
 
   lazy val signOutUrl: String = s"$basGatewayUrl/bas-gateway/sign-out-without-state"
@@ -100,7 +96,7 @@ class AppConfig @Inject()(servicesConfig: ServicesConfig, configuration: Configu
   def viewAndChangeAgentsUrl: String = s"$vcBaseUrl/report-quarterly/income-and-expenses/view/agents"
 
   def betaFeedbackUrl(request: RequestHeader, isAgent: Boolean): String = {
-    val requestUri = RedirectUrl(applicationUrl + request.uri).get(redirectPolicy).encodedUrl
+    val requestUri = URLEncoder.encode(applicationUrl + request.uri, "UTF-8")
     val contactFormService = contactFormServiceIdentifier(isAgent)
     s"$contactFrontEndUrl/contact/beta-feedback?service=$contactFormService&backUrl=$requestUri"
   }
