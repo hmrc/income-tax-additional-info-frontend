@@ -18,16 +18,18 @@ package connectors
 
 import config.AppConfig
 import connectors.httpParsers.DeleteGainsParser.{DeleteGainsHttpReads, DeleteGainsResponse}
-import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
+import uk.gov.hmrc.http.client.HttpClientV2
+import uk.gov.hmrc.http.{HeaderCarrier, StringContextOps}
 import utils.TaxYearHelper
 
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
-class DeleteGainsConnector @Inject()(http: HttpClient, val appConfig: AppConfig)(implicit ec: ExecutionContext) extends TaxYearHelper {
+class DeleteGainsConnector @Inject()(http: HttpClientV2, val appConfig: AppConfig)(implicit ec: ExecutionContext) extends TaxYearHelper {
   def deleteGainsData(nino: String, taxYear: Int)(implicit hc: HeaderCarrier): Future[DeleteGainsResponse] = {
     val deleteGainsDataUrl: String = appConfig.additionalInformationServiceBaseUrl + s"/income-tax/insurance-policies/income/$nino/$taxYear"
 
-    http.DELETE[DeleteGainsResponse](deleteGainsDataUrl)
+    http.delete(url"$deleteGainsDataUrl")
+      .execute[DeleteGainsResponse]
   }
 }

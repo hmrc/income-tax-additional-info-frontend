@@ -22,13 +22,14 @@ import connectors.errors.{ApiError, SingleErrorBody}
 import play.api.Configuration
 import play.api.http.Status._
 import support.IntegrationTest
-import uk.gov.hmrc.http.{HeaderCarrier, HeaderNames, HttpClient, SessionId}
+import uk.gov.hmrc.http.client.HttpClientV2
+import uk.gov.hmrc.http.{HeaderCarrier, HeaderNames, SessionId}
 import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 
 class DeleteGainsConnectorISpec extends IntegrationTest {
 
   lazy val connector: DeleteGainsConnector = app.injector.instanceOf[DeleteGainsConnector]
-  lazy val httpClient: HttpClient = app.injector.instanceOf[HttpClient]
+  lazy val httpClient: HttpClientV2 = app.injector.instanceOf[HttpClientV2]
   implicit val hc: HeaderCarrier = HeaderCarrier()
 
   val ifUrl: String = s"/income-tax-additional-information/income-tax/insurance-policies/income/$nino/$taxYear"

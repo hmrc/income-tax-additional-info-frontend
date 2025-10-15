@@ -19,17 +19,21 @@ package connectors
 import config.AppConfig
 import connectors.httpParsers.GainsSubmissionHttpParser._
 import models.gains.GainsSubmissionModel
-import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
+import play.api.libs.json.Json
+import uk.gov.hmrc.http.client.HttpClientV2
+import uk.gov.hmrc.http.{HeaderCarrier, StringContextOps}
 
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
-class GainsSubmissionConnector @Inject()(val http: HttpClient, appConfig: AppConfig)
+class GainsSubmissionConnector @Inject()(val http: HttpClientV2, appConfig: AppConfig)
                                         (implicit ec: ExecutionContext) {
 
   def submitGains(body: GainsSubmissionModel, nino: String, taxYear: Int)
                  (implicit hc: HeaderCarrier): Future[GainsSubmissionResponse] = {
     val gainsSubmissionUrl: String = appConfig.additionalInformationServiceBaseUrl + s"/income-tax/insurance-policies/income/$nino/$taxYear"
-    http.PUT[GainsSubmissionModel, GainsSubmissionResponse](gainsSubmissionUrl, body)
+    http.put(url"$gainsSubmissionUrl")
+      .withBody(Json.toJson(body))
+      .execute[GainsSubmissionResponse]
   }
 }

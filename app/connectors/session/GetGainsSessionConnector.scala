@@ -18,17 +18,19 @@ package connectors.session
 
 import config.AppConfig
 import connectors.httpParsers.GetGainsSessionHttpParser.{GetGainsDataHttpReads, GetGainsSessionResponse}
-import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
+import uk.gov.hmrc.http.client.HttpClientV2
+import uk.gov.hmrc.http.{HeaderCarrier, StringContextOps}
 import utils.TaxYearHelper
 
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
-class GetGainsSessionConnector @Inject()(val http: HttpClient, val config: AppConfig)(implicit ec: ExecutionContext) extends TaxYearHelper {
+class GetGainsSessionConnector @Inject()(val http: HttpClientV2, val config: AppConfig)(implicit ec: ExecutionContext) extends TaxYearHelper {
 
   def getSessionData(taxYear: Int)(implicit hc: HeaderCarrier): Future[GetGainsSessionResponse] = {
     val getGainsSessionUrl: String = config.additionalInformationServiceBaseUrl + s"/income-tax/income/insurance-policies/$taxYear/session"
 
-    http.GET[GetGainsSessionResponse](getGainsSessionUrl)
+    http.get(url"$getGainsSessionUrl")
+      .execute[GetGainsSessionResponse]
   }
 }
