@@ -20,7 +20,7 @@ import fixtures.messages.businessTaxReliefs.PostCessationTradeReliefMessages
 import forms.businessTaxReliefs.PostCessationTradeReliefForm
 import models.{BusinessTaxReliefs, UserAnswersModel}
 import org.scalatest.OptionValues.convertOptionToValuable
-import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
+import org.scalatest.matchers.must.Matchers._
 import pages.businessTaxReliefs.PostCessationTradeReliefPage
 import play.api.http.HeaderNames
 import play.api.inject.guice.GuiceApplicationBuilder

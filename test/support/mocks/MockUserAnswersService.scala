@@ -19,35 +19,27 @@ package support.mocks
 import models.requests.AuthorisationRequest
 import models.{Journey, UserAnswersModel}
 import org.apache.pekko.Done
-import org.scalamock.handlers.{CallHandler2, CallHandler4}
-import org.scalamock.scalatest.MockFactory
-import org.scalatest.TestSuite
+import org.mockito.ArgumentMatchers.{any, eq => eqTo}
+import org.mockito.Mockito.when
+import org.scalatestplus.mockito.MockitoSugar
 import services.UserAnswersService
 import uk.gov.hmrc.http.HeaderCarrier
 
 import scala.concurrent.Future
 
-trait MockUserAnswersService extends MockFactory { _: TestSuite =>
+trait MockUserAnswersService extends MockitoSugar {
 
-  lazy val mockUserAnswersService: UserAnswersService = mock[UserAnswersService]
+  val mockUserAnswersService: UserAnswersService = mock[UserAnswersService]
 
-  object MockUserAnswersService {
+  def mockUserAnswersServiceGet(taxYear: Int, journey: Journey)(result: Option[UserAnswersModel]): Unit =
+    when(mockUserAnswersService.get(eqTo(taxYear), eqTo(journey))(any[HeaderCarrier](), any[AuthorisationRequest[?]]()))
+      .thenReturn(Future.successful(result))
 
-    def get(taxYear: Int, journey: Journey): CallHandler4[Int, Journey, HeaderCarrier, AuthorisationRequest[_], Future[Option[UserAnswersModel]]] =
-      (mockUserAnswersService.get(_: Int, _: Journey)(_: HeaderCarrier, _: AuthorisationRequest[_]))
-        .expects(taxYear, journey, *, *)
+  def mockUserAnswersServiceSet(result: UserAnswersModel): Unit =
+    when(mockUserAnswersService.set(any[UserAnswersModel]())(any[HeaderCarrier]()))
+      .thenReturn(Future.successful(result))
 
-    def set(userAnswers: UserAnswersModel): CallHandler2[UserAnswersModel, HeaderCarrier, Future[UserAnswersModel]] =
-      (mockUserAnswersService.set(_: UserAnswersModel)(_: HeaderCarrier))
-        .expects( where { (actualAnswers, _) =>
-          actualAnswers.mtdItId == userAnswers.mtdItId &&
-            actualAnswers.taxYear == userAnswers.taxYear &&
-            actualAnswers.nino == userAnswers.nino &&
-            actualAnswers.data == userAnswers.data
-        })
-
-    def delete(taxYear: Int, journey: Journey): CallHandler4[Int, Journey, HeaderCarrier, AuthorisationRequest[_], Future[Done]] =
-      (mockUserAnswersService.delete(_: Int, _: Journey)(_: HeaderCarrier, _: AuthorisationRequest[_]))
-        .expects(taxYear, journey, *, *)
-  }
+  def mockUserAnswersServiceDelete(taxYear: Int, journey: Journey): Unit =
+    when(mockUserAnswersService.delete(eqTo(taxYear), eqTo(journey))(any[HeaderCarrier](), any[AuthorisationRequest[?]]()))
+      .thenReturn(Future.successful(Done))
 }

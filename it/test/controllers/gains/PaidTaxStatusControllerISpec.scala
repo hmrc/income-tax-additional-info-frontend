@@ -23,7 +23,7 @@ import models.mongo.DataNotFound
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
 import org.scalatest.OptionValues.convertOptionToValuable
-import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
+import org.scalatest.matchers.must.Matchers._
 import org.scalatestplus.mockito.MockitoSugar.mock
 import play.api.http.HeaderNames
 import play.api.http.Status._

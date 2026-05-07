@@ -16,14 +16,12 @@
 
 package utils
 
-import org.scalamock.scalatest.MockFactory
 import support.UnitTest
 import utils.InYearUtil.{inYear, toDateWithinTaxYear}
 
 import java.time.{LocalDate, LocalDateTime}
 
-class InYearUtilSpec extends UnitTest
-  with MockFactory {
+class InYearUtilSpec extends UnitTest {
 
   private val year2022: Int = 2022
   private val month4: Int = 4

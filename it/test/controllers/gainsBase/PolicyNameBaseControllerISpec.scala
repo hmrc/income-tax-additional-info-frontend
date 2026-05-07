@@ -18,7 +18,7 @@ package controllers.gainsBase
 
 import forms.gains.InputFieldForm
 import org.scalatest.OptionValues.convertOptionToValuable
-import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
+import org.scalatest.matchers.must.Matchers._
 import play.api.http.HeaderNames
 import play.api.http.Status.OK
 import play.api.inject.guice.GuiceApplicationBuilder

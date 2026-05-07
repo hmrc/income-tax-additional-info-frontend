@@ -56,7 +56,7 @@ class PolicySummaryController @Inject()(authorisedAction: AuthorisedAction,
         cya.fold(Future.successful(Redirect(appConfig.incomeTaxSubmissionOverviewUrl(taxYear)))) {
           cyaData =>
             cyaData.gains.fold(Future.successful(Redirect(appConfig.incomeTaxSubmissionOverviewUrl(taxYear)))) {
-              data: AllGainsSessionModel =>
+              (data: AllGainsSessionModel) =>
                 if (data.gateway.contains(true)) {
                   data.allGains.find(_.sessionId == sessionId) match {
                     case Some(policyCya) if !policyCya.isFinished =>

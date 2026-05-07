@@ -17,21 +17,22 @@
 package actions
 
 import config.AppConfig
-import org.apache.pekko.actor.ActorSystem
 import models.authorisation.Enrolment.{Agent, Individual, Nino}
 import models.authorisation.SessionValues.{CLIENT_MTDITID, CLIENT_NINO}
 import models.requests.AuthorisationRequest
 import models.session.UserSessionData
-import org.scalamock.handlers.CallHandler4
-import org.scalamock.scalatest.MockFactory
+import org.apache.pekko.actor.ActorSystem
+import org.mockito.ArgumentMatchers.{any, eq as eqTo}
+import org.mockito.Mockito.when
 import org.scalatest.OptionValues
 import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.matchers.should.Matchers
+import org.scalatestplus.mockito.MockitoSugar
 import play.api.http.Status.{IM_A_TEAPOT, INTERNAL_SERVER_ERROR, OK, SEE_OTHER}
 import play.api.mvc.Results.{ImATeapot, InternalServerError, Ok}
 import play.api.mvc._
-import play.api.test.{DefaultAwaitTimeout, FutureAwaits, Helpers}
 import play.api.test.Helpers._
+import play.api.test.{DefaultAwaitTimeout, FutureAwaits, Helpers}
 import services.{AuthorisationService, MissingAgentClientDetails, SessionDetailsService}
 import support.builders.UserBuilder.{aUser, anAgentUser}
 import support.mocks.MockErrorHandler
@@ -45,8 +46,9 @@ import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals.{allEnrolments, confidenceLe
 import uk.gov.hmrc.auth.core.syntax.retrieved.authSyntaxForRetrieved
 import uk.gov.hmrc.http.{HeaderCarrier, SessionId}
 
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.ExecutionContext
 import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.Future
 
 class AuthorisedActionSpec
   extends AnyFreeSpec
@@ -55,27 +57,26 @@ class AuthorisedActionSpec
     with DefaultAwaitTimeout
     with OptionValues
     with FakeRequestProvider
-    with MockFactory
+    with MockitoSugar
     with MockErrorHandler {
 
   protected val mockAuthConnector: AuthConnector = mock[AuthConnector]
 
-  def mockAuthorise[A](retrieval: Retrieval[A], result: A): CallHandler4[Predicate, Retrieval[_], HeaderCarrier, ExecutionContext, Future[Any]] = {
-    (mockAuthConnector.authorise(_: Predicate, _: Retrieval[_])(_: HeaderCarrier, _: ExecutionContext))
-      .expects(*, retrieval, *, *)
-      .returning(Future.successful(result))
-  }
+  def mockAuthorise[A](retrieval: Retrieval[A], result: A): Unit =
+    when(mockAuthConnector.authorise(any[Predicate](), eqTo(retrieval))(any[HeaderCarrier](), any[ExecutionContext]()))
+      .thenReturn(Future.successful(result))
 
-  def mockAuthorisePredicates[A](predicate: Predicate,
-                                 returningResult: Future[A]): CallHandler4[Predicate, Retrieval[_], HeaderCarrier, ExecutionContext, Future[Any]] = {
-    (mockAuthConnector.authorise(_: Predicate, _: Retrieval[_])(_: HeaderCarrier, _: ExecutionContext))
-      .expects(predicate, *, *, *)
-      .returning(returningResult)
-  }
+  def mockAuthorisePredicates[A](predicate: Predicate, returningResult: Future[A]): Unit =
+    when(mockAuthConnector.authorise(eqTo(predicate), any[Retrieval[?]]())(any[HeaderCarrier](), any[ExecutionContext]()))
+      .thenReturn(returningResult)
+
+  def mockAuthoriseAnyFailsWith(exception: Throwable): Unit =
+    when(mockAuthConnector.authorise(any[Predicate](), any[Retrieval[?]]())(any[HeaderCarrier](), any[ExecutionContext]()))
+      .thenReturn(Future.failed(exception))
 
   protected val authorisationService: AuthorisationService = new AuthorisationService(mockAuthConnector)
 
-  def mockAuthAsAgent(): CallHandler4[Predicate, Retrieval[_], HeaderCarrier, ExecutionContext, Future[Any]] = {
+  def mockAuthAsAgent(): Unit = {
     val agentRetrievals: Some[AffinityGroup] = Some(AffinityGroup.Agent)
     val enrolments: Enrolments = Enrolments(Set(
       Enrolment(Individual.key, Seq(EnrolmentIdentifier(Individual.value, aUser.mtditid)), "Activated"),
@@ -315,12 +316,8 @@ class AuthorisedActionSpec
     "return an SEE_OTHER" - {
       "the authorisation service returns an AuthorisationException exception" in {
         object AuthException extends AuthorisationException("Some reason")
-        lazy val result = {
-          (mockAuthConnector.authorise(_: Predicate, _: Retrieval[_])(_: HeaderCarrier, _: ExecutionContext))
-            .expects(*, *, *, *)
-            .returning(Future.failed(AuthException)).anyNumberOfTimes()
-          await(underTest.agentAuthentication(block, "???")(fakeRequestWithMtditidAndNino, headerCarrierWithSession))
-        }
+        mockAuthoriseAnyFailsWith(AuthException)
+        val result = await(underTest.agentAuthentication(block, "???")(fakeRequestWithMtditidAndNino, headerCarrierWithSession))
         result.header.status shouldBe SEE_OTHER
       }
     }
@@ -328,14 +325,8 @@ class AuthorisedActionSpec
     "redirect to the sign in page" - {
       "the authorisation service returns a NoActiveSession exception" in {
         object NoActiveSession extends NoActiveSession("Some reason")
-
-        lazy val result = {
-          (mockAuthConnector.authorise(_: Predicate, _: Retrieval[_])(_: HeaderCarrier, _: ExecutionContext))
-            .expects(*, *, *, *)
-            .returning(Future.failed(NoActiveSession))
-          await(underTest.agentAuthentication(block, "???")(fakeRequestWithMtditidAndNino, headerCarrierWithSession))
-        }
-
+        mockAuthoriseAnyFailsWith(NoActiveSession)
+        val result = await(underTest.agentAuthentication(block, "???")(fakeRequestWithMtditidAndNino, headerCarrierWithSession))
         result.header.status shouldBe SEE_OTHER
       }
     }
@@ -428,9 +419,7 @@ class AuthorisedActionSpec
         ))
 
         object AuthException extends AuthorisationException("Some reason")
-        (mockAuthConnector.authorise(_: Predicate, _: Retrieval[_])(_: HeaderCarrier, _: ExecutionContext))
-          .expects(*, *, *, *)
-          .returning(Future.failed(AuthException))
+        mockAuthoriseAnyFailsWith(AuthException)
 
         val result = underTest.run(fakeAgentRequest)
 
@@ -450,9 +439,7 @@ class AuthorisedActionSpec
         ))
 
         object NoActiveSession extends NoActiveSession("Some reason")
-        (mockAuthConnector.authorise(_: Predicate, _: Retrieval[_])(_: HeaderCarrier, _: ExecutionContext))
-          .expects(*, *, *, *)
-          .returning(Future.failed(NoActiveSession))
+        mockAuthoriseAnyFailsWith(NoActiveSession)
 
         val result = underTest.run(fakeIndividualRequest)
 
@@ -471,10 +458,7 @@ class AuthorisedActionSpec
           mockErrorHandler
         ))
 
-        (mockAuthConnector.authorise(_: Predicate, _: Retrieval[_])(_: HeaderCarrier, _: ExecutionContext))
-          .expects(*, *, *, *)
-          .returning(Future.failed(new Exception("bang")))
-
+        mockAuthoriseAnyFailsWith(new Exception("bang"))
         mockInternalServerError(InternalServerError("An unexpected error occurred"))
 
         val result = underTest.run(fakeAgentRequest)

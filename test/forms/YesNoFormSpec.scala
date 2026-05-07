@@ -16,7 +16,7 @@
 
 package forms
 
-import forms.YesNoForm.{no => nope, _}
+import forms.YesNoForm.{no as nope, *}
 import play.api.data.{Form, FormError}
 import support.UnitTest
 

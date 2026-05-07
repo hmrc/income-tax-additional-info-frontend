@@ -59,7 +59,7 @@ class SectionCompletedStateControllerISpec extends IntegrationTest {
         clearSession()
         authoriseAgentOrIndividual(isAgent = false)
         emptyUserDataStub()
-        urlPost(url(taxYear), headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)), body = Map("value" -> "true"))
+        urlPost(url(taxYear), headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)), body = Map[String, Seq[String]]("value" -> Seq("true")))
       }
 
       result.status shouldBe SEE_OTHER
@@ -71,7 +71,7 @@ class SectionCompletedStateControllerISpec extends IntegrationTest {
         clearSession()
         authoriseAgentOrIndividual(isAgent = false)
         emptyUserDataStub()
-        urlPost(url(taxYear), headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)), body = Map("value" -> "false"))
+        urlPost(url(taxYear), headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)), body = Map[String, Seq[String]]("value" -> Seq("false")))
       }
 
       result.status shouldBe SEE_OTHER

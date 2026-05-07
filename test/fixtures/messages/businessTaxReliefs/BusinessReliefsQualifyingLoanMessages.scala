@@ -20,7 +20,7 @@ import fixtures.messages.{Cy, En, i18n}
 
 object BusinessReliefsQualifyingLoanMessages {
 
-  sealed trait Messages { _: i18n =>
+  sealed trait Messages { this: i18n =>
     val headingAndTitle = "Qualifying loan interest payable in the year"
     val p1 = "You can claim tax relief for interest on a loan or alternative finance arrangement used to buy:"
     val p2 = "The total amount of certain Income Tax reliefs that can be used to reduce your total taxable income is limited to £50,000, or 25% of your adjusted total income, whichever amount is greater."

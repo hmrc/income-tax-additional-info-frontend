@@ -61,7 +61,8 @@ trait IntegrationTest
     with BeforeAndAfterAll
     with TaxYearProvider
     with FutureAwaits
-    with DefaultAwaitTimeout {
+    with DefaultAwaitTimeout
+    with play.api.libs.ws.DefaultBodyWritables {
 
   val nino = "AA123456A"
   val mtditid = "1234567890"

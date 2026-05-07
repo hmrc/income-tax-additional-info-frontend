@@ -20,7 +20,7 @@ import fixtures.messages.businessTaxReliefs.BusinessReliefsQualifyingLoanMessage
 import forms.AmountForm
 import models.{BusinessTaxReliefs, UserAnswersModel}
 import org.scalatest.OptionValues.convertOptionToValuable
-import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
+import org.scalatest.matchers.must.Matchers._
 import pages.businessTaxReliefs.QualifyingLoanReliefPage
 import play.api.http.HeaderNames
 import play.api.inject.guice.GuiceApplicationBuilder

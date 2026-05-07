@@ -15,6 +15,7 @@
  *@
 
 @import uk.gov.hmrc.govukfrontend.views.html.components._
+@import uk.gov.hmrc.govukfrontend.views.viewmodels.dateinput.{DateInput as GovDateInput}
 @import play.api.data.FormError
 
 @this(
@@ -77,7 +78,7 @@
 }
 
 @govukDateInput(
-    DateInput(
+    GovDateInput(
         id,
         Some(name),
         hint = hint.map(hintHtml => Hint(content = HtmlContent(hintHtml))),

@@ -18,12 +18,12 @@ package controllers.businessTaxReliefs
 
 import fixtures.messages.businessTaxReliefs.PostCessationTradeReliefMessages
 import models.{BusinessTaxReliefs, Done, UserAnswersModel}
-import org.mockito.ArgumentMatchers.{any, eq => eqTo}
+import org.mockito.ArgumentMatchers.{any, eq as eqTo}
 import org.mockito.Mockito
 import org.mockito.Mockito.when
 import org.scalatest.BeforeAndAfterEach
 import org.scalatest.OptionValues.convertOptionToValuable
-import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
+import org.scalatest.matchers.must.Matchers._
 import org.scalatestplus.mockito.MockitoSugar.mock
 import pages.businessTaxReliefs.PostCessationTradeReliefPage
 import play.api.http.HeaderNames

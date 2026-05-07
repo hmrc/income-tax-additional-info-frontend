@@ -20,7 +20,7 @@ import fixtures.messages.{Cy, En, i18n}
 
 object BusinessReliefsNonDeductibleMessages {
 
-  sealed trait Messages { _: i18n =>
+  sealed trait Messages { this: i18n =>
     val headingAndTitle = "Non-deductible loan interest from investments into property letting partnerships"
     val p1 = "You can claim tax relief on the cost of getting a loan to fund a partnership, or the interest on such a loan. Relief can also be claimed on the cost of getting alternative finance arrangements, and the interest on payments for such arrangements. This relief is limited to the extent that those funds are used for any part of the business that consists of residential properties."
     val p2 = "The tax relief you can claim is restricted to the basic rate of Income Tax."

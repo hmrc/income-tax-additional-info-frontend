@@ -23,7 +23,7 @@ import models.mongo.DataNotFound
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
 import org.scalatest.OptionValues.convertOptionToValuable
-import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
+import org.scalatest.matchers.must.Matchers._
 import org.scalatestplus.mockito.MockitoSugar.mock
 import play.api.http.HeaderNames
 import play.api.http.Status._
@@ -453,7 +453,7 @@ class GainsStatusControllerISpec extends IntegrationTest {
         updateSession()
         authoriseAgentOrIndividual(isAgent = false)
         userDataStub(gainsPriorDataModel, nino, taxYear)
-        urlPost(url(taxYear), headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)), body = Map(yesNo -> "false"))
+        urlPost(url(taxYear), headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)), body = Map[String, Seq[String]](yesNo -> Seq("false")))
       }
 
       result.status shouldBe SEE_OTHER

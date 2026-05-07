@@ -21,7 +21,8 @@ import models.gains.PolicyCyaModel
 import models.mongo._
 import models.requests.AuthorisationRequest
 import models.{AllGainsSessionModel, User}
-import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
+import org.mongodb.scala.SingleObservableFuture
+import org.scalatest.matchers.must.Matchers._
 import play.api.mvc.AnyContent
 import play.api.test.{DefaultAwaitTimeout, FakeRequest, FutureAwaits}
 import support.IntegrationTest

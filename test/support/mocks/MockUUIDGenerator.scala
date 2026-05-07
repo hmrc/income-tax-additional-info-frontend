@@ -16,17 +16,14 @@
 
 package support.mocks
 
-import org.scalamock.handlers.CallHandler0
-import org.scalamock.scalatest.MockFactory
-import org.scalatest.TestSuite
+import org.mockito.Mockito.when
+import org.scalatestplus.mockito.MockitoSugar
 import utils.UUIDGenerator
 
-trait MockUUIDGenerator extends MockFactory { _: TestSuite =>
+trait MockUUIDGenerator extends MockitoSugar {
 
   protected val mockUUIDGenerator: UUIDGenerator = mock[UUIDGenerator]
 
-  def mockRandomUUID(result: String): CallHandler0[String] =
-    (() => mockUUIDGenerator.randomUUID())
-      .expects()
-      .returning(result)
+  def mockRandomUUID(result: String): Unit =
+    when(mockUUIDGenerator.randomUUID()).thenReturn(result)
 }

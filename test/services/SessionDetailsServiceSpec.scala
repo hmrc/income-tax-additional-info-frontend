@@ -21,9 +21,11 @@ import connectors.errors._
 import connectors.session.UserSessionDataConnector
 import models.authorisation.SessionValues
 import models.session.UserSessionData
-import org.scalamock.scalatest.MockFactory
+import org.mockito.ArgumentMatchers.any
+import org.mockito.Mockito.{never, verify, when}
 import org.scalatest.matchers.must.Matchers
 import org.scalatest.wordspec.AnyWordSpec
+import org.scalatestplus.mockito.MockitoSugar
 import play.api.http.Status.IM_A_TEAPOT
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.{DefaultAwaitTimeout, FakeRequest, FutureAwaits}
@@ -33,7 +35,7 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 
-class SessionDetailsServiceSpec extends AnyWordSpec with Matchers with MockFactory with FutureAwaits with DefaultAwaitTimeout {
+class SessionDetailsServiceSpec extends AnyWordSpec with Matchers with MockitoSugar with FutureAwaits with DefaultAwaitTimeout {
 
   implicit val emptyHeaderCarrier: HeaderCarrier = HeaderCarrier()
 
@@ -48,9 +50,8 @@ class SessionDetailsServiceSpec extends AnyWordSpec with Matchers with MockFacto
           val testService = new SessionDetailsServiceImpl(mockSessionDataConnector, config)
 
           val userSessionData = UserSessionData(sessionId = sessionId, mtditid = "111111", nino = "AA111111A", utr = Some("123456"))
-          (mockSessionDataConnector.getSessionData(_: HeaderCarrier))
-            .expects(*)
-            .returning(Future.successful(Right(Some(userSessionData))))
+          when(mockSessionDataConnector.getSessionData(any[HeaderCarrier]()))
+            .thenReturn(Future.successful(Right(Some(userSessionData))))
 
           implicit val request = FakeRequest()
             .withSession(
@@ -71,9 +72,8 @@ class SessionDetailsServiceSpec extends AnyWordSpec with Matchers with MockFacto
             val testService = new SessionDetailsServiceImpl(mockSessionDataConnector, config)
 
             val error = ApiError(IM_A_TEAPOT, SingleErrorBody("codeValue", "reasonValue"))
-            (mockSessionDataConnector.getSessionData(_: HeaderCarrier))
-              .expects(*)
-              .returning(Future.successful(Left(error)))
+            when(mockSessionDataConnector.getSessionData(any[HeaderCarrier]()))
+              .thenReturn(Future.successful(Left(error)))
 
             val userSessionData = UserSessionData(sessionId = sessionId, mtditid = "111111", nino = "AA111111A", utr = None)
             implicit val request = FakeRequest()
@@ -94,9 +94,8 @@ class SessionDetailsServiceSpec extends AnyWordSpec with Matchers with MockFacto
             val testService = new SessionDetailsServiceImpl(mockSessionDataConnector, config)
 
             val error = ApiError(IM_A_TEAPOT, SingleErrorBody("codeValue", "reasonValue"))
-            (mockSessionDataConnector.getSessionData(_: HeaderCarrier))
-              .expects(*)
-              .returning(Future.successful(Left(error)))
+            when(mockSessionDataConnector.getSessionData(any[HeaderCarrier]()))
+              .thenReturn(Future.successful(Left(error)))
 
             implicit val request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest()
 
@@ -107,16 +106,12 @@ class SessionDetailsServiceSpec extends AnyWordSpec with Matchers with MockFacto
       }
     }
 
-    "V&C Session Data service feature is enabled" when {
+    "V&C Session Data service feature is disabled" when {
       "the call to retrieve session data from the downstream V&C service is successful" should {
         "return session data" in {
           val config = TestFeatureConfig.allDisabled.disableSessionCookieService
           val mockSessionDataConnector = mock[UserSessionDataConnector]
           val testService = new SessionDetailsServiceImpl(mockSessionDataConnector, config)
-
-          (mockSessionDataConnector.getSessionData(_: HeaderCarrier))
-            .expects(*)
-            .never()
 
           val userSessionData = UserSessionData(sessionId = sessionId, mtditid = "111111", nino = "AA111111A", utr = None)
           implicit val request = FakeRequest()
@@ -127,6 +122,7 @@ class SessionDetailsServiceSpec extends AnyWordSpec with Matchers with MockFacto
 
           val result = await(testService.getSessionData(sessionId))
           result mustEqual userSessionData
+          verify(mockSessionDataConnector, never()).getSessionData(any[HeaderCarrier]())
         }
       }
 
@@ -135,17 +131,12 @@ class SessionDetailsServiceSpec extends AnyWordSpec with Matchers with MockFacto
         val mockSessionDataConnector = mock[UserSessionDataConnector]
         val testService = new SessionDetailsServiceImpl(mockSessionDataConnector, config)
 
-        (mockSessionDataConnector.getSessionData(_: HeaderCarrier))
-          .expects(*)
-          .never()
-
         implicit val request = FakeRequest()
 
         val result = intercept[MissingAgentClientDetails](await(testService.getSessionData(sessionId)))
         result.message mustEqual "Session Data service and Session Cookie both returned empty data"
+        verify(mockSessionDataConnector, never()).getSessionData(any[HeaderCarrier]())
       }
     }
   }
 }
-
-

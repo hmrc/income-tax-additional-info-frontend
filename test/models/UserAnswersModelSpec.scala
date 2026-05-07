@@ -16,14 +16,13 @@
 
 package models
 
-import org.scalamock.scalatest.MockFactory
 import pages.QuestionPage
 import play.api.libs.json._
 import support.UnitTest
 import support.utils.TaxYearUtils.taxYear
 
 
-class UserAnswersModelSpec extends UnitTest with MockFactory {
+class UserAnswersModelSpec extends UnitTest {
 
   case class TestPage(jsPath: JsPath = JsPath) extends QuestionPage[String] {
     override val toString: String = "TestPage"
