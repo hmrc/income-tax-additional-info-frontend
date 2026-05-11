@@ -20,26 +20,26 @@ import connectors.httpParsers.UserAnswersHttpReads.UserAnswersResponse
 import connectors.session.UserAnswersConnector
 import models.{Journey, UserAnswersModel}
 import org.apache.pekko.Done
-import org.scalamock.handlers.{CallHandler2, CallHandler3}
-import org.scalamock.scalatest.MockFactory
-import org.scalatest.TestSuite
+import org.mockito.ArgumentMatchers.{any, eq as eqTo}
+import org.mockito.Mockito.when
+import org.scalatestplus.mockito.MockitoSugar
 import uk.gov.hmrc.http.HeaderCarrier
 
 import scala.concurrent.Future
 
-trait MockUserAnswersConnector extends MockFactory { _: TestSuite =>
+trait MockUserAnswersConnector extends MockitoSugar {
 
-  lazy val mockUserAnswersConnector: UserAnswersConnector = mock[UserAnswersConnector]
+  val mockUserAnswersConnector: UserAnswersConnector = mock[UserAnswersConnector]
 
-  object MockUserAnswersConnector {
+  def mockUserAnswersConnectorGet(taxYear: Int, journey: Journey)(result: UserAnswersResponse[Option[UserAnswersModel]]): Unit =
+    when(mockUserAnswersConnector.get(eqTo(taxYear), eqTo(journey))(any[HeaderCarrier]()))
+      .thenReturn(Future.successful(result))
 
-    def get(taxYear: Int, journey: Journey): CallHandler3[Int, Journey, HeaderCarrier, Future[UserAnswersResponse[Option[UserAnswersModel]]]] =
-      (mockUserAnswersConnector.get(_: Int, _: Journey)(_: HeaderCarrier)).expects(taxYear, journey, *)
+  def mockUserAnswersConnectorSet(userAnswers: UserAnswersModel)(result: UserAnswersResponse[Done]): Unit =
+    when(mockUserAnswersConnector.set(eqTo(userAnswers))(any[HeaderCarrier]()))
+      .thenReturn(Future.successful(result))
 
-    def set(userAnswers: UserAnswersModel): CallHandler2[UserAnswersModel, HeaderCarrier, Future[UserAnswersResponse[Done]]] =
-      (mockUserAnswersConnector.set(_: UserAnswersModel)(_: HeaderCarrier)).expects(userAnswers, *)
-
-    def delete(taxYear: Int, journey: Journey): CallHandler3[Int, Journey, HeaderCarrier, Future[UserAnswersResponse[Done]]] =
-      (mockUserAnswersConnector.delete(_: Int, _: Journey)(_: HeaderCarrier)).expects(taxYear, journey, *)
-  }
+  def mockUserAnswersConnectorDelete(taxYear: Int, journey: Journey)(result: UserAnswersResponse[Done]): Unit =
+    when(mockUserAnswersConnector.delete(eqTo(taxYear), eqTo(journey))(any[HeaderCarrier]()))
+      .thenReturn(Future.successful(result))
 }

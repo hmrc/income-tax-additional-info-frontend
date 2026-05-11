@@ -16,6 +16,9 @@
 
 package audit
 
+import org.mockito.ArgumentCaptor
+import org.mockito.ArgumentMatchers.any
+import org.mockito.Mockito.{verify, when}
 import play.api.Configuration
 import play.api.libs.json.Json
 import support.UnitTest
@@ -24,8 +27,9 @@ import uk.gov.hmrc.play.audit.http.connector.AuditResult.Success
 import uk.gov.hmrc.play.audit.http.connector.{AuditConnector, AuditResult}
 import uk.gov.hmrc.play.audit.model.ExtendedDataEvent
 
+import scala.concurrent.ExecutionContext
 import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.Future
 
 class AuditServiceSpec extends UnitTest {
 
@@ -34,12 +38,11 @@ class AuditServiceSpec extends UnitTest {
     val mockAuditConnector: AuditConnector = mock[AuditConnector]
     val mockConfig: Configuration = mock[Configuration]
 
-    (mockConfig.get[String](_: String)(_: play.api.ConfigLoader[String]))
-      .expects(*, *)
-      .returns(mockedAppName)
+    when(mockConfig.get[String](any[String]())(any[play.api.ConfigLoader[String]]()))
+      .thenReturn(mockedAppName)
 
     lazy val target = new AuditService(mockAuditConnector, mockConfig)
-    val  ec : ExecutionContext = ExecutionContext.global
+    val ec: ExecutionContext = ExecutionContext.global
   }
 
   "AuditService" when {
@@ -48,79 +51,67 @@ class AuditServiceSpec extends UnitTest {
       val transactionName = "Name"
       val eventDetails = "Details"
       val expected: Future[AuditResult] = Future.successful(Success)
-      "return a successful audit result" in new Test {
 
-        (mockAuditConnector.sendExtendedEvent(_: ExtendedDataEvent)(_: HeaderCarrier, _: ExecutionContext))
-          .expects(*, *, *)
-          .returns(expected)
+      "return a successful audit result" in new Test {
+        when(mockAuditConnector.sendExtendedEvent(any[ExtendedDataEvent]())(any[HeaderCarrier](), any[ExecutionContext]()))
+          .thenReturn(expected)
 
         val event = AuditModel(auditType, transactionName, eventDetails)
         target.auditModel(event) shouldBe expected
       }
 
-
-
       "generates an event with the correct auditSource" in new Test {
-        (mockAuditConnector.sendExtendedEvent(_: ExtendedDataEvent)(_: HeaderCarrier, _: ExecutionContext))
-          .expects(
-            where {
-              (eventArg: ExtendedDataEvent, _: HeaderCarrier, _: ExecutionContext) =>
-                eventArg.auditSource == mockedAppName
-            }
-          )
-          .returns(expected)
+        val captor: ArgumentCaptor[ExtendedDataEvent] = ArgumentCaptor.forClass(classOf[ExtendedDataEvent])
+
+        when(mockAuditConnector.sendExtendedEvent(any[ExtendedDataEvent]())(any[HeaderCarrier](), any[ExecutionContext]()))
+          .thenReturn(expected)
 
         val event = AuditModel(auditType, transactionName, eventDetails)
-
         target.auditModel(event)
+
+        verify(mockAuditConnector).sendExtendedEvent(captor.capture())(any[HeaderCarrier](), any[ExecutionContext]())
+        captor.getValue.auditSource shouldBe mockedAppName
       }
 
       "generates an event with the correct auditType" in new Test {
-        (mockAuditConnector.sendExtendedEvent(_: ExtendedDataEvent)(_: HeaderCarrier, _: ExecutionContext))
-          .expects(
-            where {
-              (eventArg: ExtendedDataEvent, _: HeaderCarrier, _: ExecutionContext) =>
-                eventArg.auditType == auditType
-            }
-          )
-          .returns(expected)
+        val captor: ArgumentCaptor[ExtendedDataEvent] = ArgumentCaptor.forClass(classOf[ExtendedDataEvent])
+
+        when(mockAuditConnector.sendExtendedEvent(any[ExtendedDataEvent]())(any[HeaderCarrier](), any[ExecutionContext]()))
+          .thenReturn(expected)
 
         val event = AuditModel(auditType, transactionName, eventDetails)
-
         target.auditModel(event)
+
+        verify(mockAuditConnector).sendExtendedEvent(captor.capture())(any[HeaderCarrier](), any[ExecutionContext]())
+        captor.getValue.auditType shouldBe auditType
       }
 
       "generates an event with the correct details" in new Test {
-        (mockAuditConnector.sendExtendedEvent(_: ExtendedDataEvent)(_: HeaderCarrier, _: ExecutionContext))
-          .expects(
-            where {
-              (eventArg: ExtendedDataEvent, _: HeaderCarrier, _: ExecutionContext) =>
-                eventArg.detail == Json.toJson(eventDetails)
-            }
-          )
-          .returns(expected)
+        val captor: ArgumentCaptor[ExtendedDataEvent] = ArgumentCaptor.forClass(classOf[ExtendedDataEvent])
+
+        when(mockAuditConnector.sendExtendedEvent(any[ExtendedDataEvent]())(any[HeaderCarrier](), any[ExecutionContext]()))
+          .thenReturn(expected)
 
         val event = AuditModel(auditType, transactionName, eventDetails)
-
         target.auditModel(event)
+
+        verify(mockAuditConnector).sendExtendedEvent(captor.capture())(any[HeaderCarrier](), any[ExecutionContext]())
+        captor.getValue.detail shouldBe Json.toJson(eventDetails)
       }
 
       "generates an event with the correct transactionName" in new Test {
-        (mockAuditConnector.sendExtendedEvent(_: ExtendedDataEvent)(_: HeaderCarrier, _: ExecutionContext))
-          .expects(
-            where {
-              (eventArg: ExtendedDataEvent, _: HeaderCarrier, _: ExecutionContext) =>
-                eventArg.tags.exists(tag => tag == "transactionName" -> transactionName)
-            }
-          )
-          .returns(expected)
+        val captor: ArgumentCaptor[ExtendedDataEvent] = ArgumentCaptor.forClass(classOf[ExtendedDataEvent])
+
+        when(mockAuditConnector.sendExtendedEvent(any[ExtendedDataEvent]())(any[HeaderCarrier](), any[ExecutionContext]()))
+          .thenReturn(expected)
 
         val event = AuditModel(auditType, transactionName, eventDetails)
-
         target.auditModel(event)
+
+        verify(mockAuditConnector).sendExtendedEvent(captor.capture())(any[HeaderCarrier](), any[ExecutionContext]())
+        captor.getValue.tags.exists(tag => tag == "transactionName" -> transactionName) shouldBe true
       }
     }
   }
 }
-
 

@@ -107,7 +107,7 @@ class GainsGatewayControllerISpec extends IntegrationTest with DefaultAwaitTimeo
         getSessionDataStub(status = NO_CONTENT)
         updateSession()
         authoriseAgentOrIndividual(isAgent = false)
-        urlPost(url(taxYear), headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)), body = Map("value" -> "true"))
+        urlPost(url(taxYear), headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)), body = Map[String, Seq[String]]("value" -> Seq("true")))
       }
 
       result.status shouldBe SEE_OTHER
@@ -120,7 +120,7 @@ class GainsGatewayControllerISpec extends IntegrationTest with DefaultAwaitTimeo
         updateSession()
         authoriseAgentOrIndividual(isAgent = false)
         emptyUserDataStub()
-        urlPost(url(taxYear), headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)), body = Map("value" -> "false"))
+        urlPost(url(taxYear), headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)), body = Map[String, Seq[String]]("value" -> Seq("false")))
       }
 
       result.status shouldBe SEE_OTHER
@@ -131,7 +131,7 @@ class GainsGatewayControllerISpec extends IntegrationTest with DefaultAwaitTimeo
       lazy val result: WSResponse = {
         getSessionDataStub(status = NO_CONTENT)
         authoriseAgentOrIndividual(isAgent = false)
-        urlPost(url(taxYear), headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)), body = Map[String, String]())
+        urlPost(url(taxYear), headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)), body = Map[String, Seq[String]]())
       }
 
       result.status shouldBe BAD_REQUEST
@@ -140,7 +140,7 @@ class GainsGatewayControllerISpec extends IntegrationTest with DefaultAwaitTimeo
     "show page with error text if form is empty" in {
       lazy val result: WSResponse = {
         authoriseAgentOrIndividual(isAgent = false)
-        urlPost(url(taxYear), headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)), body = Map[String, String]())
+        urlPost(url(taxYear), headers = Seq(HeaderNames.COOKIE -> playSessionCookies(taxYear)), body = Map[String, Seq[String]]())
       }
 
       result.status shouldBe BAD_REQUEST

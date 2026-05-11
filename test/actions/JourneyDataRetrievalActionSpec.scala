@@ -39,8 +39,8 @@ class JourneyDataRetrievalActionSpec extends UnitTest with MockUserAnswersServic
 
       "setup some empty UserAnswers for the journey" in {
 
-        MockUserAnswersService.get(taxYear, BusinessTaxReliefs).returns(Future.successful(None))
-        MockUserAnswersService.set(userAnswers).returns(Future.successful(userAnswers))
+        mockUserAnswersServiceGet(taxYear, BusinessTaxReliefs)(None)
+        mockUserAnswersServiceSet(userAnswers)
 
         val result = await(action.refine(individualRequest))
         result shouldBe Right(
@@ -57,7 +57,7 @@ class JourneyDataRetrievalActionSpec extends UnitTest with MockUserAnswersServic
 
       "must build a userAnswers object and add it to the request" in {
 
-        MockUserAnswersService.get(taxYear, BusinessTaxReliefs).returns(Future.successful(Some(userAnswers)))
+        mockUserAnswersServiceGet(taxYear, BusinessTaxReliefs)(Some(userAnswers))
 
         val result = await(action.refine(individualRequest))
         result shouldBe Right(

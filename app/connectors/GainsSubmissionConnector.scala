@@ -20,6 +20,7 @@ import config.AppConfig
 import connectors.httpParsers.GainsSubmissionHttpParser._
 import models.gains.GainsSubmissionModel
 import play.api.libs.json.Json
+import play.api.libs.ws.writeableOf_JsValue
 import uk.gov.hmrc.http.client.HttpClientV2
 import uk.gov.hmrc.http.{HeaderCarrier, StringContextOps}
 

@@ -16,13 +16,12 @@
 
 package utils
 
-import org.scalamock.scalatest.MockFactory
+import org.mockito.Mockito.when
 import support.UnitTest
 import support.stubs.AppConfigStub
 import uk.gov.hmrc.crypto.{AdDecrypter, AdEncrypter, EncryptedValue}
 
-class AesGcmAdCryptoSpec extends UnitTest
-  with MockFactory {
+class AesGcmAdCryptoSpec extends UnitTest {
 
   implicit private val associatedText: String = "some-associated-text"
   private val mockAesGcmAdCryptoFactory = mock[AesGcmAdCryptoFactory]
@@ -39,9 +38,7 @@ class AesGcmAdCryptoSpec extends UnitTest
     "useEncryption is true" should {
       val underTest: AesGcmAdCrypto = new AesGcmAdCrypto(new AppConfigStub().config(), mockAesGcmAdCryptoFactory)
       "return encrypted value" in {
-        (() => mockAesGcmAdCryptoFactory.instance())
-          .expects()
-          .returning(mockAesGcmAdCrypto)
+        when(mockAesGcmAdCryptoFactory.instance()).thenReturn(mockAesGcmAdCrypto)
 
         underTest.encrypt(valueToEncrypt) shouldBe EncryptedValue("some-value", nonce)
       }
@@ -60,9 +57,7 @@ class AesGcmAdCryptoSpec extends UnitTest
     "useEncryption is true" should {
       val underTest: AesGcmAdCrypto = new AesGcmAdCrypto(new AppConfigStub().config(), mockAesGcmAdCryptoFactory)
       "return encrypted value" in {
-        (() => mockAesGcmAdCryptoFactory.instance())
-          .expects()
-          .returning(mockAesGcmAdCrypto)
+        when(mockAesGcmAdCryptoFactory.instance()).thenReturn(mockAesGcmAdCrypto)
 
         underTest.decrypt(EncryptedValue("value-to-decrypt", nonce)) shouldBe decryptedValue
       }

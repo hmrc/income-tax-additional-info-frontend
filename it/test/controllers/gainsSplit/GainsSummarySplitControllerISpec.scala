@@ -18,7 +18,7 @@ package controllers.gainsSplit
 
 import models.gains.{CapitalRedemptionModel, LifeAnnuityModel, VoidedIsaModel}
 import org.scalatest.OptionValues.convertOptionToValuable
-import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
+import org.scalatest.matchers.must.Matchers._
 import play.api.http.HeaderNames
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.libs.ws.DefaultBodyWritables

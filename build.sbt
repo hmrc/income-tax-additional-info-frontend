@@ -19,7 +19,7 @@ import uk.gov.hmrc.DefaultBuildSettings
 val appName = "income-tax-additional-info-frontend"
 
 ThisBuild / majorVersion := 0
-ThisBuild / scalaVersion := "2.13.18"
+ThisBuild / scalaVersion := "3.3.7"
 
 lazy val coverageSettings: Seq[Setting[?]] = {
   import scoverage.ScoverageKeys
@@ -70,9 +70,9 @@ lazy val microservice = Project(appName, file("."))
     libraryDependencies ++= AppDependencies(),
     TwirlKeys.templateImports ++= twirlImports,
     scalacOptions ++= Seq(
-      "-Wconf:cat=unused-imports&src=html/.*:s",
-      "-Wconf:cat=unused-imports&src=.*routes.*:s",
-      "-Wconf:cat=unused&src=.*routes.*:s"
+      "-Wconf:msg=unused import&src=html/.*:s",
+      "-Wconf:msg=unused import&src=.*routes.*:s",
+      "-Wconf:msg=unused.*&src=.*routes.*:s"
     )
   )
   .settings(Test / fork := false)
@@ -98,6 +98,5 @@ lazy val it = project
   .dependsOn(microservice % "test->test") // the "test->test" allows reusing test code and test dependencies
   .settings(DefaultBuildSettings.itSettings())
   .settings(Seq(Test / parallelExecution := false))
-  .settings(scalacOptions ++= Seq("-Xlint:-infer-any"))
 
-addCommandAlias("runAllChecks", "clean;compile;scalastyle;coverage;test;it/test;coverageReport")
+addCommandAlias("runAllChecks", "clean;compile;scalafmtCheck;coverage;test;it/test;coverageReport")

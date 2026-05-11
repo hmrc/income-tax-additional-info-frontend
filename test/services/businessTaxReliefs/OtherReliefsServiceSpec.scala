@@ -20,7 +20,7 @@ import connectors.businessTaxReliefs.OtherReliefsConnector
 import connectors.errors.OtherReliefsSubmissionException
 import models.businessTaxReliefs.OtherReliefs
 import models.{BusinessTaxReliefs, Done, UserAnswersModel}
-import org.mockito.ArgumentMatchers.{eq => eqTo, _}
+import org.mockito.ArgumentMatchers.{eq as eqTo, *}
 import org.mockito.Mockito._
 import org.scalatest.OptionValues
 import org.scalatest.concurrent.ScalaFutures

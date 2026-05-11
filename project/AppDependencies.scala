@@ -33,7 +33,8 @@ object AppDependencies {
     "uk.gov.hmrc"             %% "bootstrap-test-play-30"     % bootstrapPlay30Version  % Test,
     "org.jsoup"               %  "jsoup"                      % "1.22.1"                % Test,
     "org.scalatestplus.play"  %% "scalatestplus-play"         % "7.0.2"                 % Test,
-    "org.scalamock"           %% "scalamock"                  % "7.5.5"                 % Test
+    "org.mockito"              % "mockito-core"               % "5.12.0"                % Test,
+    "org.scalatestplus"       %% "mockito-5-12"               % "3.2.19.0"              % Test
   )
   def apply(): Seq[ModuleID] = compile ++ test
 

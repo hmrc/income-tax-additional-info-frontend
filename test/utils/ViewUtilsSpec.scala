@@ -18,7 +18,6 @@ package utils
 
 import models.BusinessTaxReliefs
 import models.requests.JourneyDataRequest
-import org.scalamock.scalatest.MockFactory
 import play.api.i18n.{Lang, Messages}
 import play.i18n
 import support.UnitTest
@@ -26,8 +25,7 @@ import support.utils.TaxYearUtils.taxYear
 
 import java.time.LocalDate
 
-class ViewUtilsSpec extends UnitTest
-  with MockFactory {
+class ViewUtilsSpec extends UnitTest {
 
   private val messages = new Messages {
     override def lang: Lang = throw new NotImplementedError

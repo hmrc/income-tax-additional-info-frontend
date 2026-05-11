@@ -15,13 +15,14 @@
  *@
 
 @import uk.gov.hmrc.govukfrontend.views.html.components._
+@import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.{SummaryList as GovSummaryList}
 @import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 
 @this(govukSummaryList : GovukSummaryList)
 
 @(rows: Seq[SummaryListRow], classes: Option[String])
 
-@govukSummaryList(SummaryList(
+@govukSummaryList(GovSummaryList(
     classes = classes.getOrElse(""),
     rows = rows
 ))

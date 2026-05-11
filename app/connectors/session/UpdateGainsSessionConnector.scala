@@ -20,6 +20,7 @@ import config.AppConfig
 import connectors.httpParsers.UpdateGainsSessionHttpParser.{UpdateGainsSessionResponse, UpdateGainsSessionResponseResponseReads}
 import models.AllGainsSessionModel
 import play.api.libs.json.Json
+import play.api.libs.ws.writeableOf_JsValue
 import uk.gov.hmrc.http.client.HttpClientV2
 import uk.gov.hmrc.http.{HeaderCarrier, StringContextOps}
 

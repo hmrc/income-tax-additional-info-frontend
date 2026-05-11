@@ -20,7 +20,7 @@ import fixtures.messages.{Cy, En, i18n}
 
 object PostCessationTradeReliefMessages {
 
-  sealed trait Messages { _: i18n =>
+  sealed trait Messages { this: i18n =>
     val headingAndTitle = "Post-cessation trade relief and certain other losses"
     val p1 = "If you’ve paid expenses in connection with a business that has ceased, you may be able to get tax relief on those payments. This relief can only be claimed if you didn’t claim those expenses at the time the business ceased, or anywhere else in this or an earlier tax return. Post-cessation expenses are always set against post-cessation receipts first."
     val p2 = "The expenses must be paid within 7 years of your cessation, and should be claimed against the tax return for the year the expense was paid. The claim must also be made by the anniversary of the filing deadline for the tax year in question. For example, a claim for an expense paid in the tax year 6 April 2026 to 5 April 2027 must be made by 31 January 2029."

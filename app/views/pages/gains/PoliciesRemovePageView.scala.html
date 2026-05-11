@@ -142,16 +142,16 @@
         </dd>
     </div>
     }}
-    @{if(gain.entitledToDeficiencyRelief.contains(true)) {
+    @if(gain.entitledToDeficiencyRelief.contains(true)) {
     <div class="govuk-summary-list__row">
         <dt class="govuk-summary-list__key">
-            {messages("common.gains.amount-of-relief-available")}
+            @messages("common.gains.amount-of-relief-available")
         </dt>
         <dd class="govuk-summary-list__value">
-            <p class="govuk-body">£{gain.deficiencyReliefAmount.getOrElse(0)}</p>
+            <p class="govuk-body">£@{gain.deficiencyReliefAmount.getOrElse(0)}</p>
         </dd>
     </div>
-    }}
+    }
 </dl>
 
 <div class="govuk-button-group govuk-!-margin-bottom-7">

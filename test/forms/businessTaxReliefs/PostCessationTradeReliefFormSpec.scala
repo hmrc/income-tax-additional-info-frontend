@@ -17,7 +17,7 @@
 package forms.businessTaxReliefs
 
 import fixtures.messages.businessTaxReliefs.PostCessationTradeReliefMessages
-import forms.businessTaxReliefs.PostCessationTradeReliefForm.{key => formKey}
+import forms.businessTaxReliefs.PostCessationTradeReliefForm.{key as formKey}
 import models.BusinessTaxReliefs
 import models.requests.{AuthorisationRequest, JourneyDataRequest}
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite

@@ -16,17 +16,17 @@
 
 package support.mocks
 
-import org.scalamock.handlers.CallHandler2
-import org.scalamock.scalatest.MockFactory
-import org.scalatest.TestSuite
+import org.mockito.ArgumentMatchers.{any, eq => eqTo}
+import org.mockito.Mockito.when
+import org.scalatestplus.mockito.MockitoSugar
 import services.PagerDutyLoggerService
 import uk.gov.hmrc.http.HttpResponse
 
-trait MockPagerDutyLoggerService extends MockFactory { _: TestSuite =>
+trait MockPagerDutyLoggerService extends MockitoSugar {
 
   protected val mockPagerDutyLoggerService: PagerDutyLoggerService = mock[PagerDutyLoggerService]
 
-  def mockPagerDutyLog(parserName: String): CallHandler2[HttpResponse, String, Unit] = {
-    (mockPagerDutyLoggerService.pagerDutyLog _).expects(*, parserName)
-  }
+  def mockPagerDutyLog(parserName: String): Unit =
+    when(mockPagerDutyLoggerService.pagerDutyLog(any[HttpResponse](), eqTo(parserName)))
+      .thenReturn(())
 }

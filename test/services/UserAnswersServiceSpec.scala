@@ -34,7 +34,7 @@ class UserAnswersServiceSpec extends UnitTest with MockUserAnswersConnector with
 
   implicit val hc: HeaderCarrier = HeaderCarrier()
   implicit val ec: ExecutionContext = ExecutionContext.global
-  implicit val request: AuthorisationRequest[_] = AuthorisationRequestBuilder.anAuthorisationRequest
+  implicit val request: AuthorisationRequest[?] = AuthorisationRequestBuilder.anAuthorisationRequest
 
   lazy val service = new UserAnswersService(mockUserAnswersConnector)
 
@@ -51,7 +51,7 @@ class UserAnswersServiceSpec extends UnitTest with MockUserAnswersConnector with
 
       "return Some(UserAnswers)" in {
 
-        MockUserAnswersConnector.get(taxYear, BusinessTaxReliefs).returns(Future.successful(Right(Some(emptyUserAnswers))))
+        mockUserAnswersConnectorGet(taxYear, BusinessTaxReliefs)(Right(Some(emptyUserAnswers)))
         await(service.get(taxYear, BusinessTaxReliefs)) shouldBe Some(emptyUserAnswers)
       }
     }
@@ -60,7 +60,7 @@ class UserAnswersServiceSpec extends UnitTest with MockUserAnswersConnector with
 
       "return None" in {
 
-        MockUserAnswersConnector.get(taxYear, BusinessTaxReliefs).returns(Future.successful(Right(None)))
+        mockUserAnswersConnectorGet(taxYear, BusinessTaxReliefs)(Right(None))
         await(service.get(taxYear, BusinessTaxReliefs)) shouldBe None
       }
     }
@@ -69,7 +69,7 @@ class UserAnswersServiceSpec extends UnitTest with MockUserAnswersConnector with
 
       "connector returns failure from downstream" in {
 
-        MockUserAnswersConnector.get(taxYear, BusinessTaxReliefs).returns(Future.successful(Left(UnexpectedErrorResponse(INTERNAL_SERVER_ERROR, "bang"))))
+        mockUserAnswersConnectorGet(taxYear, BusinessTaxReliefs)(Left(UnexpectedErrorResponse(INTERNAL_SERVER_ERROR, "bang")))
         intercept[Exception](await(service.get(taxYear, BusinessTaxReliefs))).getMessage shouldBe
           s"Failed to retrieve UserAnswers from income-tax-additional-information for taxYear: '$taxYear', journey: '$BusinessTaxReliefs', mtditid: '${request.user.mtditid}'"
       }
@@ -82,7 +82,7 @@ class UserAnswersServiceSpec extends UnitTest with MockUserAnswersConnector with
 
       "return the saved UserAnswers" in {
 
-        MockUserAnswersConnector.set(emptyUserAnswers).returns(Future.successful(Right(Done)))
+        mockUserAnswersConnectorSet(emptyUserAnswers)(Right(Done))
         await(service.set(emptyUserAnswers)) shouldBe emptyUserAnswers
       }
     }
@@ -91,7 +91,7 @@ class UserAnswersServiceSpec extends UnitTest with MockUserAnswersConnector with
 
       "throw Exception" in {
 
-        MockUserAnswersConnector.set(emptyUserAnswers).returns(Future.successful(Left(UnexpectedErrorResponse(INTERNAL_SERVER_ERROR, "bang"))))
+        mockUserAnswersConnectorSet(emptyUserAnswers)(Left(UnexpectedErrorResponse(INTERNAL_SERVER_ERROR, "bang")))
         intercept[Exception](await(service.set(emptyUserAnswers))).getMessage shouldBe
           s"Failed to store UserAnswers in income-tax-additional-information for for taxYear: '${emptyUserAnswers.taxYear}', journey: '${emptyUserAnswers.journey}', mtditid: '${emptyUserAnswers.mtdItId}'"
       }
@@ -104,7 +104,7 @@ class UserAnswersServiceSpec extends UnitTest with MockUserAnswersConnector with
 
       "return Done" in {
 
-        MockUserAnswersConnector.delete(taxYear, BusinessTaxReliefs).returns(Future.successful(Right(Done)))
+        mockUserAnswersConnectorDelete(taxYear, BusinessTaxReliefs)(Right(Done))
         await(service.delete(taxYear, BusinessTaxReliefs)) shouldBe Done
       }
     }
@@ -113,7 +113,7 @@ class UserAnswersServiceSpec extends UnitTest with MockUserAnswersConnector with
 
       "throw UserAnswersException" in {
 
-        MockUserAnswersConnector.delete(taxYear, BusinessTaxReliefs).returns(Future.successful(Left(UnexpectedErrorResponse(INTERNAL_SERVER_ERROR, "bang"))))
+        mockUserAnswersConnectorDelete(taxYear, BusinessTaxReliefs)(Left(UnexpectedErrorResponse(INTERNAL_SERVER_ERROR, "bang")))
         intercept[Exception](await(service.delete(taxYear, BusinessTaxReliefs))).getMessage shouldBe
           s"Failed to delete UserAnswers from income-tax-additional-information for taxYear: '$taxYear', journey: '$BusinessTaxReliefs', mtditid: '${request.user.mtditid}'"
       }
